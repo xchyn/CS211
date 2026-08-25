@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSCI 111 Refresher | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#24292e;background:#fff}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#d73a49}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#6f42c1}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#005cc5}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#032f62}.hljs-built_in,.hljs-symbol{color:#e36209}.hljs-code,.hljs-comment,.hljs-formula{color:#6a737d}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#22863a}.hljs-subst{color:#24292e}.hljs-section{color:#005cc5;font-weight:700}.hljs-bullet{color:#735c0f}.hljs-emphasis{color:#24292e;font-style:italic}.hljs-strong{color:#24292e;font-weight:700}.hljs-addition{color:#22863a;background-color:#f0fff4}.hljs-deletion{color:#b31d28;background-color:#ffeef0}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:#f8fafc;border:1px solid var(--line);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52}
+pre code{font-family:inherit;font-size:inherit;background:none;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:var(--muted);background:#f1f5f9;
+  border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#0f172a;color:#e2e8f0;border-color:#0f172a;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      border-color:#cbd5e1 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Reference</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Reference &middot; background reading</div>
+  <h1>CSCI 111 Refresher &mdash; Syntax, Control Flow and Functions</h1>
+  <p class="sub">The C++ this course assumes you already have. Not one of the 28 classes &mdash; read it if CSCI 111 feels far away.</p>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; what this page is for</span></div>
+  <div class="bd">
+    <p>CSCI 211 starts from the assumption that you can already read and write a single-file C++
+    program: declare a variable, take a decision, run a loop, call a function. This page is that
+    material in one place, so you can repair a gap without hunting through last semester's notes.</p>
+    <p>It is <strong>not</strong> a class, it has no date, and nothing on it is new. If all of it
+    looks familiar, skip it and start at Class 1.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; what is deliberately NOT here</span></div>
+  <div class="bd">
+    <p>Several things you might expect on a refresher page have been left off, because CSCI 211
+    teaches them properly rather than assuming them. Do not go looking for them here:</p>
+    <table>
+      <tr><th style="width:44%">Topic</th><th>Where it is taught</th></tr>
+      <tr><td>The keyword <code>const</code></td><td>Class 1, &sect;8 &mdash; and used in almost every method from Class 10 on</td></tr>
+      <tr><td>Function overloading</td><td>Class 2</td></tr>
+      <tr><td>Forward declarations</td><td>Class 2</td></tr>
+      <tr><td>Splitting a project across several source files, and header files</td><td>Class 2</td></tr>
+      <tr><td>Prefix and postfix <code>++</code> / <code>--</code></td><td>Class 3</td></tr>
+      <tr><td><code>break</code> and <code>continue</code></td><td>Class 3</td></tr>
+    </table>
+    <p>Those six are the ones the course revisits in its own first three classes, in more depth and
+    with the exam traps attached. Learning them twice from two different pages would only give you
+    two slightly different stories.</p>
+  </div>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>After reading this page you should be able to:</p>
+    <ol>
+      <li>Read a complete C++ program and explain what every line does, including the parts that "just have to be there".</li>
+      <li>Declare variables and arrays, and move data in and out of a program with <code>cin</code> and <code>cout</code>.</li>
+      <li>Choose between <code>if</code>, an <code>else if</code> chain and <code>switch</code>, and order the tests correctly.</li>
+      <li>Write a counting loop and a sentinel loop, and say which one a problem calls for.</li>
+      <li>Write a function, decide what it should return, and explain the difference between printing a result and returning one.</li>
+      <li>Recognise the classic beginner traps: an uninitialised variable, an off-by-one index, <code>=</code> where <code>==</code> was meant.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">C++ basic syntax</a></li>
+    <li><a href="#s2">Decision making</a></li>
+    <li><a href="#s3">Repeating actions: loops</a></li>
+    <li><a href="#s4">Functions</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>C++ Basic Syntax</h2>
+
+<p>Let's start with the smallest complete C++ program that actually does something, and then take it apart line by line. Don't worry about memorising this &mdash; you will type it so many times this week that it will become automatic.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Enter an integer: ";
+    int n;
+    cin &gt;&gt; n;
+    cout &lt;&lt; "You typed " &lt;&lt; n &lt;&lt; endl;
+    return 0;
+}</code></pre>
+
+<h3>What every line is doing</h3>
+
+<ul>
+  <li><strong><code>#include &lt;iostream&gt;</code></strong> &mdash; this is a <em>preprocessor directive</em>. Before the compiler even starts, the preprocessor finds the file called <code>iostream</code> and pastes its contents in right here. That file is what tells the compiler that things named <code>cout</code>, <code>cin</code> and <code>endl</code> exist. If you forget this line, the compiler will tell you <code>cout</code> was not declared &mdash; not because you spelled it wrong, but because you never told it where to look.</li>
+  <li><strong><code>#include &lt;string&gt;</code></strong> &mdash; same idea, but for the <code>string</code> type. Include it whenever your program uses strings.</li>
+  <li><strong><code>using namespace std;</code></strong> &mdash; the Standard Library puts all its names inside a <em>namespace</em> called <code>std</code>, so the full name of <code>cout</code> is really <code>std::cout</code>. This line says "if I write a bare name and you can't find it, look inside <code>std</code> too." It saves a lot of typing.</li>
+  <li><strong><code>int main() { ... }</code></strong> &mdash; <code>main</code> is where execution begins. Every C++ program has exactly one. The <code>int</code> in front means <code>main</code> hands an integer back to the operating system when it finishes.</li>
+  <li><strong><code>return 0;</code></strong> &mdash; that integer. By convention <code>0</code> means "finished normally"; any non-zero value means "something went wrong."</li>
+  <li><strong>The semicolons</strong> &mdash; every <em>statement</em> ends with <code>;</code>. Lines that end in <code>}</code> (like the end of a function or a loop) do not.</li>
+</ul>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the two stream operators</span></div>
+  <div class="bd">
+    <p><code>cout</code> is the output stream and <code>cin</code> is the input stream. The arrows show you which way the data is travelling:</p>
+    <ul>
+      <li><code>cout &lt;&lt; x</code> &mdash; the arrows point <em>toward</em> <code>cout</code>, i.e. data flows <strong>out of</strong> your variable and into the screen.</li>
+      <li><code>cin &gt;&gt; x</code> &mdash; the arrows point <em>away from</em> <code>cin</code>, i.e. data flows <strong>from</strong> the keyboard <strong>into</strong> your variable.</li>
+    </ul>
+    <p>If you can remember "the arrows point in the direction the data moves," you will never mix them up again.</p>
+  </div>
+</div>
+
+<h3>The core syntax table</h3>
+
+<p>Here is the translation table from "what I want to do" into C++. This is the same table from your bootcamp packet, expanded with a concrete example of each.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:34%">What you want</th><th style="width:33%">C++ pattern</th><th style="width:33%">Concrete example</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Print something to the screen</td>
+      <td><code>cout &lt;&lt; " ... " ;</code></td>
+      <td><code>cout &lt;&lt; "Enter an integer: ";</code></td>
+    </tr>
+    <tr>
+      <td>Print several things at once</td>
+      <td><code>cout &lt;&lt; " ... " &lt;&lt; ... ;</code></td>
+      <td><code>cout &lt;&lt; "n = " &lt;&lt; n &lt;&lt; endl;</code></td>
+    </tr>
+    <tr>
+      <td>Create a single container</td>
+      <td><code>type name;</code></td>
+      <td><code>int count;</code></td>
+    </tr>
+    <tr>
+      <td>Create several at once</td>
+      <td><code>type name1, name2;</code></td>
+      <td><code>double x, y;</code></td>
+    </tr>
+    <tr>
+      <td>Read input into a container</td>
+      <td><code>cin &gt;&gt; name;</code></td>
+      <td><code>cin &gt;&gt; count;</code></td>
+    </tr>
+    <tr>
+      <td>Read several inputs</td>
+      <td><code>cin &gt;&gt; name1 &gt;&gt; name2;</code></td>
+      <td><code>cin &gt;&gt; x &gt;&gt; y;</code></td>
+    </tr>
+    <tr>
+      <td>Set a variable's value</td>
+      <td><code>name = data;</code></td>
+      <td><code>count = 10;</code></td>
+    </tr>
+    <tr>
+      <td>Create many containers (an array)</td>
+      <td><code>type name[size];</code></td>
+      <td><code>int scores[100];</code></td>
+    </tr>
+    <tr>
+      <td>A 2-D array</td>
+      <td><code>type name[rows][cols];</code></td>
+      <td><code>double grid[3][4];</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; variable, type, declaration</span></div>
+  <div class="bd">
+    <p>A <strong>variable</strong> is a named box in memory that holds one value. Its <strong>type</strong> tells the compiler two things: how many bytes the box needs, and how to interpret the bits inside it. A <strong>declaration</strong> is the statement that creates the box.</p>
+    <p>The types you will use constantly in this course:</p>
+    <ul>
+      <li><code>int</code> &mdash; a whole number, typically 4 bytes.</li>
+      <li><code>double</code> &mdash; a number with a decimal point, typically 8 bytes.</li>
+      <li><code>char</code> &mdash; a single character, 1 byte, written in single quotes: <code>'a'</code>.</li>
+      <li><code>bool</code> &mdash; <code>true</code> or <code>false</code>.</li>
+      <li><code>string</code> &mdash; a sequence of characters, written in double quotes: <code>"hello"</code>. Needs <code>#include &lt;string&gt;</code>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; declaring without initialising</span></div>
+  <div class="bd">
+    <p>This declares <code>n</code> but does <strong>not</strong> put anything in it:</p>
+<pre><code class="language-cpp">int n;
+cout &lt;&lt; n &lt;&lt; endl;   // What prints? Nobody knows.</code></pre>
+    <p>C++ does not zero out your variables for you. The box contains whatever bits happened to be sitting at that memory address. It might print <code>0</code>, it might print <code>32764</code>, and it might print something different every time you run the program. Always give a variable a value before you read it:</p>
+<pre><code class="language-cpp">int n = 0;           // safe
+int m;  cin &gt;&gt; m;    // also safe -- cin fills it before we use it</code></pre>
+  </div>
+</div>
+
+<h3>Arrays: many boxes with one name</h3>
+
+<p>An array is a run of boxes of the same type, laid out back-to-back in memory, sharing one name. You get at an individual box with a subscript in square brackets.</p>
+
+<pre><code class="language-cpp">int scores[5];              // five int boxes: scores[0] .. scores[4]
+scores[0] = 88;
+scores[1] = 92;
+
+int a[] = {7, 10, 12};      // size deduced from the list -- this is an int[3]
+cout &lt;&lt; a[2] &lt;&lt; endl;       // prints 12</code></pre>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; off-by-one, the classic C++ bug</span></div>
+  <div class="bd">
+    <p><strong>Array indices start at 0.</strong> An array declared as <code>int scores[5]</code> has valid indices <code>0, 1, 2, 3, 4</code>. There is no <code>scores[5]</code>.</p>
+    <p>Writing <code>scores[5] = 100;</code> compiles perfectly happily and then corrupts whatever memory happens to sit just past the end of the array. C++ does <em>not</em> check bounds for you. This is the single most common source of "my program worked yesterday and crashes today."</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check R1</div>
+  <div class="bd">
+    <p>Write each of the following.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A <code>double</code> called <code>average</code>, initialised to zero.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <pre><code class="language-cpp">        double average = 0.0;
+        </code></pre>
+        <p>Initialising at the point of declaration is a good habit &mdash; C++ will not do it for you.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> An array of 10 <code>int</code> called <code>data</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <pre><code class="language-cpp">        int data[10];
+        </code></pre>
+        <p>This creates ten boxes, <code>data[0]</code> through <code>data[9]</code>. There is no <code>data[10]</code>, and none of the ten has a defined value yet.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Two <code>string</code> variables called <code>first</code> and <code>last</code>, declared on one line.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <pre><code class="language-cpp">        string first, last;
+        </code></pre>
+        <p>Remember <code>#include &lt;string&gt;</code> at the top of the file.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> One statement that reads a first and last name from the keyboard.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <pre><code class="language-cpp">        cin &gt;&gt; first &gt;&gt; last;
+        </code></pre>
+        <p><code>cin &gt;&gt;</code> stops at whitespace, so this reads exactly two words. If the user types <code>Ada Lovelace</code>, then <code>first</code> holds <code>"Ada"</code> and <code>last</code> holds <code>"Lovelace"</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<h2 id="s2"><span class="num">2.</span>Decision Making</h2>
+
+<p>So far our programs run straight through, top to bottom. To make a program <em>decide</em> something, we use <code>if</code>.</p>
+
+<pre><code class="language-cpp">if ( Condition ) {
+    instruction(s);
+}</code></pre>
+
+<p>The <strong>condition</strong> is any expression that evaluates to true or false. If it is true, the block in braces runs; if it is false, the block is skipped entirely and execution continues after the closing brace.</p>
+
+<h3>The three shapes</h3>
+
+<pre><code class="language-cpp">// Shape 1: do something, or don't
+if ( Condition ) { instruction(s); }
+
+// Shape 2: do one thing or the other -- exactly one branch always runs
+if ( Condition ) { instruction(s); }
+else             { instruction(s); }
+
+// Shape 3: pick exactly one from many
+if      ( Condition1 ) { instruction(s); }
+else if ( Condition2 ) { instruction(s); }
+else if ( Condition3 ) { instruction(s); }
+else                   { instruction(s); }</code></pre>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; an else-if chain stops at the first match</span></div>
+  <div class="bd">
+    <p>In shape 3, the conditions are tested <strong>in order</strong>, and as soon as one is true, its block runs and the <em>entire rest of the chain is skipped</em>. This is different from writing several separate <code>if</code> statements, where every condition gets tested.</p>
+    <p>This is why order matters enormously in a grading program:</p>
+<pre><code class="language-cpp">// CORRECT -- most restrictive test first
+if      (score &gt;= 90) grade = 'A';
+else if (score &gt;= 80) grade = 'B';
+else if (score &gt;= 70) grade = 'C';
+else                  grade = 'F';
+
+// WRONG -- a score of 95 matches the very first test and gets a 'C'
+if      (score &gt;= 70) grade = 'C';
+else if (score &gt;= 80) grade = 'B';
+else if (score &gt;= 90) grade = 'A';
+else                  grade = 'F';</code></pre>
+  </div>
+</div>
+
+<h3>Comparison and logical operators</h3>
+
+<table>
+  <thead><tr><th style="width:22%">Operator</th><th style="width:38%">Meaning</th><th style="width:40%">Example (with <code>x = 5</code>)</th></tr></thead>
+  <tbody>
+    <tr><td><code>==</code></td><td>equal to</td><td><code>x == 5</code> is true</td></tr>
+    <tr><td><code>!=</code></td><td>not equal to</td><td><code>x != 3</code> is true</td></tr>
+    <tr><td><code>&lt;</code> <code>&gt;</code></td><td>less / greater than</td><td><code>x &gt; 10</code> is false</td></tr>
+    <tr><td><code>&lt;=</code> <code>&gt;=</code></td><td>less / greater than or equal</td><td><code>x &gt;= 5</code> is true</td></tr>
+    <tr><td><code>&amp;&amp;</code></td><td>AND &mdash; both sides must be true</td><td><code>x &gt; 0 &amp;&amp; x &lt; 10</code> is true</td></tr>
+    <tr><td><code>||</code></td><td>OR &mdash; at least one side true</td><td><code>x &lt; 0 || x == 5</code> is true</td></tr>
+    <tr><td><code>!</code></td><td>NOT &mdash; flips true/false</td><td><code>!(x == 5)</code> is false</td></tr>
+  </tbody>
+</table>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; <code>=</code> versus <code>==</code></span></div>
+  <div class="bd">
+    <p><code>=</code> <strong>assigns</strong>. <code>==</code> <strong>compares</strong>. Writing <code>if (x = 5)</code> does not ask whether <code>x</code> is 5 &mdash; it <em>sets</em> <code>x</code> to 5, and then treats the result (5, a non-zero number, i.e. true) as the condition. So the branch always runs and your variable got clobbered.</p>
+    <p>You will make this mistake. Everyone does. When an <code>if</code> behaves as though it is always true, this is the first thing to check.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check R2</div>
+  <div class="bd">
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write an <code>if</code> / <code>else if</code> / <code>else</code> chain that reads an integer <code>n</code> and prints <code>"negative"</code>, <code>"zero"</code>, or <code>"positive"</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <pre><code class="language-cpp">        int n;
+        cin &gt;&gt; n;
+
+        if      (n &lt; 0)  cout &lt;&lt; "negative" &lt;&lt; endl;
+        else if (n == 0) cout &lt;&lt; "zero" &lt;&lt; endl;
+        else             cout &lt;&lt; "positive" &lt;&lt; endl;
+        </code></pre>
+        <p>Notice that the final <code>else</code> needs no condition: if we got past <code>n &lt; 0</code> and past <code>n == 0</code>, then <code>n</code> must be positive. Writing <code>else if (n &gt; 0)</code> would work but is redundant.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write a single condition that is true exactly when <code>n</code> is an even number strictly between 10 and 20.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <pre><code class="language-cpp">        if (n &gt; 10 &amp;&amp; n &lt; 20 &amp;&amp; n % 2 == 0) { /* ... */ }
+        </code></pre>
+        <p><code>n % 2</code> is the remainder when <code>n</code> is divided by 2, so <code>n % 2 == 0</code> means "evenly divisible by 2," i.e. even. "Strictly between" means we use <code>&gt;</code> and <code>&lt;</code>, not <code>&gt;=</code> and <code>&lt;=</code>, so 10 and 20 are both excluded.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<h2 id="s3"><span class="num">3.</span>Repeating Actions: Loops</h2>
+
+<p>A loop runs the same block of code over and over. C++ gives you two you will use constantly.</p>
+
+<h3>The <code>while</code> loop</h3>
+
+<pre><code class="language-cpp">while ( Condition ) {
+    instruction(s);
+}</code></pre>
+
+<p>Read it as: "as long as the condition is true, keep doing this." The condition is checked <em>before</em> each pass, so if it is false the very first time, the body never runs at all.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the three-part counter pattern</span></div>
+  <div class="bd">
+    <p>Almost every counting loop has the same three moving parts. Get in the habit of naming them:</p>
+    <ol>
+      <li><strong>Set up the counter</strong> &mdash; create it and give it a starting value.</li>
+      <li><strong>Test the counter</strong> &mdash; the condition that decides whether to go around again.</li>
+      <li><strong>Change the counter</strong> &mdash; move it toward the point where the test fails.</li>
+    </ol>
+<pre><code class="language-cpp">int i = 0;              // 1. set up counter
+while ( i &lt; n ) {       // 2. test counter
+    cout &lt;&lt; i &lt;&lt; endl;  //    body: what we actually want to repeat
+    ++i;                // 3. change counter
+}</code></pre>
+    <p>If you ever write an infinite loop, it is almost always because you forgot step 3, or step 3 moves the counter in the wrong direction.</p>
+  </div>
+</div>
+
+<h3>The <code>for</code> loop</h3>
+
+<p>Because the three-part pattern is so common, C++ gives it dedicated syntax that puts all three parts on one line where you can see them together:</p>
+
+<pre><code class="language-cpp">for ( Set up counter ; Test counter ; Change counter ) {
+    Instruction(s) to repeat;
+}</code></pre>
+
+<p>So the <code>while</code> loop above becomes:</p>
+
+<pre><code class="language-cpp">for (int i = 0; i &lt; n; ++i) {
+    cout &lt;&lt; i &lt;&lt; endl;
+}</code></pre>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; <code>for</code> and <code>while</code> are interchangeable</span></div>
+  <div class="bd">
+    <p>Anything you can write with one you can write with the other. The rule of thumb is:</p>
+    <ul>
+      <li>Use <strong><code>for</code></strong> when you know up front how many times you are looping ("do this once per array element").</li>
+      <li>Use <strong><code>while</code></strong> when the stopping condition is discovered as you go ("keep reading until the user types a negative number").</li>
+    </ul>
+    <p>One real difference: a counter declared inside the <code>for</code> header, like <code>for (int i = ...)</code>, exists <em>only inside the loop</em>. After the loop ends, <code>i</code> is gone. With a <code>while</code> loop you declared <code>i</code> outside, so it is still there afterwards. That is occasionally exactly what you want.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; walking an array forwards and backwards</span></div>
+  <div class="bd">
+    <p>These two loops visit the same five elements in opposite orders. Trace the values of <code>i</code> in your head before reading on.</p>
+<pre><code class="language-cpp">int a[5] = {3, 1, 4, 1, 5};
+
+for (int i = 0; i &lt; 5; ++i)      cout &lt;&lt; a[i] &lt;&lt; " ";   // 3 1 4 1 5
+cout &lt;&lt; endl;
+
+for (int i = 5 - 1; i &gt;= 0; --i) cout &lt;&lt; a[i] &lt;&lt; " ";   // 5 1 4 1 3
+cout &lt;&lt; endl;</code></pre>
+<details class="soln reveal"><summary></summary><div class="ans"><pre class="out">3 1 4 1 5
+5 1 4 1 3</pre>
+    <p>The backwards loop is worth memorising as a pattern: start at <code>n - 1</code> (the last valid index), test <code>i &gt;= 0</code>, and decrement. Beginners often write <code>i &gt; 0</code> here and silently skip element <code>a[0]</code>.</p></div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check R3</div>
+  <div class="bd">
+    <p>What does this print? Trace it line by line before you answer.</p>
+<pre><code class="language-cpp">int sum = 0;
+for (int i = 1; i &lt;= 4; ++i) {
+    sum = sum + i;
+    cout &lt;&lt; i &lt;&lt; " " &lt;&lt; sum &lt;&lt; endl;
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <table class="trace">
+        <thead><tr><th>Pass</th><th><code>i</code> at top</th><th><code>i &lt;= 4</code>?</th><th><code>sum</code> after</th><th>Printed</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>1</td><td>yes</td><td>0 + 1 = 1</td><td><code>1 1</code></td></tr>
+          <tr><td>2</td><td>2</td><td>yes</td><td>1 + 2 = 3</td><td><code>2 3</code></td></tr>
+          <tr><td>3</td><td>3</td><td>yes</td><td>3 + 3 = 6</td><td><code>3 6</code></td></tr>
+          <tr><td>4</td><td>4</td><td>yes</td><td>6 + 4 = 10</td><td><code>4 10</code></td></tr>
+          <tr><td>5</td><td>5</td><td><strong>no</strong> &rarr; loop ends</td><td>&mdash;</td><td>nothing</td></tr>
+        </tbody>
+      </table>
+<pre class="out">1 1
+2 3
+3 6
+4 10</pre>
+      <p>The loop runs 4 times, not 5, because the test fails when <code>i</code> reaches 5. Because the test is <code>&lt;=</code> rather than <code>&lt;</code>, the loop uses <code>i</code> values 1 through 4 inclusive.</p>
+    </div></details>
+  </div>
+</div>
+
+<hr>
+
+<h2 id="s4"><span class="num">4.</span>Functions</h2>
+
+<p>A function is a named, reusable chunk of code. You write it once and use it many times. The two things you do with functions are <em>define</em> them and <em>call</em> them.</p>
+
+<pre><code class="language-cpp">// Defining a function
+result_type function_name ( parameter(s) ) {
+    C++ code ...
+    return result;
+}
+
+// Calling a function
+function_name ( argument(s) )</code></pre>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the vocabulary of a function</span></div>
+  <div class="bd">
+    <ul>
+      <li><strong>Result type</strong> (or return type) &mdash; the type of the value the function hands back. If it hands nothing back, the result type is <code>void</code>.</li>
+      <li><strong>Parameters</strong> &mdash; the variables listed in the function's definition. They are the function's own local boxes.</li>
+      <li><strong>Arguments</strong> &mdash; the actual values you pass in at the call site, which get copied into the parameters.</li>
+      <li><strong>Signature</strong> &mdash; the function's name together with the number and types of its parameters. This is what the compiler uses to tell two functions apart.</li>
+    </ul>
+  </div>
+</div>
+
+<h3><code>cout</code> versus <code>return</code> &mdash; a distinction that trips up everyone</h3>
+
+<p>These sound similar in English ("the function gives me back the answer") but they are completely different mechanisms.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; printing vs. returning</span></div>
+  <div class="bd">
+    <p>Consider this program from your packet:</p>
+<pre><code class="language-cpp">void hello() { cout &lt;&lt; "Hello" &lt;&lt; endl; }
+
+string hi()  { return "hi"; }
+
+int main() {
+    hello();                    // line A
+    hi();                       // line B
+    cout &lt;&lt; hello() &lt;&lt; endl;    // line C
+    cout &lt;&lt; hi() &lt;&lt; endl;       // line D
+    return 0;
+}</code></pre>
+    <details class="soln reveal"><summary></summary><div class="ans"><p>Let's take the four lines one at a time.</p>
+    <ul>
+      <li><strong>Line A</strong> &mdash; <code>hello()</code> runs, and <em>inside itself</em> it prints <code>Hello</code>. Output appears. The function gives nothing back, and we asked for nothing back. Fine.</li>
+      <li><strong>Line B</strong> &mdash; <code>hi()</code> runs and produces the value <code>"hi"</code>. We then throw that value away, because we never stored or printed it. <strong>Nothing is printed.</strong> This compiles, but the line accomplishes nothing.</li>
+      <li><strong>Line C</strong> &mdash; this is a <strong>compile error</strong>. <code>hello()</code> is declared <code>void</code>, so the expression <code>hello()</code> has no value at all. Asking <code>cout</code> to print "no value" is meaningless. The compiler says:</li>
+    </ul>
+<pre class="err">printvsreturn.cpp: In function 'int main()':
+printvsreturn.cpp:12:10: error: no match for 'operator&lt;&lt;' (operand types are 'std::ostream' {aka 'std::basic_ostream&lt;char&gt;'} and 'void')
+   12 |     cout &lt;&lt; hello() &lt;&lt; endl;    // line C
+      |     ~~~~ ^~ ~~~~~~~</pre>
+    <ul>
+      <li><strong>Line D</strong> &mdash; <code>hi()</code> produces the value <code>"hi"</code>, and now we <em>do</em> something with it: we hand it to <code>cout</code>. Output appears.</li>
+    </ul>
+    <p>With line C removed so the program compiles, the output is:</p>
+<pre class="out">Hello
+hi</pre>
+    <p>That is only two lines &mdash; one from line A and one from line D. Lines B and C produced nothing.</p></div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; print vs. return</span></div>
+  <div class="bd">
+    <p><strong>Printing</strong> sends characters to the screen. It is a side effect. Once printed, the value is gone &mdash; your program cannot get it back.</p>
+    <p><strong>Returning</strong> hands a value back to whoever called the function, so the caller can store it, do arithmetic with it, pass it somewhere else, <em>or</em> print it.</p>
+    <p>Returning is almost always more useful, because it keeps your options open. A function that computes an average and prints it can only ever print it. A function that computes an average and returns it can be used anywhere.</p>
+  </div>
+</div>
+
+<h3>Recursive functions</h3>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; recursion</span></div>
+  <div class="bd">
+    <p>A <strong>recursive function</strong> is a function that calls itself. Every correct recursive function has the same skeleton:</p>
+<pre><code class="language-cpp">result_type function_name ( parameter(s) ) {
+    detect the base case;                     // when do we stop?
+    make the recursive call on smaller input; // shrink the problem
+    finish the job using that result;
+    return result;
+}</code></pre>
+    <p>The <strong>base case</strong> is the input so small you can answer it immediately without recursing. Without one, the function calls itself forever and your program crashes with a stack overflow.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; factorial, traced</span></div>
+  <div class="bd">
+<pre><code class="language-cpp">int factorial(int n) {
+    if (n &lt;= 1) return 1;             // base case
+    return n * factorial(n - 1);      // recursive call, then finish the job
+}</code></pre>
+    <details class="soln reveal noout"><summary></summary><div class="ans"><p>To evaluate <code>factorial(4)</code>, the machine builds up a stack of unfinished calls, then unwinds it:</p>
+    <table class="trace">
+      <thead><tr><th>Call</th><th>What it needs</th><th>Returns</th></tr></thead>
+      <tbody>
+        <tr><td><code>factorial(4)</code></td><td><code>4 * factorial(3)</code></td><td>4 &times; 6 = <strong>24</strong></td></tr>
+        <tr><td><code>factorial(3)</code></td><td><code>3 * factorial(2)</code></td><td>3 &times; 2 = 6</td></tr>
+        <tr><td><code>factorial(2)</code></td><td><code>2 * factorial(1)</code></td><td>2 &times; 1 = 2</td></tr>
+        <tr><td><code>factorial(1)</code></td><td>base case &mdash; nothing</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <p>Read the table top to bottom to see the calls going <em>down</em>, then bottom to top to see the answers coming back <em>up</em>. Nothing is actually multiplied until the base case is reached.</p></div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check R4</div>
+  <div class="bd">
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write a function <code>int square(int x)</code> that returns the square of its argument.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <pre><code class="language-cpp">        int square(int x) {
+            return x * x;
+        }
+        </code></pre>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Explain in one sentence why <code>void square(int x) { cout &lt;&lt; x*x; }</code> would be a worse design.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The <code>void</code> version can only ever print. With the returning version you can write <code>int y = square(5);</code> or <code>cout &lt;&lt; square(3) + square(4) &lt;&lt; endl;</code> &mdash; the caller decides what to do with the value. Printing is a decision the function should not be making on the caller's behalf.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> What is wrong with this recursive function?
+<pre><code class="language-cpp">int countdown(int n) {
+    cout &lt;&lt; n &lt;&lt; endl;
+    return countdown(n - 1);
+}</code></pre></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>There is <strong>no base case</strong>. Nothing ever stops the recursion, so it calls <code>countdown(-1)</code>, <code>countdown(-2)</code>, and so on forever until the call stack runs out of memory and the program crashes. The fix:</p>
+        <pre><code class="language-cpp">        int countdown(int n) {
+            if (n &lt; 0) return 0;          // base case
+            cout &lt;&lt; n &lt;&lt; endl;
+            return countdown(n - 1);
+        }
+        </code></pre>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; CSCI 111 refresher</span></div>
+  <div class="bd">
+    <p>Problems 1&ndash;3 come from the course's own bootcamp exercises; Problem 4 was added as extra
+    practice. Three further problems from the original list are not here, because they test
+    <code>++</code>/<code>--</code>, <code>break</code>/<code>continue</code> and header files, all of
+    which CSCI 211 teaches for itself in Classes 2 and 3.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Odd primes below 100</h3>
+<p>Write a program that prints all the odd primes less than 100.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Two pieces: a helper that decides whether a single number is prime, and a loop that walks the candidates. Separating them keeps each piece easy to test.</p>
+  <p>For the helper, we check whether any <code>d</code> from 2 upward divides <code>n</code>. We can stop at the square root: if <code>n</code> has a divisor larger than its square root, it must also have the matching one <em>smaller</em> than the square root, which we would have found already. Rather than call <code>sqrt</code>, we test <code>d * d &lt;= n</code>, which is equivalent and stays in integer arithmetic.</p>
+  <p>For the loop, "odd primes" means we can skip the evens entirely by starting at 3 and stepping by 2. (2 is prime but not odd, so it is correctly excluded.)</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+bool isPrime(int n) {
+    if (n &lt; 2) return false;
+    for (int d = 2; d * d &lt;= n; ++d) {
+        if (n % d == 0) return false;     // found a divisor -&gt; not prime
+    }
+    return true;                          // no divisor found -&gt; prime
+}
+
+int main() {
+    for (int n = 3; n &lt; 100; n += 2) {    // odd candidates only
+        if (isPrime(n)) cout &lt;&lt; n &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre>
+<pre class="out">3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 </pre>
+  <p><strong>Things to notice.</strong> The <code>return false</code> inside the loop is an early exit &mdash; as soon as we find one divisor there is no point checking the rest. Note also that <code>isPrime</code> <em>returns</em> a <code>bool</code> rather than printing; that is what lets <code>main</code> decide the formatting, and what would let you reuse <code>isPrime</code> in a completely different program.</p>
+</div></details>
+
+<h3>Problem 2 &mdash; Search a sorted array</h3>
+<p>Given a sorted array with <code>n</code> distinct values, find the index of a target value.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> We could scan every element, which takes up to <code>n</code> comparisons. But the array is <em>sorted</em>, and that is a strong hint: we can throw away half the remaining range with every comparison. That is <strong>binary search</strong>, and it takes about log&#8322;<code>n</code> comparisons &mdash; for an array of a million elements, about 20 instead of a million.</p>
+  <p>Keep two indices, <code>lo</code> and <code>hi</code>, marking the part of the array still worth searching. Look at the middle element:</p>
+  <ul>
+    <li>if it equals the target, we are done;</li>
+    <li>if it is <em>smaller</em> than the target, the target must be to the right, so move <code>lo</code> past the middle;</li>
+    <li>if it is <em>larger</em>, the target must be to the left, so move <code>hi</code> before the middle.</li>
+  </ul>
+  <p>When <code>lo</code> passes <code>hi</code> the range is empty and the target is not present.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int binarySearch(const int a[], int n, int target) {
+    int lo = 0, hi = n - 1;
+    while (lo &lt;= hi) {
+        int mid = lo + (hi - lo) / 2;         // midpoint, overflow-safe
+        if      (a[mid] == target) return mid;
+        else if (a[mid] &lt;  target) lo = mid + 1;
+        else                       hi = mid - 1;
+    }
+    return -1;                                // not found
+}
+
+int main() {
+    int a[] = { 2, 5, 8, 12, 16, 23, 38, 56, 72, 91 };
+    int n = 10;
+    cout &lt;&lt; binarySearch(a, n, 23) &lt;&lt; endl;
+    cout &lt;&lt; binarySearch(a, n, 2)  &lt;&lt; endl;
+    cout &lt;&lt; binarySearch(a, n, 91) &lt;&lt; endl;
+    cout &lt;&lt; binarySearch(a, n, 40) &lt;&lt; endl;
+    return 0;
+}</code></pre>
+<pre class="out">5
+0
+9
+-1</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The parameter is <code>const int a[]</code> &mdash; we promise not to modify the caller's array (section 5). And we must pass <code>n</code> separately, because the array parameter does not carry its own length (section 6).</li>
+    <li>Returning <code>-1</code> for "not found" is the standard convention, and it works precisely because &minus;1 is never a valid index.</li>
+    <li><code>mid = lo + (hi - lo) / 2</code> rather than <code>(lo + hi) / 2</code>: for very large arrays <code>lo + hi</code> could overflow an <code>int</code>. Same answer, no overflow. This is a famous bug &mdash; it sat in the Java standard library for nine years.</li>
+    <li>The test must be <code>lo &lt;= hi</code>, not <code>lo &lt; hi</code>. With <code>&lt;</code>, a one-element range is never examined and single-element matches are missed.</li>
+  </ul>
+  <p><strong>Recursive alternative</strong>, using the skeleton from section 4:</p>
+<pre><code class="language-cpp">int binarySearchRec(const int a[], int lo, int hi, int target) {
+    if (lo &gt; hi) return -1;                                    // base case
+    int mid = lo + (hi - lo) / 2;
+    if      (a[mid] == target) return mid;                     // base case
+    else if (a[mid] &lt;  target) return binarySearchRec(a, mid + 1, hi, target);
+    else                       return binarySearchRec(a, lo, mid - 1, target);
+}</code></pre>
+</div></details>
+
+<h3>Problem 3 &mdash; Sort an unsorted array</h3>
+<p>Make a function that sorts an unsorted array of <code>n</code> distinct values.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan &mdash; selection sort.</strong> The idea is the one you would use to sort a hand of cards: find the smallest card, put it first; find the smallest of what is left, put it second; and so on.</p>
+  <p>Concretely, for each position <code>i</code> from 0 to <code>n-2</code>, scan the rest of the array to find the index of the smallest remaining value, then swap it into position <code>i</code>. After the pass for position <code>i</code>, everything from 0 to <code>i</code> is in final sorted order.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void selectionSort(int a[], int n) {
+    for (int i = 0; i &lt; n - 1; ++i) {
+        int minIndex = i;                       // assume a[i] is smallest so far
+        for (int j = i + 1; j &lt; n; ++j) {
+            if (a[j] &lt; a[minIndex]) minIndex = j;
+        }
+        if (minIndex != i) {                    // swap into place
+            int temp = a[i];
+            a[i] = a[minIndex];
+            a[minIndex] = temp;
+        }
+    }
+}
+
+void print(const int a[], int n) {
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    int a[] = { 29, 10, 14, 37, 13 };
+    int n = 5;
+    print(a, n);
+    selectionSort(a, n);
+    print(a, n);
+    return 0;
+}</code></pre>
+<pre class="out">29 10 14 37 13 
+10 13 14 29 37 </pre>
+  <p><strong>Trace of the outer loop</strong> on <code>{29, 10, 14, 37, 13}</code>:</p>
+  <table class="trace">
+    <thead><tr><th><code>i</code></th><th>Smallest in <code>a[i..4]</code></th><th>Swap</th><th>Array after the pass</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>10, at index 1</td><td><code>a[0]</code> &harr; <code>a[1]</code></td><td><code>10 29 14 37 13</code></td></tr>
+      <tr><td>1</td><td>13, at index 4</td><td><code>a[1]</code> &harr; <code>a[4]</code></td><td><code>10 13 14 37 29</code></td></tr>
+      <tr><td>2</td><td>14, at index 2</td><td>none needed</td><td><code>10 13 14 37 29</code></td></tr>
+      <tr><td>3</td><td>29, at index 4</td><td><code>a[3]</code> &harr; <code>a[4]</code></td><td><code>10 13 14 29 37</code></td></tr>
+    </tbody>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The parameter is <code>int a[]</code> with <strong>no</strong> <code>const</code>, because this function is supposed to modify the array. Compare with <code>print</code>, which takes <code>const int a[]</code>. The signatures document the intent.</li>
+    <li>The outer loop stops at <code>n - 1</code>, not <code>n</code>. Once the first <code>n-1</code> positions are correct, the last element has nowhere else to go.</li>
+    <li>Selection sort always does about <code>n</code>&sup2;/2 comparisons regardless of the input. It is easy to write and easy to reason about, which is why it is a good first sort, but do not use it on large data.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; Recursive digit sum</h3>
+<p>Write a recursive function <code>int digitSum(int n)</code> that returns the sum of the decimal digits of a non-negative integer. For example <code>digitSum(4093)</code> is 4+0+9+3 = 16. Identify your base case explicitly.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Follow the recursion skeleton from section 4.</p>
+  <ul>
+    <li><strong>Base case:</strong> a single-digit number (including 0) is its own digit sum. That is exactly <code>n &lt; 10</code>.</li>
+    <li><strong>Shrink the problem:</strong> <code>n % 10</code> peels off the last digit, and <code>n / 10</code> is the same number with that digit removed. Because both operands are <code>int</code>, <code>/</code> is integer division and truncates &mdash; <code>4093 / 10</code> is <code>409</code>, not <code>409.3</code>. That truncation is what makes this work.</li>
+    <li><strong>Combine:</strong> add the peeled digit to the digit sum of the rest.</li>
+  </ul>
+<pre><code class="language-cpp">int digitSum(int n) {
+    if (n &lt; 10) return n;                    // base case
+    return (n % 10) + digitSum(n / 10);      // last digit + sum of the rest
+}</code></pre>
+  <p><strong>Trace of <code>digitSum(4093)</code>:</strong></p>
+  <table class="trace">
+    <thead><tr><th>Call</th><th>Expands to</th><th>Returns</th></tr></thead>
+    <tbody>
+      <tr><td><code>digitSum(4093)</code></td><td><code>3 + digitSum(409)</code></td><td>3 + 13 = <strong>16</strong></td></tr>
+      <tr><td><code>digitSum(409)</code></td><td><code>9 + digitSum(40)</code></td><td>9 + 4 = 13</td></tr>
+      <tr><td><code>digitSum(40)</code></td><td><code>0 + digitSum(4)</code></td><td>0 + 4 = 4</td></tr>
+      <tr><td><code>digitSum(4)</code></td><td>base case</td><td>4</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Iterative version</strong>, for comparison &mdash; the same three ideas, written as a loop:</p>
+<pre><code class="language-cpp">int digitSumLoop(int n) {
+    int sum = 0;
+    while (n &gt;= 10) {
+        sum += n % 10;
+        n /= 10;
+    }
+    return sum + n;        // the final leading digit
+}</code></pre>
+  <p>A common wrong base case here is <code>if (n == 0) return 0;</code>. It still works for positive inputs (you just recurse one extra level), but think about why <code>n &lt; 10</code> is the more natural stopping point: it is the largest set of inputs you can answer without any work at all.</p>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Summary</div>
+  <div class="bd">
+    <ul>
+      <li><strong>Program skeleton.</strong> <code>#include</code> what you use,
+        <code>using namespace std;</code>, and one <code>int main()</code>. Statements end in
+        semicolons; blocks do not.</li>
+      <li><strong>Streams.</strong> <code>cout &lt;&lt;</code> sends data out, <code>cin &gt;&gt;</code>
+        reads data in. The arrows point the way the data travels.</li>
+      <li><strong>Variables and arrays.</strong> C++ does not initialize for you and does not check
+        array bounds. Indices run <code>0</code> to <code>size - 1</code>.</li>
+      <li><strong>Decisions.</strong> An <code>else if</code> chain stops at the first true
+        condition, so order the tests from most to least restrictive. <code>=</code> assigns,
+        <code>==</code> compares.</li>
+      <li><strong>Loops.</strong> Every counting loop is set up / test / change. <code>for</code>
+        puts all three on one line; <code>while</code> is better when the stopping point is
+        discovered as you go.</li>
+      <li><strong>Functions.</strong> Printing is a side effect; returning hands a value back to the
+        caller. A function that computes something should return it.</li>
+    </ul>
+    <p><strong>Next:</strong> <a href="lec01_intro_oop.html">Class 1</a> picks up from here and asks
+    a different question &mdash; not "how do I write instructions?" but "how do I organize a program
+    around the things it is made of?"</p>
+  </div>
+</div>
+
+<nav class="pagenav"><a href="index.html"><div class="dir">&larr; Back</div><div class="t">Course Index</div></a><div class="ph"></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

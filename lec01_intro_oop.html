@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 1 — Intro &amp; OOP | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#24292e;background:#fff}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#d73a49}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#6f42c1}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#005cc5}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#032f62}.hljs-built_in,.hljs-symbol{color:#e36209}.hljs-code,.hljs-comment,.hljs-formula{color:#6a737d}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#22863a}.hljs-subst{color:#24292e}.hljs-section{color:#005cc5;font-weight:700}.hljs-bullet{color:#735c0f}.hljs-emphasis{color:#24292e;font-style:italic}.hljs-strong{color:#24292e;font-weight:700}.hljs-addition{color:#22863a;background-color:#f0fff4}.hljs-deletion{color:#b31d28;background-color:#ffeef0}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:#f8fafc;border:1px solid var(--line);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52}
+pre code{font-family:inherit;font-size:inherit;background:none;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:var(--muted);background:#f1f5f9;
+  border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#0f172a;color:#e2e8f0;border-color:#0f172a;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      border-color:#cbd5e1 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 1 &middot; Intro &amp; OOP</span><span class="sep">|</span><span class="where">Tue Sep 1</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 1 &middot; CSCI 211</div>
+  <h1>Introduction &amp; What Object-Oriented Programming Is</h1>
+  <p class="sub">The big picture: what this course adds to the C++ you already know, and the one idea &mdash; objects &mdash; that the whole semester is built on.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Name the five structural parts of every C++ program and say what each one is for.</li>
+      <li>Compile and run a C++ program from the command line, and explain what the compiler produces.</li>
+      <li>Explain in your own words what an <em>object</em> is, and split a real-world thing into its <em>data</em> and its <em>behavior</em>.</li>
+      <li>Explain the difference between a <em>class</em> and an <em>object</em>, and say why one class can produce many objects.</li>
+      <li>Explain what <em>encapsulation</em> buys you, and why a class's public methods are called its <em>interface</em>.</li>
+      <li>Describe, in outline, what <em>inheritance</em> and <em>polymorphism</em> are for &mdash; the two ideas the second half of this course is about.</li>
+      <li>Use <code>const</code> correctly and predict the compiler error you get when you break the promise.</li>
+      <li>Explain why a swap function written with plain parameters does not swap anything.</li>
+      <li>Write and test a small standalone function such as a greatest-common-divisor routine.</li>
+    </ol>
+    <p class="muted small">Today is deliberately light on new syntax. Sections 4 to 7 are about
+    <em>ideas</em> &mdash; we do not write a single class today. The code starts for real in Class 9.</p>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">From CSCI 111 to CSCI 211</a></li>
+    <li><a href="#s2">Anatomy of a C++ program</a></li>
+    <li><a href="#s3">Compiling and running</a></li>
+    <li><a href="#s4">Objects: data plus behavior</a></li>
+    <li><a href="#s5">Classes: the blueprint</a></li>
+    <li><a href="#s6">Encapsulation and the interface</a></li>
+    <li><a href="#s7">The big picture: inheritance and polymorphism</a></li>
+    <li><a href="#s8"><code>const</code>: a promise to the compiler</a></li>
+    <li><a href="#s9">A puzzle to take into Class 2</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>From CSCI 111 to CSCI 211</h2>
+
+<p>In CSCI 111 you learned to give a computer <em>instructions</em>: declare some variables, loop over
+them, call a function, print the result. That style has a name &mdash; <strong>procedural
+programming</strong> &mdash; and it works fine right up until the program gets big. Then it stops
+working, and it stops working in a very specific way.</p>
+
+<p>Picture a program that manages a library. In the procedural style you would have an array of
+book titles, a parallel array of authors, another of due dates, another of borrower IDs. Every
+function that touches a book has to be handed all four arrays and an index. Add one field &mdash;
+say, the ISBN &mdash; and you have to change the signature of every one of those functions. Worse,
+nothing stops some careless line halfway across the program from writing into
+<code>dueDates[7]</code> when it meant <code>dueDates[8]</code>. The data is naked. Anyone can
+touch it, and nothing in the language protects it.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 214" role="img" aria-label="Four parallel arrays versus one Book object holding all four fields together">
+  <text x="8" y="16" font-family="sans-serif" font-size="12.5" font-weight="700" fill="#dc2626" letter-spacing="1">PROCEDURAL &mdash; ONE BOOK, SCATTERED</text>
+  <g font-family="monospace" font-size="11.5" fill="#1e293b">
+    <text x="8" y="40">titles</text><text x="8" y="66">authors</text>
+    <text x="8" y="92">dueDates</text><text x="8" y="118">borrowers</text>
+  </g>
+  <g stroke="#fca5a5" fill="#fef2f2">
+    <rect x="72" y="28" width="46" height="18" rx="3"/><rect x="118" y="28" width="46" height="18" rx="3"/><rect x="164" y="28" width="46" height="18" rx="3"/><rect x="210" y="28" width="46" height="18" rx="3"/>
+    <rect x="72" y="54" width="46" height="18" rx="3"/><rect x="118" y="54" width="46" height="18" rx="3"/><rect x="164" y="54" width="46" height="18" rx="3"/><rect x="210" y="54" width="46" height="18" rx="3"/>
+    <rect x="72" y="80" width="46" height="18" rx="3"/><rect x="118" y="80" width="46" height="18" rx="3"/><rect x="164" y="80" width="46" height="18" rx="3"/><rect x="210" y="80" width="46" height="18" rx="3"/>
+    <rect x="72" y="106" width="46" height="18" rx="3"/><rect x="118" y="106" width="46" height="18" rx="3"/><rect x="164" y="106" width="46" height="18" rx="3"/><rect x="210" y="106" width="46" height="18" rx="3"/>
+  </g>
+  <rect x="118" y="24" width="46" height="104" rx="4" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="141" y="146" font-family="sans-serif" font-size="11.5" fill="#dc2626" text-anchor="middle">index 1</text>
+  <text x="141" y="162" font-family="sans-serif" font-size="11.5" fill="#dc2626" text-anchor="middle">= "one book"</text>
+  <text x="8" y="184" font-family="sans-serif" font-size="12" fill="#64748b">Four places to keep in step.</text>
+  <text x="8" y="200" font-family="sans-serif" font-size="12" fill="#64748b">Add a field, change every function.</text>
+
+  <line x1="300" y1="16" x2="300" y2="206" stroke="#e2e8f0" stroke-width="2"/>
+
+  <text x="330" y="16" font-family="sans-serif" font-size="12.5" font-weight="700" fill="#059669" letter-spacing="1">OBJECT-ORIENTED &mdash; ONE BOOK, ONE THING</text>
+  <rect x="330" y="26" width="220" height="112" rx="7" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="440" y="46" font-family="sans-serif" font-size="13" font-weight="700" fill="#065f46" text-anchor="middle">a Book object</text>
+  <line x1="330" y1="54" x2="550" y2="54" stroke="#059669"/>
+  <g font-family="monospace" font-size="11.5" fill="#1e293b">
+    <text x="344" y="72">title</text><text x="344" y="90">author</text>
+    <text x="344" y="108">dueDate</text><text x="344" y="126">borrower</text>
+  </g>
+  <text x="330" y="162" font-family="sans-serif" font-size="12" fill="#64748b">One place. Add a field and the</text>
+  <text x="330" y="178" font-family="sans-serif" font-size="12" fill="#64748b">change stays inside the box.</text>
+</svg>
+<figcaption><strong>The problem OOP solves.</strong> On the left, one book is spread across four
+arrays and only an index holds it together. On the right, the same book is a single object that
+carries its own data.</figcaption>
+</figure>
+
+<p>Object-oriented programming is the response to exactly that problem. Instead of scattering a
+book across four arrays, you build a single thing called a <code>Book</code> that carries its own
+title, author, due date and borrower <em>together</em>, and that decides for itself which
+operations the outside world is allowed to perform on it. This semester is about how to build
+those things in C++.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Procedural programming organizes a program around <strong>what it does</strong>.
+    Object-oriented programming organizes it around <strong>what it is made of</strong>. The
+    payoff is not that OOP programs are shorter &mdash; often they are longer &mdash; it is that
+    when the program changes, the change stays in one place.</p>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; if CSCI 111 feels far away</span></div>
+  <div class="bd">
+    <p>This course assumes you can already read and write a single-file C++ program: declare a
+    variable, take a decision, run a loop, call a function. If any of that has gone rusty over the
+    break, the <a href="ref_cpp111_review.html">CSCI 111 refresher</a> has it in one place. It is
+    background reading rather than a class, and it is available now.</p>
+    <p>It deliberately stops short of six topics &mdash; <code>const</code>, function overloading,
+    forward declarations, header files, <code>++</code>/<code>--</code>, and
+    <code>break</code>/<code>continue</code> &mdash; because this course teaches those itself over
+    the next three classes, in more depth and with the exam traps attached.</p>
+  </div>
+</div>
+
+<p>Here is the road map. The first ten classes are the raw materials: a fast refresher on the C++
+you already know, then <em>vectors</em>, then <em>pointers</em> and dynamic memory, and finally
+your first classes. Everything after Exam 1 is the object-oriented machinery proper &mdash;
+constructors, copying, operator overloading, inheritance, polymorphism, templates, and the
+Standard Template Library. Every one of those topics rests on pointers, so the middle of the first
+unit is the part to take seriously.</p>
+
+<h2 id="s2"><span class="num">2.</span>Anatomy of a C++ program</h2>
+
+<p>Before we talk about any new ideas, let's be precise about the program skeleton you have been
+typing since CSCI 111. Every C++ program you write this semester has the same five structural
+parts, and being able to name them makes error messages far less mysterious.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the five parts, labelled</span></div>
+  <div class="bd">
+    <p>Read this program and predict exactly what it prints. Pay attention to the last line of
+    output in particular &mdash; it is not as obvious as it looks.</p>
+<div class="codewrap"><div class="cap">anatomy.cpp</div><pre><code class="language-cpp">// anatomy.cpp -- the five parts of every C++ program
+#include &lt;iostream&gt;          // 1. bring in a library
+using namespace std;         // 2. use the standard names without "std::"
+
+int main() {                 // 3. execution starts here
+    int radius = 3;          // 4. the body: declarations and statements
+    double area = 3.14159 * radius * radius;
+
+    cout &lt;&lt; "radius = " &lt;&lt; radius &lt;&lt; endl;
+    cout &lt;&lt; "area   = " &lt;&lt; area   &lt;&lt; endl;
+
+    return 0;                // 5. tell the operating system "no errors"
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">radius = 3
+area   = 28.2743</pre>
+<p>The five parts, in order:</p>
+<ol>
+  <li><strong>Preprocessor directives.</strong> <code>#include &lt;iostream&gt;</code> textually pastes the
+    declarations for <code>cout</code>, <code>cin</code> and <code>endl</code> into your file before compilation starts. Without it
+    the compiler has never heard of <code>cout</code>.</li>
+  <li><strong>The <code>using</code> directive.</strong> Everything in the standard library lives in a
+    <em>namespace</em> called <code>std</code>. Its real name is <code>std::cout</code>. <code>using namespace std;</code> tells the
+    compiler "if you see a name you don't recognize, look in <code>std</code> too", which is why you can write
+    the short form. We will study namespaces properly in Class 16.</li>
+  <li><strong><code>int main()</code>.</strong> The one function the operating system calls to start your
+    program. Exactly one of these per program.</li>
+  <li><strong>The body.</strong> Declarations and statements, executed top to bottom.</li>
+  <li><strong><code>return 0;</code>.</strong> The value <code>main</code> hands back to the operating system.
+    Zero conventionally means "finished normally"; anything else means "something went wrong."</li>
+</ol>
+<p>And the surprise: <code>area</code> is <code>28.274310</code> to six places, but <code>cout</code> printed
+<code>28.2743</code>. By default <code>cout</code> shows a floating-point value to <strong>six significant
+digits</strong> and drops trailing zeros. That default is going to cost people points on exams, so
+we will look at it head-on in Class 3.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.1</div>
+  <div class="bd">
+    <p>Using the program above as your reference:</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> If you delete the line <code>using namespace std;</code> but change nothing else, will the program still compile? If not, what is the smallest edit that fixes it?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It will not compile. Without the <code>using</code> directive the names <code>cout</code> and <code>endl</code> are not
+        visible by their short spellings.</p>
+        <p>The smallest fix is to qualify each use with the namespace:</p>
+<pre><code class="language-cpp">    std::cout &lt;&lt; "radius = " &lt;&lt; radius &lt;&lt; std::endl;
+    std::cout &lt;&lt; "area   = " &lt;&lt; area   &lt;&lt; std::endl;</code></pre>
+        <p>Note that <code>int</code>, <code>double</code> and <code>return</code> are <em>not</em> affected &mdash; they are keywords
+        built into the language, not names from a library.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> If you delete <code>#include &lt;iostream&gt;</code> instead, what does the compiler say?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>This is the real message from <code>g++ 13.3</code>, trimmed:</p>
+<pre class="err">noinclude.cpp: In function 'int main()':
+noinclude.cpp:4:5: error: 'cout' was not declared in this scope
+    4 |     cout &lt;&lt; "hello" &lt;&lt; endl;
+      |     ^~~~
+noinclude.cpp:1:1: note: 'std::cout' is defined in header '&lt;iostream&gt;'; did you forget to '#include &lt;iostream&gt;'?</pre>
+        <p>Read compiler errors from the top down and stop at the first one. <em>"was not declared
+        in this scope"</em> almost always means one of three things: you misspelled a name, you
+        forgot an <code>#include</code>, or you used a variable before declaring it. Modern g++ even guesses the missing header for you in the <code>note:</code> line &mdash; do not skip past those.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> What would happen if you wrote <code>return 1;</code> instead of <code>return 0;</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The printed output would be identical. The return value of <code>main</code> is not shown on
+        screen &mdash; it is handed to whatever launched the program. Zero means success; a nonzero
+        value signals failure, which matters when a script or a grading harness checks whether your
+        program succeeded. In this course always write <code>return 0;</code> at the end of <code>main</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Compiling and running</h2>
+
+<p>C++ is a <em>compiled</em> language. Nothing you type runs directly; a separate program called
+the compiler translates your source file into machine code first, and only that result runs. This
+is the reason C++ can catch so many of your mistakes before the program ever starts &mdash; and the
+reason those mistakes arrive as a wall of text.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; compiler, source file, executable</span></div>
+  <div class="bd">
+    <p>A <strong>source file</strong> is the text you write, saved with a <code>.cpp</code>
+    extension. A <strong>compiler</strong> is a program that translates a source file into an
+    <strong>executable</strong> &mdash; a file of machine instructions your operating system can
+    run directly. The compiler we use in this course is <code>g++</code>.</p>
+    <p>An error the compiler reports is a <strong>compile-time error</strong>: the executable is
+    never produced, so the program cannot run at all. An error that only shows up while the program
+    is running &mdash; a crash, a wrong answer &mdash; is a <strong>run-time error</strong>. Telling
+    these two apart is the single most useful debugging skill you can have.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; compile and run one file</span></div>
+  <div class="bd">
+    <ol>
+      <li>Save your source as, say, <code>anatomy.cpp</code>.</li>
+      <li>Compile it, naming the executable yourself with <code>-o</code>:
+<pre class="shell">g++ anatomy.cpp -o anatomy</pre>
+      </li>
+      <li>If the compiler prints nothing, it worked. Run it:
+<pre class="shell">./anatomy</pre>
+      </li>
+      <li>If it printed errors, fix the <strong>first</strong> one and compile again. Later errors
+      are very often just fallout from the first.</li>
+    </ol>
+    <p>You can also leave out the <code>-o</code> part entirely:</p>
+<pre class="shell">g++ anatomy.cpp</pre>
+    <p>That still compiles, but it names the executable <code>a.out</code> instead, whatever the
+    source file was called. Use <code>-o</code> when you want to keep several programs around at
+    once and be able to tell them apart.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.2</div>
+  <div class="bd">
+    <p>A student compiles with <code>g++ gcd.cpp</code>, sees no errors, then types
+    <code>./gcd</code> and gets <em>"No such file or directory."</em> Nothing is wrong with their
+    program. What happened, and what should they type?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>They left out <code>-o</code>. With no <code>-o</code>, <code>g++</code> names the
+      executable <code>a.out</code>, regardless of what the source file was called. So the program
+      compiled perfectly &mdash; it is just sitting there under a different name.</p>
+      <p>Either run it as it stands:</p>
+<pre class="shell">./a.out</pre>
+      <p>or, better, recompile and name it:</p>
+<pre class="shell">g++ gcd.cpp -o gcd
+./gcd</pre>
+      <p>The leading <code>./</code> is not decoration. It means "the file named <code>gcd</code>
+      in <em>this</em> directory." Without it the shell searches only its list of system directories
+      and will not find your program.</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write, compile and run one function</h3>
+
+<p>Write a function that computes the greatest common divisor of two positive integers, and a
+<code>main</code> that tests it. Work out the signature yourself &mdash; deciding the return type
+and the parameters is part of the exercise, and on an exam the signature line alone earns points.
+Then compile with <code>g++ gcd.cpp -o gcd</code> and run it.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="15" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+// Write a function called gcd that takes two positive integers
+// and returns their greatest common divisor.
+
+
+
+int main() {
+    cout &lt;&lt; &quot;gcd(48, 18) = &quot; &lt;&lt; gcd(48, 18) &lt;&lt; endl;
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+// Write a function called gcd that takes two positive integers
+// and returns their greatest common divisor.
+
+
+
+int main() {
+    cout &lt;&lt; "gcd(48, 18) = " &lt;&lt; gcd(48, 18) &lt;&lt; endl;
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.3</div>
+  <div class="bd">
+    <p>Complete the exercise above. Give the finished function and say what
+    <code>gcd(270, 192)</code> is.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The GCD of <code>a</code> and <code>b</code> is the largest integer
+      that divides both. Trying every integer from <code>min(a,b)</code> downwards works but is
+      slow. Euclid's algorithm is the standard answer: any number that divides both <code>a</code>
+      and <code>b</code> also divides <code>a % b</code>, so <code>gcd(a, b)</code> equals
+      <code>gcd(b, a % b)</code>. Each step gives a strictly smaller pair, so it must stop, and it
+      stops when the second number reaches 0 &mdash; at which point the first number is the answer.</p>
+<div class="codewrap"><div class="cap">gcd.cpp</div><pre><code class="language-cpp">// gcd.cpp -- greatest common divisor of two positive integers
+#include &lt;iostream&gt;
+using namespace std;
+
+int gcd(int a, int b) {
+    while (b != 0) {
+        int r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+
+int main() {
+    cout &lt;&lt; "gcd(48, 18) = " &lt;&lt; gcd(48, 18) &lt;&lt; endl;
+    cout &lt;&lt; "gcd(17, 5)  = " &lt;&lt; gcd(17, 5)  &lt;&lt; endl;
+    cout &lt;&lt; "gcd(270, 192) = " &lt;&lt; gcd(270, 192) &lt;&lt; endl;
+    cout &lt;&lt; "gcd(9, 9)   = " &lt;&lt; gcd(9, 9)   &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">gcd(48, 18) = 6
+gcd(17, 5)  = 1
+gcd(270, 192) = 6
+gcd(9, 9)   = 9</pre>
+      <p>So <code>gcd(270, 192)</code> is <strong>6</strong>. The trace is worth doing by hand once:</p>
+      <table class="trace">
+        <tr><th>Iteration</th><th><code>a</code></th><th><code>b</code></th><th><code>r = a % b</code></th></tr>
+        <tr><td>start</td><td>270</td><td>192</td><td>78</td></tr>
+        <tr><td>1</td><td>192</td><td>78</td><td>36</td></tr>
+        <tr><td>2</td><td>78</td><td>36</td><td>6</td></tr>
+        <tr><td>3</td><td>36</td><td>6</td><td>0</td></tr>
+        <tr><td>4</td><td>6</td><td>0</td><td>&mdash; loop ends</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> The parameters are taken by value on purpose: the
+      function modifies <code>a</code> and <code>b</code> as it works, and copies mean the caller's
+      variables are untouched. <code>gcd(17, 5)</code> is 1 because 17 and 5 share no factor &mdash;
+      always test one of those. A recursive version is equally correct and shorter:</p>
+<pre><code class="language-cpp">int gcd(int a, int b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}</code></pre>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Objects: data plus behavior</h2>
+
+<p>Now the idea the rest of the semester hangs on. For the next four sections we are going to stay
+at the level of ideas &mdash; no C++ syntax at all. Get the picture straight first; the syntax
+arrives in Class 9 and it is much easier once the picture is in place.</p>
+
+<p>Look up from the screen at any physical thing near you &mdash; a phone, a coffee cup, a bank
+card. Each of them has two kinds of facts attached. There are facts about <em>what it is</em>: the
+phone's battery level, its model, its number. And there are facts about <em>what it can do</em>:
+dial, ring, take a photo. Object-oriented programming takes that split seriously and builds it into
+the language.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; object-oriented programming</span></div>
+  <div class="bd">
+    <p><strong>Object-oriented programming (OOP)</strong> is a way of organizing a program around
+    <strong>objects</strong>. An object represents a real-world entity, concept, or data structure,
+    and it bundles together two things:</p>
+    <ul>
+      <li>its <strong>data</strong> &mdash; the attributes or properties that describe it; and</li>
+      <li>its <strong>behaviors</strong> &mdash; the methods or functions that operate on that data.</li>
+    </ul>
+    <p>Because the data and the code that manipulates it live in the same place, an object is a
+    self-contained unit. That is what makes OOP a modular, organized way to design software.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; attribute and method</span></div>
+  <div class="bd">
+    <p>An <strong>attribute</strong> (also called a <em>data member</em> or <em>field</em>) is a
+    variable that belongs to an object and stores part of its state.</p>
+    <p>A <strong>method</strong> (also called a <em>member function</em>) is a function that belongs
+    to an object and can read or change that object's attributes.</p>
+    <p>The two words to watch for when you read a problem statement: nouns tend to become attributes,
+    verbs tend to become methods.</p>
+  </div>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 640 250" role="img" aria-label="An object drawn as a two-compartment box: attributes on top, methods below">
+  <rect x="170" y="14" width="300" height="216" rx="9" fill="#ffffff" stroke="#4f46e5" stroke-width="2.5"/>
+  <rect x="170" y="14" width="300" height="34" rx="9" fill="#eef2ff" stroke="none"/>
+  <rect x="170" y="38" width="300" height="10" fill="#eef2ff" stroke="none"/>
+  <line x1="170" y1="48" x2="470" y2="48" stroke="#4f46e5" stroke-width="2.5"/>
+  <text x="320" y="37" font-family="sans-serif" font-size="14" font-weight="700" fill="#4f46e5" text-anchor="middle">a BankAccount object</text>
+
+  <text x="188" y="70" font-family="sans-serif" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1">DATA &mdash; WHAT IT IS</text>
+  <g font-family="monospace" font-size="12.5" fill="#1e293b">
+    <text x="196" y="92">accountNumber</text>
+    <text x="196" y="112">owner</text>
+    <text x="196" y="132">balance</text>
+  </g>
+  <line x1="186" y1="146" x2="454" y2="146" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+
+  <text x="188" y="167" font-family="sans-serif" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1">BEHAVIOR &mdash; WHAT IT CAN DO</text>
+  <g font-family="monospace" font-size="12.5" fill="#1e293b">
+    <text x="196" y="189">deposit</text>
+    <text x="196" y="209">withdraw</text>
+  </g>
+  <text x="330" y="189" font-family="monospace" font-size="12.5" fill="#1e293b">getBalance</text>
+  <text x="330" y="209" font-family="monospace" font-size="12.5" fill="#1e293b">applyInterest</text>
+
+  <text x="12" y="100" font-family="sans-serif" font-size="12.5" fill="#64748b">nouns</text>
+  <text x="12" y="118" font-family="sans-serif" font-size="12.5" fill="#64748b">become</text>
+  <text x="12" y="136" font-family="sans-serif" font-size="12.5" fill="#64748b">attributes</text>
+  <line x1="88" y1="112" x2="162" y2="112" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ar1)"/>
+  <text x="490" y="180" font-family="sans-serif" font-size="12.5" fill="#64748b">verbs</text>
+  <text x="490" y="198" font-family="sans-serif" font-size="12.5" fill="#64748b">become</text>
+  <text x="490" y="216" font-family="sans-serif" font-size="12.5" fill="#64748b">methods</text>
+  <line x1="484" y1="192" x2="478" y2="192" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="484" y1="192" x2="472" y2="192" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ar1)"/>
+  <defs>
+    <marker id="ar1" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption><strong>One object, two compartments.</strong> Everything the thing <em>is</em> sits in
+the top half; everything it <em>can do</em> sits in the bottom half. Keeping them in one box is the
+whole idea.</figcaption>
+</figure>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.4</div>
+  <div class="bd">
+    <p>You are asked to model a <strong>bank account</strong> as an object.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> List four reasonable attributes.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Any four facts that describe an account and have to be remembered between operations.
+        A standard set: account number, owner's name, current balance, interest rate.</p>
+        <p>Notice the test each one passes: if you erased it, the account would no longer be fully
+        described. "The teller's name" fails that test &mdash; it belongs to a transaction, not to
+        the account.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> List four reasonable methods.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <ul>
+          <li><em>deposit</em> &mdash; add to the balance</li>
+          <li><em>withdraw</em> &mdash; subtract from the balance, if there is enough</li>
+          <li><em>get balance</em> &mdash; report the balance without changing it</li>
+          <li><em>apply interest</em> &mdash; grow the balance by the interest rate</li>
+        </ul>
+        <p>Each one is a verb, and each one needs the account's own data to do its job. That second
+        property is the real reason it belongs to the object rather than sitting loose as an
+        ordinary function.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Why is it a bad idea to let any code anywhere in the program change the balance directly?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because the balance is not just a number &mdash; it is a number with rules attached. A
+        withdrawal must not push it below zero; a deposit must not be negative; every change might
+        need to be logged. If outside code can set the balance to anything it likes, then none of
+        those rules can be enforced, and worse, when a bad balance turns up you have no idea which
+        of the thousand lines in the program did it.</p>
+        <p>If the only way to change the balance is through <em>deposit</em> and <em>withdraw</em>,
+        the rules live in exactly two places, and those two are the only suspects. That is the
+        argument for <strong>encapsulation</strong>, which we come to in &sect;6.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Classes: the blueprint</h2>
+
+<p>If an object is a particular thing, something has to describe the <em>kind</em> of thing it is.
+That description is a class.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; class, object, instance</span></div>
+  <div class="bd">
+    <p>A <strong>class</strong> is a blueprint or template that defines the structure and behavior
+    of objects. It specifies what data attributes the object will have and what operations can be
+    performed on it.</p>
+    <p>An <strong>object</strong> is an <strong>instance</strong> of a class &mdash; an actual
+    thing created according to the class's definition, with its own copy of the data.</p>
+  </div>
+</div>
+
+<p>The blueprint of a house is not a house. You can build a hundred houses from one blueprint, and
+painting one of them blue does not change the others. In exactly the same way, one class can
+produce many objects, and changing one object's data leaves every other object alone.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 700 262" role="img" aria-label="One class blueprint producing three separate objects, each with its own values">
+  <text x="16" y="16" font-family="sans-serif" font-size="11.5" font-weight="700" fill="#64748b" letter-spacing="1">THE CLASS &mdash; WRITTEN ONCE</text>
+  <rect x="16" y="26" width="196" height="150" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="7 4"/>
+  <text x="114" y="50" font-family="sans-serif" font-size="14" font-weight="700" fill="#1d4ed8" text-anchor="middle">BankAccount</text>
+  <line x1="16" y1="60" x2="212" y2="60" stroke="#2563eb"/>
+  <g font-family="monospace" font-size="12" fill="#334155">
+    <text x="32" y="80">owner</text>
+    <text x="32" y="98">balance</text>
+  </g>
+  <line x1="32" y1="110" x2="196" y2="110" stroke="#93c5fd" stroke-dasharray="3 3"/>
+  <g font-family="monospace" font-size="12" fill="#334155">
+    <text x="32" y="130">deposit</text>
+    <text x="32" y="148">withdraw</text>
+    <text x="32" y="166">getBalance</text>
+  </g>
+  <text x="114" y="200" font-family="sans-serif" font-size="12" fill="#64748b" text-anchor="middle">No memory is used by this.</text>
+  <text x="114" y="217" font-family="sans-serif" font-size="12" fill="#64748b" text-anchor="middle">It is only a description.</text>
+
+  <line x1="222" y1="100" x2="276" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar2)"/>
+  <text x="249" y="90" font-family="sans-serif" font-size="11.5" fill="#64748b" text-anchor="middle">build</text>
+
+  <text x="292" y="16" font-family="sans-serif" font-size="11.5" font-weight="700" fill="#64748b" letter-spacing="1">THE OBJECTS &mdash; AS MANY AS YOU LIKE</text>
+
+  <g>
+    <rect x="292" y="26" width="126" height="96" rx="7" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+    <text x="355" y="46" font-family="sans-serif" font-size="12.5" font-weight="700" fill="#065f46" text-anchor="middle">object 1</text>
+    <line x1="292" y1="54" x2="418" y2="54" stroke="#059669"/>
+    <g font-family="monospace" font-size="11.5" fill="#1e293b">
+      <text x="304" y="74">owner Ada</text>
+      <text x="304" y="94">balance</text>
+      <text x="304" y="112">  1200.50</text>
+    </g>
+  </g>
+  <g>
+    <rect x="432" y="26" width="126" height="96" rx="7" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+    <text x="495" y="46" font-family="sans-serif" font-size="12.5" font-weight="700" fill="#065f46" text-anchor="middle">object 2</text>
+    <line x1="432" y1="54" x2="558" y2="54" stroke="#059669"/>
+    <g font-family="monospace" font-size="11.5" fill="#1e293b">
+      <text x="444" y="74">owner Bo</text>
+      <text x="444" y="94">balance</text>
+      <text x="444" y="112">  87.00</text>
+    </g>
+  </g>
+  <g>
+    <rect x="572" y="26" width="112" height="96" rx="7" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+    <text x="628" y="46" font-family="sans-serif" font-size="12.5" font-weight="700" fill="#065f46" text-anchor="middle">object 3</text>
+    <line x1="572" y1="54" x2="684" y2="54" stroke="#059669"/>
+    <g font-family="monospace" font-size="11.5" fill="#1e293b">
+      <text x="584" y="74">owner Cy</text>
+      <text x="584" y="94">balance</text>
+      <text x="584" y="112">  0.00</text>
+    </g>
+  </g>
+
+  <rect x="292" y="140" width="392" height="54" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+  <text x="306" y="160" font-family="sans-serif" font-size="12.5" fill="#78350f">Each object has its <tspan font-weight="700">own copy of the data</tspan>.</text>
+  <text x="306" y="180" font-family="sans-serif" font-size="12.5" fill="#78350f">All three <tspan font-weight="700">share one copy of the methods</tspan>.</text>
+  <text x="292" y="216" font-family="sans-serif" font-size="12" fill="#64748b">Changing object 2's balance does nothing to objects 1 and 3.</text>
+  <defs>
+    <marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#64748b"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption><strong>One class, many objects.</strong> The class is a description written once. Each
+object built from it gets its own data but shares the method code.</figcaption>
+</figure>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.5</div>
+  <div class="bd">
+    <p>A program models a course roster. It defines one description of what a student is, and then
+    creates three students: Ada, Bo and Cy.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many classes exist here, and how many objects?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>One class</strong> and <strong>three objects</strong>. The class is the single
+        description of what "a student" is; each of Ada, Bo and Cy is one instance built from it.</p>
+        <p>A useful sanity check: if the answer to "how many classes" is ever the same as the number
+        of individual things you are modelling, you have almost certainly misunderstood the
+        question. You do not write a new class per student any more than an architect draws a new
+        blueprint per house.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> If each student has a GPA, how many GPA values exist in memory? How many copies of the code that computes a GPA?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Three GPA values</strong> &mdash; one inside each object. Attributes are
+        per-object; that is the entire point of an object.</p>
+        <p><strong>One copy of the code.</strong> Methods are compiled once and shared by every
+        object of the class. What changes from call to call is <em>which object</em> the method is
+        working on. How the method knows that is a real question with a real answer, and we meet it
+        as the <code>this</code> pointer in Class 15.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Bo drops the course and Bo's object is destroyed. What happens to Ada's and Cy's data, and what happens to the class?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Nothing happens to either.</strong> Ada's and Cy's objects hold their own separate
+        data and are untouched. The class is a description, not a container of objects &mdash; it does
+        not shrink, and it is still there to build more students from.</p>
+        <p>This independence is exactly what the parallel-array design in &sect;1 could not give you.
+        There, "removing Bo" means deleting element 1 from four different arrays and hoping every
+        other index in the program still lines up.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Encapsulation and the interface</h2>
+
+<p>We said a class decides which operations the outside world may perform on its data. The set of
+operations it offers has a name.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; interface</span></div>
+  <div class="bd">
+    <p>An <strong>interface</strong> is a concept in programming and software development that
+    defines a contract or set of methods that a class or object must implement. It acts as a
+    blueprint for creating consistent and structured code, enabling multiple components to interact
+    seamlessly <em>without needing to know the internal details of each other</em>.</p>
+    <p>In C++ the interface of a class is, concretely, the set of things it makes
+    <strong>public</strong>. That is the promise the class makes to the rest of the program;
+    everything else is private business.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; encapsulation</span></div>
+  <div class="bd">
+    <p><strong>Encapsulation</strong> is the practice of keeping an object's data private and
+    exposing it only through a controlled public interface. The data is <em>enclosed in a capsule</em>;
+    the methods are the only doors in and out.</p>
+  </div>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 660 264" role="img" aria-label="Private data at the center of an object, reachable only through public methods; direct access from outside is blocked">
+  <text x="14" y="18" font-family="sans-serif" font-size="12" fill="#64748b">the rest of the program</text>
+  <rect x="14" y="30" width="120" height="180" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+  <g font-family="monospace" font-size="11.5" fill="#475569">
+    <text x="28" y="58">reporting.cpp</text>
+    <text x="28" y="86">teller.cpp</text>
+    <text x="28" y="114">atm.cpp</text>
+    <text x="28" y="142">audit.cpp</text>
+    <text x="28" y="170">tests.cpp</text>
+  </g>
+
+  <ellipse cx="430" cy="120" rx="150" ry="100" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+  <text x="430" y="40" font-family="sans-serif" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle">PUBLIC INTERFACE</text>
+  <g font-family="monospace" font-size="12" fill="#1d4ed8">
+    <text x="318" y="66">deposit</text>
+    <text x="470" y="66">withdraw</text>
+    <text x="318" y="188">getBalance</text>
+    <text x="470" y="188">applyInterest</text>
+  </g>
+
+  <ellipse cx="430" cy="120" rx="86" ry="46" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="430" y="112" font-family="sans-serif" font-size="11.5" font-weight="700" fill="#dc2626" text-anchor="middle">PRIVATE DATA</text>
+  <text x="430" y="132" font-family="monospace" font-size="12" fill="#7f1d1d" text-anchor="middle">balance, owner</text>
+
+  <line x1="140" y1="80" x2="286" y2="88" stroke="#059669" stroke-width="2" marker-end="url(#ar3)"/>
+  <text x="196" y="74" font-family="sans-serif" font-size="11.5" fill="#059669">allowed</text>
+
+  <line x1="140" y1="150" x2="336" y2="128" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="228" y1="146" x2="252" y2="126" stroke="#dc2626" stroke-width="3"/>
+  <line x1="228" y1="126" x2="252" y2="146" stroke="#dc2626" stroke-width="3"/>
+  <text x="150" y="205" font-family="sans-serif" font-size="11.5" fill="#dc2626">blocked &mdash; the only way in</text>
+  <text x="150" y="221" font-family="sans-serif" font-size="11.5" fill="#dc2626">is through a method</text>
+  <defs>
+    <marker id="ar3" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#059669"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption><strong>Encapsulation.</strong> The data sits at the center and nothing outside can
+touch it directly. Every route in goes through a method, which is where the rules get enforced.</figcaption>
+</figure>
+
+<p>Think about driving. The interface of a car is a steering wheel, two or three pedals, and a
+gear selector. That is a genuinely tiny interface for a machine with thousands of parts, and it is
+why you can rent a car you have never seen before and drive it out of the lot. You do not need to
+know whether the engine is a four-cylinder or an electric motor. The manufacturer is free to change
+the engine completely as long as the pedals still mean what they meant.</p>
+
+<p>A class works the same way. If <em>deposit</em> and <em>withdraw</em> are the only doors into an
+account's balance, then the author of the class can later change how the balance is stored &mdash;
+from a decimal number to an exact count of cents, say &mdash; without breaking a single line of code
+anywhere else. That freedom is what encapsulation buys.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; "interface" is not a C++ keyword</span></div>
+  <div class="bd">
+    <p>If you have seen Java, you have met an <code>interface</code> keyword. <strong>C++ has no
+    such keyword.</strong> In C++, "interface" is a design word, not a syntax word, and it means one
+    of two things depending on context:</p>
+    <ul>
+      <li>the public part of a class &mdash; this is the meaning we use for most of the semester; or</li>
+      <li>an <em>abstract base class</em>, the closest C++ equivalent of a Java interface, which we
+        build in Class 25.</li>
+    </ul>
+    <p>Do not go looking for an <code>interface</code> construct in C++. There isn't one.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.6</div>
+  <div class="bd">
+    <p>A team writes a <em>Temperature</em> class that stores its value in degrees Fahrenheit, and
+    makes that value public. Fifty other files across the project read and write it directly. A year
+    later the team needs to store the value in Celsius instead.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many files have to change?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>All fifty, plus the class itself. Every direct use of the stored value is now wrong.</p>
+        <p>And here is the part that should worry you: the compiler will only catch the uses that
+        fail to compile. A line that sets the temperature to 100 still compiles perfectly and is now
+        silently a bug, because it now means 100&deg;C rather than 100&deg;F. Those are the expensive
+        ones.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> How many files would have had to change if the value had been private from the start, reachable only through a "get Fahrenheit" and a "set Fahrenheit" method?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>One</strong> &mdash; the class itself. You change what is stored to Celsius and
+        rewrite the two methods so that "get Fahrenheit" converts on the way out and "set
+        Fahrenheit" converts on the way in.</p>
+        <p>The other fifty files still call the same two methods and never notice anything happened.
+        This is the entire argument for encapsulation in one example: <strong>a public attribute is
+        a promise about how you store things, and you can never take it back; a public method is a
+        promise about what you can do, and you can keep it while changing everything behind it.</strong></p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>The big picture: inheritance and polymorphism</h2>
+
+<p>Two more ideas, in outline only. These are the subject of the second half of the course, from
+Class 19 onward. You are not expected to be able to use them today &mdash; only to know what
+problem each one solves, so that the rest of the semester has a shape.</p>
+
+<p>Start with the problem. Suppose your drawing program needs circles, rectangles and triangles.
+All three have a color, all three have a position, all three can be moved, and all three can report
+their area. If you write three completely separate classes, you write "color", "position" and
+"move" three times &mdash; and when you fix a bug in <em>move</em>, you have to remember to fix it in
+three places.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; inheritance</span></div>
+  <div class="bd">
+    <p><strong>Inheritance</strong> lets you define a general class once and then define more
+    specific classes that automatically get everything the general one has, adding or changing only
+    what is different.</p>
+    <p>The general class is called the <strong>base class</strong>; the specific ones are
+    <strong>derived classes</strong>. The relationship is read as <strong>IS-A</strong>: a circle
+    <em>is a</em> shape.</p>
+  </div>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 660 244" role="img" aria-label="A Shape base class with Circle, Rectangle and Triangle derived from it, each supplying its own area">
+  <rect x="240" y="12" width="180" height="72" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.5"/>
+  <text x="330" y="33" font-family="sans-serif" font-size="13.5" font-weight="700" fill="#6d28d9" text-anchor="middle">Shape</text>
+  <line x1="240" y1="42" x2="420" y2="42" stroke="#7c3aed"/>
+  <text x="254" y="60" font-family="monospace" font-size="11.5" fill="#334155">color, position</text>
+  <text x="254" y="77" font-family="monospace" font-size="11.5" fill="#334155">move, area</text>
+  <text x="440" y="52" font-family="sans-serif" font-size="12" fill="#64748b">written once</text>
+
+  <line x1="330" y1="84" x2="330" y2="106" stroke="#7c3aed" stroke-width="2"/>
+  <line x1="106" y1="106" x2="554" y2="106" stroke="#7c3aed" stroke-width="2"/>
+  <line x1="106" y1="106" x2="106" y2="130" stroke="#7c3aed" stroke-width="2" marker-end="url(#ar4)"/>
+  <line x1="330" y1="106" x2="330" y2="130" stroke="#7c3aed" stroke-width="2" marker-end="url(#ar4)"/>
+  <line x1="554" y1="106" x2="554" y2="130" stroke="#7c3aed" stroke-width="2" marker-end="url(#ar4)"/>
+
+  <rect x="26" y="138" width="160" height="66" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="1.8"/>
+  <text x="106" y="158" font-family="sans-serif" font-size="13" font-weight="700" fill="#6d28d9" text-anchor="middle">Circle</text>
+  <line x1="26" y1="166" x2="186" y2="166" stroke="#c4b5fd"/>
+  <text x="40" y="184" font-family="monospace" font-size="11.5" fill="#334155">radius</text>
+  <text x="40" y="199" font-family="monospace" font-size="11.5" fill="#334155">its own area</text>
+
+  <rect x="250" y="138" width="160" height="66" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="1.8"/>
+  <text x="330" y="158" font-family="sans-serif" font-size="13" font-weight="700" fill="#6d28d9" text-anchor="middle">Rectangle</text>
+  <line x1="250" y1="166" x2="410" y2="166" stroke="#c4b5fd"/>
+  <text x="264" y="184" font-family="monospace" font-size="11.5" fill="#334155">width, height</text>
+  <text x="264" y="199" font-family="monospace" font-size="11.5" fill="#334155">its own area</text>
+
+  <rect x="474" y="138" width="160" height="66" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="1.8"/>
+  <text x="554" y="158" font-family="sans-serif" font-size="13" font-weight="700" fill="#6d28d9" text-anchor="middle">Triangle</text>
+  <line x1="474" y1="166" x2="634" y2="166" stroke="#c4b5fd"/>
+  <text x="488" y="184" font-family="monospace" font-size="11.5" fill="#334155">base, height</text>
+  <text x="488" y="199" font-family="monospace" font-size="11.5" fill="#334155">its own area</text>
+
+  <text x="330" y="230" font-family="sans-serif" font-size="12.5" fill="#64748b" text-anchor="middle">Each derived class inherits color, position and move &mdash; and supplies its own area.</text>
+  <defs>
+    <marker id="ar4" markerWidth="8" markerHeight="8" refX="4" refY="7" orient="0">
+      <path d="M0,0 L8,0 L4,8 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption><strong>Inheritance.</strong> The shared parts are written once in the base class. Each
+derived class adds only what makes it different. Class 19 onward.</figcaption>
+</figure>
+
+<p>Now the second idea, which is what inheritance is really <em>for</em>. Once every shape is a
+<em>Shape</em>, you can put all of them in one list and tell the whole list to draw itself &mdash;
+without your code knowing or caring which one is which. Each object runs its own version.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; polymorphism</span></div>
+  <div class="bd">
+    <p><strong>Polymorphism</strong> means "many forms." It is the ability to write <em>one</em>
+    instruction &mdash; "draw yourself" &mdash; and have each object respond in the way that is
+    right for what it actually is.</p>
+    <p>The code that gives the instruction does not need to be changed when you invent a new kind of
+    shape. That is the payoff, and it is the reason this is the last big topic of the course.</p>
+  </div>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 660 172" role="img" aria-label="One loop sends the same draw instruction to a circle, a rectangle and a triangle; each responds differently">
+  <rect x="14" y="46" width="176" height="76" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"/>
+  <text x="102" y="68" font-family="sans-serif" font-size="12.5" font-weight="700" fill="#334155" text-anchor="middle">your code, written once</text>
+  <text x="102" y="94" font-family="monospace" font-size="12.5" fill="#1e293b" text-anchor="middle">for each shape s:</text>
+  <text x="102" y="112" font-family="monospace" font-size="12.5" fill="#1e293b" text-anchor="middle">s.draw()</text>
+
+  <line x1="196" y1="84" x2="268" y2="42" stroke="#059669" stroke-width="2" marker-end="url(#ar5)"/>
+  <line x1="196" y1="84" x2="268" y2="84" stroke="#059669" stroke-width="2" marker-end="url(#ar5)"/>
+  <line x1="196" y1="84" x2="268" y2="126" stroke="#059669" stroke-width="2" marker-end="url(#ar5)"/>
+  <text x="232" y="20" font-family="sans-serif" font-size="12" fill="#059669" text-anchor="middle">same instruction</text>
+
+  <circle cx="300" cy="42" r="17" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <rect x="283" y="68" width="34" height="32" rx="2" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <path d="M300,110 L318,142 L282,142 z" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+
+  <text x="336" y="47" font-family="sans-serif" font-size="12.5" fill="#1e293b">draws a circle &mdash; Circle's own version runs</text>
+  <text x="336" y="89" font-family="sans-serif" font-size="12.5" fill="#1e293b">draws a rectangle &mdash; Rectangle's version</text>
+  <text x="336" y="131" font-family="sans-serif" font-size="12.5" fill="#1e293b">draws a triangle &mdash; Triangle's version</text>
+  <defs>
+    <marker id="ar5" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#059669"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption><strong>Polymorphism.</strong> One instruction, three different behaviors, chosen by
+what each object actually is. Add a fifth kind of shape later and the loop does not change.
+Class 24.</figcaption>
+</figure>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.6</div>
+  <div class="bd">
+    <p>You are designing a payroll program with salaried employees, hourly employees and
+    contractors. All three have a name and an ID; all three can report how much they are owed this
+    month, but each one calculates that differently.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What should the base class be, and what should go in it?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>A general <em>Employee</em> class, holding the things all three genuinely share &mdash;
+        name and ID &mdash; plus the <em>idea</em> of "report how much you are owed."</p>
+        <p>The test for whether something belongs in the base class is not "do two of them have it"
+        but "does <strong>every</strong> derived class have it, and does it mean the same thing for
+        each." An hourly rate fails that test: a salaried employee does not have one.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Which of the three ideas from today &mdash; encapsulation, inheritance, polymorphism &mdash; lets you write "print every worker's pay slip" as a single loop that never mentions the three kinds by name?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Polymorphism.</strong> The loop asks each worker for the amount owed; each one
+        answers using its own calculation. Inheritance is what makes the loop <em>possible</em>
+        &mdash; it is what lets all three be treated as employees in the first place &mdash; but
+        polymorphism is what makes each one behave correctly.</p>
+        <p>The practical measure of whether you got this right: when the company adds a fourth kind
+        of worker next year, how much existing code has to change? With this design, none of it. The
+        new class is written, and the loop that prints the pay slips is not touched.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span><code>const</code>: a promise to the compiler</h2>
+
+<p>Back to concrete C++. Some of an object's methods change it and some only read it &mdash;
+<em>deposit</em> changes an account, <em>get balance</em> does not. C++ lets you write that
+distinction down, and the keyword is <code>const</code>. From Class 10 onward it appears in almost
+every method we write, so it is worth pinning down now.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>const</code></span></div>
+  <div class="bd">
+    <p>The <code>const</code> keyword is a <strong>promise to the compiler that something cannot be
+    modified after its initial assignment or definition.</strong></p>
+    <p>It is not a hint or a convention. The compiler checks it, and if you break the promise
+    anywhere in the program, compilation fails. That is the point: a broken <code>const</code>
+    promise becomes a compile-time error rather than a run-time bug.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; keeping the promise, then breaking it</span></div>
+  <div class="bd">
+    <p>First, a legal program. <code>DAYS_IN_WEEK</code> never changes; <code>weeks</code> does.
+    Predict the three lines of output.</p>
+<div class="codewrap"><div class="cap">constdemo.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int DAYS_IN_WEEK = 7;
+    int weeks = 3;
+
+    cout &lt;&lt; "weeks = " &lt;&lt; weeks &lt;&lt; endl;
+    cout &lt;&lt; "days  = " &lt;&lt; weeks * DAYS_IN_WEEK &lt;&lt; endl;
+
+    weeks = 4;                       // fine: weeks is not const
+    cout &lt;&lt; "days  = " &lt;&lt; weeks * DAYS_IN_WEEK &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">weeks = 3
+days  = 21
+days  = 28</pre>
+<p>Nothing surprising: a <code>const</code> variable can be <em>read</em> as often as you like. The
+restriction is only on writing to it. Naming constants in capitals is a widespread convention, not
+a language rule &mdash; but follow it, because it makes the promise visible at every use site.</p>
+
+</div></details>
+
+    <p>Now the same program with one line changed, so that it breaks the promise. What does the
+    compiler do?</p>
+<div class="codewrap"><div class="cap">constbad.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int DAYS_IN_WEEK = 7;
+    DAYS_IN_WEEK = 8;                // the promise is broken here
+    cout &lt;&lt; DAYS_IN_WEEK &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constbad.cpp: In function 'int main()':
+constbad.cpp:6:18: error: assignment of read-only variable 'DAYS_IN_WEEK'
+    6 |     DAYS_IN_WEEK = 8;                // the promise is broken here
+      |     ~~~~~~~~~~~~~^~~</pre>
+<p>No executable is produced. This is a <strong>compile-time</strong> error, and that is exactly
+what you want: the mistake is caught before the program ever runs, on your machine, rather than in
+front of a user. <em>"assignment of read-only variable"</em> is g++'s standard phrasing for a
+broken <code>const</code> promise &mdash; learn to recognize it, because you will see it many times
+this semester, usually because you called a non-<code>const</code> method on a <code>const</code>
+object.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.6</div>
+  <div class="bd">
+    <p>Which of these four lines compile, and which do not? Assume each is the next statement after
+    <code>const double PI = 3.14159;</code> and <code>double r = 2.0;</code>.</p>
+<pre><code class="language-cpp">double c = 2 * PI * r;      // (i)
+PI = 3.14;                  // (ii)
+r = PI;                     // (iii)
+const double E = PI;        // (iv)</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Ask one question about each line: <em>is anything being written into
+      a <code>const</code> variable?</em> Reading a <code>const</code> is always fine; only assignment to it is banned.</p>
+      <table class="trace">
+        <tr><th>Line</th><th>Verdict</th><th>Why</th></tr>
+        <tr><td>(i)</td><td>Compiles</td><td><code>PI</code> is only read. Its value flows into a new, ordinary variable.</td></tr>
+        <tr><td>(ii)</td><td><strong>Error</strong></td><td>Assignment to a read-only variable. This is the broken promise.</td></tr>
+        <tr><td>(iii)</td><td>Compiles</td><td><code>r</code> is not <code>const</code>, so writing to it is fine. Copying <em>out of</em> a <code>const</code> is always allowed.</td></tr>
+        <tr><td>(iv)</td><td>Compiles</td><td>A <code>const</code> may be initialized from another <code>const</code>. Initialization is not assignment &mdash; it is the one write a <code>const</code> is allowed, and it must happen at the declaration.</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> The distinction in (iv) is subtle but it comes back
+      hard later. <code>const double E = PI;</code> is legal, but splitting it into
+      <code>const double E; E = PI;</code> is <em>two</em> errors: a <code>const</code> must be
+      initialized where it is declared, and it cannot be assigned afterwards. When we reach member
+      initializer lists in Class 13, this is precisely why <code>const</code> data members can only
+      be set there.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s9"><span class="num">9.</span>A puzzle to take into Class 2</h2>
+
+<p>Here is a program from the CSCI 111 material you already know. It defines two functions that
+look almost identical and are supposed to do the same job &mdash; swap two integers. One of them
+works. One of them does absolutely nothing. Read them carefully before you reveal the output.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; two swaps, one of which is a no-op</span></div>
+  <div class="bd">
+    <p>The only difference between the two functions is two <code>&amp;</code> characters in the
+    parameter list of the second one. Predict all three lines.</p>
+<div class="codewrap"><div class="cap">swap12.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void swap1(int u, int v) {
+    int t = u;
+    u = v;
+    v = t;
+}
+
+void swap2(int &amp;u, int &amp;v) {
+    int t = u;
+    u = v;
+    v = t;
+}
+
+int main() {
+    int a = 3;
+    int b = 4;
+    int c = 5;
+    int d = 6;
+    cout &lt;&lt; "original: " &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; " " &lt;&lt; c &lt;&lt; " " &lt;&lt; d &lt;&lt; endl;
+    swap1(a,b);
+    cout &lt;&lt; "swap1: " &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    swap2(c,d);
+    cout &lt;&lt; "swap2: " &lt;&lt; c &lt;&lt; " " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">original: 3 4 5 6
+swap1: 3 4
+swap2: 6 5</pre>
+<p><code>swap1</code> did nothing. <code>a</code> and <code>b</code> came back exactly as they went
+in. <code>swap2</code>, which differs only by those two <code>&amp;</code> characters, worked.</p>
+<p>The reason, in one sentence: <code>swap1(int u, int v)</code> receives <em>copies</em> of
+<code>a</code> and <code>b</code>, so it dutifully swaps the copies and then throws them away when
+it returns; <code>swap2(int &amp;u, int &amp;v)</code> receives the caller's variables
+<em>themselves</em>, under the local names <code>u</code> and <code>v</code>, so swapping them
+swaps the originals.</p>
+<p>That is the whole story of <em>call by value</em> versus <em>call by reference</em>, and it is
+the first thing we take apart properly in Class 2. It matters far beyond swapping: once objects
+enter the picture, passing by value means <em>copying an entire object</em> every time you call a
+function, and knowing when a copy happens is the difference between a correct program and a
+mysterious one.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 1.6</div>
+  <div class="bd">
+    <p>Without changing <code>main</code>, what is the smallest edit that makes <code>swap1</code>
+    actually swap? And why is the function then indistinguishable from <code>swap2</code>?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The body of <code>swap1</code> is already correct &mdash; the
+      three-line temp swap is textbook. The bug is entirely in how the parameters arrive. So the fix
+      is in the signature, not the body.</p>
+      <p>Add two ampersands:</p>
+<pre><code class="language-cpp">void swap1(int &amp;u, int &amp;v) {
+    int t = u;
+    u = v;
+    v = t;
+}</code></pre>
+      <p>At that point <code>swap1</code> and <code>swap2</code> are character-for-character the same
+      function apart from the name, and both print a genuine swap.</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The <code>&amp;</code> goes in the <em>parameter list of the function</em>, not at the
+          call site. <code>main</code> still writes <code>swap1(a,b);</code> with no decoration at
+          all. In C++ you cannot tell from the call whether an argument is being passed by value or
+          by reference &mdash; you have to look at the function's declaration. That is a real
+          readability cost of the feature, and a reason to keep function declarations visible.</li>
+        <li>The three-statement idiom <code>int t = u; u = v; v = t;</code> needs the temporary.
+          Writing <code>u = v; v = u;</code> loses the original <code>u</code> on the first line and
+          leaves both variables equal.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 1</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 are the two exercises posed in the original course notes for this lecture.
+    Problems 3, 4 and 5 are additional, written in the style of the exam questions used in this
+    course &mdash; short output-prediction items and "write N C++ statements" items.</p>
+    <p>Work each one on paper or in a compiler <em>before</em> opening the answer. On an exam,
+    output-prediction parts typically carry no partial credit, so the habit of committing to an
+    answer first is worth building now.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Greatest common divisor <span class="muted small">(from the course notes)</span></h3>
+
+<p>Write a function that calculates the greatest common divisor (GCD) of two positive integers.
+Include a <code>main</code> that tests it on at least three pairs.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Euclid's algorithm, as worked through in Quick Check 1.3: while
+  <code>b</code> is not zero, replace the pair <code>(a, b)</code> with <code>(b, a % b)</code>.
+  When the loop ends, <code>a</code> holds the answer.</p>
+<div class="codewrap"><div class="cap">gcd.cpp</div><pre><code class="language-cpp">// gcd.cpp -- greatest common divisor of two positive integers
+#include &lt;iostream&gt;
+using namespace std;
+
+int gcd(int a, int b) {
+    while (b != 0) {
+        int r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+
+int main() {
+    cout &lt;&lt; "gcd(48, 18) = " &lt;&lt; gcd(48, 18) &lt;&lt; endl;
+    cout &lt;&lt; "gcd(17, 5)  = " &lt;&lt; gcd(17, 5)  &lt;&lt; endl;
+    cout &lt;&lt; "gcd(270, 192) = " &lt;&lt; gcd(270, 192) &lt;&lt; endl;
+    cout &lt;&lt; "gcd(9, 9)   = " &lt;&lt; gcd(9, 9)   &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">gcd(48, 18) = 6
+gcd(17, 5)  = 1
+gcd(270, 192) = 6
+gcd(9, 9)   = 9</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The parameters are taken <em>by value</em> on purpose. The function modifies <code>a</code>
+      and <code>b</code> as it works, and taking copies means the caller's variables are untouched.
+      This is a case where call by value is exactly what you want &mdash; it is not always the wrong
+      choice.</li>
+    <li><code>gcd(17, 5)</code> is 1 because 17 and 5 share no factor; such pairs are called
+      <em>relatively prime</em>. Always test one of these.</li>
+    <li>A recursive version is equally correct and even shorter. Either is acceptable; the loop
+      version uses constant stack space, which is the only practical difference at these sizes.</li>
+    <li>If the problem had allowed zero or negative inputs you would need a guard. As stated the
+      inputs are positive, so no guard is required &mdash; but say so in a comment. On an exam,
+      stating your assumption costs one line and protects you.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; The two swap functions <span class="muted small">(from the course notes)</span></h3>
+
+<p>Consider the two functions <code>swap1</code> and <code>swap2</code> from &sect;9. State exactly
+what the program prints, and explain in your own words why the two functions behave differently.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Two things are being asked: the literal output, and the mechanism. For
+  the output, trace <code>main</code> line by line, remembering that <code>swap1</code> cannot
+  affect <code>main</code>'s variables. For the mechanism, describe what the parameter actually
+  <em>is</em> in each case.</p>
+<pre class="out">original: 3 4 5 6
+swap1: 3 4
+swap2: 6 5</pre>
+  <p><strong>Why.</strong> When <code>main</code> calls <code>swap1(a, b)</code>, the parameters
+  <code>u</code> and <code>v</code> are brand-new local variables inside <code>swap1</code>,
+  initialized with copies of the values 3 and 4. The function swaps those two local variables
+  perfectly well &mdash; and then the function returns, the locals are destroyed, and
+  <code>a</code> and <code>b</code> in <code>main</code> have never been touched. This is
+  <strong>call by value</strong>.</p>
+  <p>When <code>main</code> calls <code>swap2(c, d)</code>, the <code>&amp;</code> in
+  <code>int &amp;u</code> makes <code>u</code> a <em>reference</em> &mdash; another name for
+  <code>main</code>'s variable <code>c</code>, not a copy of it. Every read of <code>u</code> reads
+  <code>c</code>, and every write to <code>u</code> writes <code>c</code>. So the swap lands on the
+  originals. This is <strong>call by reference</strong>.</p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Trace the first output line carefully: it prints all four variables
+      <em>before</em> anything is swapped, hence <code>3 4 5 6</code>.</li>
+    <li>The second and third lines each print only two variables, so the answer is
+      <code>3 4</code> and <code>6 5</code>, not four numbers each.</li>
+    <li><code>swap1</code> is not a typo in the original notes &mdash; it is deliberately broken to
+      make the point. Do not "correct" it when you are asked to trace it.</li>
+    <li>The lesson generalizes: any function that must <em>change</em> its caller's variable needs a
+      reference parameter (or, from Class 7, a pointer). A function that only needs to <em>read</em>
+      its argument should take it by value if it is small, or by <code>const</code> reference if it
+      is large &mdash; which is Class 2's material.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Predict the output <span class="muted small">(added)</span></h3>
+
+<p>State the exact output of this program, line by line. Be careful with the arithmetic types.</p>
+
+<div class="codewrap"><div class="cap">qc_output.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n = 7;
+    double avg = 10.0 / 4;
+    cout &lt;&lt; "n = " &lt;&lt; n &lt;&lt; ", n / 2 = " &lt;&lt; n / 2 &lt;&lt; endl;
+    cout &lt;&lt; "avg = " &lt;&lt; avg &lt;&lt; endl;
+    cout &lt;&lt; "sum = " &lt;&lt; 3 + 4 &lt;&lt; endl;
+    cout &lt;&lt; 1.0 + 3.0 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Four independent lines. For each one, decide the <em>type</em> of every
+  expression before deciding its value &mdash; in C++ the type is what determines whether you get
+  integer division, and it determines how the result is printed.</p>
+<pre class="out">n = 7, n / 2 = 3
+avg = 2.5
+sum = 7
+4</pre>
+  <table class="trace">
+    <tr><th>Line</th><th>Reasoning</th></tr>
+    <tr><td>1</td><td><code>n / 2</code> is <code>int / int</code>, so it is <strong>integer division</strong>: 7 divided by 2 is 3, remainder discarded. Not 3.5.</td></tr>
+    <tr><td>2</td><td><code>10.0 / 4</code> has one <code>double</code> operand, so the <code>4</code> is converted to <code>4.0</code> and the division is floating point: 2.5.</td></tr>
+    <tr><td>3</td><td><code>+</code> binds tighter than <code>&lt;&lt;</code>, so this is <code>cout &lt;&lt; "sum = " &lt;&lt; 7</code>. Prints <code>sum = 7</code>.</td></tr>
+    <tr><td>4</td><td>The value is the <code>double</code> 4.0, but <code>cout</code>'s default formatting drops the trailing zeros, so it appears as <code>4</code>.</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Line 4 is the trap, and it is a favourite on output-prediction questions. A
+      <code>double</code> whose value happens to be a whole number prints with no decimal point at
+      all. Writing <code>4.0</code> as your answer is wrong.</li>
+    <li>Line 3 is the other trap, in the opposite direction. <code>cout &lt;&lt; 3 + 4</code> works
+      because <code>+</code> has higher precedence than <code>&lt;&lt;</code>. But
+      <code>cout &lt;&lt; 3 &lt; 4</code> would not do what you expect, because <code>&lt;&lt;</code>
+      and <code>&lt;</code> group left to right. When in doubt, parenthesize.</li>
+    <li>Integer division is the most common source of silently wrong numeric answers in this course.
+      If you want a real average, make sure at least one operand is a <code>double</code> &mdash;
+      <code>sum / 2.0</code>, or <code>static_cast&lt;double&gt;(sum) / count</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; Write five C++ statements <span class="muted small">(added)</span></h3>
+
+<p>Write five C++ statements, in order, that: (1) declare a constant integer <code>MAX_SCORE</code>
+equal to 100; (2) declare an integer <code>score</code> equal to 87; (3) declare a
+<code>double</code> called <code>percent</code> holding <code>score</code> as a percentage of
+<code>MAX_SCORE</code>; (4) print <code>percent</code>; (5) end <code>main</code> normally.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Statement (3) is the only one with any thought in it. Both
+  <code>score</code> and <code>MAX_SCORE</code> are <code>int</code>, so <code>score / MAX_SCORE</code>
+  would be integer division and evaluate to <strong>0</strong>. The fix is to force floating-point
+  arithmetic by making one operand a <code>double</code>; the cleanest way is to write the literal as
+  <code>100.0</code> and to put it first so the conversion happens before the division.</p>
+<div class="codewrap"><div class="cap">five_statements.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int MAX_SCORE = 100;                    // (1)
+    int score = 87;                               // (2)
+    double percent = 100.0 * score / MAX_SCORE;   // (3)
+    cout &lt;&lt; "percent = " &lt;&lt; percent &lt;&lt; endl;      // (4)
+    return 0;                                     // (5)
+}</code></pre></div>
+<pre class="out">percent = 87</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>100.0 * score / MAX_SCORE</code> evaluates left to right: <code>100.0 * 87</code> is
+      the <code>double</code> 8700.0, then dividing by 100 gives 87.0. Had you written
+      <code>score / MAX_SCORE * 100.0</code> you would get <code>0 * 100.0</code>, that is
+      <strong>0</strong> &mdash; a completely wrong answer that compiles without a murmur.</li>
+    <li>The output is <code>87</code>, not <code>87.0</code> &mdash; the same default formatting rule
+      as Problem 3.</li>
+    <li><code>MAX_SCORE</code> is <code>const</code> because it is a fixed property of the problem.
+      Marking it so means a later stray <code>MAX_SCORE = 90;</code> is a compile error rather than
+      a bug.</li>
+    <li>On an exam that asks for "five statements", write exactly five and number them in comments.
+      Rubrics for this style of question award points per statement, so a clearly labelled partial
+      answer still scores.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>Every C++ program has the same five parts: <code>#include</code> directives, the
+        <code>using</code> directive, <code>int main()</code>, the body, and <code>return 0;</code>.</li>
+      <li>Compile with <code>g++ file.cpp -o name</code> and run with <code>./name</code>. Leave off
+        <code>-o name</code> and the executable is called <code>a.out</code> instead.</li>
+      <li>Compile-time errors stop the executable from being produced; run-time errors happen while
+        it runs. Fix the <em>first</em> compiler error and recompile.</li>
+      <li><strong>OOP</strong> organizes a program around <strong>objects</strong>, each bundling
+        <strong>data</strong> (attributes) with <strong>behavior</strong> (methods). Nouns tend to
+        become attributes; verbs tend to become methods.</li>
+      <li>A <strong>class</strong> is the blueprint; an <strong>object</strong> is an
+        <strong>instance</strong> built from it. Many objects, one class. Each object has its own
+        copy of the data; the method code is shared.</li>
+      <li>A class's <strong>interface</strong> is what it makes public &mdash; the contract it offers
+        the rest of the program. <strong>Encapsulation</strong> means keeping the data private and
+        reachable only through that interface, so the representation can change without breaking
+        anyone.</li>
+      <li><strong>Inheritance</strong> lets a specific class reuse everything a general class has,
+        adding only what differs. <strong>Polymorphism</strong> lets one instruction produce the
+        right behavior for whatever the object actually is. Those two are the second half of the
+        course.</li>
+      <li><code>const</code> is a promise to the compiler that something will not be modified. Break
+        it and you get <em>"assignment of read-only variable"</em> at compile time.</li>
+      <li>By default <code>cout</code> prints a floating-point value to six significant digits and
+        drops trailing zeros, so <code>4.0</code> appears as <code>4</code>.</li>
+      <li><code>swap1</code> fails and <code>swap2</code> works because of two <code>&amp;</code>
+        characters: copies versus the caller's own variables.</li>
+    </ul>
+    <p><strong>Coming up in Class 2:</strong> we take those two ampersands apart properly &mdash;
+    call by value versus call by reference, <code>const</code> reference parameters, returning a
+    reference, function overloading, and how to split a program across several files with headers.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 2 &middot; Functions &amp; References</div><div class="pending">posts Thu Sep 3</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>
