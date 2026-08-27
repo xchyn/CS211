@@ -1,0 +1,3225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 19 — Inheritance I | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 19 &middot; Inheritance I</span><span class="sep">|</span><span class="where">Thu Nov 5</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 19 &middot; CSCI 211</div>
+  <h1>Inheritance I &mdash; IS-A, Derived Classes and <code>protected</code></h1>
+  <p class="sub">Every square is a rectangle. Today we teach the compiler that sentence, and get a
+  whole class's worth of code for free in the process.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>State the two problems inheritance solves &mdash; duplicated code and the missing
+        "is a kind of" relationship &mdash; and recognize a hierarchy when you see one.</li>
+      <li>Write <code>class Derived : public Base</code> and use the words <em>base class</em>,
+        <em>derived class</em>, <em>parent</em> and <em>inherits</em> correctly.</li>
+      <li>Say exactly which members a derived class inherits, and name the four things it does
+        <strong>not</strong> inherit.</li>
+      <li>Draw the memory picture of a derived object &mdash; the base sub-object plus the extra
+        members &mdash; and explain what "IS-A" means concretely.</li>
+      <li>Decide whether two classes are related by <strong>IS-A</strong> (inheritance) or
+        <strong>HAS-A</strong> (composition), and say what goes wrong when you choose the
+        wrong one.</li>
+      <li><strong>Override</strong> a method in a derived class, and walk the inheritance tree the
+        way the compiler does to work out which version a call <code>d.f()</code> runs.</li>
+      <li>Use the term <strong>static binding</strong> for that compile-time decision, and say what
+        it is going to be contrasted with later.</li>
+      <li>Explain why <code>private</code> locks a derived class out, what <code>protected</code> grants instead, and why
+        experienced programmers still argue that <code>protected</code> <em>data</em> is usually a mistake.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">The problem: two classes, one body of code</a></li>
+    <li><a href="#s2">The syntax: <code>class B : public A</code></a></li>
+    <li><a href="#s3">What a derived object actually contains</a></li>
+    <li><a href="#s4">IS-A or HAS-A? Inheritance versus composition</a></li>
+    <li><a href="#s5">Overriding, and how the compiler resolves a call</a></li>
+    <li><a href="#s6"><code>private</code> is an absolute lock-out</a></li>
+    <li><a href="#s7"><code>protected</code>, and when not to use it</a></li>
+    <li><a href="#s8">The running example: <code>Rectangle</code> and <code>Square</code></a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>The problem: two classes, one body of code</h2>
+
+<p>Classes 9 through 18 gave you one class at a time. You can build a type, initialize it, copy it,
+destroy it and overload its operators. What you cannot yet do is say that <em>one of your types is a
+kind of another one</em> &mdash; and that turns out to be the single most common relationship
+between real types.</p>
+
+<p>As the professor puts it: <em>"as with much else in object-oriented programming, we observe the
+fundamental concepts all around us in everyday life."</em> You can motivate inheritance without
+mentioning a computer at all. Take rectangles and squares:</p>
+
+<ol>
+  <li>Every square is a rectangle.</li>
+  <li>Every square has &mdash; <strong>inherits</strong> &mdash; all the properties of a
+    rectangle. It has a height, a width, an area, a perimeter.</li>
+  <li>A square also has specialized properties that not all rectangles share. It has an
+    <em>edge length</em>, a single number that describes it completely.</li>
+  <li>A square is therefore a <strong>specialization</strong> of the parent, or base case, of a
+    rectangle.</li>
+</ol>
+
+<p>Now write those two ideas as two independent C++ classes and watch what happens.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the duplication you are trying to avoid</span></div>
+  <div class="bd">
+    <p>Two classes, written the way you would have written them in Class 10. Before you open the
+    toggle, count how many <em>lines</em> of <code>Square</code> are character-for-character
+    identical to a line of <code>Rectangle</code>.</p>
+<div class="codewrap"><div class="cap">dupe.cpp</div><pre><code class="language-cpp">// dupe.cpp -- the problem inheritance solves: one class copy-pasted into another
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    void set(double ht, double wd) { h = ht; w = wd; }
+    double height() const    { return h; }
+    double width() const     { return w; }
+    double area() const      { return h * w; }
+    double perimeter() const { return 2 * (h + w); }
+    void print() const {
+        cout &lt;&lt; "Rectangle " &lt;&lt; w &lt;&lt; " x " &lt;&lt; h &lt;&lt; ", area " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double h, w;
+};
+
+class Square {
+public:
+    void set(double e)       { h = e; w = e; }
+    double height() const    { return h; }        // copied
+    double width() const     { return w; }        // copied
+    double area() const      { return h * w; }    // copied
+    double perimeter() const { return 2 * (h + w); }  // copied
+    double edge() const      { return h; }        // new
+    void print() const {
+        cout &lt;&lt; "Square edge " &lt;&lt; h &lt;&lt; ", area " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double h, w;
+};
+
+int main() {
+    Rectangle r;
+    r.set(3.0, 4.0);
+    r.print();
+
+    Square s;
+    s.set(2.5);
+    s.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Rectangle 4 x 3, area 12
+Square edge 2.5, area 6.25</pre>
+<p>Four method bodies plus the two data members are duplicated verbatim. That is not a style
+complaint &mdash; it is a maintenance bomb with a timer on it:</p>
+<ul>
+  <li>Suppose you decide that <code>area()</code> should never return a negative number, so you
+    change it to <code>fabs(h * w)</code>. You must remember to change it in <em>both</em> places.
+    Miss one and you have a bug that only shows up for one of the two types.</li>
+  <li>Add a third shape and the copying happens again.</li>
+  <li>Nothing in the code says a square <em>is</em> a rectangle. To the compiler these two classes
+    are as unrelated as <code>string</code> and <code>ifstream</code>. You cannot write a function
+    that accepts "any rectangle" and pass it a square.</li>
+</ul>
+<p>Both of those problems have the same fix.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; inheritance, base class, derived class</span></div>
+  <div class="bd">
+    <p><strong>Inheritance</strong> is a mechanism by which one class acquires all the members of
+    another class, and may then add to them or replace some of them.</p>
+    <p>The class being inherited from is the <strong>base class</strong> (also called the
+    <strong>parent</strong>). The class doing the inheriting is the <strong>derived class</strong>
+    &mdash; we say it <strong>derives from</strong>, or <strong>inherits from</strong>, the base
+    class.</p>
+    <p>Inheritance is a computer-science concept, not a C++ feature. It is a major feature of Java,
+    C#, Python and many other languages, and the vocabulary above travels with it.</p>
+  </div>
+</div>
+
+<p>The relationship does not stop at one level. Step back from rectangles and take
+<em>polygon</em> as the base case:</p>
+
+<ul>
+  <li>Every triangle is a polygon.</li>
+  <li>Every rectangle is also a polygon.</li>
+  <li>Every equilateral triangle is a triangle.</li>
+  <li>Every square is a rectangle.</li>
+  <li>However, a rectangle is <em>not</em> a triangle, and a triangle is not a rectangle.</li>
+</ul>
+
+<p>Drawn out, that is a <strong>tree</strong>: each shape inherits from its parent, and from its
+parent's parent, and so on up to the root. The tree can go as many levels deep as you like &mdash;
+there is no upper limit &mdash; and each branch can have sub-branches.</p>
+
+<table class="trace">
+  <tr><th>Level</th><th>Classes at this level</th><th>Each one inherits from</th></tr>
+  <tr><td>0 (root)</td><td><code>Polygon</code></td><td>&mdash; nothing</td></tr>
+  <tr><td>1</td><td><code>Triangle</code>, <code>Rectangle</code></td><td><code>Polygon</code></td></tr>
+  <tr><td>2</td><td><code>EquilateralTriangle</code> (under <code>Triangle</code>), <code>Square</code> (under <code>Rectangle</code>)</td><td>its own parent &mdash; and, through it, <code>Polygon</code></td></tr>
+</table>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Inheritance buys you two things at once, and you should be able to name both. First,
+    <strong>code reuse</strong>: the derived class gets the base class's members without retyping
+    them. Second, and more importantly, a <strong>modelling claim</strong>: the code now
+    <em>states</em> that a square is a kind of rectangle, and the compiler will act on that
+    statement.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.1</div>
+  <div class="bd">
+    <p>Look again at <code>dupe.cpp</code> above.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> If <code>Square</code> were made to inherit from <code>Rectangle</code>, which of its members would you delete outright?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Everything that was copied: <code>height()</code>, <code>width()</code>,
+        <code>area()</code>, <code>perimeter()</code>, and the data members <code>h</code> and
+        <code>w</code>. Six members gone.</p>
+        <p>What survives is exactly the part that is <em>special about squares</em>:
+        <code>edge()</code>, the one-argument <code>set()</code>, and a <code>print()</code> that
+        says "Square" instead of "Rectangle". That is the shape a good derived class has &mdash;
+        small, and made only of the differences.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Name one bug that the duplicated version makes possible and the inherited version does not.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Any change applied to one copy and not the other. Concretely: change
+        <code>Rectangle::area()</code> to <code>fabs(h * w)</code> so it copes with negative sides,
+        forget <code>Square::area()</code>, and now <code>Rectangle</code> and <code>Square</code>
+        disagree about what "area" means. Nothing in the program flags it; the two functions were
+        never connected in the first place.</p>
+        <p>With inheritance there is only one <code>area()</code> in the program. There is nothing
+        to keep in sync, because there is nothing to sync <em>with</em>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Give a pair of classes from earlier in this course that are <em>not</em> in an inheritance relationship, and say why not.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>Point</code> and <code>Rectangle</code> from Classes 9 and 13, for example. A
+        rectangle is not "a kind of point" and a point is not "a kind of rectangle" &mdash; a
+        rectangle might well <em>have</em> a corner point, which is a different relationship
+        entirely (&sect;4).</p>
+        <p>The test to apply is the English sentence. If <em>"every X is a Y"</em> is true and
+        useful, inheritance is on the table. If it reads as nonsense, it is not.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>The syntax: <code>class B : public A</code></h2>
+
+<p>The professor introduces the syntax on the smallest possible example: a class with four methods
+and no data at all. Here it is on its own first, so that the output of the next program has
+something to be compared with.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the base class A, by itself</span></div>
+  <div class="bd">
+    <p>Four public methods, no data members. Nothing here is new; predict the four lines anyway,
+    because the next program looks almost identical and prints something different.</p>
+<div class="codewrap"><div class="cap">classa.cpp</div><pre><code class="language-cpp">// classa.cpp -- the base class A on its own
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class A {
+public:
+    string name() const { return "class is A"; }
+    void f1() const { cout &lt;&lt; "A::f1" &lt;&lt; endl; }
+    void f2() const { cout &lt;&lt; "A::f2" &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; "A::f3" &lt;&lt; endl; }
+};
+
+int main() {
+    A a;
+    cout &lt;&lt; a.name() &lt;&lt; endl;
+    a.f1();
+    a.f2();
+    a.f3();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">class is A
+A::f1
+A::f2
+A::f3</pre>
+<p>Each call goes to the only place it could go. Keep this output on screen; the interesting part
+is which of these four lines survives in the next program.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now derive a second class from it. The syntax is one clause bolted onto the class head:</p>
+
+<pre><code class="language-cpp">class B : public A {
+public:
+    string name() const { return "class is B"; }
+    void f1() const { cout &lt;&lt; "B::f1" &lt;&lt; endl; }
+};</code></pre>
+
+<p>Read <code>: public A</code> out loud as <em>"which inherits publicly from A"</em>. Three
+statements are now true, and all three are worth saying separately:</p>
+
+<ol>
+  <li><code>B</code> is a <strong>derived class</strong> of <code>A</code>; <code>B</code> derives
+    from <code>A</code>.</li>
+  <li><code>A</code> is the <strong>base class</strong> of <code>B</code>; <code>A</code> is the
+    <strong>parent</strong> of <code>B</code>.</li>
+  <li><code>B</code> has access to all the public members of <code>A</code>
+    <strong>as if they were members of B itself</strong> &mdash; just as a square has all the
+    properties of a rectangle.</li>
+</ol>
+
+<p>The word <code>public</code> in that clause is doing real work; there are two other spellings
+(<code>protected</code> and <code>private</code> inheritance) and they mean different things. They
+are rare, and they are Class 21's business. For this course, when you write a base-specifier you
+write <code>public</code>. Leave it out of a <code>class</code> and you silently get <em>private</em>
+inheritance, which is almost never what you meant.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; four calls on a B object</span></div>
+  <div class="bd">
+    <p>This is the same <code>main</code> as before with <code>A a;</code> changed to
+    <code>B b;</code>. <code>B</code> declares only two of the four methods. Write down all four
+    lines you expect before opening the toggle &mdash; especially the last two.</p>
+<div class="codewrap"><div class="cap">classb.cpp</div><pre><code class="language-cpp">// classb.cpp -- B derives from A and overrides two of the four methods
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class A {
+public:
+    string name() const { return "class is A"; }
+    void f1() const { cout &lt;&lt; "A::f1" &lt;&lt; endl; }
+    void f2() const { cout &lt;&lt; "A::f2" &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; "A::f3" &lt;&lt; endl; }
+};
+
+class B : public A {
+public:
+    string name() const { return "class is B"; }
+    void f1() const { cout &lt;&lt; "B::f1" &lt;&lt; endl; }
+};
+
+int main() {
+    B b;
+    cout &lt;&lt; b.name() &lt;&lt; endl;
+    b.f1();
+    b.f2();
+    b.f3();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">class is B
+B::f1
+A::f2
+A::f3</pre>
+<p>Four calls, four different stories. Here is the professor's walk-through, one row per call:</p>
+<table class="trace">
+  <tr><th>Call</th><th>What the compiler does</th><th>Prints</th></tr>
+  <tr><td><code>b.name()</code></td><td>Looks in <code>B</code>. Finds <code>name()</code>. Done.</td><td><code>class is B</code></td></tr>
+  <tr><td><code>b.f1()</code></td><td>Looks in <code>B</code>. Finds <code>f1()</code>. Done.</td><td><code>B::f1</code></td></tr>
+  <tr><td><code>b.f2()</code></td><td>Looks in <code>B</code>. <strong>Not there.</strong> The compiler does not give up &mdash; it knows <code>B</code> inherits from <code>A</code>, so it searches the declaration of <code>A</code>, and finds it.</td><td><code>A::f2</code></td></tr>
+  <tr><td><code>b.f3()</code></td><td>Same as <code>f2</code>: not in <code>B</code>, found in <code>A</code>.</td><td><code>A::f3</code></td></tr>
+</table>
+<p>The professor's phrase for the last two rows is worth memorizing: the method runs
+<em>"as if <code>b</code> were an object of the class <code>A</code>."</em> Which, as &sect;3 is
+about to show, it partly is.</p>
+<p>Note also what did <strong>not</strong> happen. <code>B</code> did not have to mention
+<code>f2</code> or <code>f3</code> anywhere, and did not have to repeat their bodies. Three lines of
+class head bought all four methods.</p>
+<p>Two small housekeeping points about this listing, since it is the pattern for everything that
+follows. All four methods are marked <code>const</code>, because none of them changes the object
+&mdash; the same rule you have applied to accessors since Class 10, and it applies to inherited and
+overriding methods just as much. And an overriding method should print in exactly the same style as
+the one it replaces: <code>B::f1</code> here, matching <code>A::f1</code>, not
+<code>B :: f1</code>. When a trace question asks you for the exact output, spacing inside the string
+literal is part of the answer.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.2</div>
+  <div class="bd">
+    <p>Using the classes <code>A</code> and <code>B</code> above:</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which class is the base class, which is the derived class, and which one has more members?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>A</code> is the base class (the parent); <code>B</code> is the derived class.</p>
+        <p><code>B</code> has more members. This trips people up, because <code>B</code>'s
+        <em>declaration</em> is shorter. A derived class is written smaller and <em>is</em> bigger:
+        it has all four methods (two of its own, two inherited) where <code>A</code> has four, and
+        as soon as it declares a data member of its own it occupies more memory too. Inheritance
+        only ever adds.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Can an object of type <code>A</code> call <code>B</code>'s version of <code>f1()</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> Inheritance runs one way only. <code>B</code> knows about
+        <code>A</code>; <code>A</code> has never heard of <code>B</code> and was compiled without
+        any knowledge that <code>B</code> would ever exist.</p>
+        <p>Concretely, <code>A a; a.f1();</code> prints <code>A::f1</code>, and there is no
+        spelling of that call that reaches <code>B::f1</code>. The base class is the general case;
+        it cannot depend on its own specializations.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>B</code> declares no data members and no methods called <code>f2</code> or <code>f3</code>. Is <code>B</code> therefore the same type as <code>A</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. <code>A</code> and <code>B</code> are two distinct types, related by inheritance. A
+        function declared as <code>void g(B x)</code> will not accept an <code>A</code>; the compiler
+        rejects it, because an <code>A</code> is not a <code>B</code>. (The reverse direction &mdash;
+        handing a <code>B</code> to something expecting an <code>A</code> &mdash; <em>is</em>
+        allowed, and it is exactly the topic of Class 21.)</p>
+        <p>"Same members" never means "same type" in C++. Two classes with identical bodies and
+        different names are still two types.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>What is inherited, and what is not</h3>
+
+<p>The short answer is: <strong>everything, except four things.</strong> A derived class inherits
+every data member and every member function of its base &mdash; public, protected and even private
+ones (they are <em>there</em>, occupying memory, they are just not <em>reachable</em>; see
+&sect;6). What it does not inherit is:</p>
+
+<table class="trace">
+  <tr><th>Not inherited</th><th>Why not, and what happens instead</th></tr>
+  <tr><td>The base class's <strong>constructors</strong></td><td>A constructor's job is to build an object <em>of its own class</em>. The derived class gets its own constructors &mdash; either ones you write, or a compiler-generated default. Class 20 shows how a derived constructor asks the base constructor to run.</td></tr>
+  <tr><td>The base class's <strong>destructor</strong></td><td>Same reason. The derived class gets its own, and the base destructor still runs automatically as part of destroying the base part &mdash; again, Class 20.</td></tr>
+  <tr><td>The base class's <strong>assignment operator</strong></td><td>The compiler declares a fresh <code>operator=</code> for the derived class, which hides the inherited one. This is the derived-class end of the Big Three, and it is Class 20's material.</td></tr>
+  <tr><td><strong>Friendship</strong></td><td>A friend of the base is not a friend of the derived class. Friendship is granted to a named function or class, and it is not passed down.</td></tr>
+</table>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; constructors really are not inherited</span></div>
+  <div class="bd">
+    <p><code>Rectangle</code> has a two-argument constructor. <code>Square</code> derives from it and
+    declares nothing at all. Does <code>Square s2(2.0, 2.0);</code> compile?</p>
+<div class="codewrap"><div class="cap">notinherited.cpp</div><pre><code class="language-cpp">// notinherited.cpp -- constructors are NOT inherited
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle()                     { h = 1.0; w = 1.0; }
+    Rectangle(double ht, double wd) { h = ht;  w = wd; }
+    double area() const { return h * w; }
+protected:
+    double h, w;
+};
+
+class Square : public Rectangle {
+};
+
+int main() {
+    Square s1;              // fine: Square has a compiler-generated default constructor
+    Square s2(2.0, 2.0);    // NOT fine
+    cout &lt;&lt; s1.area() &lt;&lt; " " &lt;&lt; s2.area() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">notinherited.cpp: In function 'int main()':
+notinherited.cpp:19:23: error: no matching function for call to 'Square::Square(double, double)'
+   19 |     Square s2(2.0, 2.0);    // NOT fine
+      |                       ^
+notinherited.cpp:14:7: note: candidate: 'Square::Square()'
+   14 | class Square : public Rectangle {
+      |       ^~~~~~
+notinherited.cpp:14:7: note:   candidate expects 0 arguments, 2 provided</pre>
+<p><code>Square</code> has exactly one constructor that takes arguments-free construction &mdash;
+the default one the compiler generated for it &mdash; plus the copy constructor. The
+<code>Rectangle(double, double)</code> constructor exists, but it is not a member of
+<code>Square</code> and cannot be called as one.</p>
+<p>Notice how the error message reads. <em>"no matching function for call to
+'Square::Square(double, double)'"</em> is the same message you met in Class 13 when a class had no
+default constructor. Same rule, seen from a new angle: the compiler only ever considers the
+constructors of the class you actually named.</p>
+<p>The fix is to give <code>Square</code> a constructor of its own that passes the arguments down to
+<code>Rectangle</code>. That handover has its own syntax, and it is the first thing we do in
+Class 20.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.3</div>
+  <div class="bd">
+    <p>A base class <code>Widget</code> has: a public method <code>run()</code>, a private data
+    member <code>int serial</code>, a public non-default constructor <code>Widget(int)</code>, a
+    destructor, and a public <code>operator=</code>. A class <code>Gadget : public Widget</code>
+    declares nothing except a public method <code>calibrate()</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many methods can you call on a <code>Gadget</code> object from <code>main</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Three, in the sense of ordinary named methods: <code>calibrate()</code> (its own),
+        <code>run()</code> (inherited and public), and assignment through <code>operator=</code>
+        &mdash; but the <code>operator=</code> being called is the compiler-generated
+        <em>Gadget</em> one, which copies the base part by calling <code>Widget::operator=</code>
+        underneath.</p>
+        <p>You cannot call <code>Widget(int)</code> on a <code>Gadget</code>, and you cannot touch
+        <code>serial</code> from anywhere outside <code>Widget</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Does a <code>Gadget</code> object contain the member <code>serial</code>? Can <code>calibrate()</code> read it?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Yes, and no.</strong> Every <code>Gadget</code> physically contains a
+        <code>serial</code> &mdash; it is part of the <code>Widget</code> sub-object and it takes up
+        space. But it is <code>private</code> to <code>Widget</code>, so
+        <code>Gadget::calibrate()</code> cannot name it. It exists and is untouchable.</p>
+        <p>This is the situation the professor calls <em>"terribly inconvenient for an inherited
+        class"</em>, and it is what <code>protected</code> is designed to fix (&sect;7).</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Does <code>Gadget g;</code> compile?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> <code>Gadget</code> gets a compiler-generated default constructor,
+        and that constructor must build the <code>Widget</code> part &mdash; but <code>Widget</code>
+        declares a non-default constructor and therefore has no default constructor at all
+        (Class 13's rule: write any constructor and the free one disappears). So there is nothing
+        for <code>Gadget</code>'s default constructor to call, and it is rejected.</p>
+        <p>The real message names both ends of the problem:</p>
+<pre class="err">qc3_widget.cpp: In function 'int main()':
+qc3_widget.cpp:16:12: error: use of deleted function 'Gadget::Gadget()'
+   16 |     Gadget g;
+      |            ^
+qc3_widget.cpp:11:7: note: 'Gadget::Gadget()' is implicitly deleted because the default definition would be ill-formed:
+   11 | class Gadget : public Widget {
+      |       ^~~~~~
+qc3_widget.cpp:11:7: error: no matching function for call to 'Widget::Widget()'</pre>
+        <p>When you see a compiler error about the <em>base</em> class's default constructor while
+        looking at a line that mentions only the <em>derived</em> class, this is why.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>What a derived object actually contains</h2>
+
+<p>The professor's question at this point is exactly the right one: <em>"What exactly does the class
+B consist of?"</em> The answer is the thing that makes inheritance more than a copy-paste
+shortcut.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; IS-A and the base sub-object</span></div>
+  <div class="bd">
+    <p>Many textbooks use the <strong>IS-A</strong> buzzword to express the concept of inheritance:
+    a <code>Square</code> IS-A <code>Rectangle</code>, a <code>B</code> IS-A <code>A</code>.</p>
+    <p>What that means in C++ is concrete, not poetic. An object of the derived class
+    <strong>implicitly contains an object of the base class</strong>. That contained piece is called
+    the <strong>base sub-object</strong>, and:</p>
+    <p style="text-align:center"><em>object of class B</em> &nbsp;=&nbsp; <em>the A component</em>
+    &nbsp;+&nbsp; <em>the B component</em></p>
+    <p>In practice, for the simple single inheritance we use in this course, the compiler lays the
+    base part out first and adds the derived class's extra members after it.</p>
+  </div>
+</div>
+
+<p>The professor is emphatic that this is not a metaphor: <em>"This is not just symbolic&hellip;
+There really is a base class object implicitly inside a derived class object."</em> Two consequences
+follow, and you can observe both.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; measuring the base sub-object</span></div>
+  <div class="bd">
+    <p><code>Base</code> holds two <code>int</code>s; <code>Derived</code> adds a third. Predict the three
+    sizes, then predict which of the two <code>show</code> methods can see which members.</p>
+<div class="codewrap"><div class="cap">subobject.cpp</div><pre><code class="language-cpp">// subobject.cpp -- a derived object physically contains a base object
+#include &lt;iostream&gt;
+using namespace std;
+
+class Base {
+public:
+    void showBase() const { cout &lt;&lt; "base part: " &lt;&lt; b1 &lt;&lt; " " &lt;&lt; b2 &lt;&lt; endl; }
+    int b1, b2;
+};
+
+class Derived : public Base {
+public:
+    void showAll() const {
+        cout &lt;&lt; "derived part: " &lt;&lt; d1 &lt;&lt; ", base part: " &lt;&lt; b1 &lt;&lt; " " &lt;&lt; b2 &lt;&lt; endl;
+    }
+    int d1;
+};
+
+int main() {
+    cout &lt;&lt; "sizeof(Base)    = " &lt;&lt; sizeof(Base) &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(Derived) = " &lt;&lt; sizeof(Derived) &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(int)     = " &lt;&lt; sizeof(int) &lt;&lt; endl;
+
+    Derived d;
+    d.b1 = 10;      // inherited from Base
+    d.b2 = 20;      // inherited from Base
+    d.d1 = 30;      // Derived's own
+    d.showBase();   // inherited method, sees only the base part
+    d.showAll();    // Derived's own method, sees everything
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">sizeof(Base)    = 8
+sizeof(Derived) = 12
+sizeof(int)     = 4
+base part: 10 20
+derived part: 30, base part: 10 20</pre>
+<p>A <code>Derived</code> is exactly a <code>Base</code> plus one more <code>int</code>: 8 + 4 = 12. Here is
+the memory picture, which is worth drawing on paper once so it sticks:</p>
+<table class="trace">
+  <tr><th>Byte offset</th><th>Member</th><th>Belongs to</th><th>Reachable from</th></tr>
+  <tr><td>0&ndash;3</td><td><code>b1</code></td><td rowspan="2">the <code>Base</code> sub-object</td><td><code>Base</code>'s methods, <code>Derived</code>'s methods, and (because it is public here) <code>main</code></td></tr>
+  <tr><td>4&ndash;7</td><td><code>b2</code></td><td><code>Base</code>'s methods, <code>Derived</code>'s methods, <code>main</code></td></tr>
+  <tr><td>8&ndash;11</td><td><code>d1</code></td><td>the <code>Derived</code> part</td><td><code>Derived</code>'s methods and <code>main</code> &mdash; <strong>not</strong> <code>Base</code>'s methods</td></tr>
+</table>
+<p>Look hard at the last column. <code>showBase()</code> was compiled as part of <code>Base</code>,
+long before <code>Derived</code> was written, so it can only see the first eight bytes. It is not
+that it refuses to print <code>d1</code>; the name <code>d1</code> does not exist in the scope it
+was compiled in. That asymmetry &mdash; the derived class sees the whole object, the base class sees
+only its own part &mdash; is the structural fact behind everything in this class and the next
+two.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; "base first" is what compilers do, not what the standard promises</span></div>
+  <div class="bd">
+    <p>The course notes state that <em>"when the compiler allocates memory for an object of the
+    class B, it first allocates memory for an object of the class A, then adds on whatever extra
+    memory is required."</em> For simple single inheritance with no virtual functions, that is
+    exactly what g++ does, and the byte offsets above confirm it.</p>
+    <p>It is worth knowing that the C++ standard does not <em>guarantee</em> that layout in general.
+    With multiple base classes (Class 21) or virtual functions (Class 24, where the compiler also
+    slips a hidden pointer into every object) the picture gets more complicated and
+    <code>sizeof(Derived)</code> stops being a simple sum. Do not write code that depends on the
+    offsets; do keep the mental picture, because it explains the behavior you will actually
+    see.</p>
+  </div>
+</div>
+
+<p>The other consequence is about <em>construction</em>. If a <code>B</code> object contains an
+<code>A</code> object, something has to build that <code>A</code>. It does: the compiler invokes
+<code>A</code>'s constructor first, then <code>B</code>'s. In <code>classb.cpp</code> neither class
+had a constructor, so the compiler generated defaults for both and called them in that order &mdash;
+silently, because they printed nothing. Class 20 opens by making them print, which turns this claim
+into something you can watch happen.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.4</div>
+  <div class="bd">
+    <p>Given these declarations:</p>
+<pre><code class="language-cpp">class Animal {
+public:
+    void breathe() const;
+private:
+    double weight;
+    int    age;
+};
+
+class Bird : public Animal {
+public:
+    void fly() const;
+private:
+    double wingspan;
+};</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> On a machine where <code>double</code> is 8 bytes and <code>int</code> is 4, what would you expect <code>sizeof(Animal)</code> and <code>sizeof(Bird)</code> to be?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>sizeof(Animal)</code> is 16: 8 for the <code>double</code>, 4 for the
+        <code>int</code>, and 4 bytes of padding so that the whole thing stays 8-byte aligned.
+        <code>sizeof(Bird)</code> is 24: the 16-byte <code>Animal</code> sub-object plus 8 for
+        <code>wingspan</code>.</p>
+        <p>Padding is the reason to say "expect" rather than "is". The point of the question is the
+        <em>structure</em> &mdash; a <code>Bird</code> is an <code>Animal</code> with something
+        appended &mdash; not the arithmetic.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Can <code>Animal::breathe()</code> read <code>wingspan</code>? Can <code>Bird::fly()</code> read <code>age</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>breathe()</code> <strong>cannot</strong> read <code>wingspan</code>, for two
+        independent reasons: <code>wingspan</code> is private to <code>Bird</code>, and in any case
+        <code>Animal</code> was compiled with no knowledge that <code>Bird</code> exists.</p>
+        <p><code>fly()</code> <strong>also cannot</strong> read <code>age</code> &mdash; but for a
+        different and much more fixable reason. The member is right there inside every
+        <code>Bird</code>; it is only the <code>private</code> label that stops the derived class.
+        Change that label to <code>protected</code> and <code>fly()</code> can read it. That is
+        &sect;7.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Is it true that "a <code>Bird</code> object contains an <code>Animal</code> object"? Is the reverse true?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The first is true, and literally so: bytes 0 through 15 of every <code>Bird</code>
+        <em>are</em> an <code>Animal</code>. That is the base sub-object.</p>
+        <p>The reverse is false. An <code>Animal</code> object is 16 bytes and contains no
+        <code>Bird</code>, no <code>wingspan</code>, and no way of reaching either. Every bird is an
+        animal; not every animal is a bird. The English sentence and the memory layout agree,
+        which is the whole reason IS-A is a useful test.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>IS-A or HAS-A? Inheritance versus composition</h2>
+
+<p>Inheritance is not the only way two classes can be related, and choosing it when you should not
+is the most common design mistake in an object-oriented program. The alternative has its own
+buzzword.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; HAS-A (composition)</span></div>
+  <div class="bd">
+    <p><strong>HAS-A</strong> indicates that a class has a <strong>data member</strong> of another
+    class type. This is called <strong>composition</strong>, and it is <em>not</em> inheritance.</p>
+    <p>If <code>Owner</code> has a data member of type <code>Cat</code> and one of type
+    <code>Dog</code>, we say <code>Owner</code> HAS-A <code>Cat</code> and <code>Owner</code>
+    HAS-A <code>Dog</code>. Nothing is inherited; <code>Owner</code> simply contains two objects.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; composition, in full</span></div>
+  <div class="bd">
+    <p>The course notes give this one as a sketch with the bodies left out. Here it is filled in and
+    running. Read the private section of <code>Owner</code> first &mdash; that is where the
+    relationship lives.</p>
+<div class="codewrap"><div class="cap">hasa.cpp</div><pre><code class="language-cpp">// hasa.cpp -- composition: an Owner HAS-A Cat and HAS-A Dog
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Cat {
+public:
+    void setName(const string &amp;n) { name = n; }
+    void speak() const { cout &lt;&lt; name &lt;&lt; " says meow" &lt;&lt; endl; }
+private:
+    string name;
+};
+
+class Dog {
+public:
+    void setName(const string &amp;n) { name = n; }
+    void speak() const { cout &lt;&lt; name &lt;&lt; " says woof" &lt;&lt; endl; }
+private:
+    string name;
+};
+
+class Owner {
+public:
+    void set(const string &amp;who, const string &amp;catName, const string &amp;dogName) {
+        person = who;
+        c.setName(catName);
+        d.setName(dogName);
+    }
+    void morning() const {
+        cout &lt;&lt; person &lt;&lt; " feeds the pets:" &lt;&lt; endl;
+        c.speak();
+        d.speak();
+    }
+private:
+    string person;
+    Cat c;      // Owner HAS-A Cat
+    Dog d;      // Owner HAS-A Dog
+};
+
+int main() {
+    Owner o;
+    o.set("Maria", "Mochi", "Rex");
+    o.morning();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Maria feeds the pets:
+Mochi says meow
+Rex says woof</pre>
+<p>Three things distinguish this from inheritance, and all three are visible in the source:</p>
+<ul>
+  <li>There is no <code>:</code> in any class head. Composition is expressed entirely by declaring
+    data members.</li>
+  <li><code>Owner</code> cannot call <code>speak()</code> as if it were its own method. It has to
+    say <em>which</em> pet: <code>c.speak()</code>, <code>d.speak()</code>. With inheritance the
+    inherited method is called with no object in front of it at all.</li>
+  <li><code>Owner</code> can hold two <code>Cat</code>s, or a <code>vector&lt;Cat&gt;</code>, or
+    swap one out at run time. Inheritance gives you exactly one base sub-object, fixed at compile
+    time.</li>
+</ul>
+<p>Note also that <code>Owner</code> goes through <code>Cat</code>'s public interface exactly like
+any other outside code. Being the containing class buys no special access &mdash; <code>Owner</code>
+cannot read <code>Cat::name</code> directly any more than <code>main</code> can.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; deciding between inheritance and composition</span></div>
+  <div class="bd">
+    <ol>
+      <li>Write the English sentence both ways: <em>"every X is a Y"</em> and <em>"every X has a
+        Y"</em>. Say them out loud. Usually one of them is obviously silly.</li>
+      <li>Apply the <strong>substitution test</strong>: anywhere the program uses a <code>Y</code>,
+        could you hand it an <code>X</code> and have every promise <code>Y</code> makes still hold?
+        If yes, IS-A. If you find even one method of <code>Y</code> that makes no sense on an
+        <code>X</code>, it is not IS-A.</li>
+      <li>Count the members you would inherit and actually want. If a derived class inherits
+        fifteen methods and only three of them are meaningful, you have picked the wrong
+        relationship.</li>
+      <li>When both readings seem defensible, <strong>prefer composition</strong>. It is the looser
+        coupling: a data member can be replaced, held more than once, or dropped, and the containing
+        class is not committed to anyone else's interface.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; inheriting because it is convenient</span></div>
+  <div class="bd">
+    <p>Each of these compiles perfectly and each is wrong:</p>
+    <ul>
+      <li><code>class Car : public Engine</code> &mdash; written because a car needs the engine's
+        <code>start()</code> and <code>rpm()</code>. But a car is not a kind of engine. Give
+        <code>Car</code> an <code>Engine</code> data member instead, and it can then have two of
+        them, or none.</li>
+      <li><code>class Owner : public Cat</code> &mdash; the owner would inherit <code>speak()</code>
+        and start meowing. Absurd, and the compiler will not stop you.</li>
+      <li><code>class Stack : public vector&lt;int&gt;</code> &mdash; the classic. A stack promises
+        that you can only touch the top; <code>vector</code> hands the outside world
+        <code>operator[]</code>, <code>insert</code> and <code>erase</code>, so your stack is now a
+        stack that anybody can reach into the middle of. The substitution test catches this one:
+        code that expects a <code>vector</code> may legitimately insert in the middle, which breaks
+        every promise <code>Stack</code> was written to make.</li>
+    </ul>
+    <p>The tell is always the same. You reached for inheritance because you wanted the
+    <em>methods</em>, not because the sentence <em>"X is a Y"</em> was true.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.5</div>
+  <div class="bd">
+    <p>For each pair, say whether the relationship is IS-A, HAS-A, or neither, and give the C++ that
+    expresses it.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>Rectangle</code> and <code>Point</code> (a rectangle knows the coordinates of its lower-left corner).</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>HAS-A.</strong> A rectangle is not a kind of point &mdash; it has a corner that
+        happens to be one.</p>
+<pre><code class="language-cpp">class Rectangle {
+    // ...
+private:
+    Point corner;      // Rectangle HAS-A Point
+    double h, w;
+};</code></pre>
+        <p>Try the substitution test on the inheritance reading and it collapses immediately:
+        anywhere the program expects a point &mdash; say, to compute the distance between two points
+        &mdash; handing it a rectangle is meaningless.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>SavingsAccount</code> and <code>Account</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>IS-A.</strong> Every savings account is an account: it has a balance, it accepts
+        deposits and withdrawals, and it adds an interest rate on top.</p>
+<pre><code class="language-cpp">class SavingsAccount : public Account {
+public:
+    void addInterest();
+protected:
+    double rate;
+};</code></pre>
+        <p>The substitution test passes: anywhere the bank's software handles "an account" &mdash;
+        printing a statement, taking a deposit &mdash; a savings account behaves correctly.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>Course</code> and <code>Student</code> (a course has a roster of enrolled students).</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>HAS-A</strong> &mdash; and note the multiplicity, which is the giveaway. A course
+        has <em>many</em> students:</p>
+<pre><code class="language-cpp">class Course {
+    // ...
+private:
+    string title;
+    vector&lt;Student&gt; roster;    // Course HAS-A (many) Student
+};</code></pre>
+        <p>Inheritance can never express "many". A derived class has exactly one base sub-object of
+        each base class. Whenever the English sentence contains a number other than one, the answer
+        is composition.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>Square</code> and <code>Circle</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Neither.</strong> A square is not a circle, a circle is not a square, and neither
+        contains the other. They are <em>siblings</em>: both are shapes.</p>
+        <p>The right move, if you need to treat them uniformly, is to give them a common base class
+        &mdash; <code>class Square : public Shape</code> and <code>class Circle : public
+        Shape</code>. That is the standard shape of a hierarchy, and it is exactly the structure the
+        polymorphism questions on this professor's finals are built on (Class 24).</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; model a car</h3>
+
+<p>A <code>Car</code> is a kind of <code>Vehicle</code>, and a <code>Car</code> has an
+<code>Engine</code>. Write both relationships into the starter code below: one base-specifier and
+one data member. Then give <code>Car</code> a <code>describe()</code> that prints its plate and
+starts its engine.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Engine {
+public:
+    void setPower(int hp) { power = hp; }
+    void start() const { cout &lt;&lt; &quot;engine (&quot; &lt;&lt; power &lt;&lt; &quot; hp) starts&quot; &lt;&lt; endl; }
+private:
+    int power;
+};
+
+class Vehicle {
+public:
+    void setPlate(const string &amp;p) { plate = p; }
+    void describe() const { cout &lt;&lt; &quot;vehicle &quot; &lt;&lt; plate; }
+protected:
+    string plate;
+};
+
+// A Car IS-A Vehicle ... and HAS-A Engine.  Write both.
+class Car {
+public:
+
+private:
+
+};
+
+int main() {
+    Car c;
+    // set up the car and describe it
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Engine {
+public:
+    void setPower(int hp) { power = hp; }
+    void start() const { cout &lt;&lt; "engine (" &lt;&lt; power &lt;&lt; " hp) starts" &lt;&lt; endl; }
+private:
+    int power;
+};
+
+class Vehicle {
+public:
+    void setPlate(const string &amp;p) { plate = p; }
+    void describe() const { cout &lt;&lt; "vehicle " &lt;&lt; plate; }
+protected:
+    string plate;
+};
+
+// A Car IS-A Vehicle ... and HAS-A Engine.  Write both.
+class Car {
+public:
+
+private:
+
+};
+
+int main() {
+    Car c;
+    // set up the car and describe it
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.6</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output of your program.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Two different pieces of syntax for two different relationships. IS-A
+      goes in the class head: <code>class Car : public Vehicle</code>. HAS-A goes in the data
+      section: <code>Engine e;</code>. Once the base is <code>Vehicle</code>, <code>Car</code> can
+      write to <code>plate</code> directly because the base declared it <code>protected</code>; the
+      engine, by contrast, has to be driven through its public methods, because <code>Car</code> is
+      just ordinary outside code as far as <code>Engine</code> is concerned.</p>
+<div class="codewrap"><div class="cap">ex3_isa_hasa.cpp</div><pre><code class="language-cpp">// ex3_isa_hasa.cpp -- in-class exercise: choose inheritance or composition
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Engine {
+public:
+    void setPower(int hp) { power = hp; }
+    void start() const { cout &lt;&lt; "engine (" &lt;&lt; power &lt;&lt; " hp) starts" &lt;&lt; endl; }
+private:
+    int power;
+};
+
+class Vehicle {
+public:
+    void setPlate(const string &amp;p) { plate = p; }
+    void describe() const { cout &lt;&lt; "vehicle " &lt;&lt; plate; }
+protected:
+    string plate;
+};
+
+class Car : public Vehicle {          // a Car IS-A Vehicle
+public:
+    void setUp(const string &amp;p, int hp) {
+        plate = p;                     // protected, so Car may write it
+        e.setPower(hp);
+    }
+    void describe() const {
+        cout &lt;&lt; "car " &lt;&lt; plate &lt;&lt; ": ";
+        e.start();
+    }
+private:
+    Engine e;                          // a Car HAS-A Engine
+};
+
+int main() {
+    Vehicle v;
+    v.setPlate("QC-1234");
+    v.describe();
+    cout &lt;&lt; endl;
+
+    Car c;
+    c.setUp("NY-8899", 180);
+    c.describe();
+    return 0;
+}</code></pre></div>
+<pre class="out">vehicle QC-1234
+car NY-8899: engine (180 hp) starts</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>Car::setUp</code> assigns to <code>plate</code> with no dot and no object name.
+          That is what inheritance feels like from the inside: the base class's members are
+          <em>your</em> members.</li>
+        <li><code>e.start()</code> needs the <code>e.</code>. That is what composition feels like:
+          you are holding an object, and you talk to it.</li>
+        <li><code>Car::describe()</code> overrides <code>Vehicle::describe()</code> &mdash;
+          &sect;5's topic. <code>c.describe()</code> runs the <code>Car</code> version because
+          <code>c</code> was declared as a <code>Car</code>.</li>
+        <li>If you wrote <code>class Car : public Engine</code> the program would still compile.
+          Ask the English question every time.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Overriding, and how the compiler resolves a call</h2>
+
+<p>In &sect;2 the class <code>B</code> declared its own <code>name()</code> and <code>f1()</code>,
+and those won over <code>A</code>'s versions. That has a name.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; override</span></div>
+  <div class="bd">
+    <p>When a derived class declares a method with the same name and parameter list as one in its
+    base class, we say the derived method <strong>overrides</strong> the base method. For an object
+    of the derived class, the derived version is the one that runs.</p>
+    <p>In the classes <code>A</code> and <code>B</code>: <code>B</code> overrides
+    <code>name()</code> and <code>f1()</code>, and does <strong>not</strong> override
+    <code>f2()</code> and <code>f3()</code>. Overriding is opt-in, one method at a time.</p>
+  </div>
+</div>
+
+<p>Now make the hierarchy deeper, which is where the rule gets interesting. The professor's example
+has five classes:</p>
+
+<ul>
+  <li><code>A</code> is the base.</li>
+  <li><code>B</code> derives from <code>A</code>.</li>
+  <li><code>C</code> and <code>D</code> both derive from <code>B</code>.</li>
+  <li><code>E</code> derives directly from <code>A</code>.</li>
+</ul>
+
+<p>Drawn as a table &mdash; read the last column as "what is physically inside one object of
+this class":</p>
+
+<table class="trace">
+  <tr><th>Class</th><th>Derives directly from</th><th>Inheritance chain up to the root</th><th>An object of it contains</th></tr>
+  <tr><td><code>A</code></td><td>&mdash;</td><td><code>A</code></td><td>an <code>A</code></td></tr>
+  <tr><td><code>B</code></td><td><code>A</code></td><td><code>B</code> &rarr; <code>A</code></td><td>an <code>A</code>, plus <code>B</code>'s part</td></tr>
+  <tr><td><code>C</code></td><td><code>B</code></td><td><code>C</code> &rarr; <code>B</code> &rarr; <code>A</code></td><td>a <code>B</code> (which contains an <code>A</code>), plus <code>C</code>'s part</td></tr>
+  <tr><td><code>D</code></td><td><code>B</code></td><td><code>D</code> &rarr; <code>B</code> &rarr; <code>A</code></td><td>a <code>B</code> (which contains an <code>A</code>), plus <code>D</code>'s part</td></tr>
+  <tr><td><code>E</code></td><td><code>A</code></td><td><code>E</code> &rarr; <code>A</code></td><td>an <code>A</code>, plus <code>E</code>'s part</td></tr>
+</table>
+
+<p>Two consequences the professor draws out explicitly. First, <em>each class in the tree is a base
+class for all the others above it</em>: <code>A</code> is a base class of every other class here,
+<code>B</code> is the base class of <code>C</code> and <code>D</code> (and has its own base,
+<code>A</code>), and if some later class <code>F</code> derived from <code>C</code> the chain would
+be <code>F</code> &rarr; <code>C</code> &rarr; <code>B</code> &rarr; <code>A</code>. Second,
+<code>C</code> and <code>D</code> know about <code>B</code> and therefore about <code>A</code>;
+<code>E</code> knows only about <code>A</code>, and knows nothing about <code>B</code>,
+<code>C</code> or <code>D</code> &mdash; and they know nothing about it.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; how the compiler resolves <code>obj.f()</code></span></div>
+  <div class="bd">
+    <p>Given a call <code>obj.f()</code> where <code>obj</code> was declared to be of class
+    <code>X</code>:</p>
+    <ol>
+      <li>Look for <code>f</code> in the declaration of <code>X</code>. If it is there, that is the
+        one. Stop.</li>
+      <li>Otherwise, move to <code>X</code>'s base class and look there.</li>
+      <li>Repeat, walking <em>up</em> the chain one class at a time, until <code>f</code> is
+        found.</li>
+      <li>If the root is reached and <code>f</code> was never found, it is a compile error &mdash;
+        <em>"no member named f"</em>.</li>
+    </ol>
+    <p>The search only ever moves along <code>X</code>'s own chain. Starting from <code>C</code> the
+    compiler searches <code>C</code>, then <code>B</code>, then <code>A</code>. It will
+    <strong>never</strong> look in <code>E</code>, or in <code>D</code>, or in any other branch
+    &mdash; those classes are not on <code>C</code>'s chain, and <code>C</code> has no way of even
+    naming them. The compiler works the structure of the tree out for itself; you never tell it.</p>
+  </div>
+</div>
+
+<p>Now give <code>C</code>, <code>D</code> and <code>E</code> some overrides and see the rule
+bite:</p>
+
+<pre><code class="language-cpp">class C : public B {            // overrides name and f3
+public:
+    string name() const { return "class is C"; }
+    void f3() const { cout &lt;&lt; "C::f3" &lt;&lt; endl; }
+};
+
+class D : public B {            // overrides name only
+public:
+    string name() const { return "class is D"; }
+};
+
+class E : public A {            // overrides name, f1 and f3
+public:
+    string name() const { return "class is E"; }
+    void f1() const { cout &lt;&lt; "E::f1" &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; "E::f3" &lt;&lt; endl; }
+};</code></pre>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the whole tree, resolved</span></div>
+  <div class="bd">
+    <p>The course notes declare these five classes and give the resolution table, but never run
+    them. Here is the driver that proves the table. Fill in your own answers for all twenty calls
+    before you open this &mdash; five objects, four calls each.</p>
+<div class="codewrap"><div class="cap">tree.cpp</div><pre><code class="language-cpp">// tree.cpp -- the five-class inheritance tree, with a driver that prints the whole table
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class A {
+public:
+    string name() const { return "class is A"; }
+    void f1() const { cout &lt;&lt; "A::f1" &lt;&lt; endl; }
+    void f2() const { cout &lt;&lt; "A::f2" &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; "A::f3" &lt;&lt; endl; }
+};
+
+class B : public A {
+public:
+    string name() const { return "class is B"; }
+    void f1() const { cout &lt;&lt; "B::f1" &lt;&lt; endl; }
+};
+
+class C : public B {
+public:
+    string name() const { return "class is C"; }
+    void f3() const { cout &lt;&lt; "C::f3" &lt;&lt; endl; }
+};
+
+class D : public B {
+public:
+    string name() const { return "class is D"; }
+};
+
+class E : public A {
+public:
+    string name() const { return "class is E"; }
+    void f1() const { cout &lt;&lt; "E::f1" &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; "E::f3" &lt;&lt; endl; }
+};
+
+int main() {
+    A a;   B b;   C c;   D d;   E e;
+
+    cout &lt;&lt; a.name() &lt;&lt; endl;  a.f1();  a.f2();  a.f3();
+    cout &lt;&lt; b.name() &lt;&lt; endl;  b.f1();  b.f2();  b.f3();
+    cout &lt;&lt; c.name() &lt;&lt; endl;  c.f1();  c.f2();  c.f3();
+    cout &lt;&lt; d.name() &lt;&lt; endl;  d.f1();  d.f2();  d.f3();
+    cout &lt;&lt; e.name() &lt;&lt; endl;  e.f1();  e.f2();  e.f3();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">class is A
+A::f1
+A::f2
+A::f3
+class is B
+B::f1
+A::f2
+A::f3
+class is C
+B::f1
+A::f2
+C::f3
+class is D
+B::f1
+A::f2
+A::f3
+class is E
+E::f1
+A::f2
+E::f3</pre>
+<p>Collected into the professor's resolution table &mdash; each cell is the class whose version
+actually runs:</p>
+<table class="trace">
+  <tr><th>Object's class</th><th><code>name</code></th><th><code>f1</code></th><th><code>f2</code></th><th><code>f3</code></th></tr>
+  <tr><td><code>A</code></td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
+  <tr><td><code>B</code></td><td>B</td><td>B</td><td>A</td><td>A</td></tr>
+  <tr><td><code>C</code></td><td>C</td><td>B</td><td>A</td><td>C</td></tr>
+  <tr><td><code>D</code></td><td>D</td><td>B</td><td>A</td><td>A</td></tr>
+  <tr><td><code>E</code></td><td>E</td><td>E</td><td>A</td><td>E</td></tr>
+</table>
+<p>Read the <code>C</code> row across, because it exercises every case at once:</p>
+<ul>
+  <li><code>c.name()</code> &mdash; found in <code>C</code>. No search needed.</li>
+  <li><code>c.f1()</code> &mdash; not in <code>C</code>; <strong>drops down</strong> one level to
+    <code>B</code>, which has it. Prints <code>B::f1</code>. It never reaches <code>A</code>'s
+    version, because the search stops at the first match.</li>
+  <li><code>c.f2()</code> &mdash; not in <code>C</code>, not in <code>B</code>; drops all the way to
+    <code>A</code>.</li>
+  <li><code>c.f3()</code> &mdash; found in <code>C</code>, so no drop at all, even though both
+    <code>A</code> and (in another branch) <code>E</code> also define an <code>f3</code>.</li>
+</ul>
+<p>And the <code>f2</code> column is the punchline of the whole table: nobody except <code>A</code>
+ever overrides <code>f2</code>, so every one of the five classes runs <code>A::f2</code>. One
+function, five types, zero duplication.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>There is a word for the decision the compiler just made, and the course notes never say it. It is
+worth learning now, because in Class 24 you will meet a completely different mechanism described in
+almost the same words, and students who cannot name the two mechanisms separately mix them up
+permanently.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; static binding (added &mdash; not in the original notes)</span></div>
+  <div class="bd">
+    <p><strong>Binding</strong> is the act of deciding which function body a call will run.</p>
+    <p><strong>Static binding</strong> &mdash; also called <strong>early binding</strong> or
+    <strong>compile-time binding</strong> &mdash; means the decision is made by the compiler, once,
+    while it is compiling the call, using the <strong>declared type</strong> of the expression to the
+    left of the dot. The finished executable contains a call to one specific function and cannot
+    change its mind.</p>
+    <p>Every method call you have written so far in this course &mdash; including all twenty in
+    <code>tree.cpp</code> &mdash; is statically bound. <code>c</code> is declared to be a
+    <code>C</code>, so <code>c.f1()</code> is compiled as a call to <code>B::f1</code> and stays
+    that way forever.</p>
+    <p>The alternative is <strong>dynamic binding</strong> (late binding, run-time binding), where
+    the choice is deferred until the program is running and made from the type of the object that is
+    actually there. C++ gives you that only when you ask for it with the keyword
+    <code>virtual</code>, which is Class 24. Until then, everything is static.</p>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>With non-<code>virtual</code> methods, the <strong>declared type of the variable</strong>
+    decides which function runs &mdash; not the object, not the run-time situation, not the call
+    site. Walk the inheritance chain upward from that declared type and take the first match. That
+    single rule answers every "which version runs?" question on this page.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a derived method hides <em>every</em> base method of that name</span></div>
+  <div class="bd">
+    <p>The search in the Procedure box stops at the first <em>name</em> match, not the first
+    <em>signature</em> match. So declaring one <code>show</code> in the derived class hides all the
+    base's <code>show</code> overloads, even ones with different parameter lists:</p>
+<div class="codewrap"><div class="cap">hiding.cpp</div><pre><code class="language-cpp">class Base {
+public:
+    void show() const          { cout &lt;&lt; "Base::show()" &lt;&lt; endl; }
+    void show(int n) const     { cout &lt;&lt; "Base::show(" &lt;&lt; n &lt;&lt; ")" &lt;&lt; endl; }
+};
+
+class Derived : public Base {
+public:
+    void show() const          { cout &lt;&lt; "Derived::show()" &lt;&lt; endl; }
+};
+
+int main() {
+    Derived d;
+    d.show();       // fine
+    d.show(7);      // ?
+    return 0;
+}</code></pre></div>
+<pre class="err">hiding.cpp: In function 'int main()':
+hiding.cpp:19:11: error: no matching function for call to 'Derived::show(int)'
+   19 |     d.show(7);      // ?
+      |     ~~~~~~^~~
+hiding.cpp:13:10: note: candidate: 'void Derived::show() const'
+   13 |     void show() const          { cout &lt;&lt; "Derived::show()" &lt;&lt; endl; }
+      |          ^~~~
+hiding.cpp:13:10: note:   candidate expects 1 argument, 0 provided</pre>
+    <p><code>Base::show(int)</code> is still there and still public &mdash; the compiler simply never
+    looks at <code>Base</code>, because it found the name <code>show</code> in <code>Derived</code>
+    and stopped. If you want the base overloads back, either re-declare them in the derived class or
+    write <code>using Base::show;</code> in its public section.</p>
+    <p>The same rule explains a subtler trap. If you "override" a base method but mistype the
+    parameter list &mdash; <code>print(int)</code> where the base has <code>print()</code>, or drop a
+    <code>const</code> &mdash; you have not overridden anything. You have hidden the base version and
+    added a new method, and the compiler will not warn you. Copy the base's signature
+    character for character.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; add a class to the tree</h3>
+
+<p>Starting from <code>A</code> and <code>B</code>, write a class <code>C</code> that derives from
+<code>B</code>, overrides <code>name()</code> and <code>f3()</code>, and leaves the other two alone.
+Then predict all four lines that <code>main</code> prints.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class A {
+public:
+    string name() const { return &quot;class is A&quot;; }
+    void f1() const { cout &lt;&lt; &quot;A::f1&quot; &lt;&lt; endl; }
+    void f2() const { cout &lt;&lt; &quot;A::f2&quot; &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; &quot;A::f3&quot; &lt;&lt; endl; }
+};
+
+class B : public A {
+public:
+    string name() const { return &quot;class is B&quot;; }
+    void f1() const { cout &lt;&lt; &quot;B::f1&quot; &lt;&lt; endl; }
+};
+
+// class C derives from B, overrides name() and f3()
+
+
+int main() {
+    C c;
+    cout &lt;&lt; c.name() &lt;&lt; endl;
+    c.f1();
+    c.f2();
+    c.f3();
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class A {
+public:
+    string name() const { return "class is A"; }
+    void f1() const { cout &lt;&lt; "A::f1" &lt;&lt; endl; }
+    void f2() const { cout &lt;&lt; "A::f2" &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; "A::f3" &lt;&lt; endl; }
+};
+
+class B : public A {
+public:
+    string name() const { return "class is B"; }
+    void f1() const { cout &lt;&lt; "B::f1" &lt;&lt; endl; }
+};
+
+// class C derives from B, overrides name() and f3()
+
+
+int main() {
+    C c;
+    cout &lt;&lt; c.name() &lt;&lt; endl;
+    c.f1();
+    c.f2();
+    c.f3();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.7</div>
+  <div class="bd">
+    <p>Write the class <code>C</code> described above and give the exact four lines of output, with
+    a one-line justification for each.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> <code>C</code>'s declaration contains only the differences: the
+      class head naming <code>B</code> as base, and the two methods being replaced. For the output,
+      walk the chain <code>C</code> &rarr; <code>B</code> &rarr; <code>A</code> once per call and
+      take the first match.</p>
+<div class="codewrap"><div class="cap">ex1_c.cpp</div><pre><code class="language-cpp">// ex1_c.cpp -- in-class exercise: add class C to the A/B hierarchy
+// (classes A and B exactly as given above)
+
+class C : public B {
+public:
+    string name() const { return "class is C"; }
+    void f3() const { cout &lt;&lt; "C::f3" &lt;&lt; endl; }
+};
+
+int main() {
+    C c;
+    cout &lt;&lt; c.name() &lt;&lt; endl;
+    c.f1();
+    c.f2();
+    c.f3();
+    return 0;
+}</code></pre></div>
+<pre class="out">class is C
+B::f1
+A::f2
+C::f3</pre>
+      <table class="trace">
+        <tr><th>Call</th><th>Search</th><th>Result</th></tr>
+        <tr><td><code>c.name()</code></td><td>found in <code>C</code></td><td><code>class is C</code></td></tr>
+        <tr><td><code>c.f1()</code></td><td>not in <code>C</code> &rarr; found in <code>B</code></td><td><code>B::f1</code></td></tr>
+        <tr><td><code>c.f2()</code></td><td>not in <code>C</code> &rarr; not in <code>B</code> &rarr; found in <code>A</code></td><td><code>A::f2</code></td></tr>
+        <tr><td><code>c.f3()</code></td><td>found in <code>C</code></td><td><code>C::f3</code></td></tr>
+      </table>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The second line is the one people get wrong. <code>B::f1</code> beats
+          <code>A::f1</code> because the search goes <em>up</em> one level at a time and stops at the
+          first hit &mdash; it does not run both, and it does not skip to the root.</li>
+        <li><code>C</code> is four lines long and has four methods. That ratio is the point of
+          inheritance.</li>
+        <li>Every one of these four decisions was made while compiling, from the declared type
+          <code>C c;</code>. That is static binding.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.8</div>
+  <div class="bd">
+    <p>Still using the five-class tree from the Worked Example.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>E</code> defines an <code>f3()</code>. Class <code>D</code> does not. When <code>d.f3()</code> is called, why does the compiler not use <code>E::f3</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because <code>E</code> is not on <code>D</code>'s chain. <code>D</code>'s chain is
+        <code>D</code> &rarr; <code>B</code> &rarr; <code>A</code>, and the search walks that chain
+        and nothing else. <code>E</code> sits on a different branch &mdash; it derives from
+        <code>A</code> directly &mdash; and is invisible to <code>D</code> in exactly the way a
+        cousin is not an ancestor.</p>
+        <p>So <code>d.f3()</code> prints <code>A::f3</code>. The professor states this as a rule:
+        <em>"the compiler will not search in E."</em></p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Add a class <code>F : public C</code> that overrides <code>f2()</code> only. What do <code>f.name()</code>, <code>f.f1()</code>, <code>f.f2()</code> and <code>f.f3()</code> print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The chain is now <code>F</code> &rarr; <code>C</code> &rarr; <code>B</code> &rarr;
+        <code>A</code>. Walk it four times:</p>
+        <table class="trace">
+          <tr><th>Call</th><th>Found in</th><th>Prints</th></tr>
+          <tr><td><code>f.name()</code></td><td><code>C</code></td><td><code>class is C</code></td></tr>
+          <tr><td><code>f.f1()</code></td><td><code>B</code></td><td><code>B::f1</code></td></tr>
+          <tr><td><code>f.f2()</code></td><td><code>F</code></td><td><code>F::f2</code></td></tr>
+          <tr><td><code>f.f3()</code></td><td><code>C</code></td><td><code>C::f3</code></td></tr>
+        </table>
+        <p>Note the first line: an <code>F</code> object cheerfully announces "class is C", because
+        <code>F</code> did not override <code>name()</code>. A derived class inherits its parent's
+        idea of what it is until it says otherwise.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> If you delete <code>f2()</code> from class <code>A</code> entirely, what happens to <code>c.f2()</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It becomes a compile-time error. The search runs <code>C</code>, then <code>B</code>,
+        then <code>A</code>, reaches the root with nothing found, and g++ reports
+        <em>"'class C' has no member named 'f2'"</em>.</p>
+        <p>Two things are worth taking from that. It is an <em>error</em>, not a run-time surprise
+        &mdash; the whole resolution happens during compilation. And the message names
+        <code>C</code>, not <code>A</code>, even though <code>A</code> is where the missing method
+        used to be; the compiler reports the type you actually wrote.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span><code>private</code> is an absolute lock-out</h2>
+
+<p>Up to now every example class in this lecture has had public methods and no data. Real classes
+are the other way around: private data, public methods. So the questions the professor asks next are
+the practical ones. <em>How does a derived class access data members in a parent class? What about
+private data? Private methods?</em></p>
+
+<p>Take the running example. <code>Rectangle</code> stores its height and width the way Class 10
+taught you &mdash; privately &mdash; and <code>Square</code> derives from it and wants its edge
+length, which is just the height under another name.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a derived class reaching for private data</span></div>
+  <div class="bd">
+    <p>Everything here is legal-looking. <code>Square</code> IS-A <code>Rectangle</code>, every
+    <code>Square</code> object physically contains an <code>h</code>, and <code>edge()</code> only
+    wants to read it. Does it compile?</p>
+<div class="codewrap"><div class="cap">privlock.cpp</div><pre><code class="language-cpp">// privlock.cpp -- a derived class cannot touch the base class's private data
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() { h = 1.0; w = 1.0; }
+    double height() const { return h; }
+    double width() const  { return w; }
+private:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    double edge() const { return h; }     // reaching for the base class's private data
+};
+
+int main() {
+    Square s;
+    cout &lt;&lt; s.edge() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">privlock.cpp: In member function 'double Square::edge() const':
+privlock.cpp:16:34: error: 'double Rectangle::h' is private within this context
+   16 |     double edge() const { return h; }     // reaching for the base class's private data
+      |                                  ^
+privlock.cpp:11:12: note: declared private here
+   11 |     double h, w;
+      |            ^</pre>
+<p>It does not compile, and the professor's summary of why is blunt:</p>
+<ul>
+  <li><strong>A derived class cannot access private data and methods.</strong></li>
+  <li>It does not matter that a <code>Square</code> IS-A <code>Rectangle</code>.</li>
+  <li>It does not matter that a <code>Square</code> object implicitly contains a
+    <code>Rectangle</code> object.</li>
+  <li>The keyword <code>private</code> is an <strong>absolute lock-out</strong>: nothing outside of
+    a class can access its private data and methods. The only way in is through public accessor and
+    mutator methods.</li>
+  <li>The same applies to private <em>methods</em>. A private helper function in the base is
+    uncallable from the derived class.</li>
+</ul>
+<p>Notice the exact wording of the error: <em>"is private within this context"</em>. The member
+<code>h</code> exists, the compiler found it, and it knows the type. It refused on access grounds
+alone. That is a different failure from <em>"has no member named h"</em>, and telling the two apart
+tells you whether your problem is spelling or permissions.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>There is a workaround, and it is the one Class 10 would have you use: go through the public
+interface. <code>double edge() const { return height(); }</code> compiles and works. But look at what
+it costs. <code>Square</code> is family &mdash; it is <em>made of</em> a <code>Rectangle</code>
+&mdash; and it is being made to knock on the front door like a stranger. Worse, a derived class that
+needs to <em>modify</em> the base's data is stuck entirely unless the base happens to provide a
+public mutator, and adding a public mutator hands that power to every other line of code in the
+program too.</p>
+
+<p>The professor's verdict: <em>"This situation is terribly inconvenient for an inherited class. By
+definition, an inherited class is related to the base class and would like to use its data and
+methods."</em> The keyword <code>protected</code> is designed to remedy this situation.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.9</div>
+  <div class="bd">
+    <p>A base class <code>Timer</code> has a private data member <code>int seconds;</code>, a public
+    method <code>int get() const</code>, and a private helper <code>void tick();</code>. A class
+    <code>Stopwatch : public Timer</code> is being written.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of <code>seconds</code>, <code>get()</code> and <code>tick()</code> can a method of <code>Stopwatch</code> name?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Only <code>get()</code>. Both <code>seconds</code> and <code>tick()</code> are private to
+        <code>Timer</code>, and <code>private</code> excludes derived classes just as firmly as it
+        excludes <code>main</code>.</p>
+        <p>Every <code>Stopwatch</code> object still <em>contains</em> a <code>seconds</code>. It
+        just cannot say the word.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Stopwatch</code> needs to reset the count to zero. Give two ways to make that possible, and say which you would choose.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Option 1 &mdash; add a public mutator to <code>Timer</code>:</strong>
+        <code>void reset() { seconds = 0; }</code>. Now <code>Stopwatch</code> can call it &mdash;
+        and so can every other piece of code in the program, including code that has no business
+        resetting a timer.</p>
+        <p><strong>Option 2 &mdash; change <code>seconds</code> from <code>private</code> to
+        <code>protected</code>:</strong> now <code>Stopwatch</code> can write
+        <code>seconds = 0;</code> directly, and <code>main</code> still cannot touch it.</p>
+        <p>Which to choose depends on whether resetting is part of what a timer publicly
+        <em>is</em>. If it is, option 1 is better design: it is a real operation with a name, and the
+        base class stays in control of its own data. If the derived class needs raw access for
+        reasons the base class knows nothing about, option 2 is what <code>protected</code> exists
+        for. &sect;7 argues that option 1 should be your default.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span><code>protected</code>, and when not to use it</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the access specifier <code>protected</code></span></div>
+  <div class="bd">
+    <p>A member declared <code>protected</code> is accessible to the class itself and to
+    <strong>every class derived from it</strong>, but not to anyone else.</p>
+    <p>The three properties to memorize, in the professor's own order:</p>
+    <ol>
+      <li>Derived classes have access to all the protected data and methods.</li>
+      <li>Outside applications cannot access protected data and methods.</li>
+      <li>Effectively, <code>protected</code> means &mdash; (a) <code>private</code> to the outside
+        world, and (b) <code>public</code> to derived classes.</li>
+    </ol>
+    <p>Protected members are visible to <em>all</em> the classes above the declaring class in the
+    inheritance tree, however deep. A class can reach every protected member down its whole
+    inheritance chain, not just its immediate parent's.</p>
+  </div>
+</div>
+
+<p>C++ therefore has exactly three access specifiers, and it is worth having the table in your head
+as a single picture:</p>
+
+<table class="trace">
+  <tr><th>Specifier</th><th>The class's own methods</th><th>Derived classes</th><th>Everyone else (<code>main</code>, free functions)</th></tr>
+  <tr><td><code>private</code></td><td>yes</td><td><strong>no</strong></td><td>no</td></tr>
+  <tr><td><code>protected</code></td><td>yes</td><td><strong>yes</strong></td><td>no</td></tr>
+  <tr><td><code>public</code></td><td>yes</td><td>yes</td><td>yes</td></tr>
+</table>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one word changed</span></div>
+  <div class="bd">
+    <p>This is <code>privlock.cpp</code> with <code>private</code> replaced by
+    <code>protected</code>, and a mutator added to prove that a derived class can write as well as
+    read. Nothing else differs.</p>
+<div class="codewrap"><div class="cap">protok.cpp</div><pre><code class="language-cpp">// protok.cpp -- the same class, with h and w moved from private to protected
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() { h = 1.0; w = 1.0; }
+    double height() const { return h; }
+    double width() const  { return w; }
+protected:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    void setEdge(double e) { h = e; w = e; }   // legal now
+    double edge() const    { return h; }       // legal now
+};
+
+int main() {
+    Square s;
+    cout &lt;&lt; "edge = " &lt;&lt; s.edge() &lt;&lt; endl;
+    s.setEdge(2.5);
+    cout &lt;&lt; "edge = " &lt;&lt; s.edge() &lt;&lt; endl;
+    cout &lt;&lt; "height = " &lt;&lt; s.height() &lt;&lt; ", width = " &lt;&lt; s.width() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">edge = 1
+edge = 2.5
+height = 2.5, width = 2.5</pre>
+<p>Three things to read off that output. The first <code>edge()</code> is 1 because
+<code>Rectangle</code>'s default constructor ran and set both members to 1.0 &mdash; the base part of
+a <code>Square</code> is constructed exactly as a standalone <code>Rectangle</code> would be. After
+<code>setEdge(2.5)</code>, the <em>inherited</em> accessors <code>height()</code> and
+<code>width()</code> both report 2.5, because <code>Square</code> wrote straight into the base
+sub-object's members. There is only one <code>h</code> in the object, and both classes are looking
+at it.</p>
+
+</div></details>
+
+    <p>Property 2 says the outside world still cannot get in. Here is the proof: the same classes,
+    with <code>main</code> trying to read <code>s.h</code> directly.</p>
+<div class="codewrap"><div class="cap">protoutside.cpp</div><pre><code class="language-cpp">int main() {
+    Square s;
+    cout &lt;&lt; s.h &lt;&lt; endl;      // main() is "the outside world"
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">protoutside.cpp: In function 'int main()':
+protoutside.cpp:19:15: error: 'double Rectangle::h' is protected within this context
+   19 |     cout &lt;&lt; s.h &lt;&lt; endl;      // main() is "the outside world"
+      |               ^
+protoutside.cpp:9:12: note: declared protected here
+    9 |     double h, w;
+      |            ^</pre>
+<p><em>"is protected within this context"</em> &mdash; the encapsulation you built in Class 10 is
+completely intact as far as <code>main</code> is concerned. <code>protected</code> opened a door for
+derived classes and for nobody else.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.10</div>
+  <div class="bd">
+    <p>Given this pair of classes:</p>
+<pre><code class="language-cpp">class Base {
+public:
+    void pub();
+protected:
+    void prot();
+private:
+    void priv();
+};
+
+class Mid : public Base {
+public:
+    void trybase();
+};
+
+class Leaf : public Mid {
+public:
+    void tryall();
+};</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of <code>pub()</code>, <code>prot()</code> and <code>priv()</code> may <code>Mid::trybase()</code> call?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>pub()</code> and <code>prot()</code>. Not <code>priv()</code>.</p>
+        <p><code>Mid</code> is a derived class, so the protected door is open to it; the private one
+        never is.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Which of them may <code>Leaf::tryall()</code> call? <code>Leaf</code> is two levels down, not one.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The same two: <code>pub()</code> and <code>prot()</code>. Depth is irrelevant.</p>
+        <p>The professor states this directly: protected members are visible to <em>all</em> the
+        classes above the declaring class in the tree, and a class can access every protected member
+        down its entire inheritance chain. <code>Leaf</code>'s chain is <code>Leaf</code> &rarr;
+        <code>Mid</code> &rarr; <code>Base</code>, so <code>Base</code>'s protected members are
+        <code>Leaf</code>'s to use.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Which may <code>main</code> call on a <code>Leaf</code> object?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Only <code>pub()</code> &mdash; plus of course <code>Mid::trybase()</code> and
+        <code>Leaf::tryall()</code>, which are public members of the derived classes.</p>
+        <p><code>main</code> is the outside world at every level of the tree. Deriving a class does
+        not loosen anything for ordinary code; it loosens things for the derived class only.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<p>The professor adds a personal note at this point: <em>"Personally, I find the keyword protected
+to be much more useful than private."</em> That is a defensible position and you should know the
+argument on the other side too, because it is the majority view among working C++ programmers and
+because it will make your own designs better.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; <code>protected</code> data reopens the hole <code>private</code> closed</span></div>
+  <div class="bd">
+    <p>Class 10 argued that data should be private so that the class can <em>enforce its own
+    rules</em>. Every rule you enforce inside a mutator is a rule that <code>protected</code> data
+    lets a derived class walk straight past &mdash; and unlike <code>main</code>, a derived class can
+    be written years later by somebody who never read your base class.</p>
+<div class="codewrap"><div class="cap">protbreak.cpp</div><pre><code class="language-cpp">// protbreak.cpp -- protected data lets a derived class break the base class's rules
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() { h = 1.0; w = 1.0; }
+    void setSize(double ht, double wd) {         // the base class checks its inputs
+        if (ht &lt;= 0.0 || wd &lt;= 0.0) {
+            cout &lt;&lt; "Rectangle: refusing a non-positive side" &lt;&lt; endl;
+            return;
+        }
+        h = ht;
+        w = wd;
+    }
+    double area() const { return h * w; }
+protected:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    void setEdge(double e) { h = e; w = e; }     // no check at all
+};
+
+int main() {
+    Rectangle r;
+    r.setSize(-3.0, 4.0);
+    cout &lt;&lt; "rectangle area = " &lt;&lt; r.area() &lt;&lt; endl;
+
+    Square s;
+    s.setEdge(-3.0);                              // straight past the check
+    cout &lt;&lt; "square area    = " &lt;&lt; s.area() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Rectangle: refusing a non-positive side
+rectangle area = 1
+square area    = 9</pre>
+    <p>The <code>Rectangle</code> defended itself. The <code>Square</code> now claims to have an
+    edge of &minus;3 and an area of 9, and every method of <code>Rectangle</code> that assumed
+    positive sides is now working on impossible data.</p>
+    <p>There is a second cost, less dramatic and more expensive in the long run: a protected data
+    member is part of your class's <em>public promise to every future derived class</em>. You can
+    change a private member's name, type or representation freely, because only your own methods
+    touch it. Change a protected one and you break every class anyone ever derived from yours.</p>
+    <p><strong>The rule of thumb to leave with:</strong> make data <code>private</code> and provide
+    <code>protected</code> <em>methods</em> when a derived class needs controlled access. Reach for
+    <code>protected</code> data when the alternative is genuinely worse &mdash; which, in a
+    small class like <code>Rectangle</code> where the derived class is written by the same person on
+    the same day, it sometimes is. This professor's exam questions use <code>protected</code> data
+    freely, so you must be fluent in it; just know what you are trading away.</p>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>The running example: <code>Rectangle</code> and <code>Square</code></h2>
+
+<p>Everything so far has been machinery. Here is the class that Classes 19, 20 and 21 all build on,
+written out in full. It is deliberately instrumented: the constructors and the destructor each print
+a line, so that you can see when they run. That trick &mdash; announcement messages in every special
+member &mdash; is exactly what this professor's exam questions do, and half the exam points in the
+second half of this course come from reading such a trace correctly.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the base class <code>Rectangle</code></span></div>
+  <div class="bd">
+    <p>For simplicity we consider only <strong>upright</strong> rectangles &mdash; horizontal and
+    vertical sides. <code>print()</code> reports the four vertices, with the lower-left corner fixed
+    at the origin, and <code>area()</code> uses <code>fabs</code> so that a negative side cannot
+    produce a negative area. Predict every line, including the ones nobody wrote a
+    <code>cout</code> for.</p>
+<div class="codewrap"><div class="cap">rectangle.cpp</div><pre><code class="language-cpp">// rectangle.cpp -- the base class of the running example
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() {
+        h = 1.0;
+        w = 1.0;
+        cout &lt;&lt; "Rectangle: default constructor" &lt;&lt; endl;
+    }
+
+    Rectangle(double ht, double wd) {
+        h = ht;
+        w = wd;
+        cout &lt;&lt; "Rectangle: non-default constructor" &lt;&lt; endl;
+    }
+
+    ~Rectangle() {
+        cout &lt;&lt; "Rectangle: destructor" &lt;&lt; endl;
+    }
+
+    double height() const { return h; }
+    double width()  const { return w; }
+    double area()   const { return fabs(h * w); }
+
+    void print() const {
+        cout &lt;&lt; "Rectangle::print ";
+        cout &lt;&lt; "(" &lt;&lt; 0 &lt;&lt; "," &lt;&lt; 0 &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; w &lt;&lt; "," &lt;&lt; 0 &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; w &lt;&lt; "," &lt;&lt; h &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; 0 &lt;&lt; "," &lt;&lt; h &lt;&lt; ") ";
+        cout &lt;&lt; endl;
+    }
+
+protected:
+    double h, w;
+};
+
+int main() {
+    Rectangle r1;
+    Rectangle r2(3.0, 4.0);
+    r1.print();
+    r2.print();
+    cout &lt;&lt; "r2 area = " &lt;&lt; r2.area() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Rectangle: default constructor
+Rectangle: non-default constructor
+Rectangle::print (0,0), (1,0), (1,1), (0,1) 
+Rectangle::print (0,0), (4,0), (4,3), (0,3) 
+r2 area = 12
+Rectangle: destructor
+Rectangle: destructor</pre>
+<p>The two destructor lines at the end are the ones people forget: <code>r1</code> and
+<code>r2</code> are destroyed when <code>main</code> returns, in reverse order of construction.
+There is no way to tell from the message which object each one belongs to, which is a small design
+weakness of the announcement-message style &mdash; and one the professor's exam questions exploit
+constantly. Count carefully.</p>
+<p>The design decisions worth naming, because Class 20 leans on all of them:</p>
+<ul>
+  <li>A default constructor <em>and</em> a non-default one, so a <code>Rectangle</code> can be built
+    either way.</li>
+  <li>A destructor that does nothing but announce itself. A class with no dynamic memory does not
+    need a destructor at all; this one exists purely so that you can watch the order of events when
+    a derived class is added.</li>
+  <li><code>h</code> and <code>w</code> are <strong>protected</strong>, precisely so that
+    <code>Square</code> can use them.</li>
+  <li><code>print()</code> is <code>const</code>, as are all three accessors.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; <code>abs</code> on a <code>double</code>, and the missing headers</span></div>
+  <div class="bd">
+    <p>The original listing of this class writes <code>return abs(h*w);</code> and includes no
+    headers at all &mdash; no <code>&lt;iostream&gt;</code>, despite using <code>cout</code>, and no
+    <code>&lt;cmath&gt;</code>, despite using <code>abs</code>. Both are worth fixing rather than
+    copying.</p>
+    <p>In C++, <code>&lt;cmath&gt;</code> (and, as it happens, <code>&lt;cstdlib&gt;</code>) declares
+    a <code>double</code> overload of <code>abs</code>, so on g++ 13 the original line does compute
+    <code>6.25</code> for a 2.5-by-2.5 square. But that is luck, not design. If the only declaration
+    in scope is the C library's <code>int abs(int)</code> &mdash; which is what you get from
+    <code>&lt;stdlib.h&gt;</code>, and what happens in plenty of real code bases &mdash; then
+    <code>abs(2.5 * 2.5)</code> converts to <code>int</code>, returns <strong>6</strong>, and your
+    program is silently, unfixably wrong with no warning of any kind.</p>
+    <p>Two habits protect you: <strong>include the header for every facility you use</strong>, and
+    use <code>fabs</code> for floating-point absolute values, where the name itself says
+    "floating". Both are applied in the listing above.</p>
+  </div>
+</div>
+
+<p>The derived class is where Class 20 picks up. Here is its declaration, exactly as the course notes
+give it, so you can see the shape of what is coming:</p>
+
+<pre><code class="language-cpp">class Square : public Rectangle {
+public:
+    Square();
+    Square(double e, bool c);
+    ~Square();
+    double edge() const;
+    void print() const;
+protected:
+    bool centered;
+};</code></pre>
+
+<p>Read it as a summary of this whole lecture. <code>Square</code> declares five members and gets
+<code>height()</code>, <code>width()</code>, <code>area()</code>, <code>h</code> and <code>w</code>
+free. It adds a data member of its own, <code>centered</code>, which is <code>protected</code> so
+that classes derived from <code>Square</code> can reach it in turn. It adds a method the base class
+does not have at all &mdash; <code>edge()</code>, because a square has an edge length where a
+rectangle has a height and a width &mdash; which is the professor's point that <strong>derived
+classes can declare extra methods that are not in the base class</strong>. And it overrides
+<code>print()</code>.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; what is still missing</span></div>
+  <div class="bd">
+    <p>The bodies of those constructors and that destructor are not written here, and you cannot
+    write them yet with what this class has given you. <code>Square()</code> must somehow arrange
+    for the <code>Rectangle</code> part to be built, and <code>Square(double e, bool c)</code> must
+    pass <code>e</code> down to it. There is a specific syntax for that handover, and a fixed order
+    in which the pieces are constructed and destroyed. That is Class 20, and it starts from exactly
+    this declaration.</p>
+    <p>One further caution to carry forward: <code>Square::print()</code> <em>hides</em>
+    <code>Rectangle::print()</code> rather than overriding it in the polymorphic sense, because
+    neither is declared <code>virtual</code>. For an object declared <code>Square s;</code> that
+    makes no difference &mdash; <code>s.print()</code> runs the <code>Square</code> version. It
+    starts to matter the moment a <code>Square</code> is handled through a <code>Rectangle</code>
+    pointer or reference, which is Class 21, and it is fixed with <code>virtual</code> in
+    Class 24.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.11</div>
+  <div class="bd">
+    <p>Look only at the declaration of <code>Square</code> above, together with the full
+    <code>Rectangle</code> from this section.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> List every member a <code>Square</code> object has, marking each one as inherited or its own.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Member</th><th>Where it comes from</th></tr>
+          <tr><td><code>h</code>, <code>w</code></td><td>inherited (protected) from <code>Rectangle</code></td></tr>
+          <tr><td><code>height()</code>, <code>width()</code>, <code>area()</code></td><td>inherited (public) from <code>Rectangle</code></td></tr>
+          <tr><td><code>centered</code></td><td><code>Square</code>'s own, protected</td></tr>
+          <tr><td><code>edge()</code></td><td><code>Square</code>'s own &mdash; a method the base class does not have at all</td></tr>
+          <tr><td><code>print()</code></td><td><code>Square</code>'s own, replacing the inherited one</td></tr>
+          <tr><td>two constructors and a destructor</td><td><code>Square</code>'s own &mdash; these are never inherited</td></tr>
+        </table>
+        <p>Nine members, of which five were free.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Why is <code>centered</code> marked <code>protected</code> rather than <code>private</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>So that classes derived from <code>Square</code> can access it in turn. The course notes
+        say exactly this. It is the same reasoning that made <code>Rectangle</code>'s <code>h</code>
+        and <code>w</code> protected, applied one level further down: <code>Square</code> is itself a
+        base class for anything derived from it.</p>
+        <p>Nothing forces the choice. <code>private</code> would compile and would be the safer
+        default by the argument in the box above; <code>protected</code> is a bet that somebody will
+        derive from <code>Square</code> and will need the raw member.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> The declaration says <code>double edge() const;</code> but no body appears. What has to be true for the program to link?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>A definition must appear somewhere &mdash; written outside the class as</p>
+<pre><code class="language-cpp">double Square::edge() const {
+    return h;
+}</code></pre>
+        <p>Declaring a method inside the class and defining it outside with the
+        <code>Square::</code> qualifier is the same split you used in Class 10; inheritance changes
+        nothing about it. If no definition exists anywhere, the compiler is satisfied and the
+        <em>linker</em> fails with <em>"undefined reference to Square::edge() const"</em> &mdash;
+        which is how you tell a missing body from a missing declaration.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; give <code>Square</code> its edge</h3>
+
+<p>Using the <code>Rectangle</code> below (protected data, no announcement messages this time), write
+a <code>Square</code> that has a <code>setEdge</code>, an <code>edge()</code> accessor and its own
+<code>print()</code>. Do not write any constructors &mdash; let the compiler's default one handle
+it, so that a new <code>Square</code> starts out 1 by 1.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() { h = 1.0; w = 1.0; }
+    double height() const { return h; }
+    double width()  const { return w; }
+    double area()   const { return fabs(h * w); }
+    void print() const {
+        cout &lt;&lt; &quot;Rectangle::print &quot; &lt;&lt; w &lt;&lt; &quot; by &quot; &lt;&lt; h
+             &lt;&lt; &quot;, area &quot; &lt;&lt; area() &lt;&lt; endl;
+    }
+protected:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    // setEdge(double), edge(), and a print() of your own
+
+};
+
+int main() {
+    Rectangle r;
+    r.print();
+
+    Square s;
+    s.print();
+    // set s to an edge of 2.5 and print it again
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() { h = 1.0; w = 1.0; }
+    double height() const { return h; }
+    double width()  const { return w; }
+    double area()   const { return fabs(h * w); }
+    void print() const {
+        cout &lt;&lt; "Rectangle::print " &lt;&lt; w &lt;&lt; " by " &lt;&lt; h
+             &lt;&lt; ", area " &lt;&lt; area() &lt;&lt; endl;
+    }
+protected:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    // setEdge(double), edge(), and a print() of your own
+
+};
+
+int main() {
+    Rectangle r;
+    r.print();
+
+    Square s;
+    s.print();
+    // set s to an edge of 2.5 and print it again
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 19.12</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output, including the line that reports
+    <code>s.height()</code> and <code>s.width()</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> <code>Square</code> needs three members and nothing else.
+      <code>setEdge</code> writes both protected members, because a square's height and width are
+      the same number. <code>edge()</code> reads either one. <code>print()</code> is written in terms
+      of the inherited <code>area()</code> and its own <code>edge()</code> &mdash; no arithmetic is
+      repeated anywhere.</p>
+<div class="codewrap"><div class="cap">ex2_square.cpp</div><pre><code class="language-cpp">// ex2_square.cpp -- in-class exercise: a Square that uses the base class's protected data
+class Square : public Rectangle {
+public:
+    void setEdge(double e) { h = e; w = e; }
+    double edge() const    { return h; }
+    void print() const {
+        cout &lt;&lt; "Square::print edge " &lt;&lt; edge()
+             &lt;&lt; ", area " &lt;&lt; area() &lt;&lt; endl;
+    }
+};
+
+int main() {
+    Rectangle r;
+    r.print();
+
+    Square s;
+    s.print();
+    s.setEdge(2.5);
+    s.print();
+    cout &lt;&lt; "s.height() = " &lt;&lt; s.height() &lt;&lt; ", s.width() = " &lt;&lt; s.width() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Rectangle::print 1 by 1, area 1
+Square::print edge 1, area 1
+Square::print edge 2.5, area 6.25
+s.height() = 2.5, s.width() = 2.5</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>Square</code> declares no constructor, so the compiler generates a default one,
+          and that one runs <code>Rectangle()</code> for the base part. That is why a brand-new
+          <code>Square</code> prints "edge 1, area 1" rather than garbage.</li>
+        <li><code>Square::print()</code> calls <code>area()</code> with no object and no
+          <code>Rectangle::</code> in front of it. Inherited methods are called exactly like the
+          class's own.</li>
+        <li>The last line proves there is one set of data, not two: writing through
+          <code>setEdge</code> changed what the inherited accessors report.</li>
+        <li>If <code>Rectangle</code> had left <code>h</code> and <code>w</code> private, only
+          <code>setEdge</code> would break &mdash; <code>edge()</code> could be written as
+          <code>return height();</code> and <code>print()</code> would be unaffected. Being precise
+          about <em>which</em> member needs the access is how you decide how much to open up.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 19</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 come straight out of the course notes for this lecture &mdash; the
+    five-class tree and the <code>Rectangle</code>/<code>Square</code> access question. Problems 3
+    and 4 are adapted from the exam bank: <em>"implement a Y class that inherits from X"</em> is one
+    of this professor's fixed question formats, appearing on six of the ten graded papers and on
+    <em>every</em> final. Problems 5 and 6 are added &mdash; a design question and a find-the-bug
+    question, both in the shape of things that cost points on the real papers.</p>
+    <p>On the exam version of Problems 3 and 4 the rubric pays points for things you might think are
+    free: <strong>2 points for the class title line</strong> <code>class Y : public X {</code>,
+    a point for the closing <code>};</code>, and a point for having the
+    <code>protected:</code> and <code>public:</code> labels at all. Write those even if you get
+    nothing else out.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; The five-class tree <span class="muted small">(from the course notes)</span></h3>
+
+<p>The classes <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code> and <code>E</code> are
+exactly as declared in &sect;5: <code>B</code> derives from <code>A</code>; <code>C</code> and
+<code>D</code> derive from <code>B</code>; <code>E</code> derives from <code>A</code>.
+<code>B</code> overrides <code>name</code> and <code>f1</code>; <code>C</code> overrides
+<code>name</code> and <code>f3</code>; <code>D</code> overrides <code>name</code>; <code>E</code>
+overrides <code>name</code>, <code>f1</code> and <code>f3</code>.</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Fill in the complete resolution table: for each of the five classes, which class's version of <code>name</code>, <code>f1</code>, <code>f2</code> and <code>f3</code> actually runs?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Twenty independent questions, each answered the same way: start at the
+    object's declared class, walk up the chain, take the first match.</p>
+    <table class="trace">
+      <tr><th>Class</th><th><code>name</code></th><th><code>f1</code></th><th><code>f2</code></th><th><code>f3</code></th></tr>
+      <tr><td><code>A</code></td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
+      <tr><td><code>B</code></td><td>B</td><td>B</td><td>A</td><td>A</td></tr>
+      <tr><td><code>C</code></td><td>C</td><td>B</td><td>A</td><td>C</td></tr>
+      <tr><td><code>D</code></td><td>D</td><td>B</td><td>A</td><td>A</td></tr>
+      <tr><td><code>E</code></td><td>E</td><td>E</td><td>A</td><td>E</td></tr>
+    </table>
+    <p>The <code>f2</code> column is constant because nobody overrides it. The <code>f1</code>
+    column is the interesting one: <code>C</code> and <code>D</code> both land on <code>B</code>,
+    because <code>B</code> is between them and <code>A</code> &mdash; whereas <code>E</code>, which
+    is not below <code>B</code> at all, defines its own.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Write the complete program, declare one object of each class, call all four methods on each, and give the exact output.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Declare the classes in order &mdash; a base class must be a complete
+    type before anything derives from it, so <code>A</code> comes first, then <code>B</code>, then
+    <code>C</code>/<code>D</code>/<code>E</code> in any order. Each derived class contains only its
+    overrides. Then five blocks of four calls in <code>main</code>.</p>
+<div class="codewrap"><div class="cap">tree.cpp</div><pre><code class="language-cpp">// tree.cpp -- the five-class inheritance tree, with a driver that prints the whole table
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class A {
+public:
+    string name() const { return "class is A"; }
+    void f1() const { cout &lt;&lt; "A::f1" &lt;&lt; endl; }
+    void f2() const { cout &lt;&lt; "A::f2" &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; "A::f3" &lt;&lt; endl; }
+};
+
+class B : public A {
+public:
+    string name() const { return "class is B"; }
+    void f1() const { cout &lt;&lt; "B::f1" &lt;&lt; endl; }
+};
+
+class C : public B {
+public:
+    string name() const { return "class is C"; }
+    void f3() const { cout &lt;&lt; "C::f3" &lt;&lt; endl; }
+};
+
+class D : public B {
+public:
+    string name() const { return "class is D"; }
+};
+
+class E : public A {
+public:
+    string name() const { return "class is E"; }
+    void f1() const { cout &lt;&lt; "E::f1" &lt;&lt; endl; }
+    void f3() const { cout &lt;&lt; "E::f3" &lt;&lt; endl; }
+};
+
+int main() {
+    A a;   B b;   C c;   D d;   E e;
+
+    cout &lt;&lt; a.name() &lt;&lt; endl;  a.f1();  a.f2();  a.f3();
+    cout &lt;&lt; b.name() &lt;&lt; endl;  b.f1();  b.f2();  b.f3();
+    cout &lt;&lt; c.name() &lt;&lt; endl;  c.f1();  c.f2();  c.f3();
+    cout &lt;&lt; d.name() &lt;&lt; endl;  d.f1();  d.f2();  d.f3();
+    cout &lt;&lt; e.name() &lt;&lt; endl;  e.f1();  e.f2();  e.f3();
+    return 0;
+}</code></pre></div>
+<pre class="out">class is A
+A::f1
+A::f2
+A::f3
+class is B
+B::f1
+A::f2
+A::f3
+class is C
+B::f1
+A::f2
+C::f3
+class is D
+B::f1
+A::f2
+A::f3
+class is E
+E::f1
+A::f2
+E::f3</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>The course notes sketch these classes as <code>class B : public A;</code> on a line by
+        itself. That is not valid C++ &mdash; a base-specifier cannot appear on a forward
+        declaration, only on a real definition with a body. Written out properly, even an empty
+        derived class needs its braces: <code>class B : public A { };</code></li>
+      <li>Declaration order matters. Put <code>class C : public B</code> before <code>B</code> is
+        defined and you get <em>"invalid use of incomplete type"</em>: the compiler must know how
+        big a <code>B</code> is to lay a <code>C</code> out.</li>
+      <li>Twenty calls, four function bodies for <code>f1</code>/<code>f2</code>/<code>f3</code>
+        beyond the base's three. That ratio is the argument for inheritance in one number.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 2 &mdash; Why <code>Square</code> would not compile <span class="muted small">(from the course notes)</span></h3>
+
+<p>A student writes the class below and gets a compiler error on the line marked. Explain the error
+in one sentence, then give <em>two</em> different repairs: one that changes only
+<code>Square</code>, and one that changes only <code>Rectangle</code>. Say which you would submit
+and why.</p>
+
+<pre><code class="language-cpp">class Rectangle {
+public:
+    Rectangle() { h = 1.0; w = 1.0; }
+    double height() const { return h; }
+    double width() const  { return w; }
+private:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    double edge() const { return h; }     // error here
+};</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The error is about access, not about existence: <code>h</code> is
+  present in every <code>Square</code> object, but it belongs to <code>Rectangle</code> and is
+  labelled <code>private</code>, which shuts out derived classes exactly as firmly as it shuts out
+  <code>main</code>. So the two repairs are "stop asking for it directly" and "stop labelling it
+  private".</p>
+<pre class="err">privlock.cpp: In member function 'double Square::edge() const':
+privlock.cpp:16:34: error: 'double Rectangle::h' is private within this context
+   16 |     double edge() const { return h; }     // reaching for the base class's private data
+      |                                  ^
+privlock.cpp:11:12: note: declared private here
+   11 |     double h, w;
+      |            ^</pre>
+  <p><strong>Repair 1 &mdash; change only <code>Square</code>: go through the public interface.</strong></p>
+<pre><code class="language-cpp">class Square : public Rectangle {
+public:
+    double edge() const { return height(); }    // public accessor, inherited
+};</code></pre>
+  <p><strong>Repair 2 &mdash; change only <code>Rectangle</code>: open the door to derived classes.</strong></p>
+<pre><code class="language-cpp">class Rectangle {
+public:
+    Rectangle() { h = 1.0; w = 1.0; }
+    double height() const { return h; }
+    double width() const  { return w; }
+protected:
+    double h, w;
+};</code></pre>
+  <p>Both compile. Verified output for repair 2, with a mutator added so the write case is covered
+  too:</p>
+<pre class="out">edge = 1
+edge = 2.5
+height = 2.5, width = 2.5</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>For <em>reading</em>, repair 1 is better: it costs nothing, the base class keeps full
+      control of its representation, and <code>Rectangle</code> can change how it stores its shape
+      without breaking <code>Square</code>.</li>
+    <li>For <em>writing</em>, repair 1 is not available unless <code>Rectangle</code> also offers a
+      public mutator &mdash; and adding one hands that power to every caller in the program, not
+      just to derived classes. That asymmetry is the honest case for <code>protected</code>.</li>
+    <li>The course notes take repair 2, and every subsequent example in this course uses a
+      <code>Rectangle</code> with protected data. Follow the source you are given: on an exam, if
+      the printed base class says <code>protected:</code>, use the members directly; if it says
+      <code>private:</code>, you must go through the accessors or you will lose the points.</li>
+    <li>What you must not write is the third "fix" students reach for &mdash; redeclaring
+      <code>double h, w;</code> inside <code>Square</code>. That compiles, and it gives every
+      <code>Square</code> object <em>two</em> pairs of numbers: the base class's, which
+      <code>height()</code> reports, and the derived class's, which <code>edge()</code> reports.
+      They immediately disagree.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; A <code>SquareBox</code> that inherits from <code>Box</code> <span class="muted small">(from the Fall 2023 Final)</span></h3>
+
+<p>The class <code>Box</code> is given. Implement a <code>SquareBox</code> class that inherits from
+it, with the following requirements:</p>
+<ul>
+  <li><code>SquareBox</code> has no additional data member.</li>
+  <li>Implement a default constructor.</li>
+  <li>Implement a non-default constructor with one argument, <code>size</code>, used for the length,
+    the width and the height.</li>
+</ul>
+
+<pre><code class="language-cpp">class Box {
+public:
+    Box() { length = 1; width = 1; height = 1; }
+    void print() const {
+        cout &lt;&lt; "Box: (" &lt;&lt; length &lt;&lt; ", " &lt;&lt; width &lt;&lt; ", " &lt;&lt; height &lt;&lt; ")" &lt;&lt; endl;
+    }
+    int volume() const { return length * width * height; }
+protected:
+    int length, width, height;
+};
+
+int main() {
+    SquareBox a, b(5);
+    a.print();          // Box: (1, 1, 1)
+    b.print();          // Box: (5, 5, 5)
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Start with the title line, because it is worth points on its own:
+  <code>class SquareBox : public Box {</code>. There is no extra data member, so the whole class is
+  two constructors. The default one has nothing to do &mdash; <code>Box()</code> runs first and
+  leaves 1, 1, 1 behind &mdash; so its body is empty. The one-argument one writes all three
+  protected members, which is legal precisely because <code>Box</code> labelled them
+  <code>protected</code>. Then the closing <code>};</code>.</p>
+<div class="codewrap"><div class="cap">prac_squarebox.cpp</div><pre><code class="language-cpp">// prac_squarebox.cpp -- Fall 2023 Final Problem 5, adapted to Class 19 tools
+#include &lt;iostream&gt;
+using namespace std;
+
+class Box {
+public:
+    Box() { length = 1; width = 1; height = 1; }
+    void print() const {
+        cout &lt;&lt; "Box: (" &lt;&lt; length &lt;&lt; ", " &lt;&lt; width &lt;&lt; ", " &lt;&lt; height &lt;&lt; ")" &lt;&lt; endl;
+    }
+    int volume() const { return length * width * height; }
+protected:
+    int length, width, height;
+};
+
+class SquareBox : public Box {
+public:
+    SquareBox() { }                                  // Box() has already set 1, 1, 1
+    SquareBox(int size) { length = size; width = size; height = size; }
+    int edge() const { return length; }
+};
+
+int main() {
+    SquareBox a, b(5);
+    a.print();          // Box: (1, 1, 1)
+    b.print();          // Box: (5, 5, 5)
+    cout &lt;&lt; "b edge = " &lt;&lt; b.edge() &lt;&lt; ", volume = " &lt;&lt; b.volume() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Box: (1, 1, 1)
+Box: (5, 5, 5)
+b edge = 5, volume = 125</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>a.print()</code> and <code>b.print()</code> both say "Box:" &mdash;
+      <code>SquareBox</code> did not override <code>print()</code>, so the inherited one runs and it
+      was written to print the word "Box". The expected-output comments in the question say the same
+      thing; read them as a specification, not a typo.</li>
+    <li><code>edge()</code> is not required by the question. It is here to make the point that a
+      derived class may add methods the base does not have &mdash; and that it can read the
+      protected members to do so.</li>
+    <li>The official rubric answer writes the second constructor as
+      <code>SquareBox(int size) : Box(size, size, size) {}</code>, using a <em>base-class
+      initializer</em> and a three-argument <code>Box</code> constructor. That is Class 20's syntax
+      and it is the better answer once you have it: it initializes the base part correctly the first
+      time instead of default-constructing it and then overwriting. Assigning to the protected
+      members in the body, as above, is the version you can write with today's tools, and it
+      produces identical output here.</li>
+    <li>Do not forget the semicolon after the closing brace of the class. The rubric gives a point
+      for it.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; A <code>Pfunction</code> that inherits from <code>Polynomial</code> <span class="muted small">(from the Fall 2023 Exam 2)</span></h3>
+
+<p>The class <code>Polynomial</code> below stores coefficients and a degree, and prints itself as a
+polynomial in <code>x</code>. Implement a <code>Pfunction</code> class that inherits from it, with
+these requirements:</p>
+<ul>
+  <li><code>Pfunction</code> has one additional <code>double</code> data member, <code>x</code>.</li>
+  <li>Implement a constructor taking three arguments: the coefficient array, the degree, and the
+    value of <code>x</code>.</li>
+  <li>Override <code>print()</code> so that it replaces the symbol <code>x</code> with the actual
+    value.</li>
+</ul>
+
+<pre><code class="language-cpp">const int MAXDEG = 10;
+
+class Polynomial {
+public:
+    Polynomial() {
+        degree = 0;
+        for (int i = 0; i &lt;= MAXDEG; i++) coefficients[i] = 0.0;
+    }
+    void set(const double c[], int d) {
+        degree = d;
+        for (int i = 0; i &lt;= d; i++) coefficients[i] = c[i];
+    }
+    void print() const {
+        for (int i = degree; i &gt;= 1; i--) {
+            cout &lt;&lt; coefficients[i] &lt;&lt; "*x^" &lt;&lt; i &lt;&lt; " + ";
+        }
+        cout &lt;&lt; coefficients[0] &lt;&lt; endl;
+    }
+protected:
+    double coefficients[MAXDEG + 1];
+    int degree;
+};
+
+int main() {
+    double a[3] = {1.1, 2.2, 3.3};
+    Pfunction pf(a, 2, 1.5);
+    pf.print();      // 3.3*(1.5)^2 + 2.2*(1.5)^1 + 1.1
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Three requirements, three pieces of code. The extra member goes in a
+  <code>protected:</code> section &mdash; the rubric accepts <code>private</code> too, but
+  <code>protected</code> keeps the door open for anything derived from <code>Pfunction</code>. The
+  constructor has to fill in the base part before it can fill in its own, and the only tool this
+  class gives you for that is the inherited public <code>set()</code>. The override copies the
+  base's <code>print()</code> and swaps the literal <code>"*x^"</code> for the value of
+  <code>x</code>.</p>
+<div class="codewrap"><div class="cap">prac_pfunction.cpp</div><pre><code class="language-cpp">// prac_pfunction.cpp -- Fall 2023 Exam 2 Problem 3, adapted to Class 19 tools
+// (class Polynomial exactly as printed above)
+
+class Pfunction : public Polynomial {
+public:
+    Pfunction(const double c[], int d, double xVal) {
+        set(c, d);          // inherited public method fills the base part
+        x = xVal;           // then the derived class's own member
+    }
+    void print() const {
+        for (int i = degree; i &gt;= 1; i--) {
+            cout &lt;&lt; coefficients[i] &lt;&lt; "*(" &lt;&lt; x &lt;&lt; ")^" &lt;&lt; i &lt;&lt; " + ";
+        }
+        cout &lt;&lt; coefficients[0] &lt;&lt; endl;
+    }
+protected:
+    double x;
+};
+
+int main() {
+    double a[3] = {1.1, 2.2, 3.3};
+
+    Polynomial p;
+    p.set(a, 2);
+    p.print();
+
+    Pfunction pf(a, 2, 1.5);
+    pf.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">3.3*x^2 + 2.2*x^1 + 1.1
+3.3*(1.5)^2 + 2.2*(1.5)^1 + 1.1</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The override reads <code>degree</code> and <code>coefficients</code> by name. That works
+      only because <code>Polynomial</code> declared them <code>protected</code>. This is the single
+      most common reason a derived-class exam answer fails to compile: the printed base class says
+      <code>private</code> and the student writes the loop anyway.</li>
+    <li><code>coefficients[2]</code> is 3.3, so the highest-degree term is <code>3.3*(1.5)^2</code>.
+      The array is indexed by degree, lowest first &mdash; check that before you write the loop, on
+      every question of this shape.</li>
+    <li>Both <code>print()</code> methods exist in the program. <code>p.print()</code> runs
+      <code>Polynomial</code>'s because <code>p</code> is declared a <code>Polynomial</code>;
+      <code>pf.print()</code> runs <code>Pfunction</code>'s. Declared type decides &mdash; static
+      binding.</li>
+    <li>The real exam's <code>Polynomial</code> holds its coefficients in a
+      <code>double *</code> allocated with <code>new[]</code>, and its constructor takes the array
+      directly, so the model answer chains to it with <code>: Polynomial(c, d)</code>. That is
+      Class 20 syntax over a Class 15 class; the fixed-size array here changes none of the
+      inheritance reasoning.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 5 &mdash; IS-A and HAS-A in one model <span class="muted small">(added)</span></h3>
+
+<p>A registrar's office needs three types: an <code>Address</code> (street and city), a
+<code>Student</code> (name, ID, home address), and a <code>GradStudent</code>, which is a student who
+also has a thesis advisor and prints itself differently. Decide which relationships are IS-A and
+which are HAS-A, then write all three classes and a <code>main</code> that prints one of each.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Say both sentences out loud. <em>"A graduate student is a student"</em>
+  &mdash; true, and everything a student can do a graduate student can do, so the substitution test
+  passes: IS-A, inheritance. <em>"A student is an address"</em> &mdash; nonsense; <em>"a student has
+  an address"</em> &mdash; obviously true: HAS-A, composition. So <code>Address</code> becomes a
+  data member of <code>Student</code>, and <code>GradStudent</code> derives from
+  <code>Student</code>. <code>Student</code>'s data is <code>protected</code> because
+  <code>GradStudent::print()</code> needs to read the name and ID.</p>
+<div class="codewrap"><div class="cap">prac_student.cpp</div><pre><code class="language-cpp">// prac_student.cpp -- IS-A and HAS-A in one small model
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Address {
+public:
+    void set(const string &amp;st, const string &amp;ct) { street = st; city = ct; }
+    void print() const { cout &lt;&lt; street &lt;&lt; ", " &lt;&lt; city; }
+private:
+    string street, city;
+};
+
+class Student {
+public:
+    void setStudent(const string &amp;n, int i) { name = n; id = i; }
+    void setAddress(const string &amp;st, const string &amp;ct) { home.set(st, ct); }
+    void print() const {
+        cout &lt;&lt; "Student " &lt;&lt; id &lt;&lt; " " &lt;&lt; name &lt;&lt; " -- ";
+        home.print();
+        cout &lt;&lt; endl;
+    }
+protected:
+    string name;
+    int id;
+    Address home;          // a Student HAS-A Address
+};
+
+class GradStudent : public Student {   // a GradStudent IS-A Student
+public:
+    void setAdvisor(const string &amp;a) { advisor = a; }
+    void print() const {
+        cout &lt;&lt; "Grad student " &lt;&lt; id &lt;&lt; " " &lt;&lt; name
+             &lt;&lt; " (advisor: " &lt;&lt; advisor &lt;&lt; ") -- ";
+        home.print();
+        cout &lt;&lt; endl;
+    }
+protected:
+    string advisor;
+};
+
+int main() {
+    Student s;
+    s.setStudent("Ana Ruiz", 1001);
+    s.setAddress("65-30 Kissena Blvd", "Flushing");
+    s.print();
+
+    GradStudent g;
+    g.setStudent("Ben Okoro", 2002);
+    g.setAddress("1 Union Sq", "New York");
+    g.setAdvisor("Prof. Lee");
+    g.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">Student 1001 Ana Ruiz -- 65-30 Kissena Blvd, Flushing
+Grad student 2002 Ben Okoro (advisor: Prof. Lee) -- 1 Union Sq, New York</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>GradStudent</code> reuses <code>setStudent</code> and <code>setAddress</code> without
+      writing a line of them, and adds exactly what is new. Three inherited members, two new ones.</li>
+    <li><code>GradStudent::print()</code> calls <code>home.print()</code> &mdash; it reaches the
+      <code>Address</code> through the protected member it inherited, and then talks to it through
+      <em>its</em> public interface. Both relationships in one line.</li>
+    <li>Two different <code>print()</code> methods are in play here and they are not related by
+      anything except the name. <code>s.print()</code> and <code>g.print()</code> are resolved from
+      the declared types of <code>s</code> and <code>g</code>.</li>
+    <li>If <code>Address</code> had been made a base class of <code>Student</code> instead, the
+      program would still compile &mdash; and a <code>Student</code> would then <em>be</em> an
+      address, with a <code>set(street, city)</code> in its public interface and no way to hold a
+      second address later. That is the design smell to watch for.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Find the three access mistakes <span class="muted small">(added)</span></h3>
+
+<p>This program does not compile. Find all three errors, say what the compiler reports for each, and
+give a corrected version that prints the balance after 5% interest has been added to a $100
+deposit.</p>
+
+<pre><code class="language-cpp">class Account {
+public:
+    Account() { balance = 0.0; }
+    void deposit(double amt) { balance += amt; }
+    double getBalance() const { return balance; }
+private:
+    double balance;
+    string owner;
+};
+
+class SavingsAccount : public Account {
+public:
+    void addInterest(double rate) {
+        balance = balance * (1.0 + rate);
+    }
+};
+
+int main() {
+    SavingsAccount s;
+    s.deposit(100.0);
+    s.addInterest(0.05);
+    cout &lt;&lt; s.balance &lt;&lt; endl;
+    SavingsAccount t(500.0);
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Check every use of a name against the section it was declared in, and
+  every constructor call against the constructors the class actually has. Three uses fail:
+  <code>addInterest</code> touches a private base member; <code>main</code> touches the same private
+  member from outside; and <code>SavingsAccount t(500.0);</code> calls a constructor that does not
+  exist, because constructors are not inherited.</p>
+<pre class="err">prac_bugs_bad.cpp: In member function 'void SavingsAccount::addInterest(double)':
+prac_bugs_bad.cpp:19:9: error: 'double Account::balance' is private within this context
+   19 |         balance = balance * (1.0 + rate);      // bug 1
+      |         ^~~~~~~
+prac_bugs_bad.cpp: In function 'int main()':
+prac_bugs_bad.cpp:27:15: error: 'double Account::balance' is private within this context
+   27 |     cout &lt;&lt; s.balance &lt;&lt; endl;                 // bug 2
+      |               ^~~~~~~
+prac_bugs_bad.cpp:27:15: note: field 'double Account::balance' can be accessed via 'double Account::getBalance() const'
+prac_bugs_bad.cpp:28:27: error: no matching function for call to 'SavingsAccount::SavingsAccount(double)'
+   28 |     SavingsAccount t(500.0);                   // bug 3
+      |                           ^
+prac_bugs_bad.cpp:16:7: note: candidate: 'SavingsAccount::SavingsAccount()'
+   16 | class SavingsAccount : public Account {
+      |       ^~~~~~~~~~~~~~</pre>
+  <p>The repairs, one per bug: move <code>balance</code> to a <code>protected:</code> section so the
+  derived class may use it; go through the public accessor from <code>main</code>; and construct
+  <code>t</code> with the constructor <code>SavingsAccount</code> actually has, then deposit.</p>
+<div class="codewrap"><div class="cap">prac_bugs_fixed.cpp</div><pre><code class="language-cpp">// prac_bugs_fixed.cpp -- the same program with the three access mistakes repaired
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Account {
+public:
+    Account() { balance = 0.0; }
+    void deposit(double amt) { balance += amt; }
+    double getBalance() const { return balance; }
+protected:                       // fix 1: derived classes may now read and write balance
+    double balance;
+    string owner;
+};
+
+class SavingsAccount : public Account {
+public:
+    void setRate(double r) { rate = r; }
+    void addInterest() { balance = balance * (1.0 + rate); }
+protected:
+    double rate;
+};
+
+int main() {
+    SavingsAccount s;
+    s.deposit(100.0);
+    s.setRate(0.05);
+    s.addInterest();
+    cout &lt;&lt; s.getBalance() &lt;&lt; endl;    // fix 2: go through the public accessor
+
+    SavingsAccount t;                  // fix 3: SavingsAccount has no 1-argument constructor
+    t.deposit(500.0);
+    cout &lt;&lt; t.getBalance() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">105
+500</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Bugs 1 and 2 produce the <em>same</em> message &mdash; <em>"is private within this
+      context"</em> &mdash; from two completely different places. Read the "In member function" /
+      "In function 'int main()'" header line above each error; it tells you who was refused.</li>
+    <li>g++ suggests the accessor for you: <em>"field can be accessed via
+      'double Account::getBalance() const'"</em>. Modern compiler notes are worth reading to the
+      end.</li>
+    <li>Bug 3 is the one that has nothing to do with access. Constructors are never inherited, so
+      giving <code>Account</code> a <code>double</code> constructor would not help either; the fix
+      is either to use the constructor that exists or to write
+      <code>SavingsAccount(double)</code> yourself &mdash; which needs the base-initializer syntax
+      from Class 20.</li>
+    <li><code>owner</code> is unused throughout, which is legal and warning-free. Unused data
+      members are not errors; unused <em>access</em> is what the compiler polices.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li><strong>Inheritance</strong> lets one class acquire the members of another. It solves
+        duplicated code, and &mdash; more importantly &mdash; it lets the program state that one
+        type <em>is a kind of</em> another.</li>
+      <li>The syntax is <code>class Derived : public Base { ... };</code>. <code>Base</code> is the
+        <strong>base class</strong> or parent; <code>Derived</code> is the <strong>derived
+        class</strong>. Inheritance forms a <strong>tree</strong> of any depth.</li>
+      <li>A derived object <strong>contains a base sub-object</strong>. That is what
+        <strong>IS-A</strong> means concretely: an object of class <code>B</code> is an
+        <code>A</code> component plus a <code>B</code> component, and for simple single inheritance
+        the compiler lays the base part out first.</li>
+      <li>A derived class inherits every member of the base <em>except</em> its constructors, its
+        destructor, its assignment operator, and its friendships.</li>
+      <li><strong>IS-A</strong> means inheritance; <strong>HAS-A</strong> means a data member of
+        another class type &mdash; composition. Test with the English sentence and with
+        substitution, and prefer composition when both readings look plausible.</li>
+      <li>A derived class <strong>overrides</strong> a method by declaring one with the same name and
+        parameter list. To resolve <code>obj.f()</code> the compiler starts at the declared class of
+        <code>obj</code> and walks <em>up</em> its own chain, taking the first match; it never looks
+        in another branch of the tree.</li>
+      <li>That decision is <strong>static binding</strong> (early binding): it is made at compile
+        time from the <em>declared type</em>, and cannot change while the program runs. Its opposite,
+        dynamic binding, arrives with <code>virtual</code> in Class 24.</li>
+      <li>A name declared in the derived class <strong>hides every base member of that name</strong>,
+        including overloads with different parameter lists.</li>
+      <li><code>private</code> is an absolute lock-out &mdash; derived classes are shut out exactly
+        like everyone else. <code>protected</code> means "private to the outside world, public to
+        derived classes", at every depth of the tree.</li>
+      <li><code>protected</code> <em>data</em> is convenient and is what this course's examples and
+        exams use, but it lets a derived class bypass the base class's own rules and freezes the
+        base's representation. Prefer private data with protected methods when you have the
+        choice.</li>
+    </ul>
+    <p><strong>Coming up in Class 20:</strong> the bodies of those <code>Square</code> constructors
+    &mdash; the base-class initializer that passes arguments down, the exact order in which base and
+    derived parts are constructed and destroyed, how to call a base method you have overridden with
+    <code>Rectangle::print()</code>, and what the Big Three look like for a derived class.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 18 &middot; Operators II</div><div class="pending">posts Tue Nov 3</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 20 &middot; Inheritance II</div><div class="pending">posts Tue Nov 10</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

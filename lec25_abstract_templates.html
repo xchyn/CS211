@@ -1,0 +1,2872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 25 — Abstract &amp; Templates | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 25 &middot; Abstract &amp; Templates</span><span class="sep">|</span><span class="where">Tue Dec 1</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 25 &middot; CSCI 211</div>
+  <h1>Abstract Base Classes and Function Templates</h1>
+  <p class="sub">Two ideas that both say "write it once": a base class you are <em>forbidden</em> to instantiate, and a function you write once for every type there will ever be.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Write a <em>pure virtual function</em> and say precisely what <code>= 0</code> means.</li>
+      <li>Decide whether a given class is <em>abstract</em>, and predict the exact <code>g++</code> error you get when you try to create an object of it.</li>
+      <li>Work out whether a <em>derived</em> class is still abstract because it inherited a pure virtual it never overrode &mdash; the single most-tested idea on this professor's finals.</li>
+      <li>Explain why pointers and references to an abstract type are legal, and why that is the entire point.</li>
+      <li>Use an abstract base class as an <em>interface</em>, and connect that back to the Java word you met in Class 1.</li>
+      <li>Make a class abstract using <code>protected</code> constructors instead, and argue honestly for one technique over the other.</li>
+      <li>Write a function template with <code>template &lt;typename T&gt;</code>, call it with an explicit template argument, and say when the compiler can deduce <code>T</code> for you.</li>
+      <li>Read a 200-line template error message by finding the one line that says <em>which</em> instantiation failed.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Where polymorphism runs out</a></li>
+    <li><a href="#s2">Pure virtual functions</a></li>
+    <li><a href="#s3">Which derived classes are still abstract?</a></li>
+    <li><a href="#s4">An abstract class as an interface</a></li>
+    <li><a href="#s5">The other way: protected constructors</a></li>
+    <li><a href="#s6">The same function, written three times</a></li>
+    <li><a href="#s7"><code>template &lt;typename T&gt;</code></a></li>
+    <li><a href="#s8">Deduction versus explicit template arguments</a></li>
+    <li><a href="#s9">When <code>T</code> does not cooperate</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Where polymorphism runs out</h2>
+
+<p>Class 24 gave you the machinery. A method marked <code>virtual</code> is dispatched on the
+<em>dynamic</em> type of the object, not on the static type of the pointer or reference you reached
+it through. A base-class pointer aimed at a derived object calls the derived override. A base class
+with virtual methods needs a <code>virtual</code> destructor so that <code>delete</code> through a base pointer runs the
+right destructor chain. That is polymorphism, and with it you can write code today that correctly
+drives classes nobody has written yet.</p>
+
+<p>Now think about what "nobody has written yet" really costs you. Suppose you are writing a
+software library for an accounting system: customers, suppliers, sales and receipts, income and
+expenses, inventory. Who buys it? A department store. A restaurant. A trucking company. A medical
+billing firm, which has legal regulations that apply to nobody else on that list. What your library
+provides is a <strong>service</strong>. What it emphatically does <em>not</em> have is a model of
+the objects it operates on &mdash; you have no idea what a "sale" looks like at a trucking company.</p>
+
+<p>And yet the library has to operate on <em>something</em>. Every virtual call in it has to go
+through a base-class pointer or reference, so:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>You cannot write virtual functions without a base class of some sort. But in a library like
+    this you never want to create a base-class object &mdash; there is no such thing as a generic
+    "ledger entry." The base class exists only to <strong>describe the functionality</strong> that
+    the library calls. Users of the library write the derived classes and instantiate the actual
+    objects. You never instantiate anything.</p>
+  </div>
+</div>
+
+<p>So the question this class opens with is a strange one, and it is worth asking out loud before
+we answer it: <em>why would anyone want to write a class such that objects of it cannot be
+instantiated?</em> The answer is exactly the paragraph above. The base class is a contract, not a
+thing.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; abstract class, abstract base class</span></div>
+  <div class="bd">
+    <p>An <strong>abstract class</strong> is a class such that objects of the class cannot be
+    instantiated. All objects must be of derived classes only.</p>
+    <ul>
+      <li>You can only declare <strong>pointers and references</strong> to an abstract class.</li>
+      <li>Pointers and references are not objects, so they are permitted to exist.</li>
+    </ul>
+    <p>If an abstract class sits at the root of an inheritance tree we call it an <strong>abstract
+    base class</strong>. In practice almost every abstract class is an abstract base class, and the
+    two terms get used interchangeably. Abstract base classes are everywhere in commercial
+    software.</p>
+  </div>
+</div>
+
+<p>C++ gives you two ways to make a class abstract. We will do both, in the order the professor
+teaches them: first the standard mechanism, the <em>pure virtual function</em>; then his own
+preferred alternative, <em>protected constructors</em>.</p>
+
+<h2 id="s2"><span class="num">2.</span>Pure virtual functions</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; pure virtual function</span></div>
+  <div class="bd">
+    <p>A <strong>pure virtual function</strong> is a virtual member function declared with
+    <code>= 0</code> in place of a body:</p>
+<pre><code class="language-cpp">virtual string name() = 0;</code></pre>
+    <p>The <code>= 0</code> means the method <code>name()</code> has <strong>no function body</strong> &mdash;
+    not here, not in a <code>.cpp</code> file, not anywhere in the compiled project. There is nothing to call.
+    Any class that contains (or inherits) even one pure virtual function is <strong>abstract</strong>,
+    and the compiler will refuse to create an object of it.</p>
+    <p>The <code>0</code> is not a value being assigned. It is a piece of syntax, chosen decades ago
+    because it looks like "the slot in the vtable is null." Read <code>= 0</code> as one token
+    meaning "no implementation."</p>
+  </div>
+</div>
+
+<p>Here is the professor's example class. Read it carefully &mdash; it has one of each of the four
+kinds of member you can put in a base class, and the differences matter.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; PVFname, and what a base pointer does with it</span></div>
+  <div class="bd">
+    <p><code>PVFname</code> &mdash; the name is short for "pure virtual function" &mdash; has a virtual
+    destructor, an ordinary virtual method <code>x()</code> that <em>does</em> have a body, a non-virtual
+    <code>print()</code> that calls the virtuals, and one pure virtual <code>name()</code>. <code>Aname</code> overrides both.
+    <code>Bname</code> overrides only <code>x()</code>. <code>Cname</code> derives from <code>Bname</code> and overrides <code>name()</code>.</p>
+    <p>Work out the four lines this prints before you open the answer. The trap is <code>Cname</code>: which
+    <code>x()</code> does it use?</p>
+<div class="codewrap"><div class="cap">pvfname.cpp</div><pre><code class="language-cpp">// pvfname.cpp -- pure virtual functions: an abstract base class and its family
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class PVFname {
+public:
+    virtual ~PVFname() {}
+    virtual string name() = 0;              // pure virtual: no body anywhere
+    virtual double x() const { return 0; }  // ordinary virtual, has a body
+    void print() {                          // NOT virtual -- calls the virtuals
+        cout &lt;&lt; x() &lt;&lt; endl;
+        cout &lt;&lt; name() &lt;&lt; endl;
+    }
+};
+
+class Aname : public PVFname {
+public:
+    double x() const { return 1.1; }
+    string name() { return "Aname"; }
+};
+
+class Bname : public PVFname {
+public:
+    double x() const { return 2.2; }
+    // name() is NOT overridden -- Bname is still abstract
+};
+
+class Cname : public Bname {
+public:
+    string name() { return "Cname"; }
+};
+
+void pvf_func(PVFname *p) { p-&gt;print(); }
+
+int main() {
+    Aname a;
+    Cname c;
+    // PVFname p;   // ERROR: cannot instantiate an abstract class
+    // Bname   b;   // ERROR: Bname never overrode name(), so it is abstract too
+    pvf_func(&amp;a);
+    pvf_func(&amp;c);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">1.1
+Aname
+2.2
+Cname</pre>
+    <table class="trace">
+      <tr><th>Call</th><th><code>x()</code> resolves to</th><th><code>name()</code> resolves to</th><th>Printed</th></tr>
+      <tr><td><code>pvf_func(&amp;a)</code></td><td><code>Aname::x</code> &mdash; A overrode it</td><td><code>Aname::name</code></td><td><code>1.1</code> then <code>Aname</code></td></tr>
+      <tr><td><code>pvf_func(&amp;c)</code></td><td><code>Bname::x</code> &mdash; inherited, C did not override it</td><td><code>Cname::name</code></td><td><code>2.2</code> then <code>Cname</code></td></tr>
+    </table>
+    <p>Four things to take away:</p>
+    <ul>
+      <li><code>pvf_func</code> takes a <code>PVFname *</code>. That is legal <em>because it is a pointer</em>.
+        A parameter of type <code>PVFname</code> by value would not compile.</li>
+      <li><code>print()</code> is deliberately <strong>not</strong> virtual. It is the fixed algorithm the
+        library owns; the virtuals it calls are the holes the user fills in. This "non-virtual
+        skeleton calling virtual steps" shape is the single most common way abstract base classes
+        get used in real code, and it is exactly the shape of the exam question in &sect;3.</li>
+      <li><code>Cname</code> gets <code>x()</code> from <code>Bname</code>, two levels up the tree, so it prints <code>2.2</code>.
+        Overriding is not "the most derived class wins", it is "the most derived class that
+        <em>defines</em> the method wins."</li>
+      <li>The commented-out <code>PVFname p;</code> and <code>Bname b;</code> are not decoration. Neither line compiles,
+        and the next box shows precisely what the compiler says.</li>
+    </ul>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now the part you will actually be tested on: the error message. Uncomment both declarations and
+compile.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the real g++ message for an abstract type</span></div>
+  <div class="bd">
+    <p>This file declares <code>PVFname p;</code> and <code>Bname b;</code> inside <code>main</code>, and nothing else changes.</p>
+<div class="codewrap"><div class="cap">pvfbad.cpp</div><pre><code class="language-cpp">int main() {
+    PVFname p;
+    Bname b;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">pvfbad.cpp: In function 'int main()':
+pvfbad.cpp:20:13: error: cannot declare variable 'p' to be of abstract type 'PVFname'
+   20 |     PVFname p;
+      |             ^
+pvfbad.cpp:6:7: note:   because the following virtual functions are pure within 'PVFname':
+    6 | class PVFname {
+      |       ^~~~~~~
+pvfbad.cpp:9:20: note:     'virtual std::string PVFname::name()'
+    9 |     virtual string name() = 0;
+      |                    ^~~~
+pvfbad.cpp:21:11: error: cannot declare variable 'b' to be of abstract type 'Bname'
+   21 |     Bname b;
+      |           ^
+pvfbad.cpp:14:7: note:   because the following virtual functions are pure within 'Bname':
+   14 | class Bname : public PVFname {
+      |       ^~~~~
+pvfbad.cpp:9:20: note:     'virtual std::string PVFname::name()'
+    9 |     virtual string name() = 0;
+      |                    ^~~~</pre>
+    <p>Learn to read this, because it is the most useful diagnostic in the whole topic. It comes in
+    three parts:</p>
+    <ol>
+      <li><strong>The error line</strong> &mdash; <em>"cannot declare variable 'p' to be of abstract
+        type 'PVFname'"</em>. This is the compiler telling you the class is abstract. You did not
+        have to work it out; <code>g++</code> did.</li>
+      <li><strong>The first note</strong> &mdash; <em>"because the following virtual functions are
+        pure within 'PVFname'"</em>. This is the reason.</li>
+      <li><strong>The second note</strong> &mdash; it <strong>names the offending method</strong>:
+        <code>virtual std::string PVFname::name()</code>. When you are staring at a hierarchy on an exam
+        wondering which pure virtual was left unimplemented, this is the answer the compiler would
+        have given you.</li>
+    </ol>
+    <p>Notice the second error. <code>Bname</code> is a class you wrote, with a body for <code>x()</code>, and <code>g++</code>
+    still calls it abstract &mdash; and the note points at <code>PVFname::name()</code>, up in the base. That
+    is &sect;3 in a nutshell.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>The same thing happens with <code>new</code>, with a slightly different wording worth recognizing:</p>
+
+<pre class="err">newabstract.cpp:13:22: error: invalid new-expression of abstract class type 'PVFname'
+   13 |     PVFname *p = new PVFname;
+      |                      ^~~~~~~
+newabstract.cpp:5:7: note:   because the following virtual functions are pure within 'PVFname':</pre>
+
+<p>The <em>declaration</em> <code>PVFname *p;</code> is fine. It is <code>new PVFname</code> &mdash; the part that would
+actually build an object &mdash; that fails. Pointer: yes. Object: never.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; an erratum in the course notes</span></div>
+  <div class="bd">
+    <p>The lecture handout explains <code>= 0</code> by saying <em>"the notation <code>= 0</code>
+    means that the method <strong>string</strong> has no function body"</em>, and repeats "the method
+    string" in the very next sentence. There is no method called <code>string</code>. <code>string</code> is the
+    <em>return type</em>; the method is <strong><code>name()</code></strong>. Read those two
+    sentences as "the method <code>name()</code>".</p>
+    <p>It matters more than a typo normally would, because on the exam you have to name the
+    unimplemented method to decide whether a class is abstract. Get in the habit of pointing at the
+    <em>identifier before the parentheses</em>, never at the type in front of it.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.1</div>
+  <div class="bd">
+    <p>Given the <code>PVFname</code> hierarchy above, decide for each line whether it compiles. If it does
+    not, say which pure virtual is to blame.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>PVFname *p;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Compiles.</strong> It declares a pointer and does not create anything. The
+        pointer is uninitialized, which is a separate (and real) hazard, but not a compile error.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Aname a; PVFname &amp;r = a;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Compiles.</strong> <code>Aname</code> is concrete (it overrides <code>name()</code>), so <code>a</code> is a legal
+        object, and a reference to an abstract base class is allowed &mdash; a reference is not an
+        object. This is the ordinary way library code takes its parameter.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>Cname c;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Compiles.</strong> <code>Cname</code> overrides <code>name()</code> itself and inherits a perfectly
+        good <code>x()</code> from <code>Bname</code>. Nothing is left pure, so <code>Cname</code> is concrete.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>void f(PVFname q) { q.print(); }</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Does not compile.</strong> A by-value parameter <em>is</em> an object; the
+        compiler would have to construct a <code>PVFname</code> to hold the copy. <code>g++</code> reports
+        <em>"cannot declare parameter 'q' to be of abstract type 'PVFname'"</em>, blaming
+        <code>PVFname::name()</code>.</p>
+        <p>This is worth internalizing beyond abstract classes: passing a polymorphic base class
+        <em>by value</em> is nearly always wrong even when it compiles, because it slices the
+        derived part off the object. When the base is abstract, C++ upgrades that design mistake
+        into a compile error for you.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Which derived classes are still abstract?</h2>
+
+<p>This section is the highest-value fifty minutes of the semester per point scored. Some version
+of this question has been the <strong>last problem on every single final</strong> this professor has
+given, worth 10 to 15 points, no partial credit.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A derived class inherits its base's pure virtual functions <em>as pure virtual functions</em>.
+    If a derived class does not override every one of them, <strong>the derived class is abstract
+    too</strong>, and declaring an object of it is a compile error.</p>
+    <p>A class becomes concrete at the exact point in the tree where the last remaining pure virtual
+    gets a body &mdash; and it may inherit the other overrides from anywhere above it.</p>
+  </div>
+</div>
+
+<p>Apply it to the tree from &sect;2. There is only one pure virtual in play, <code>name()</code>:</p>
+
+<table class="trace">
+  <tr><th>Class</th><th>Overrides <code>x()</code></th><th>Overrides <code>name()</code></th><th>Any pure virtual left?</th><th>Status</th></tr>
+  <tr><td><code>PVFname</code></td><td>defines it</td><td>declares it <code>= 0</code></td><td><code>name()</code></td><td><strong>abstract</strong></td></tr>
+  <tr><td><code>Aname</code></td><td>yes</td><td>yes</td><td>none</td><td>concrete</td></tr>
+  <tr><td><code>Bname</code></td><td>yes</td><td><strong>no</strong></td><td><code>name()</code>, inherited</td><td><strong>abstract</strong></td></tr>
+  <tr><td><code>Cname</code></td><td>no &mdash; uses <code>Bname</code>'s</td><td>yes</td><td>none</td><td>concrete</td></tr>
+</table>
+
+<p>Read the fourth column top to bottom. Nothing else in the class matters. A derived class can add
+data, add methods, override half the tree, and still be abstract because of one method it never
+mentioned.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; deciding if a class is abstract, on an exam, in 20 seconds</span></div>
+  <div class="bd">
+    <ol>
+      <li>Go to the base class and <strong>list every method marked <code>= 0</code></strong>. Write
+        them in the margin. Usually there are one or two.</li>
+      <li>For the class you are asked about, walk <strong>up its own chain of ancestors</strong>,
+        from itself to the base, ticking off each pure virtual the moment you find a version of it
+        with a body.</li>
+      <li>Any pure virtual still unticked when you reach the base means the class is
+        <strong>abstract</strong>. Declaring an object of it is an <strong>ERROR</strong>.</li>
+      <li>If every one is ticked, the class is concrete. Now answer the output part: for each
+        virtual call, the version that wins is the <strong>first one you found walking up</strong>.</li>
+    </ol>
+    <p>Only walk up <em>that class's own</em> chain. A sibling's override is invisible &mdash;
+    <code>Bname</code> overriding <code>x()</code> does nothing for <code>Aname</code>.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.2</div>
+  <div class="bd">
+    <p>A base class <code>Media</code> declares two pure virtuals, <code>title()</code> and <code>duration()</code>, plus a
+    non-virtual <code>show()</code> that calls both. Four derived classes:</p>
+<pre><code class="language-cpp">class Song   : public Media { public: string title() { return "Song"; } };
+class Video  : public Media { public: string title() { return "Video"; }
+                                      int duration() { return 90; } };
+class Remix  : public Song  { public: int duration() { return 4; } };
+class Trailer: public Video { public: string title() { return "Trailer"; } };</code></pre>
+    <p>Which of <code>Song</code>, <code>Video</code>, <code>Remix</code>, <code>Trailer</code> can you create objects of?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <table class="trace">
+        <tr><th>Class</th><th><code>title()</code></th><th><code>duration()</code></th><th>Status</th></tr>
+        <tr><td><code>Song</code></td><td>own</td><td>&mdash; still pure</td><td><strong>abstract</strong></td></tr>
+        <tr><td><code>Video</code></td><td>own</td><td>own</td><td>concrete</td></tr>
+        <tr><td><code>Remix</code></td><td>from <code>Song</code></td><td>own</td><td>concrete</td></tr>
+        <tr><td><code>Trailer</code></td><td>own</td><td>from <code>Video</code></td><td>concrete</td></tr>
+      </table>
+      <p>Only <code>Song</code> is abstract. <code>Remix</code> is the interesting one: it supplies just one method, and
+      that single method is enough because its parent already supplied the other. This is exactly
+      the <code>Bname</code>/<code>Cname</code> pattern, and exam hierarchies are built out of it.</p>
+      <p>If <code>show()</code> prints <code>title()</code> then <code>duration()</code>, a <code>Remix</code> object shows
+      <code>Song</code> and <code>4</code> &mdash; its own class name appears nowhere in the output.
+      Students lose points here constantly by answering "Remix".</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; finish an abstract <code>Employee</code> hierarchy</h3>
+
+<p><code>Employee</code> below is abstract: <code>pay()</code> and <code>title()</code> are both pure virtual. Write <code>Salaried</code>
+(paid <code>annual / 26</code> per period) and <code>Hourly</code> (paid <code>rate * hours</code>) so that both can be
+instantiated, then answer the question in the comment about <code>Intern</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Employee {
+public:
+    Employee(string n) : who(n) {}
+    virtual ~Employee() {}
+    virtual double pay() const = 0;
+    virtual string title() const = 0;
+    void payslip() const {
+        cout &lt;&lt; who &lt;&lt; &quot; (&quot; &lt;&lt; title() &lt;&lt; &quot;): &quot; &lt;&lt; pay() &lt;&lt; endl;
+    }
+protected:
+    string who;
+};
+
+class Salaried : public Employee {
+public:
+    // constructor taking (string, double annual)
+
+    // override pay() and title()
+
+};
+
+class Hourly : public Employee {
+public:
+    // constructor taking (string, double rate, double hours)
+
+    // override pay() and title()
+
+};
+
+// Intern supplies pay() but NOT title(). Can you write &quot;Intern i(&quot;Alan&quot;);&quot;?
+class Intern : public Employee {
+public:
+    Intern(string n) : Employee(n) {}
+    double pay() const { return 0; }
+};
+
+int main() {
+    // Salaried s(&quot;Ada&quot;, 78000);
+    // Hourly   h(&quot;Grace&quot;, 32.5, 40);
+    // Employee *staff[2] = { &amp;s, &amp;h };
+    // for (int i = 0; i &lt; 2; ++i) staff[i]-&gt;payslip();
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Employee {
+public:
+    Employee(string n) : who(n) {}
+    virtual ~Employee() {}
+    virtual double pay() const = 0;
+    virtual string title() const = 0;
+    void payslip() const {
+        cout &lt;&lt; who &lt;&lt; " (" &lt;&lt; title() &lt;&lt; "): " &lt;&lt; pay() &lt;&lt; endl;
+    }
+protected:
+    string who;
+};
+
+class Salaried : public Employee {
+public:
+    // constructor taking (string, double annual)
+
+    // override pay() and title()
+
+};
+
+class Hourly : public Employee {
+public:
+    // constructor taking (string, double rate, double hours)
+
+    // override pay() and title()
+
+};
+
+// Intern supplies pay() but NOT title(). Can you write "Intern i("Alan");"?
+class Intern : public Employee {
+public:
+    Intern(string n) : Employee(n) {}
+    double pay() const { return 0; }
+};
+
+int main() {
+    // Salaried s("Ada", 78000);
+    // Hourly   h("Grace", 32.5, 40);
+    // Employee *staff[2] = { &amp;s, &amp;h };
+    // for (int i = 0; i &lt; 2; ++i) staff[i]-&gt;payslip();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.3</div>
+  <div class="bd">
+    <p>Write the two derived classes, and state what happens with <code>Intern</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Give the code for <code>Salaried</code> and <code>Hourly</code>, and the output of the driver.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Each derived class needs a constructor that forwards the name to the base's constructor
+        with an initializer list, plus a body for <em>both</em> pure virtuals.</p>
+<div class="codewrap"><div class="cap">employee.cpp</div><pre><code class="language-cpp">class Salaried : public Employee {
+public:
+    Salaried(string n, double a) : Employee(n), annual(a) {}
+    double pay() const { return annual / 26; }
+    string title() const { return "Salaried"; }
+private:
+    double annual;
+};
+
+class Hourly : public Employee {
+public:
+    Hourly(string n, double r, double h) : Employee(n), rate(r), hours(h) {}
+    double pay() const { return rate * hours; }
+    string title() const { return "Hourly"; }
+private:
+    double rate, hours;
+};</code></pre></div>
+<pre class="out">Ada (Salaried): 3000
+Grace (Hourly): 1300</pre>
+        <p><code>78000 / 26</code> is <code>3000</code> exactly, and <code>cout</code> prints a <code>double</code> of 3000.0 as
+        <code>3000</code> with no decimal point &mdash; the six-significant-digit default from
+        Class 3, which shows up in every one of these trace questions.</p>
+        <p>Note the <code>const</code> on the overrides. The base declares <code>double pay() const = 0;</code>. If you
+        write <code>double pay()</code> without <code>const</code> in the derived class you have not overridden anything
+        &mdash; you have declared a <em>different</em> method, the pure virtual stays pure, and your
+        derived class is still abstract. Copy the base's signature exactly.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What does <code>Intern i("Alan");</code> do?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It does not compile. <code>Intern</code> never gave <code>title()</code> a body, so it inherits it as a pure
+        virtual and remains abstract:</p>
+<pre class="err">employee_bad.cpp: In function 'int main()':
+employee_bad.cpp:47:12: error: cannot declare variable 'i' to be of abstract type 'Intern'
+   47 |     Intern i("Alan");     // ERROR: title() is still pure in Intern
+      |            ^
+employee_bad.cpp:38:7: note:   because the following virtual functions are pure within 'Intern':
+   38 | class Intern : public Employee {
+      |       ^~~~~~
+employee_bad.cpp:11:20: note:     'virtual std::string Employee::title() const'
+   11 |     virtual string title() const = 0;            // pure virtual
+      |                    ^~~~~</pre>
+        <p>Read the last note: <code>virtual std::string Employee::title() const</code>. The compiler tells you
+        the method <em>and</em> the class it came from. On an exam you are being asked to produce
+        that sentence from the source code without a compiler.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>An abstract class as an interface</h2>
+
+<p>Back in Class 1 we defined an <em>interface</em> as the contract a class offers the rest of the
+program, and there was a warning box attached to it: C++ has no <code>interface</code> keyword, and the nearest
+thing C++ has to a Java interface is an abstract base class whose methods are all pure virtual,
+"which we build in Class 25." This is Class 25. Here it is.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; interface (the abstract-class sense)</span></div>
+  <div class="bd">
+    <p>An <strong>interface</strong>, in this second sense, is an abstract base class that consists
+    of <em>nothing but</em> a virtual destructor and pure virtual functions. It holds no data and
+    implements no behavior. It is a pure statement of what an implementing class must be able to do.</p>
+    <p>Java has a keyword for this because in Java it is a special language construct. In C++ it is
+    not a construct at all &mdash; it is a class you happened to write a certain way. There is no
+    <code>implements</code> either; you inherit publicly, exactly as you inherit from any other base:</p>
+<pre><code class="language-cpp">class Sale : public LedgerEntry { ... };   // C++ has no "implements"</code></pre>
+  </div>
+</div>
+
+<p>Here is the accounting-library idea from &sect;1, shrunk to something you can compile. The
+library half is written once and knows nothing about retail. The customer half is written years
+later by somebody else.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a library that operates on classes that do not exist yet</span></div>
+  <div class="bd">
+    <p><code>LedgerEntry</code> is a pure interface: a virtual destructor and two pure virtuals, no data.
+    <code>report</code> is the library's service; it never mentions <code>Sale</code> or <code>Payroll</code>. Predict the four
+    output lines &mdash; and watch the formatting of the money values, which is not what you might
+    guess.</p>
+<div class="codewrap"><div class="cap">ledger.cpp</div><pre><code class="language-cpp">// ledger.cpp -- an abstract base class used as a pure interface
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// ---------- the library ----------
+// Written once. It has no idea what a Sale or a Payroll entry is.
+class LedgerEntry {
+public:
+    virtual ~LedgerEntry() {}
+    virtual string label() const = 0;   // every entry must name itself
+    virtual double amount() const = 0;  // every entry must have a signed amount
+};
+
+void report(LedgerEntry *entries[], int n) {
+    double total = 0;
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; entries[i]-&gt;label() &lt;&lt; ": " &lt;&lt; entries[i]-&gt;amount() &lt;&lt; endl;
+        total += entries[i]-&gt;amount();
+    }
+    cout &lt;&lt; "net: " &lt;&lt; total &lt;&lt; endl;
+}
+
+// ---------- the customer's code, written years later ----------
+class Sale : public LedgerEntry {
+public:
+    Sale(double d) : dollars(d) {}
+    string label() const { return "Sale"; }
+    double amount() const { return dollars; }
+private:
+    double dollars;
+};
+
+class Payroll : public LedgerEntry {
+public:
+    Payroll(double d) : dollars(d) {}
+    string label() const { return "Payroll"; }
+    double amount() const { return -dollars; }
+private:
+    double dollars;
+};
+
+int main() {
+    Sale s1(1200.50), s2(300.00);
+    Payroll p1(900.25);
+    LedgerEntry *book[3] = { &amp;s1, &amp;s2, &amp;p1 };
+    report(book, 3);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Sale: 1200.5
+Sale: 300
+Payroll: -900.25
+net: 600.25</pre>
+    <p><code>1200.50</code> prints as <code>1200.5</code> and <code>300.00</code> prints as <code>300</code>, because
+    <code>cout</code> drops trailing zeros by default. If this were real accounting software you would fix that
+    with the stream manipulators from Class 3; here it is a useful reminder that the professor's
+    trace questions always print raw <code>double</code> values.</p>
+    <p>What actually matters is the array declaration:</p>
+<pre><code class="language-cpp">LedgerEntry *book[3] = { &amp;s1, &amp;s2, &amp;p1 };</code></pre>
+    <p>An array of <strong>pointers</strong> to an abstract class &mdash; completely legal, and the
+    only way to hold three different derived types in one container. Drop the <code>*</code> and write
+    <code>LedgerEntry book[3];</code> instead and you get a variant of &sect;2's message, because building the
+    array would mean building three <code>LedgerEntry</code> objects:</p>
+<pre class="err">ledger_bad.cpp:46:23: error: creating array of 'LedgerEntry', which is an abstract class type
+   46 |     LedgerEntry book[3];
+      |                       ^
+ledger_bad.cpp:8:7: note:   because the following virtual functions are pure within 'LedgerEntry':</pre>
+    <p>And notice what <code>report</code> does <em>not</em> contain: no <code>if</code>, no type tag, no switch on what
+    kind of entry it is. Adding a third entry type &mdash; <code>Refund</code>, <code>Depreciation</code> &mdash; requires
+    no change to <code>report</code> at all. That is the payoff the whole chapter is buying.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.4</div>
+  <div class="bd">
+    <p>In <code>LedgerEntry</code>, the destructor <code>virtual ~LedgerEntry() {}</code> has an empty body and the class
+    has no data members. Why not just delete the line?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Because the destructor that matters is not this one &mdash; it is <code>Sale</code>'s and <code>Payroll</code>'s.
+      If a program ever writes</p>
+<pre><code class="language-cpp">LedgerEntry *e = new Sale(50.0);
+delete e;</code></pre>
+      <p>then <code>delete</code> looks at the static type <code>LedgerEntry *</code> to decide which destructor to run.
+      Without <code>virtual</code>, it runs <code>~LedgerEntry</code> only, and <code>~Sale</code> never executes &mdash; undefined
+      behavior, and a memory leak the moment a derived class holds anything dynamic. With <code>virtual</code>,
+      the call is dispatched to <code>~Sale</code>, which then runs <code>~LedgerEntry</code> automatically.</p>
+      <p>The rule from Class 24: <strong>if a class has any virtual method, give it a virtual
+      destructor.</strong> An abstract base class always has virtual methods &mdash; that is what
+      makes it abstract &mdash; so an abstract base class always needs one. Writing it empty costs
+      nothing; leaving it out costs correctness. Every abstract base class in this professor's exams
+      has one, and it is always the first line of the class.</p>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.5</div>
+  <div class="bd">
+    <p>Someone reads the phrase "an abstract class has methods with no bodies" and concludes: an
+    abstract class is just an <em>incomplete class definition</em>, so it is not a real design idea,
+    only a placeholder you have not finished writing. What is wrong with that argument?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Two things.</p>
+      <p><strong>First, "incomplete" mischaracterizes what the missing body means.</strong> A pure
+      virtual is not a body the author forgot; it is a body the author has <em>deliberately declined
+      to write</em>, because at this level of the hierarchy there is no sensible answer. There is no
+      generic amount for a generic ledger entry. The class is complete as a specification. What is
+      missing is the part only a derived class can know.</p>
+      <p><strong>Second, and this is the professor's own rebuttal:</strong> you can build a perfectly
+      good abstract base class with <em>no pure virtual functions at all</em>. Section 5 does exactly
+      that. If a class can be abstract while every one of its methods has a body, then "abstract" and
+      "incomplete" cannot be the same idea. Abstract is a statement about
+      <em>instantiation</em>, not about missing code.</p>
+      <p>The fair version of the objection is the practical one: with pure virtuals, it is not enough
+      to write a derived class &mdash; the derived class must override <em>all</em> of them, or
+      inherit from something in the tree that already did. That is a genuine obligation the design
+      imposes on your users, and it is the trade-off &sect;5 weighs.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>The other way: protected constructors</h2>
+
+<p>Pure virtual functions are the textbook mechanism, and they are what the exams test. But they are
+not the only way, and they are not the professor's preferred way.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; making a class abstract with protected constructors</span></div>
+  <div class="bd">
+    <ol>
+      <li>Make every <strong>constructor</strong> <code>protected</code> &mdash; the default constructor, the
+        copy constructor, any non-default constructors. Add the assignment operator too, for the
+        reason in the note below.</li>
+      <li>They must be <code>protected</code>, <strong>not <code>private</code></strong>. A derived class's constructor
+        has to be able to call the base constructor, and <code>private</code> would block it &mdash; making the
+        class not merely abstract but unusable.</li>
+      <li>Leave the <strong>destructor public, and virtual</strong>. Client code deletes objects
+        through base pointers, so the destructor has to be reachable from outside.</li>
+      <li>Everything else can stay exactly as it was. No <code>= 0</code> anywhere.</li>
+    </ol>
+  </div>
+</div>
+
+<p>Outside code cannot construct an object of the class, because it cannot reach a constructor.
+Derived classes can, because <code>protected</code> is precisely "my derived classes and nobody else."</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; ABC, abstract with no pure virtuals at all</span></div>
+  <div class="bd">
+    <p><code>ABC</code> has a virtual destructor, two ordinary virtual methods that both have bodies, a
+    non-virtual <code>print()</code>, and a <code>protected:</code> section holding the constructors and <code>operator=</code>.
+    <code>Aabc</code> overrides <em>nothing</em>. <code>Babc</code> overrides <code>x()</code>. <code>Cabc</code> overrides <code>name()</code>.</p>
+    <p>Six lines come out. Predict them &mdash; the middle pair is where people slip.</p>
+<div class="codewrap"><div class="cap">abc.cpp</div><pre><code class="language-cpp">// abc.cpp -- an abstract base class made abstract by PROTECTED constructors
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class ABC {
+public:
+    virtual ~ABC() {}                                 // public, and virtual
+    virtual string name() { return "unset"; }
+    virtual double x() const { return 0; }
+    void print() {
+        cout &lt;&lt; x() &lt;&lt; endl;
+        cout &lt;&lt; name() &lt;&lt; endl;
+    }
+protected:
+    ABC() {}                                          // protected: outsiders cannot construct
+    ABC(const ABC &amp;orig) {}
+    ABC&amp; operator= (const ABC &amp;rhs) { return *this; }
+};
+
+class Aabc : public ABC {
+public:
+    // overrides nothing at all -- and that is legal
+};
+
+class Babc : public Aabc {
+public:
+    double x() const { return 1.1; }
+};
+
+class Cabc : public Babc {
+public:
+    string name() { return "Cabc"; }
+};
+
+void abc_func(ABC *p) { p-&gt;print(); }
+
+int main() {
+    Aabc a;
+    Babc b;
+    Cabc c;
+    // ABC obj;     // ERROR: ABC::ABC() is protected
+    abc_func(&amp;a);
+    abc_func(&amp;b);
+    abc_func(&amp;c);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0
+unset
+1.1
+unset
+1.1
+Cabc</pre>
+    <table class="trace">
+      <tr><th>Call</th><th><code>x()</code></th><th><code>name()</code></th><th>Printed</th></tr>
+      <tr><td><code>abc_func(&amp;a)</code></td><td><code>ABC::x</code> &rarr; 0</td><td><code>ABC::name</code> &rarr; "unset"</td><td><code>0</code> / <code>unset</code></td></tr>
+      <tr><td><code>abc_func(&amp;b)</code></td><td><code>Babc::x</code> &rarr; 1.1</td><td><code>ABC::name</code> &rarr; "unset"</td><td><code>1.1</code> / <code>unset</code></td></tr>
+      <tr><td><code>abc_func(&amp;c)</code></td><td><code>Babc::x</code>, inherited &rarr; 1.1</td><td><code>Cabc::name</code> &rarr; "Cabc"</td><td><code>1.1</code> / <code>Cabc</code></td></tr>
+    </table>
+    <p>Three observations:</p>
+    <ul>
+      <li><code>Aabc</code> is a legal, instantiable class whose body is empty. It inherits everything and
+        overrides nothing. Under the pure-virtual scheme that class could not exist &mdash; it would
+        be forced to override <code>name()</code>. <strong>A derived class can inherit from <code>ABC</code> without being
+        forced to override anything.</strong> That is the professor's argument for this design.</li>
+      <li><code>Babc</code> prints <code>unset</code>. It is a complete, usable object that silently reports a
+        placeholder, and nothing in the language complains. Hold that thought for the warning box.</li>
+      <li><code>Cabc</code> picks up <code>x()</code> from <code>Babc</code>, one level up &mdash; the same "first ancestor that
+        defines it wins" rule as &sect;2.</li>
+    </ul>
+
+</div></details>
+  </div>
+</div>
+
+<p>And the error for the one line we commented out:</p>
+
+<pre class="err">abcbad.cpp: In function 'int main()':
+abcbad.cpp:19:9: error: 'ABC::ABC()' is protected within this context
+   19 |     ABC obj;
+      |         ^~~
+abcbad.cpp:13:5: note: declared protected here
+   13 |     ABC() {}
+      |     ^~~</pre>
+
+<p>Compare it with &sect;2's message. That one said <em>"cannot declare variable to be of abstract
+type"</em> and named the pure virtual. This one says <em>"'ABC::ABC()' is protected within this
+context"</em>. Two different diagnostics for the same design intent &mdash; and only the first one
+uses the word "abstract", because only the first one is abstract in the language's formal sense.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; what the protected <code>operator=</code> is actually for</span></div>
+  <div class="bd">
+    <p>The handout puts the constructors <em>and</em> the assignment operator in the <code>protected:</code>
+    section together, as if both were needed to make the class abstract. They are not. It is the
+    <strong>constructors alone</strong> that prevent instantiation &mdash; an assignment operator is
+    never what builds an object.</p>
+    <p>Protecting <code>operator=</code> is still a good idea, but for a different reason: it stops outside code
+    from writing <code>*basePtr1 = *basePtr2;</code>, which would copy only the base part of one object over
+    the base part of another and leave the derived halves untouched &mdash; the slicing problem from
+    Class 21. Group them if you like, but know why each one is there.</p>
+    <p>While you are looking at that section: <code>ABC&amp; operator=(const ABC &amp;rhs) { return *this; }</code> has
+    no self-assignment guard, contrary to the six-step recipe from Class 15. Here the class has no
+    data at all, so there is genuinely nothing to guard, but do not copy this shape into a class
+    that holds a pointer.</p>
+  </div>
+</div>
+
+<p>So which do you use? Teach yourself both, and be honest about the trade-off, because they fail
+in opposite directions.</p>
+
+<table class="trace">
+  <tr><th></th><th>Pure virtual (<code>= 0</code>)</th><th>Protected constructors</th></tr>
+  <tr><td>What makes it abstract</td><td>a method with no body</td><td>no reachable constructor</td></tr>
+  <tr><td>Derived class must override</td><td><strong>every</strong> pure virtual, or it is abstract too</td><td>nothing at all</td></tr>
+  <tr><td>A derived class that forgets a method</td><td><strong>compile error</strong> at the object declaration</td><td>compiles; silently uses the base's version</td></tr>
+  <tr><td>Compiler message</td><td>"cannot declare variable ... abstract type", <em>and it names the method</em></td><td>"'ABC::ABC()' is protected within this context"</td></tr>
+  <tr><td>Can the base supply a default?</td><td>no (not without advanced techniques)</td><td>yes &mdash; that is the normal case</td></tr>
+  <tr><td>Standard C++ idiom?</td><td>yes &mdash; and what the exams use</td><td>less common; the professor's stated preference</td></tr>
+</table>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the sentinel that never gets caught</span></div>
+  <div class="bd">
+    <p>Look again at what <code>ABC</code> does when a derived class forgets to override: <code>name()</code> returns the
+    string <code>"unset"</code>. That is a <strong>sentinel</strong> &mdash; a made-up value meaning
+    "nobody filled this in." It is exactly the design pure virtual functions were invented to
+    eliminate, and it converts a compile-time error into a run-time surprise. <code>Babc</code> above is a
+    finished, shippable class that reports <code>unset</code> forever, and nothing anywhere warned
+    anybody.</p>
+    <p>The honest summary: <strong><code>= 0</code> gives you an error the moment you build the object;
+    the sentinel gives you a wrong answer six months later in production.</strong> Protected
+    constructors are the more flexible design; pure virtuals are the safer one. Use pure virtuals
+    when a derived class genuinely cannot have a sensible default &mdash; and that is nearly always
+    the situation an abstract base class is in.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.6</div>
+  <div class="bd">
+    <p>Consider three variations on <code>ABC</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What breaks if you move the constructors from <code>protected:</code> to <code>private:</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The class stops being usable. <code>Aabc</code>'s implicitly generated default constructor has to
+        call <code>ABC()</code>, and a <code>private</code> member is invisible even to derived classes, so
+        <code>Aabc a;</code> fails with <em>"'ABC::ABC()' is private within this context"</em>. You would have
+        made the class not abstract but <strong>uninheritable</strong> &mdash; a class nobody can
+        instantiate and nobody can derive from, which is to say a class with no purpose.</p>
+        <p>This is why the handout stresses "protected (not private)". <code>protected</code> means "derived
+        classes yes, everybody else no", which is exactly the access rule an abstract base class
+        wants.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What breaks if you move the destructor into <code>protected:</code> as well?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Two things. Outside code can no longer create an <code>Aabc</code> object on the stack either, because
+        destroying it at the end of scope needs access to <code>~ABC</code>. And <code>delete basePtr;</code> in library
+        code fails for the same reason. This is why the procedure says the destructor stays
+        <strong>public and virtual</strong> &mdash; it is the one special member that outside code
+        legitimately needs.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Could you make a class abstract by giving it a pure virtual function <em>and</em> protected constructors?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes, and the professor's Fall 2023 final does exactly that: <code>class T</code> has
+        <code>virtual int x() = 0;</code> in its public section <em>and</em> <code>T()</code>, the copy constructor and
+        <code>operator=</code> under <code>protected:</code>. The two mechanisms are independent and stack happily.</p>
+        <p>When you meet that hierarchy on an exam, do not be distracted by the <code>protected:</code> block
+        &mdash; it makes <code>T</code> itself uninstantiable, but the question is always about the
+        <em>derived</em> classes, and there the only thing that matters is which of them still carry
+        an unoverridden pure virtual. Practice Problem 3 is that exact question.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>The same function, written three times</h2>
+
+<p>Change of subject. Here is a function so simple it is barely a function:</p>
+
+<div class="codewrap"><div class="cap">printinput3.cpp</div><pre><code class="language-cpp">void printInput(int x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}
+
+void printInput(double x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}
+
+void printInput(string x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}</code></pre></div>
+
+<p>Three overloads, from Class 2. They compile, they work, and they are <em>identical copies of the
+same underlying function</em>. Character for character, the bodies are the same. The only difference
+between them is the data type of the parameter <code>x</code>.</p>
+
+<p>That should bother you. Three copies is three places to fix a bug. And the list is not finished:
+what about <code>char</code>? <code>long</code>? <code>bool</code>? The <code>Money</code> class you wrote last week? You cannot enumerate every
+type your users will ever invent.</p>
+
+<p>So do what you would do in algebra. Replace the type with a symbol &mdash; call it <code>T</code>:</p>
+
+<pre><code class="language-cpp">void printInput(T x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}</code></pre>
+
+<p>That is not C++ yet; <code>T</code> is not a type and the compiler has never heard of it. But it is the
+right idea, and the whole of templates is the syntax for making it legal. All you need is a way to
+tell the compiler <em>"T is a placeholder, and here is which type to substitute for it."</em></p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.7</div>
+  <div class="bd">
+    <p>Before we fix it: why can't you get the same effect just by writing the function once as
+    <code>void printInput(double x)</code> and letting C++ convert everything to <code>double</code> at the call?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Because conversion only exists between types that are related, and it loses information even
+      then.</p>
+      <ul>
+        <li><code>printInput(s)</code> with a <code>string</code> argument does not compile at all &mdash; there is no
+          conversion from <code>string</code> to <code>double</code>.</li>
+        <li><code>printInput(3)</code> would work, but a <code>long long</code> value of 9007199254740993 converted to
+          <code>double</code> prints as <code>9.00720e+15</code>. You asked it to print your value and it
+          printed a different one.</li>
+        <li>A user-defined type &mdash; <code>Money</code>, <code>Complex</code>, <code>Polynomial</code> &mdash; converts to nothing.</li>
+      </ul>
+      <p>Overloading and templates both avoid this by giving the compiler a function that
+      <em>actually takes your type</em>, so no conversion happens. The difference is that with
+      overloading you write one function per type by hand, and with a template the compiler writes
+      them for you, on demand.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span><code>template &lt;typename T&gt;</code></h2>
+
+<p>To finish the job you <strong>prepend</strong> one line:</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; function template</span></div>
+  <div class="bd">
+    <p>A <strong>function template</strong> is a pattern from which the compiler generates real
+    functions. You write it by putting a <em>template header</em> in front of an ordinary function
+    definition:</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+void printInput(T x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}</code></pre>
+    <p><code>template &lt;typename T&gt;</code> introduces <code>T</code> as a <strong>type parameter</strong>: a name that
+    stands for a type not yet chosen. Inside the function, <code>T</code> may be used anywhere a type name may
+    be used &mdash; parameter types, the return type, local declarations, <code>new T[n]</code>.</p>
+    <p>The keyword <code>class</code> is an accepted synonym for <code>typename</code> in this position:</p>
+<pre><code class="language-cpp">template &lt;class T&gt;
+void printInput(T x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}</code></pre>
+    <p><code>template &lt;typename T&gt;</code> and <code>template &lt;class T&gt;</code> mean <strong>exactly the same thing</strong>.
+    It is purely a matter of personal taste. (<code>typename</code> reads better, because <code>T</code> is very often
+    <em>not</em> a class &mdash; <code>T = int</code> is completely normal.) The professor's exam rubrics use
+    <code>template &lt;typename T&gt;</code>; write that and you will never have to think about it again.</p>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A template is not a function. It is a <strong>prescription for writing a function</strong>.
+    Nothing is compiled from a template until somebody names a type for <code>T</code>; at that moment the
+    compiler generates the code for a real C++ function with that type substituted throughout, and
+    compiles that. Ten different <code>T</code>s in your program means ten real functions in the executable.
+    Zero uses means zero functions &mdash; a template you never call generates no code at all.</p>
+    <p>The generation is called <strong>instantiation</strong>, and it happens
+    <em>on demand</em>, per type, at compile time.</p>
+  </div>
+</div>
+
+<p>So <code>printInput&lt;int&gt;(n)</code> says: take the prescription, put <code>int</code> everywhere <code>T</code> appears, and call
+the resulting function. What gets compiled is exactly</p>
+
+<pre><code class="language-cpp">void printInput(int x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}</code></pre>
+
+<p>&mdash; the first of the three overloads from &sect;6, written by the compiler instead of by you.
+That equivalence is the single most useful mental model in this topic, and &sect;9 turns it into a
+test you can apply.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one template replaces all three overloads</span></div>
+  <div class="bd">
+    <p>The three overloads are gone. One template serves all three calls, twice each &mdash; once
+    with the type written out, once without.</p>
+<div class="codewrap"><div class="cap">printinput_t.cpp</div><pre><code class="language-cpp">// printinput_t.cpp -- one templated function replaces all three overloads
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+void printInput(T x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}
+
+int main() {
+    int n = 7;
+    double d = 1.2345;
+    string s("abcd");
+
+    printInput(n);            // T deduced as int
+    printInput(d);            // T deduced as double
+    printInput(s);            // T deduced as string
+
+    printInput&lt;int&gt;(n);       // T given explicitly
+    printInput&lt;double&gt;(d);
+    printInput&lt;string&gt;(s);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">7
+1.2345
+abcd
+7
+1.2345
+abcd</pre>
+    <p>Both halves work, and they print the same thing, because both end up calling the same three
+    generated functions. The compiler instantiated <code>printInput</code> three times &mdash; for <code>int</code>, for
+    <code>double</code>, for <code>string</code> &mdash; and the executable contains three real functions.</p>
+    <p>The first three calls give no type at all. That is <strong>template argument deduction</strong>,
+    and it is the subject of &sect;8. It is also the reason a claim you may hear &mdash; "you must
+    always specify a data type to use a templated function" &mdash; needs qualifying: you must always
+    <em>have</em> a type, but the compiler will usually work it out from the arguments.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now a subtler question, and one the professor's own example program hides rather than shows: what
+happens when the overloads and the template are <em>both</em> in scope? Which one gets called?</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; overload versus template, made visible</span></div>
+  <div class="bd">
+    <p>Same three overloads as &sect;6, plus the template, all in one file &mdash; but each function
+    now prints a marker saying which one ran. There is also a <code>char</code> variable, which none of the
+    overloads takes exactly. Predict all seven lines.</p>
+<div class="codewrap"><div class="cap">printinput_both.cpp</div><pre><code class="language-cpp">// printinput_both.cpp -- overloads AND a template in the same program:
+//                        which one does each call actually use?
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+void printInput(int x)    { cout &lt;&lt; "[int overload] "    &lt;&lt; x &lt;&lt; endl; }
+void printInput(double x) { cout &lt;&lt; "[double overload] " &lt;&lt; x &lt;&lt; endl; }
+void printInput(string x) { cout &lt;&lt; "[string overload] " &lt;&lt; x &lt;&lt; endl; }
+
+template &lt;typename T&gt;
+void printInput(T x)      { cout &lt;&lt; "[template] "        &lt;&lt; x &lt;&lt; endl; }
+
+int main() {
+    int n = 7;
+    double d = 1.2345;
+    string s("abcd");
+    char ch = 'Q';
+
+    printInput(n);
+    printInput(d);
+    printInput(s);
+    printInput(ch);
+
+    printInput&lt;int&gt;(n);
+    printInput&lt;double&gt;(d);
+    printInput&lt;string&gt;(s);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">[int overload] 7
+[double overload] 1.2345
+[string overload] abcd
+[template] Q
+[template] 7
+[template] 1.2345
+[template] abcd</pre>
+    <table class="trace">
+      <tr><th>Call</th><th>Who runs</th><th>Why</th></tr>
+      <tr><td><code>printInput(n)</code></td><td>the <code>int</code> overload</td><td>An ordinary function that matches exactly beats a template. The template is only consulted if no non-template function fits.</td></tr>
+      <tr><td><code>printInput(ch)</code></td><td>the template</td><td>No overload takes <code>char</code> exactly. Converting <code>char</code> to <code>int</code> would work, but a template that matches perfectly beats an overload that needs a conversion.</td></tr>
+      <tr><td><code>printInput&lt;int&gt;(n)</code></td><td>the template</td><td>The <code>&lt;int&gt;</code> syntax is only legal on a template, so it forces the template, exact-match overload or not.</td></tr>
+    </table>
+    <p>The rule in one line: <strong>exact-match ordinary function, then template, then ordinary
+    function with a conversion</strong> &mdash; and explicit <code>&lt;T&gt;</code> skips straight to the template.</p>
+    <p>This is worth doing once because the professor's own version of this program has all four
+    functions printing the same bare value, so nothing in its output reveals which one ran. The
+    markers are the only way to see the mechanism. If you are ever unsure which of two candidates a
+    call resolves to, add a marker string and run it &mdash; that is a real debugging technique, not
+    just a classroom trick.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.8</div>
+  <div class="bd">
+    <p>In the program above, replace <code>printInput(ch)</code> with <code>printInput&lt;int&gt;(ch)</code>. What is printed?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><code>[template] 81</code>.</p>
+      <p>The <code>&lt;int&gt;</code> forces the template with <code>T = int</code>, so the parameter is <code>int x</code>, and the <code>char</code>
+      argument <code>'Q'</code> is converted to its numeric code on the way in. <code>'Q'</code> is 81 in ASCII. Once <code>x</code>
+      is an <code>int</code>, <code>cout &lt;&lt; x</code> prints the number, not the letter.</p>
+      <p>The lesson: an explicit template argument is not a hint, it is an <em>instruction</em>. The
+      compiler stops deducing and converts your arguments to fit. That is occasionally exactly what
+      you want (&sect;8) and occasionally a silent bug.</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write a templated <code>swapValues</code></h3>
+
+<p>Write one function that swaps two values of any type. Think about the parameters before you type:
+a swap has to change the caller's variables, so from Class 2 you know they cannot be taken by value.
+The template header goes in front; the <code>&amp;</code> still goes where it always did.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="23" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// Write swapValues here. One function, any type T.
+
+
+int main() {
+    int m = 3, n = 8;
+    string p = &quot;left&quot;, q = &quot;right&quot;;
+    double u = 1.5, v = 9.25;
+
+    swapValues&lt;int&gt;(m, n);
+    swapValues&lt;string&gt;(p, q);
+    swapValues(u, v);                // let the compiler deduce T
+
+    cout &lt;&lt; m &lt;&lt; &quot; &quot; &lt;&lt; n &lt;&lt; endl;
+    cout &lt;&lt; p &lt;&lt; &quot; &quot; &lt;&lt; q &lt;&lt; endl;
+    cout &lt;&lt; u &lt;&lt; &quot; &quot; &lt;&lt; v &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// Write swapValues here. One function, any type T.
+
+
+int main() {
+    int m = 3, n = 8;
+    string p = "left", q = "right";
+    double u = 1.5, v = 9.25;
+
+    swapValues&lt;int&gt;(m, n);
+    swapValues&lt;string&gt;(p, q);
+    swapValues(u, v);                // let the compiler deduce T
+
+    cout &lt;&lt; m &lt;&lt; " " &lt;&lt; n &lt;&lt; endl;
+    cout &lt;&lt; p &lt;&lt; " " &lt;&lt; q &lt;&lt; endl;
+    cout &lt;&lt; u &lt;&lt; " " &lt;&lt; v &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.9</div>
+  <div class="bd">
+    <p>Give the function and the program's output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">swapvalues.cpp</div><pre><code class="language-cpp">template &lt;typename T&gt;
+void swapValues(T &amp;a, T &amp;b) {
+    T temp = a;
+    a = b;
+    b = temp;
+}</code></pre></div>
+<pre class="out">8 3
+right left
+9.25 1.5</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The local <code>T temp</code> is the piece that makes this a template rather than three functions.
+          <code>T</code> is used for a parameter type <em>and</em> a local variable type, which is completely
+          normal.</li>
+        <li><code>T &amp;a, T &amp;b</code> &mdash; references, not values. With value parameters the function
+          would compile, run, swap two copies, and change nothing, which is exactly <code>swap1</code> from
+          Class 1 wearing a template header. Templates do not rescue you from a design mistake; they
+          replicate it for every type you use.</li>
+        <li><code>swapValues(u, v)</code> with no <code>&lt;double&gt;</code> works fine: both arguments are <code>double</code>, so <code>T</code> is
+          deduced. <code>swapValues(m, u)</code> &mdash; one <code>int</code>, one <code>double</code> &mdash; would <em>not</em>
+          compile, because <code>T</code> cannot be both. See &sect;8.</li>
+        <li>The standard library already has <code>std::swap</code>, and <code>using namespace std;</code> makes it
+          visible. Calling your function <code>swapValues</code> avoids any argument about which one you meant.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Deduction versus explicit template arguments</h2>
+
+<p>You have now seen both call forms. It is worth being precise about when each is required, because
+the professor's exam drivers always use the explicit form, while ordinary C++ code usually does not.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; template argument deduction</span></div>
+  <div class="bd">
+    <p><strong>Template argument deduction</strong> is the compiler working out what <code>T</code> must be by
+    matching the types of the arguments you passed against the types of the parameters in the
+    template. If the match is unambiguous, you never have to write <code>&lt;T&gt;</code> at all.</p>
+<pre><code class="language-cpp">printInput(s);          // s is a string  -&gt;  T = string
+printInput&lt;string&gt;(s);  // the same call, with T stated</code></pre>
+    <p>Both forms produce identical code. The second one is what the exams show you, so learn to
+    read it; the first is what you will write in practice.</p>
+  </div>
+</div>
+
+<p>Deduction handles references and pointers too, without you doing anything special. Here are the
+professor's two variants:</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; templates over references and pointers</span></div>
+  <div class="bd">
+    <p><code>printInputRef</code> takes <code>T &amp;x</code>; <code>printInputPtr</code> takes <code>T *p</code> and dereferences it. The last
+    two calls omit the type entirely.</p>
+<div class="codewrap"><div class="cap">printref.cpp</div><pre><code class="language-cpp">// printref.cpp -- templated functions taking a reference and a pointer
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+void printInputRef(T &amp;x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}
+
+template &lt;typename T&gt;
+void printInputPtr(T *p) {
+    cout &lt;&lt; *p &lt;&lt; endl;
+}
+
+int main() {
+    int n = 7;
+    double d = 1.2345;
+    string s("abcd");
+
+    printInputRef&lt;string&gt;(s);
+    printInputPtr&lt;double&gt;(&amp;d);
+
+    printInputRef(n);      // T deduced as int
+    printInputPtr(&amp;n);     // T deduced as int
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">abcd
+1.2345
+7
+7</pre>
+    <p>Read the pointer case carefully, because the bookkeeping catches people out. In
+    <code>printInputPtr&lt;double&gt;(&amp;d)</code>, the template argument is <code>double</code>, <strong>not</strong>
+    <code>double *</code>. <code>T</code> is the type the pointer points to; the <code>*</code> is written in the parameter list. So
+    the argument you pass is <code>&amp;d</code>, of type <code>double *</code>, and inside the function <code>*p</code> is a
+    <code>double</code>.</p>
+    <p>In the deduced call <code>printInputPtr(&amp;n)</code>, the compiler sees an argument of type <code>int *</code>,
+    matches it against the parameter pattern <code>T *</code>, and concludes <code>T = int</code>. Pattern matching, not
+    guessing.</p>
+    <p>Note also that <code>int n</code> is not <code>const</code> here. <code>printInputRef</code> takes a non-<code>const</code> reference, so
+    <code>printInputRef(7)</code> would fail &mdash; you cannot bind a non-<code>const</code> reference to a literal. A
+    print function that does not modify its argument would be better written
+    <code>template &lt;typename T&gt; void printInputRef(const T &amp;x)</code>. The professor's exam rubrics take
+    every parameter by value, so match his style on his exams, but know the better habit.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>When is the explicit form genuinely required? Two situations.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; deduction that cannot decide</span></div>
+  <div class="bd">
+    <p><code>maxOf</code> has two parameters of the <em>same</em> type <code>T</code>. The third call passes an <code>int</code> and a
+    <code>double</code>. What can <code>T</code> possibly be?</p>
+<div class="codewrap"><div class="cap">deducefail.cpp</div><pre><code class="language-cpp">template &lt;typename T&gt;
+T maxOf(T a, T b) {
+    return (a &gt; b) ? a : b;
+}
+
+int main() {
+    cout &lt;&lt; maxOf(3, 7) &lt;&lt; endl;
+    cout &lt;&lt; maxOf(2.5, 1.5) &lt;&lt; endl;
+    cout &lt;&lt; maxOf(3, 4.5) &lt;&lt; endl;      // int and double -- which T?
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">deducefail.cpp: In function 'int main()':
+deducefail.cpp:13:18: error: no matching function for call to 'maxOf(int, double)'
+   13 |     cout &lt;&lt; maxOf(3, 4.5) &lt;&lt; endl;      // int and double -- which T?
+      |             ~~~~~^~~~~~~~
+deducefail.cpp:6:3: note: candidate: 'template&lt;class T&gt; T maxOf(T, T)'
+    6 | T maxOf(T a, T b) {
+      |   ^~~~~
+deducefail.cpp:6:3: note:   template argument deduction/substitution failed:
+deducefail.cpp:13:18: note:   deduced conflicting types for parameter 'T' ('int' and 'double')</pre>
+    <p>The last note is the one that tells you everything: <em>"deduced conflicting types for
+    parameter 'T' ('int' and 'double')"</em>. The compiler is not going to pick a winner; deduction
+    is an exact-match process and it refuses to convert one argument to satisfy the other.</p>
+    <p>The fix is to stop deducing and say what you want:</p>
+
+</div></details>
+<div class="codewrap"><div class="cap">deducefix.cpp</div><pre><code class="language-cpp">    cout &lt;&lt; maxOf&lt;double&gt;(3, 4.5) &lt;&lt; endl;   // both arguments converted to double
+    cout &lt;&lt; maxOf&lt;int&gt;(3, 4.5) &lt;&lt; endl;      // both arguments converted to int (!)</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">7
+2.5
+4.5
+4</pre>
+    <p>With <code>T</code> given, the parameters have a known type and the ordinary conversion rules take over.
+    <code>maxOf&lt;double&gt;</code> compares 3.0 with 4.5 and returns <code>4.5</code>. <code>maxOf&lt;int&gt;</code> converts 4.5 to
+    the <code>int</code> 4, compares 3 with 4, and returns <code>4</code> &mdash; a silently truncated answer,
+    with no warning even under <code>-Wall</code>. Explicit template arguments give you control and hand you
+    the responsibility along with it.</p>
+    <p>The second situation needing explicit arguments is a type that appears <strong>only in the
+    return type</strong>. <code>template &lt;typename T&gt; T readValue();</code> has nothing to deduce from &mdash;
+    there are no arguments &mdash; so <code>readValue&lt;int&gt;()</code> is the only way to call it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; "you must always specify the data type"</span></div>
+  <div class="bd">
+    <p>The lecture handout states that <em>we must always specify a data type to use a templated
+    function</em> and that <em>we cannot call the templated function "as is" in programming
+    code.</em> Taken literally that is not true, and &sect;7's program proves it: <code>printInput(n)</code>
+    with no <code>&lt;int&gt;</code> compiles and runs.</p>
+    <p>What is true &mdash; and what the sentence is getting at &mdash; is that a template
+    <strong>always ends up with a concrete type</strong>. <code>T</code> is never left as <code>T</code>. The only question
+    is whether you wrote the type or the compiler deduced it.</p>
+    <p>Why does the handout's own example look like it needs the explicit form? Because that program
+    has all three ordinary overloads in scope alongside the template. <code>printInput(n)</code> there calls the
+    <em>overload</em>, and <code>&lt;int&gt;</code> is the only way to reach the template &mdash; which is a fact
+    about overload resolution, not about templates. Remove the overloads and deduction works fine.</p>
+    <p>Write explicit arguments on this professor's exams, since every one of his drivers does
+    (<code>reverse&lt;int&gt;(a,5)</code>, <code>contain&lt;string&gt;(vs,ts)</code>) and his rubrics pay for the <code>&lt;T&gt;</code> syntax. Use
+    deduction everywhere else.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.10</div>
+  <div class="bd">
+    <p>Given <code>template &lt;typename T&gt; T addUp(T a, T b) { return a + b; }</code>, state for each call whether
+    it compiles, and what <code>T</code> is.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>addUp(2, 3)</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Compiles. <code>T = int</code>, both arguments are <code>int</code>. Result <code>5</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>addUp(string("ab"), string("cd"))</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Compiles. <code>T = string</code>, and <code>a + b</code> is <code>string</code> concatenation, which <code>std::string</code>
+        overloads. Result <code>abcd</code>. This is the point of the whole topic: the same function
+        body means "add" for numbers and "concatenate" for strings, because <code>operator+</code> is looked up
+        after <code>T</code> is known.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>addUp(2, 3.5)</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Does not compile: <em>"deduced conflicting types for parameter 'T' ('int' and
+        'double')"</em>. Fix it with <code>addUp&lt;double&gt;(2, 3.5)</code>, which gives <code>5.5</code>, or with
+        <code>addUp(2.0, 3.5)</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>addUp&lt;double&gt;(2, 3)</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Compiles. There is nothing to deduce &mdash; you said <code>T = double</code> &mdash; so both <code>int</code>
+        literals are converted to <code>double</code> and the result is the <code>double</code> 5.0, which <code>cout</code> prints as
+        <code>5</code>.</p>
+        <p>Across all four parts, the pattern to remember: deduction demands an <em>exact</em> match
+        and never converts; an explicit argument converts freely. When a template call fails on a
+        mixed-type argument list, naming <code>T</code> yourself is almost always the fix.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s9"><span class="num">9.</span>When <code>T</code> does not cooperate</h2>
+
+<p>A template body makes demands on <code>T</code>. <code>cout &lt;&lt; x</code> demands that <code>T</code> can be streamed. <code>a + b</code>
+demands an <code>operator+</code>. <code>T sum;</code> demands a default constructor. Nothing in
+<code>template &lt;typename T&gt;</code> restricts what <code>T</code> may be, so those demands are not checked when you write
+the template &mdash; they are checked when you <em>instantiate</em> it, against the actual type.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the test to apply before you call a template</span></div>
+  <div class="bd">
+    <p><em>Would the code compile if you wrote ordinary, non-templated code with <code>MyClass</code> written in
+    place of <code>T</code> everywhere?</em></p>
+    <p>If yes, the template call compiles. If no, it does not. That is not an analogy &mdash; it is
+    literally what the compiler generates. Every requirement a template imposes on <code>T</code> can be found
+    by doing the substitution on paper and reading the result as ordinary C++.</p>
+  </div>
+</div>
+
+<p>So for <code>printInput&lt;MyClass&gt;(m)</code>, the generated function is
+<code>void printInput(MyClass x) { cout &lt;&lt; x &lt;&lt; endl; }</code>, and reading that as ordinary C++ tells you two
+things immediately: <code>MyClass</code> needs a <strong>public copy constructor</strong> (the parameter is
+by value, so the argument gets copied), and <code>operator&lt;&lt;</code> must be overloaded for <code>MyClass</code> or the
+<code>cout</code> line is meaningless. The copy constructor may be the compiler-generated one or one you wrote,
+but it must be public.</p>
+
+<p>Break the second requirement and you meet the thing templates are notorious for.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; reading a 231-line error message</span></div>
+  <div class="bd">
+    <p><code>Point</code> has a constructor and two private <code>int</code>s. It has no <code>operator&lt;&lt;</code>. We call the print
+    template on it anyway.</p>
+<div class="codewrap"><div class="cap">tmplerr.cpp</div><pre><code class="language-cpp">// tmplerr.cpp -- what happens when T does not support what the template body does
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Point {
+public:
+    Point(int a, int b) : x(a), y(b) {}
+private:
+    int x, y;
+};
+
+template &lt;typename T&gt;
+void printInput(T x) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}
+
+int main() {
+    Point p(3, 4);
+    printInput&lt;Point&gt;(p);
+    return 0;
+}</code></pre></div>
+    <p>This produces <strong>231 lines</strong> of compiler output. Almost all of it is noise. Here
+    are the first six lines, which are the entire message:</p>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">tmplerr.cpp: In instantiation of 'void printInput(T) [with T = Point]':
+tmplerr.cpp:20:22:   required from here
+tmplerr.cpp:15:10: error: no match for 'operator&lt;&lt;' (operand types are 'std::ostream' {aka 'std::basic_ostream&lt;char&gt;'} and 'Point')
+   15 |     cout &lt;&lt; x &lt;&lt; endl;
+      |     ~~~~~^~~~~~~~
+In file included from /usr/include/c++/13/iostream:41,
+                 from tmplerr.cpp:2:
+/usr/include/c++/13/ostream:110:7: note: candidate: 'std::basic_ostream&lt;_CharT, _Traits&gt;::operator&lt;&lt;(...)'</pre>
+    <p>Everything after that seventh line is <code>g++</code> listing, one at a time, all <em>forty-odd</em>
+    overloads of <code>operator&lt;&lt;</code> in the standard library and explaining for each one why it does not
+    take a <code>Point</code>. It is thorough and it is useless. <strong>Do not read it.</strong></p>
+    <p>Read these three lines instead:</p>
+    <table class="trace">
+      <tr><th>Line</th><th>What it tells you</th></tr>
+      <tr><td><code>In instantiation of 'void printInput(T) [with T = Point]'</code></td><td><strong>Which template, and which <code>T</code>.</strong> The error is not in the template &mdash; the template is fine for <code>int</code>. It is in this one instantiation.</td></tr>
+      <tr><td><code>tmplerr.cpp:20:22: required from here</code></td><td><strong>The line in your code that asked for it.</strong> Line 20 is <code>printInput&lt;Point&gt;(p);</code>. In a real program this is the line you go and look at, and it is often nowhere near the error.</td></tr>
+      <tr><td><code>error: no match for 'operator&lt;&lt;' ... and 'Point'</code></td><td><strong>What <code>T</code> failed to provide.</strong> <code>Point</code> has no <code>operator&lt;&lt;</code>.</td></tr>
+    </table>
+    <p><strong>The procedure, every time:</strong> find the first line containing
+    <code>required from here</code>. The line immediately above it names the instantiation; the line
+    immediately below it is the actual error. Read those three, ignore the rest, go fix your class.</p>
+    <p>The fix here is the free function from Class 18:</p>
+<pre><code class="language-cpp">ostream&amp; operator&lt;&lt;(ostream &amp;out, const Point &amp;p) {
+    out &lt;&lt; "(" &lt;&lt; p.getX() &lt;&lt; ", " &lt;&lt; p.getY() &lt;&lt; ")";
+    return out;
+}</code></pre>
+    <p>&mdash; with public accessors, or with <code>friend</code>. Once <code>Point</code> supports <code>&lt;&lt;</code>, the same
+    unchanged template compiles.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now the professor's longer example, which is where the demands on <code>T</code> get interesting. Start from
+an ordinary function that sums an array of <code>int</code>:</p>
+
+<pre><code class="language-cpp">int sumArray(int n, const int a[]) {
+    int sum = 0;
+    for (int i = 0; i &lt; n; ++i) {
+        sum = sum + a[i];
+    }
+    return sum;
+}</code></pre>
+
+<p>Turn it into a template. The important thing here is that <strong>not every <code>int</code> becomes
+<code>T</code></strong>. Go through them one at a time:</p>
+
+<table class="trace">
+  <tr><th>Occurrence</th><th>Becomes</th><th>Why</th></tr>
+  <tr><td>the return type <code>int</code></td><td><code>T</code></td><td>The sum of an array of <code>T</code> is a <code>T</code>.</td></tr>
+  <tr><td><code>int n</code>, the element count</td><td><strong>stays <code>int</code></strong></td><td>A count of elements really is an integer, whatever the elements are.</td></tr>
+  <tr><td><code>const int a[]</code></td><td><code>const T a[]</code></td><td>The array holds <code>T</code>s. Note the syntax &mdash; the <code>[]</code> stays where it was.</td></tr>
+  <tr><td><code>int sum</code></td><td><code>T sum</code></td><td>The accumulator holds the same type as the elements.</td></tr>
+  <tr><td><code>int i</code>, the loop counter</td><td><strong>stays <code>int</code></strong></td><td>A subscript really is an integer.</td></tr>
+</table>
+
+<p>Two of the five stay <code>int</code>. Getting that division right is most of the skill in converting a
+concrete function into a template, and it is worth doing on paper before you type.</p>
+
+<p>That leaves <code>int sum = 0;</code>, and it is the interesting one. What happens to the initialization to
+zero? You cannot write <code>T sum = 0;</code>, because for a general class type <code>0</code> means nothing. But you
+cannot write <code>T sum;</code> either, because for <code>int</code> and <code>double</code> that leaves the variable
+<strong>uninitialized</strong> and the function returns garbage.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; T sum; and what it really costs</span></div>
+  <div class="bd">
+    <p>Here is the template exactly as the handout has it, with <code>T sum;</code> and no initializer, called
+    on a five-element <code>int</code> array holding 1 through 5. The correct answer is 15.</p>
+<div class="codewrap"><div class="cap">sumarray_bug.cpp</div><pre><code class="language-cpp">// sumarray_bug.cpp -- the lecture's version: T sum; with no initialization
+template &lt;typename T&gt;
+T sumArray(int n, const T a[]) {
+    T sum;                                // NOT initialized
+    for (int i = 0; i &lt; n; ++i) {
+        sum = sum + a[i];
+    }
+    return sum;
+}
+
+int main() {
+    int a[5] = {1, 2, 3, 4, 5};
+    cout &lt;&lt; sumArray&lt;int&gt;(5, a) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">73743</pre>
+    <p>(That number is whatever happened to be sitting in that stack slot on this machine on this
+    run &mdash; it is representative, not reproducible. On your machine you may see a different
+    value, or 15, or a crash. All of them are "correct" for undefined behavior.)</p>
+    <p>Two things are worth being very clear about here, because the handout gets both of them
+    wrong.</p>
+    <ul>
+      <li><strong>It compiles.</strong> <code>g++</code> accepts this file without a single
+        diagnostic. The handout concludes that "we cannot use the above templated function for
+        primitive data types such as <code>int</code> or <code>double</code>", and that is not what is happening. There is
+        no compilation barrier at all. It is a <em>correctness</em> bug &mdash; the worst kind,
+        because the program runs and prints an answer.</li>
+      <li><strong>The problem is not confined to primitives.</strong> Any class whose default
+        constructor does not produce a "zero" object has exactly the same bug. <code>T sum;</code> is wrong for
+        the same reason everywhere.</li>
+    </ul>
+    <p>Turning the optimizer on does get you a warning, which is a good habit to know about:</p>
+<pre class="err">In function 'T sumArray(int, const T*) [with T = int]',
+    inlined from 'int main()' at sumarray_bug.cpp:16:31:
+sumarray_bug.cpp:9:13: warning: 'sum' is used uninitialized [-Wuninitialized]
+    9 |         sum = sum + a[i];
+      |         ~~~~^~~~~~~~~~</pre>
+    <p><code>-Wall</code> alone did not find it; <code>-Wall -O1</code> did, because the uninitialized-use analysis needs
+    the optimizer's data-flow information. Compiling with optimization on occasionally at least
+    once is cheap insurance.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; two errata in the course notes' <code>sumArray</code></span></div>
+  <div class="bd">
+    <p>This is the most damaged passage in the source material, so here is what to trust.</p>
+    <ol>
+      <li>The handout's concrete listing has the loop's opening brace mangled into a stray character
+        and an extra closing brace, so as printed the braces do not balance and it will not compile.
+        The version above is the repaired one.</li>
+      <li>The handout's <em>templated</em> listing begins <code>T sumArray(int n, const T a[]) {</code> with the
+        <code>template &lt;typename T&gt;</code> line missing entirely. Without that line <code>T</code> is an unknown type and
+        the file does not compile. Always write the template header.</li>
+      <li>The handout's conclusion &mdash; <em>"we cannot use the above templated function for
+        primitive data types"</em> &mdash; is false, as the run above shows, and its supporting claim
+        that <em>"there is no default constructor for primitive data types"</em> is misleading:
+        primitives can be <strong>value-initialized</strong>, which is exactly the fix.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the repair: T sum = T();</span></div>
+  <div class="bd">
+    <p>The fix is one expression:</p>
+<pre><code class="language-cpp">T sum = T();      // value-initialize:  0 for int/double,
+                  // default-constructed for a class type</code></pre>
+    <p><code>T()</code> means "a value-initialized <code>T</code>". For <code>int</code> and <code>double</code> that is zero. For a class type
+    it calls the default constructor. One line, both cases, no special-casing. (C++11 onwards also
+    allows the shorter <code>T sum{};</code>, which means the same thing.)</p>
+    <p>Here is the complete repaired template, exercised on <code>int</code>, on <code>double</code>, and on a small class
+    whose default constructor produces a genuine zero object. Predict all four lines.</p>
+<div class="codewrap"><div class="cap">sumarray.cpp</div><pre><code class="language-cpp">// sumarray.cpp -- the templated sumArray, repaired
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Money {
+public:
+    Money() : cents(0) {}                 // the "zero" object
+    Money(long c) : cents(c) {}
+    Money operator+(const Money &amp;rhs) const { return Money(cents + rhs.cents); }
+    long getCents() const { return cents; }
+private:
+    long cents;
+};
+
+ostream&amp; operator&lt;&lt;(ostream &amp;out, const Money &amp;m) {
+    out &lt;&lt; "$" &lt;&lt; m.getCents() / 100 &lt;&lt; "." &lt;&lt; (m.getCents() % 100) / 10
+        &lt;&lt; m.getCents() % 10;
+    return out;
+}
+
+template &lt;typename T&gt;
+T sumArray(int n, const T a[]) {
+    T sum = T();                          // value-initialize: 0 for int/double,
+    for (int i = 0; i &lt; n; ++i) {         // default-constructed for a class
+        sum = sum + a[i];
+    }
+    return sum;
+}
+
+int main() {
+    int ai[5] = {1, 2, 3, 4, 5};
+    double ad[4] = {1.5, 2.25, 3.0, 0.25};
+    Money am[3] = { Money(1250), Money(399), Money(1000) };
+
+    cout &lt;&lt; sumArray&lt;int&gt;(5, ai) &lt;&lt; endl;
+    cout &lt;&lt; sumArray&lt;double&gt;(4, ad) &lt;&lt; endl;
+    cout &lt;&lt; sumArray&lt;Money&gt;(3, am) &lt;&lt; endl;
+
+    cout &lt;&lt; sumArray(5, ai) &lt;&lt; endl;      // T deduced from the array element type
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">15
+7
+$26.49
+15</pre>
+    <p>The same six lines of template now serve three completely different types, one of which did
+    not exist when the template was written.</p>
+    <p>Apply the substitution test to see what <code>Money</code> had to provide. Writing <code>Money</code> for <code>T</code>
+    throughout gives ordinary C++ that needs:</p>
+    <ul>
+      <li>a <strong>public default constructor</strong>, for <code>Money sum = Money();</code>. Notice
+        <em>why</em> it must be the default constructor: a template cannot call a non-default
+        constructor, because it has no idea what arguments to supply for an arbitrary type;</li>
+      <li>a <strong>public copy constructor and assignment operator</strong>, for <code>sum = sum + a[i]</code>
+        and for returning <code>sum</code> by value;</li>
+      <li>an <strong><code>operator+</code></strong>, member or free, it does not matter which;</li>
+      <li>and, for the driver to print it, <code>operator&lt;&lt;</code>.</li>
+    </ul>
+    <p><code>Money</code> has all four, so it works. And here is the design point the handout is reaching for
+    and never quite states: <strong>the default constructor must produce something that behaves like
+    zero.</strong> <code>Money() : cents(0)</code> does. If <code>Money</code>'s default constructor left <code>cents</code>
+    uninitialized, or set it to 100, <code>sumArray</code> would return a wrong answer with no error anywhere.
+    What "an empty object" means depends entirely on the class, and only the class's author can
+    decide it.</p>
+    <p>The last line, <code>sumArray(5, ai)</code> with no <code>&lt;int&gt;</code>, deduces <code>T = int</code> from the array's element
+    type &mdash; and prints <code>15</code>, same as the explicit call.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the closing line of the lecture</span></div>
+  <div class="bd">
+    <p><strong>Not everything can be templated.</strong> A template is only as general as the
+    operations its body uses. Write <code>a + b</code> and you have restricted <code>T</code> to types with an
+    <code>operator+</code>; write <code>T sum = T();</code> and you have restricted it to types with an accessible default
+    constructor. There is no way to be generic <em>and</em> assume nothing &mdash; the body always
+    demands something. The skill is knowing what your body demands, so you can say so in the
+    documentation instead of leaving your users to discover it in 231 lines of error output.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; the exam's favorite template</h3>
+
+<p>Write <code>findIndex</code>: a templated function that returns the index of the first occurrence of a
+target in a <code>vector</code> of any type, or <code>-1</code> if it is not there. This is the Summer 2025 final's
+Problem 5 almost word for word, and the shape recurs on every final &mdash; a template over a
+<code>vector&lt;T&gt;</code>, a target of type <code>T</code>, a linear scan. Match the driver's calls exactly.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="27" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+// Write findIndex here.
+// Returns the index of the first occurrence of target, or -1 if absent.
+
+
+int main() {
+    int num = 42;
+    char letter = &#39;B&#39;;
+    vector&lt;int&gt; numbers = {10, 20, 42, 30, 42};
+    vector&lt;char&gt; letters = {&#39;A&#39;, &#39;C&#39;, &#39;B&#39;, &#39;D&#39;};
+
+    if (findIndex&lt;int&gt;(numbers, num) != -1)
+        cout &lt;&lt; num &lt;&lt; &quot; found at index &quot; &lt;&lt; findIndex&lt;int&gt;(numbers, num) &lt;&lt; endl;
+    else cout &lt;&lt; num &lt;&lt; &quot; is not in the list.&quot; &lt;&lt; endl;
+
+    if (findIndex&lt;char&gt;(letters, letter) != -1)
+        cout &lt;&lt; letter &lt;&lt; &quot; found at index &quot; &lt;&lt; findIndex&lt;char&gt;(letters, letter) &lt;&lt; endl;
+    else cout &lt;&lt; letter &lt;&lt; &quot; is not in the list.&quot; &lt;&lt; endl;
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+// Write findIndex here.
+// Returns the index of the first occurrence of target, or -1 if absent.
+
+
+int main() {
+    int num = 42;
+    char letter = 'B';
+    vector&lt;int&gt; numbers = {10, 20, 42, 30, 42};
+    vector&lt;char&gt; letters = {'A', 'C', 'B', 'D'};
+
+    if (findIndex&lt;int&gt;(numbers, num) != -1)
+        cout &lt;&lt; num &lt;&lt; " found at index " &lt;&lt; findIndex&lt;int&gt;(numbers, num) &lt;&lt; endl;
+    else cout &lt;&lt; num &lt;&lt; " is not in the list." &lt;&lt; endl;
+
+    if (findIndex&lt;char&gt;(letters, letter) != -1)
+        cout &lt;&lt; letter &lt;&lt; " found at index " &lt;&lt; findIndex&lt;char&gt;(letters, letter) &lt;&lt; endl;
+    else cout &lt;&lt; letter &lt;&lt; " is not in the list." &lt;&lt; endl;
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.11</div>
+  <div class="bd">
+    <p>Give <code>findIndex</code> and the program's output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">findindex_t.cpp</div><pre><code class="language-cpp">template &lt;typename T&gt;
+int findIndex(vector&lt;T&gt; x, T target) {
+    for (int i = 0; i &lt; (int)x.size(); i++) {
+        if (x[i] == target) return i;
+    }
+    return -1;
+}</code></pre></div>
+<pre class="out">42 found at index 2
+B found at index 2</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The return type is <code>int</code>, <em>not</em> <code>T</code>. An index is an integer no matter what the
+          vector holds &mdash; the same "not every type becomes <code>T</code>" judgment as in <code>sumArray</code>. The
+          two <code>T</code>s are the vector's element type and the target's type, and they must match, which
+          is what lets <code>findIndex&lt;int&gt;(numbers, num)</code> type-check.</li>
+        <li><code>return i;</code> inside the loop is what makes it the <em>first</em> occurrence. <code>numbers</code>
+          contains 42 twice; the answer is 2, not 4.</li>
+        <li>What does the template demand of <code>T</code>? Only <code>operator==</code>, plus a copy constructor because
+          the vector is taken by value. That is a very small demand, which is why this function works
+          for <code>int</code>, <code>char</code>, <code>string</code> and most user-defined classes.</li>
+        <li><code>x.size()</code> returns an unsigned type, so comparing it with <code>int i</code> draws a
+          <code>-Wsign-compare</code> warning under <code>-Wall</code>. Casting with <code>(int)x.size()</code> silences it. The
+          professor's rubric writes the plain <code>i &lt; x.size()</code> and it is accepted &mdash; on an exam,
+          write it however you like; in real code, get rid of the warning.</li>
+        <li>Taking the vector <strong>by value</strong> copies the whole thing on every call, and
+          this driver calls <code>findIndex</code> twice per <code>if</code>. <code>const vector&lt;T&gt; &amp;x</code> would be better
+          engineering. Every one of this professor's rubric answers passes by value, so match him on
+          his exams.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 25.12</div>
+  <div class="bd">
+    <p>Pull the two halves of today together. A library declares</p>
+<pre><code class="language-cpp">class Shape {
+public:
+    virtual ~Shape() {}
+    virtual double area() const = 0;
+};
+
+template &lt;typename T&gt;
+double totalArea(const T shapes[], int n) {
+    double sum = 0;
+    for (int i = 0; i &lt; n; ++i) sum = sum + shapes[i]-&gt;area();
+    return sum;
+}</code></pre>
+    <p>Explain why <code>totalArea&lt;Shape *&gt;(arr, 3)</code> compiles and works, while <code>totalArea&lt;Shape&gt;(arr, 3)</code>
+    could never work no matter what you passed.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Do the substitution test on each one.</p>
+      <p>With <code>T = Shape *</code>, the generated function takes <code>const Shape *shapes[]</code> &mdash; an array of
+      pointers to <code>Shape</code>. <code>shapes[i]</code> is a <code>Shape *</code>, so <code>shapes[i]-&gt;area()</code> is a virtual call
+      through a pointer, dispatched to whatever derived class the pointer really refers to. Arrays of
+      pointers to an abstract class are legal, so this is fine.</p>
+      <p>With <code>T = Shape</code>, the generated function takes <code>const Shape shapes[]</code> &mdash; an array of
+      <code>Shape</code> <em>objects</em>. There is no such thing. <code>Shape s[3];</code> is rejected with
+      <em>"creating array of 'Shape', which is an abstract class type"</em>, so no caller can ever
+      produce an argument. And the body would not survive either: <code>shapes[i]</code> would be a <code>Shape</code>
+      object, not a pointer, so <code>shapes[i]-&gt;area()</code> is not even valid syntax. Passing the same
+      <code>arr</code> gives</p>
+<pre class="err">totalarea_bad.cpp:18:30: error: cannot convert 'Shape**' to 'const Shape*'
+   18 |     cout &lt;&lt; totalArea&lt;Shape&gt;(arr, 3) &lt;&lt; endl;
+      |                              ^~~</pre>
+      <p>(A small language subtlety worth knowing: an array <em>parameter</em> is secretly a pointer
+      &mdash; <code>const Shape shapes[]</code> really means <code>const Shape *shapes</code> &mdash; so the parameter
+      declaration itself is accepted. It is the call and the body that cannot be made to work.)</p>
+      <p>This is the connection between the two halves of today's class. Polymorphism needs
+      <strong>indirection</strong> &mdash; a pointer or a reference &mdash; and an abstract class
+      enforces that by making the direct form impossible. A template is happy to substitute either
+      one; it is the abstract class that decides which substitutions can survive. And note that
+      <code>totalArea</code> does not need to be a template at all here &mdash; `double totalArea(Shape
+      *shapes[], int n)` already works for every shape ever written. Class 26 shows where templates
+      and polymorphism genuinely combine.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems</div>
+  <div class="bd">
+    <p>Problem 1 is the professor's own <code>sumArray</code> exercise from the lecture notes, repaired.
+    Problems 2 to 5 are taken from his exam bank: the templated <code>reverse</code> from the Fall 2023 final,
+    the abstract-hierarchy trace from the same paper, the <code>contain</code> template from the Winter 2025
+    final, and the <code>Shape</code> trace from the Summer 2025 final. Problem 6 was written for these notes.</p>
+    <p>Problems 3 and 5 are the format you should recognize instantly: <strong>the last problem on
+    every final he has given</strong> is an abstract-hierarchy trace, five parts, two or three points
+    each, no partial credit, and the instruction is always <em>"if a line causes a compiler/runtime
+    error, write ERROR, then comment out the line and proceed."</em> Problems 2 and 4 are the other
+    guaranteed one: <em>"write a templated function called Z"</em>, where 30&ndash;40% of the marks
+    are for the signature line alone. Write <code>template &lt;typename T&gt;</code> and a correct signature even if
+    you cannot finish the body.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Repair and template <code>sumArray</code> <span class="muted small">(from the course notes)</span></h3>
+
+<p>Start from this concrete function:</p>
+
+<pre><code class="language-cpp">int sumArray(int n, const int a[]) {
+    int sum = 0;
+    for (int i = 0; i &lt; n; ++i) {
+        sum = sum + a[i];
+    }
+    return sum;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Convert it to a function template. State which occurrences of <code>int</code> become <code>T</code> and which stay <code>int</code>, and say what happens to <code>sum = 0</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Ask of each <code>int</code>: does this quantity have the array's element type, or
+    is it genuinely a whole number? The return value, the array, and the accumulator have the
+    element's type. The count and the loop index are genuinely integers.</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+T sumArray(int n, const T a[]) {
+    T sum = T();
+    for (int i = 0; i &lt; n; ++i) {
+        sum = sum + a[i];
+    }
+    return sum;
+}</code></pre>
+    <table class="trace">
+      <tr><th>Occurrence</th><th>Result</th></tr>
+      <tr><td>return type</td><td><code>T</code></td></tr>
+      <tr><td><code>int n</code></td><td>stays <code>int</code> &mdash; a count</td></tr>
+      <tr><td><code>const int a[]</code></td><td><code>const T a[]</code></td></tr>
+      <tr><td><code>int sum</code></td><td><code>T sum</code></td></tr>
+      <tr><td><code>int i</code></td><td>stays <code>int</code> &mdash; a subscript</td></tr>
+    </table>
+    <p><code>sum = 0</code> becomes <code>T sum = T();</code>. You cannot write <code>T sum = 0;</code> because <code>0</code> is meaningless for
+    a general class type, and you cannot write a bare <code>T sum;</code> because that leaves the variable
+    uninitialized for <code>int</code> and <code>double</code>. <code>T()</code> value-initializes: zero for a primitive,
+    default-constructed for a class.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Write a complete program that calls it on an <code>int</code> array, a <code>double</code> array, and an array of a class of your own, and give the output.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> The class needs whatever the substitution test says: a default
+    constructor that produces a zero object, an <code>operator+</code>, and (for the driver) an <code>operator&lt;&lt;</code>.
+    A money type in whole cents is the natural example because "zero" is unambiguous.</p>
+<div class="codewrap"><div class="cap">sumarray.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Money {
+public:
+    Money() : cents(0) {}                 // the "zero" object
+    Money(long c) : cents(c) {}
+    Money operator+(const Money &amp;rhs) const { return Money(cents + rhs.cents); }
+    long getCents() const { return cents; }
+private:
+    long cents;
+};
+
+ostream&amp; operator&lt;&lt;(ostream &amp;out, const Money &amp;m) {
+    out &lt;&lt; "$" &lt;&lt; m.getCents() / 100 &lt;&lt; "." &lt;&lt; (m.getCents() % 100) / 10
+        &lt;&lt; m.getCents() % 10;
+    return out;
+}
+
+template &lt;typename T&gt;
+T sumArray(int n, const T a[]) {
+    T sum = T();
+    for (int i = 0; i &lt; n; ++i) {
+        sum = sum + a[i];
+    }
+    return sum;
+}
+
+int main() {
+    int ai[5] = {1, 2, 3, 4, 5};
+    double ad[4] = {1.5, 2.25, 3.0, 0.25};
+    Money am[3] = { Money(1250), Money(399), Money(1000) };
+
+    cout &lt;&lt; sumArray&lt;int&gt;(5, ai) &lt;&lt; endl;
+    cout &lt;&lt; sumArray&lt;double&gt;(4, ad) &lt;&lt; endl;
+    cout &lt;&lt; sumArray&lt;Money&gt;(3, am) &lt;&lt; endl;
+
+    cout &lt;&lt; sumArray(5, ai) &lt;&lt; endl;      // T deduced from the array element type
+    return 0;
+}</code></pre></div>
+<pre class="out">15
+7
+$26.49
+15</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>The <code>double</code> sum is 7.0 and prints as <code>7</code> &mdash; the six-significant-digit
+        default again.</li>
+      <li><code>Money</code> needs a public default constructor <em>that means zero</em>. A template can never
+        call a non-default constructor, because it has no way to know what arguments an arbitrary
+        type wants.</li>
+      <li>Writing <code>Money(long c)</code> as a one-argument constructor also gives <code>Money</code> an implicit
+        conversion from <code>long</code>, which is not always desirable; <code>explicit</code> would prevent it. Not
+        required here, but worth knowing.</li>
+      <li>The last call deduces <code>T</code> from the array. The array parameter pattern <code>const T a[]</code> is
+        matched against <code>int[5]</code>, which decays to <code>int *</code>, giving <code>T = int</code>.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 2 &mdash; A templated <code>reverse</code> over arrays <span class="muted small">(from the Fall 2023 Final)</span></h3>
+
+<p>Write a templated function called <code>reverse</code> that takes an array of any data type and the array
+size, and reverses the array entries. A program that uses it:</p>
+
+<pre><code class="language-cpp">int main() {
+    int a[5] = {1, 2, 3, 4, 5};
+    string b[2] = {"Hello", "Bye"};
+    reverse&lt;int&gt;(a, 5);
+    reverse&lt;string&gt;(b, 2);
+    for (int i = 0; i &lt; 5; i++) cout &lt;&lt; a[i] &lt;&lt; " ";   // print: 5 4 3 2 1
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; 2; i++) cout &lt;&lt; b[i] &lt;&lt; " ";   // print: Bye Hello
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Reversing in place means swapping the outermost pair, then the next pair
+  in, and stopping in the middle. Element <code>i</code> pairs with element <code>size - i - 1</code>, and the loop runs
+  while <code>i &lt; size / 2</code> &mdash; integer division does the right thing for both even and odd sizes,
+  since a middle element in an odd-length array does not need moving. The swap needs a temporary of
+  type <code>T</code>. The function returns nothing; it modifies the caller's array, which works because an
+  array parameter is really a pointer.</p>
+<div class="codewrap"><div class="cap">reverse_t.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+void reverse(T arr[], int size) {
+    for (int i = 0; i &lt; size / 2; ++i) {
+        T temp = arr[i];
+        arr[i] = arr[size - i - 1];
+        arr[size - i - 1] = temp;
+    }
+}
+
+int main() {
+    int a[5] = {1, 2, 3, 4, 5};
+    string b[2] = {"Hello", "Bye"};
+
+    reverse&lt;int&gt;(a, 5);
+    reverse&lt;string&gt;(b, 2);
+
+    for (int i = 0; i &lt; 5; i++) cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; 2; i++) cout &lt;&lt; b[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">5 4 3 2 1
+Bye Hello</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><strong>Three of the ten points are for the title line alone.</strong> <code>template &lt;typename T&gt;</code>
+      on its own line, then <code>void reverse(T arr[], int size)</code>. Write that first, even if the body
+      then goes wrong.</li>
+    <li><code>T arr[]</code> has <strong>no <code>const</code></strong>, unlike <code>sumArray</code>. This function modifies the
+      array, so a <code>const</code> parameter would be a compile error. Deciding <code>const</code> or not is part of
+      designing the signature.</li>
+    <li>The rubric accepts a second answer that copies into a temporary array:
+<pre><code class="language-cpp">template &lt;typename T&gt;
+void reverse(T arr[], int size) {
+    T *temp = new T[size];
+    for (int i = 0; i &lt; size; i++) { temp[i] = arr[i]; }
+    for (int i = 0; i &lt; size; i++) { arr[i] = temp[size - i - 1]; }
+    delete [] temp;
+}</code></pre>
+      It works and is leak-free, but it allocates <code>size</code> objects to do a job that needs
+      one temporary. Note <code>new T[size]</code> &mdash; allocating an array of a template type is perfectly
+      normal, and it quietly requires <code>T</code> to have a default constructor, which the in-place version
+      does not.</li>
+    <li>The exam paper's own driver loops start at <code>i = 1</code>, not <code>i = 0</code>, so the printed output would
+      actually be <code>4 3 2 1</code> and <code>Hello</code> &mdash; the comments in the question
+      are wrong. The function is still right; it is the driver that is buggy. If you notice something
+      like this in an exam, answer the question that was meant and add a one-line note.</li>
+    <li><code>using namespace std;</code> also makes <code>std::reverse</code> visible, but the explicit <code>reverse&lt;int&gt;(a,5)</code>
+      cannot match it (it wants two iterators) so there is no ambiguity, and this compiles cleanly.
+      Naming your own function something like <code>reverseArray</code> avoids the question entirely.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Abstract-hierarchy trace <span class="muted small">(from the Fall 2023 Final)</span></h3>
+
+<p>What output does the program print for each of the marked lines? If a line causes a
+compiler/runtime error, write <strong>ERROR</strong>, then comment out the line and proceed to the
+next one.</p>
+
+<pre><code class="language-cpp">class T {
+  public:
+    virtual ~T() {}
+    virtual string name() { return "T"; }
+    virtual int x() = 0;
+    void print() { cout &lt;&lt; name() &lt;&lt; ": " &lt;&lt; x() &lt;&lt; endl; }
+  protected:
+    T() {}
+    T(const T &amp;orig) {}
+    T&amp; operator=(const T &amp;rhs) { return *this; }
+};
+
+class A : public T { public: string name() { return "A"; } };
+class B : public T { public: int    x()    { return 1;   } };
+class C : public A { public: int    x()    { return 2;   } };
+class D : public B { public: string name() { return "D"; } };
+class E : public D { public: string name() { return "E"; } };
+
+void poly_lib(T *p) { p-&gt;print(); }
+
+int main() {
+    A a; B b; C c; D d; E e;
+    poly_lib(&amp;a);      // output for this line: ______________
+    poly_lib(&amp;b);      // output for this line: ______________
+    poly_lib(&amp;c);      // output for this line: ______________
+    poly_lib(&amp;d);      // output for this line: ______________
+    poly_lib(&amp;e);      // output for this line: ______________
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Follow the &sect;3 procedure. There is exactly one pure virtual, <code>x()</code>.
+  <code>name()</code> is virtual but has a body in the base, so it is never a source of abstractness. The
+  <code>protected:</code> block makes <code>T</code> itself uninstantiable but has no effect on the derived classes, since
+  each derived constructor can reach the base constructor. So the only question per class is: does
+  it, or an ancestor of it, define <code>x()</code>?</p>
+  <table class="trace">
+    <tr><th>Class</th><th>Where <code>x()</code> comes from</th><th>Where <code>name()</code> comes from</th><th>Result</th></tr>
+    <tr><td><code>A</code></td><td><strong>nowhere &mdash; still pure</strong></td><td><code>A</code></td><td><strong>ERROR</strong>: <code>A a;</code> will not compile</td></tr>
+    <tr><td><code>B</code></td><td><code>B</code> &rarr; 1</td><td><code>T</code> &rarr; "T"</td><td><code>T: 1</code></td></tr>
+    <tr><td><code>C</code></td><td><code>C</code> &rarr; 2</td><td><code>A</code> &rarr; "A"</td><td><code>A: 2</code></td></tr>
+    <tr><td><code>D</code></td><td><code>B</code> &rarr; 1</td><td><code>D</code> &rarr; "D"</td><td><code>D: 1</code></td></tr>
+    <tr><td><code>E</code></td><td><code>B</code> &rarr; 1</td><td><code>E</code> &rarr; "E"</td><td><code>E: 1</code></td></tr>
+  </table>
+  <p>So the five answers are <strong>ERROR</strong>, <code>T: 1</code>, <code>A: 2</code>,
+  <code>D: 1</code>, <code>E: 1</code>. Compiling the program with <code>A a;</code> and <code>poly_lib(&amp;a);</code>
+  commented out confirms the other four:</p>
+<pre class="out">T: 1
+A: 2
+D: 1
+E: 1</pre>
+  <p>And with <code>A a;</code> left in, this is what <code>g++</code> says &mdash; note that it names the culprit,
+  <code>T::x()</code>:</p>
+<pre class="err">polytrace_bad.cpp: In function 'int main()':
+polytrace_bad.cpp:46:7: error: cannot declare variable 'a' to be of abstract type 'A'
+   46 |     A a;      // ERROR: A never overrode x(), so A is still abstract
+      |       ^
+polytrace_bad.cpp:18:7: note:   because the following virtual functions are pure within 'A':
+   18 | class A : public T {
+      |       ^
+polytrace_bad.cpp:10:17: note:     'virtual int T::x()'
+   10 |     virtual int x() = 0;
+      |                 ^</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The error is at the <strong>declaration</strong> <code>A a;</code>, not at the call <code>poly_lib(&amp;a);</code>.
+      The exam's instruction "comment out the line and proceed" means both lines go.</li>
+    <li><code>B</code> prints <code>T: 1</code> &mdash; the base class's own <code>name()</code>. Students reliably write
+      "B: 1". <code>B</code> never overrode <code>name()</code>, so the base version wins, and the base version returns the
+      literal string <code>"T"</code>. This is the sentinel problem from &sect;5 showing up on an
+      exam.</li>
+    <li><code>D</code> and <code>E</code> both print <code>1</code>, from <code>B::x()</code> two and three levels up. Depth does not
+      matter; the nearest ancestor that defines the method wins.</li>
+    <li><code>print()</code> is not virtual, so <code>p-&gt;print()</code> always runs <code>T::print()</code>. It is the calls
+      <em>inside</em> it that are dispatched. Every version of this question is built that way.</li>
+    <li>Two points per part, no partial credit. Build the table before you write anything &mdash;
+      it takes ninety seconds and it is the difference between 10/10 and 4/10.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; A templated <code>contain</code> over vectors <span class="muted small">(from the Winter 2025 Final)</span></h3>
+
+<p>Write a templated function called <code>contain</code> that checks whether a target value is in a <code>vector</code>
+of any data type. A program that uses it:</p>
+
+<pre><code class="language-cpp">int main() {
+    double td = 3.3;
+    string ts = "yellow";
+    vector&lt;double&gt; vd = {1.1, 2.2, 4.4, 5.5, 7.7};
+    vector&lt;string&gt; vs = {"red", "blue", "yellow"};
+
+    if (contain&lt;double&gt;(vd, td)) cout &lt;&lt; td &lt;&lt; " is in the list." &lt;&lt; endl;
+    else                         cout &lt;&lt; td &lt;&lt; " is not in the list." &lt;&lt; endl;
+
+    if (contain&lt;string&gt;(vs, ts)) cout &lt;&lt; ts &lt;&lt; " is in the list." &lt;&lt; endl;
+    else                         cout &lt;&lt; ts &lt;&lt; " is not in the list." &lt;&lt; endl;
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The return type is <code>bool</code>, not <code>T</code> &mdash; "is it there" is a yes/no
+  question whatever the elements are. Two parameters: the vector of <code>T</code>, and a target of <code>T</code>. Scan
+  once, return <code>true</code> on the first match, <code>false</code> if the loop finishes. Returning early from inside
+  the loop is both simpler and faster than a flag variable.</p>
+<div class="codewrap"><div class="cap">contain_t.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+bool contain(vector&lt;T&gt; x, T target) {
+    for (int i = 0; i &lt; (int)x.size(); i++) {
+        if (x[i] == target) return true;
+    }
+    return false;
+}
+
+int main() {
+    double td = 3.3;
+    string ts = "yellow";
+    vector&lt;double&gt; vd = {1.1, 2.2, 4.4, 5.5, 7.7};
+    vector&lt;string&gt; vs = {"red", "blue", "yellow"};
+
+    if (contain&lt;double&gt;(vd, td)) cout &lt;&lt; td &lt;&lt; " is in the list." &lt;&lt; endl;
+    else                         cout &lt;&lt; td &lt;&lt; " is not in the list." &lt;&lt; endl;
+
+    if (contain&lt;string&gt;(vs, ts)) cout &lt;&lt; ts &lt;&lt; " is in the list." &lt;&lt; endl;
+    else                         cout &lt;&lt; ts &lt;&lt; " is not in the list." &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">3.3 is not in the list.
+yellow is in the list.</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><strong>Four of the ten points are the title line.</strong> <code>template &lt;typename T&gt;</code> plus
+      <code>bool contain(vector&lt;T&gt; x, T target)</code>. Getting <code>bool</code> and <code>vector&lt;T&gt;</code> right is most of that.</li>
+    <li><code>vector&lt;T&gt;</code> is your first sight of a <em>class</em> template &mdash; <code>vector</code> is itself a
+      template, and <code>vector&lt;T&gt;</code> inside a function template means "a vector of whatever <code>T</code> turns out
+      to be." Class 26 shows you how <code>vector</code> is built.</li>
+    <li>The only demand this makes on <code>T</code> is <code>operator==</code> (plus copying, since the vector is by
+      value). <code>double</code> and <code>string</code> both have it.</li>
+    <li>Comparing <code>double</code>s with <code>==</code> is fragile in general &mdash; <code>0.1 + 0.2 == 0.3</code> is false. Here
+      3.3 is simply absent so the answer is right either way, but in real numeric code you compare
+      with a tolerance.</li>
+    <li>The professor's rubric writes <code>for(int i = 0; i &lt; x.size(); i++)</code> without the cast, which
+      draws a <code>-Wsign-compare</code> warning but compiles and is fully accepted. A range-based
+      <code>for (T item : x)</code> is also fine.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 5 &mdash; The <code>Shape</code> trace <span class="muted small">(from the Summer 2025 Final)</span></h3>
+
+<p>Same instructions as Problem 3: give the output of each marked line, or <strong>ERROR</strong>.</p>
+
+<pre><code class="language-cpp">class Shape {
+public:
+    Shape() {}
+    Shape(const Shape &amp;orig) {}
+    Shape&amp; operator=(const Shape &amp;rhs) { return *this; }
+    virtual ~Shape() {}
+    virtual string type() = 0;
+    virtual double area() = 0;
+    void display() { cout &lt;&lt; type() &lt;&lt; ": " &lt;&lt; area() &lt;&lt; endl; }
+};
+
+class Rectangle : public Shape { public: double area() { return 4.0; } };
+class Circle    : public Shape { public: string type() { return "Circle"; }
+                                         double area() { return 3.14; } };
+class Square    : public Rectangle { public: string type() { return "Square"; } };
+class Triangle  : public Circle    { public: string type() { return "Triangle"; } };
+class Polygon   : public Rectangle { public: string type() { return "Polygon"; }
+                                             double area() { return 5.5; } };
+
+void shape_test(Shape *p) { p-&gt;display(); }
+
+int main() {
+    Rectangle r; Circle c; Square s; Triangle t; Polygon p;
+    shape_test(&amp;r);        // output: ______________
+    shape_test(&amp;c);        // output: ______________
+    shape_test(&amp;s);        // output: ______________
+    shape_test(&amp;t);        // output: ______________
+    shape_test(&amp;p);        // output: ______________
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> This time there are <strong>two</strong> pure virtuals, <code>type()</code> and
+  <code>area()</code>, so each class needs both ticked off. Note also that <code>Shape</code>'s constructors are public
+  here &mdash; the professor varies that detail between terms and it never changes the answer, since
+  the question is only ever about the derived classes.</p>
+  <table class="trace">
+    <tr><th>Class</th><th><code>type()</code></th><th><code>area()</code></th><th>Result</th></tr>
+    <tr><td><code>Rectangle</code></td><td><strong>still pure</strong></td><td><code>Rectangle</code> &rarr; 4.0</td><td><strong>ERROR</strong></td></tr>
+    <tr><td><code>Circle</code></td><td><code>Circle</code></td><td><code>Circle</code> &rarr; 3.14</td><td><code>Circle: 3.14</code></td></tr>
+    <tr><td><code>Square</code></td><td><code>Square</code></td><td><code>Rectangle</code> &rarr; 4.0</td><td><code>Square: 4</code></td></tr>
+    <tr><td><code>Triangle</code></td><td><code>Triangle</code></td><td><code>Circle</code> &rarr; 3.14</td><td><code>Triangle: 3.14</code></td></tr>
+    <tr><td><code>Polygon</code></td><td><code>Polygon</code></td><td><code>Polygon</code> &rarr; 5.5</td><td><code>Polygon: 5.5</code></td></tr>
+  </table>
+  <p>Verified by compiling with <code>Rectangle r;</code> and its call commented out:</p>
+<pre class="out">Circle: 3.14
+Square: 4
+Triangle: 3.14
+Polygon: 5.5</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>Square: 4</code>, not <code>Square: 4.0</code>. <code>area()</code> returns the <code>double</code> 4.0 and
+      <code>cout</code> drops the trailing zero. Writing "4.0" loses the whole 3 points for that part, because
+      these questions carry no partial credit. This exact detail is called out in the professor's own
+      rubric.</li>
+    <li><code>Square</code> is <code>Rectangle</code>'s child, and <code>Rectangle</code> is abstract &mdash; but <code>Square</code> supplies the
+      one missing method, so <code>Square</code> is concrete. <strong>An abstract class can have concrete
+      children; that is the entire point of it.</strong> Do not answer ERROR for <code>Square</code> just
+      because its parent failed.</li>
+    <li><code>Triangle</code> derives from <code>Circle</code>, which is already concrete, so <code>Triangle</code> only changes the
+      name and keeps the area 3.14 &mdash; a geometrically absurd class, and a deliberate trap.
+      Trace the code, not the geometry.</li>
+    <li>Compare this table with Problem 3's. Same question, different names, one extra pure virtual.
+      Once you can build the table mechanically, every version of this question takes two minutes.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; An abstract <code>Account</code> and a templated report <span class="muted small">(added)</span></h3>
+
+<p>Build a small system that uses both halves of this class.</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Write an abstract base class <code>Account</code> with a virtual destructor, a pure virtual <code>double balance() const</code>, a pure virtual <code>string kind() const</code>, and a non-virtual <code>void show() const</code> that prints <code>kind()</code>, a colon and a space, then <code>balance()</code>. Then write <code>Checking</code> (balance = deposits) and <code>Savings</code> (balance = deposits plus 5% interest). Demonstrate them through an array of <code>Account *</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> <code>show()</code> is the fixed algorithm and stays non-virtual; the two pure
+    virtuals are the holes. Each derived class stores its own deposits and supplies both methods.
+    The driver holds pointers, because an array of <code>Account</code> objects is impossible.</p>
+<div class="codewrap"><div class="cap">account.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Account {
+public:
+    virtual ~Account() {}
+    virtual double balance() const = 0;
+    virtual string kind() const = 0;
+    void show() const { cout &lt;&lt; kind() &lt;&lt; ": " &lt;&lt; balance() &lt;&lt; endl; }
+};
+
+class Checking : public Account {
+public:
+    Checking(double d) : deposits(d) {}
+    double balance() const { return deposits; }
+    string kind() const { return "Checking"; }
+private:
+    double deposits;
+};
+
+class Savings : public Account {
+public:
+    Savings(double d) : deposits(d) {}
+    double balance() const { return deposits * 1.05; }
+    string kind() const { return "Savings"; }
+private:
+    double deposits;
+};
+
+int main() {
+    Checking c(1000);
+    Savings s(1000);
+    Account *bank[2] = { &amp;c, &amp;s };
+    for (int i = 0; i &lt; 2; ++i) bank[i]-&gt;show();
+    return 0;
+}</code></pre></div>
+<pre class="out">Checking: 1000
+Savings: 1050</pre>
+    <p><strong>Things to notice.</strong> Both pure virtuals are <code>const</code>, so both overrides must be
+    <code>const</code> too &mdash; drop it and you have declared a new method, left the pure virtual unfilled,
+    and made your derived class abstract. <code>show()</code> is <code>const</code> as well, which is only possible because
+    everything it calls is <code>const</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Now add <code>template &lt;typename T&gt; double totalOf(T items[], int n)</code>, returning the sum of <code>items[i]-&gt;balance()</code>, and call it with <code>T = Account *</code>. Why must <code>T</code> be <code>Account *</code> and not <code>Account</code>?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> The body dereferences with <code>-&gt;</code>, so <code>T</code> has to be a pointer type. Apply
+    the substitution test to check.</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+double totalOf(T items[], int n) {
+    double sum = 0;
+    for (int i = 0; i &lt; n; ++i) sum = sum + items[i]-&gt;balance();
+    return sum;
+}
+
+int main() {
+    Checking c(1000);
+    Savings s(1000);
+    Account *bank[2] = { &amp;c, &amp;s };
+    for (int i = 0; i &lt; 2; ++i) bank[i]-&gt;show();
+    cout &lt;&lt; "total: " &lt;&lt; totalOf&lt;Account *&gt;(bank, 2) &lt;&lt; endl;
+    return 0;
+}</code></pre>
+<pre class="out">Checking: 1000
+Savings: 1050
+total: 2050</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>Substituting <code>Account *</code> for <code>T</code> gives <code>double totalOf(Account *items[], int n)</code> &mdash;
+        an array of pointers, exactly what <code>bank</code> is. Legal.</li>
+      <li>Substituting <code>Account</code> gives <code>double totalOf(Account items[], int n)</code> &mdash; it wants an
+        array of abstract <em>objects</em>, which cannot exist. Passing <code>bank</code> anyway gives
+        <em>"cannot convert 'Account**' to 'Account*'"</em>, and even if you got past that,
+        <code>items[i]-&gt;area()</code> on a non-pointer is not valid syntax.</li>
+      <li><code>totalOf(bank, 2)</code> with no explicit argument also works: the compiler deduces
+        <code>T = Account *</code> from <code>bank</code>. The explicit form is what the professor's drivers use.</li>
+      <li>Notice that <code>totalOf</code> did not have to be a template at all &mdash;
+        <code>double totalOf(Account *items[], int n)</code> handles every account type that will ever exist,
+        because polymorphism is already doing the generalizing. A template earns its keep when the
+        types are <em>unrelated</em>; polymorphism handles types related by inheritance. Knowing
+        which tool a problem calls for is the real skill.</li>
+    </ul>
+  </div></details>
+</div>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>An <strong>abstract class</strong> is one you cannot create objects of. You may declare
+        <strong>pointers and references</strong> to it &mdash; they are not objects &mdash; and that
+        is the whole point: library code takes <code>Base *</code> or <code>Base &amp;</code> and works with derived
+        classes written years later.</li>
+      <li>A <strong>pure virtual function</strong> is declared <code>virtual T f() = 0;</code> and has no body
+        anywhere. One of them makes the class abstract.</li>
+      <li>Trying to create the object gives <em>"cannot declare variable 'x' to be of abstract type
+        'C'"</em>, and the <code>note:</code> lines <strong>name the pure virtual</strong> that is still
+        unimplemented.</li>
+      <li>A derived class that fails to override <strong>every</strong> inherited pure virtual is
+        <strong>itself abstract</strong>. This is the single most-tested idea on this professor's
+        finals. Build the table: one column per pure virtual, one row per class.</li>
+      <li>For a virtual call, the version that wins is the one in the <strong>nearest ancestor that
+        defines it</strong>, which may be several levels up &mdash; and may be the base's own
+        version, so a class can print a name that is not its own.</li>
+      <li>An abstract class with nothing but pure virtuals is C++'s version of a Java
+        <strong>interface</strong>. There is no <code>interface</code> keyword and no <code>implements</code>; you just
+        inherit publicly.</li>
+      <li>The alternative technique is <strong>protected constructors</strong>: no <code>= 0</code> anywhere,
+        derived classes are forced to override nothing, and outside code gets
+        <em>"'C::C()' is protected within this context"</em>. Constructors <code>protected</code>, never
+        <code>private</code>; destructor public and virtual. It buys flexibility and pays for it with sentinel
+        values that fail at run time instead of compile time.</li>
+      <li>A <strong>function template</strong> is written <code>template &lt;typename T&gt;</code> (or
+        <code>template &lt;class T&gt;</code>, identical) in front of an ordinary function. It is not a function; it
+        is a prescription from which the compiler <strong>instantiates</strong> a real function, on
+        demand, once per type used.</li>
+      <li><code>f(x)</code> <strong>deduces</strong> <code>T</code> from the argument types; <code>f&lt;int&gt;(x)</code> states it
+        explicitly. Deduction never converts, so mixed argument types fail with <em>"deduced
+        conflicting types for parameter 'T'"</em> &mdash; name <code>T</code> yourself to fix it. This
+        professor's exam drivers always use the explicit form.</li>
+      <li>Not every <code>int</code> becomes <code>T</code>. Counts, indexes and "is it there" answers stay <code>int</code> and
+        <code>bool</code>; only quantities that really have the element's type become <code>T</code>.</li>
+      <li>Ask of any template call: <em>would this compile if I wrote the type name in place of <code>T</code>
+        everywhere?</em> That is literally what the compiler generates, and it tells you what <code>T</code>
+        must provide &mdash; a public copy constructor, <code>operator+</code>, <code>operator&lt;&lt;</code>, a default
+        constructor for <code>T sum = T();</code>, and so on.</li>
+      <li>Template errors are long. Find <code>required from here</code>: the line above names the
+        instantiation, the line below is the real error, and the other 200 lines are the compiler
+        listing every candidate it rejected.</li>
+      <li><strong>Not everything can be templated</strong> &mdash; a template is only as general as
+        the operations its body performs.</li>
+    </ul>
+    <p><strong>Coming up in Class 26:</strong> templates with more than one type parameter, and then
+    templated <em>classes</em> &mdash; how <code>vector&lt;T&gt;</code> is actually built, a <code>DynAlloc</code> class that
+    manages dynamic memory for any type, and what "generic programming" means once the whole class
+    is a prescription.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 24 &middot; Polymorphism</div><div class="pending">posts Tue Nov 24</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 26 &middot; Class Templates</div><div class="pending">posts Thu Dec 3</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

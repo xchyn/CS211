@@ -1,0 +1,3097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 8 — Pointers II | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 8 &middot; Pointers II</span><span class="sep">|</span><span class="where">Thu Sep 24</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 8 &middot; CSCI 211</div>
+  <h1>Pointers II &mdash; Dynamic Memory</h1>
+  <p class="sub">Using pointers to create variables that did not exist before &mdash; and giving every one of them back.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain the difference between <em>static</em> (automatic) and <em>dynamic</em> allocation, and say which one the compiler decides and which one the running program decides.</li>
+      <li>Give the honest reason for using the heap: the size is not known until run time.</li>
+      <li>Allocate and release a single variable with <code>new</code> and <code>delete</code>, and say why the allocated variable has no name.</li>
+      <li>Allocate and release an array with <code>new[]</code> and <code>delete[]</code>, and explain why mixing the two forms is a bug.</li>
+      <li>Define a <strong>memory leak</strong>, say why a leaking program does not crash, and find the statement that caused one.</li>
+      <li>Recognize a <strong>dangling pointer</strong> and a <strong>double delete</strong>, and use the <code>p = nullptr;</code> habit to defuse both.</li>
+      <li>Build, use and correctly release a two-dimensional array as an array of pointers, in the right order.</li>
+      <li>Build a <strong>ragged</strong> array whose rows have different lengths, and say why a statically declared array cannot do this.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Where variables live: the stack and the heap</a></li>
+    <li><a href="#s2"><code>new</code> and <code>delete</code>: one variable at a time</a></li>
+    <li><a href="#s3"><code>new[]</code> and <code>delete[]</code>: whole arrays</a></li>
+    <li><a href="#s4">Allocating in one function, releasing in another</a></li>
+    <li><a href="#s5">Memory leaks</a></li>
+    <li><a href="#s6">Dangling pointers, double delete, and the <code>nullptr</code> habit</a></li>
+    <li><a href="#s7">Arrays of pointers, and 2-D arrays built at run time</a></li>
+    <li><a href="#s8">Ragged arrays</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Where variables live: the stack and the heap</h2>
+
+<p>Class 7 was about pointing at things that already exist. Every pointer we wrote was aimed at a
+variable that some other line had already declared. Today we use pointers for the thing they were
+really invented for, and the course notes put it exactly this way:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; from the course notes</span></div>
+  <div class="bd">
+    <p>All the pointers up to now pointed to variables which already exist in the program. We now
+    come to one of the most useful features of pointers: <strong>we shall use pointers to create new
+    variables which did not exist before.</strong> The process of doing so is called
+    <strong>dynamic memory allocation</strong>.</p>
+  </div>
+</div>
+
+<p>Before the syntax, the motivation &mdash; because if you learn <code>new</code> and <code>delete</code> without
+understanding <em>why</em> anyone would want them, you will use them in places where an ordinary
+variable would have been simpler and safer.</p>
+
+<h3>The problem: you do not know how big it needs to be</h3>
+
+<p>Here is a program that averages some test scores. It is completely ordinary, and it has a flaw
+you have probably written yourself.</p>
+
+<div class="codewrap"><div class="cap">fixedsize.cpp</div><pre><code class="language-cpp">// fixedsize.cpp -- the problem dynamic memory solves
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int MAX = 100;        // a guess, made when the program was written
+    double scores[MAX];
+    int n;
+
+    cout &lt;&lt; "How many scores? ";
+    cin &gt;&gt; n;                   // the real answer arrives here, at run time
+
+    if (n &gt; MAX) {
+        cout &lt;&lt; "Sorry, this program can only handle " &lt;&lt; MAX &lt;&lt; " scores." &lt;&lt; endl;
+        return 1;
+    }
+    for (int i = 0; i &lt; n; ++i)
+        cin &gt;&gt; scores[i];
+
+    double sum = 0.0;
+    for (int i = 0; i &lt; n; ++i)
+        sum += scores[i];
+    cout &lt;&lt; "average = " &lt;&lt; sum / n &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<p>The number <code>MAX</code> is a guess made by the programmer, at the time the program was written, about
+something only the user knows, at the time the program is run. Every guess is wrong in one of two
+directions. Guess too small and the program refuses perfectly reasonable work. Guess too large and
+every single run reserves 100 doubles &mdash; 800 bytes &mdash; to hold the three numbers the user
+actually typed. Neither is a disaster here. Change <code>MAX</code> to a million, or put this array inside a
+class that gets created ten thousand times, and both become one.</p>
+
+<p>The obvious repair looks like this, and it is the first thing everybody tries:</p>
+
+<div class="codewrap"><div class="cap">vla.cpp</div><pre><code class="language-cpp">// vla.cpp -- looks reasonable, is not standard C++
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cout &lt;&lt; "How many scores? ";
+    cin &gt;&gt; n;
+
+    double scores[n];        // NOT standard C++
+    for (int i = 0; i &lt; n; ++i)
+        cin &gt;&gt; scores[i];
+    return 0;
+}</code></pre></div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; an array length must be a compile-time constant</span></div>
+  <div class="bd">
+    <p><code>double scores[n];</code> where <code>n</code> is an ordinary variable is <strong>not standard C++</strong>.
+    The compiler has to decide how large every ordinary array is while it is compiling, long before
+    <code>n</code> has a value. What makes this trap so effective is that <code>g++</code> accepts it anyway, as
+    a non-standard extension, so it appears to work. Ask the compiler to hold you to the actual
+    language standard and it says so:</p>
+<pre class="shell">g++ -pedantic-errors vla.cpp -o vla</pre>
+<pre class="err">vla.cpp: In function 'int main()':
+vla.cpp:10:12: error: ISO C++ forbids variable length array 'scores' [-Wvla]
+   10 |     double scores[n];        // NOT standard C++
+      |            ^~~~~~</pre>
+    <p>You will see <code>int n = 3; double a[n];</code> in the Class 7 notes and in plenty of textbooks, and on
+    <code>g++</code> it will run. Do not rely on it. It does not compile on the Microsoft compiler at
+    all, and it is not what the exam is looking for &mdash; when the professor's exam says
+    <em>"set up just enough space to store those inputs,"</em> he means a <code>vector</code> or he means
+    <code>new[]</code>.</p>
+  </div>
+</div>
+
+<p>So we need memory whose size is decided while the program is running. That memory comes from a
+different place than your ordinary variables do.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; static (automatic) and dynamic allocation</span></div>
+  <div class="bd">
+    <p>For ordinary variables, <strong>the compiler allocates the required memory at compile
+    time.</strong> This is called <strong>static allocation</strong>. Statically allocated memory
+    remains in place until the variable goes out of scope, at which point it is deallocated
+    automatically, by code the compiler wrote for you.</p>
+    <p>The memory for a <strong>dynamically allocated</strong> variable is allocated at
+    <strong>run time</strong> &mdash; that is why it is called dynamic. The compiler does not know
+    how much memory is being requested. And, crucially:</p>
+    <p><strong>dynamically allocated memory is not deallocated until you call <code>delete</code> or
+    <code>delete[]</code>.</strong> Going out of scope does nothing to it.</p>
+  </div>
+</div>
+
+<p>Two vocabulary notes before we go on. The C++ standard calls static allocation <em>automatic
+storage duration</em> and dynamic allocation <em>dynamic storage duration</em>; the region the
+automatic variables come from is universally called the <strong>stack</strong>, and the region
+<code>new</code> draws from is called the <strong>heap</strong> (or the <em>free store</em>). The course notes
+say "static" where the standard says "automatic"; the two mean the same thing here. We will use
+<em>stack</em> and <em>heap</em> because they are what everyone says out loud.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the two regions are visibly far apart</span></div>
+  <div class="bd">
+    <p>You can see the split with your own eyes. This program declares one ordinary <code>int</code>, asks
+    <code>new</code> for one more, and prints all three addresses in play. Before you open the toggle, predict
+    which two of the three will look similar to each other.</p>
+<div class="codewrap"><div class="cap">stackheap.cpp</div><pre><code class="language-cpp">// stackheap.cpp -- where do variables actually live?
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int local = 1;                  // automatic storage: the stack
+    int *heap = new int;            // dynamic storage: the heap
+    *heap = 2;
+
+    cout &lt;&lt; "address of local     = " &lt;&lt; &amp;local &lt;&lt; endl;
+    cout &lt;&lt; "address of heap int  = " &lt;&lt; heap   &lt;&lt; endl;
+    cout &lt;&lt; "address of the pointer variable itself = " &lt;&lt; &amp;heap &lt;&lt; endl;
+
+    delete heap;
+    heap = nullptr;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">address of local     = 0x7ffdd908330c
+address of heap int  = 0x55af4bfa72b0
+address of the pointer variable itself = 0x7ffdd9083310</pre>
+<p><strong>These particular numbers are representative only</strong> &mdash; they change on every
+single run, because the operating system deliberately moves the program around in memory each time
+it starts. What does not change is the <em>pattern</em>, and the pattern is the lesson:</p>
+<table class="trace">
+  <tr><th>What</th><th>Address</th><th>Lives on</th></tr>
+  <tr><td><code>local</code></td><td><code>0x7ffd&hellip;330c</code></td><td>the <strong>stack</strong></td></tr>
+  <tr><td>the pointer variable <code>heap</code> itself</td><td><code>0x7ffd&hellip;3310</code></td><td>the <strong>stack</strong> &mdash; four bytes past <code>local</code>, its immediate neighbor</td></tr>
+  <tr><td>the <code>int</code> that <code>heap</code> points at</td><td><code>0x55af&hellip;72b0</code></td><td>the <strong>heap</strong> &mdash; a completely different region</td></tr>
+</table>
+<p>Read that middle row twice. <code>int *heap;</code> declares a perfectly ordinary automatic
+variable that happens to hold an address; the <em>pointer</em> is on the stack even though what it
+points at is not. When <code>main</code> returns, the pointer is destroyed automatically like any
+other local. The <code>int</code> on the heap is not &mdash; it is destroyed only because line
+<code>delete heap;</code> asked for it.</p>
+<p>That asymmetry is the whole subject of today's class, and it is where every bug in it comes
+from.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.1</div>
+  <div class="bd">
+    <p>For each declaration below, say (i) where the memory comes from, and (ii) who is responsible
+    for releasing it.</p>
+<pre><code class="language-cpp">void f() {
+    int a = 3;               // (i)
+    int b[10];               // (ii)
+    int *p = new int;        // (iii)
+    int *q = new int[10];    // (iv)
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <table class="trace">
+        <tr><th>Line</th><th>Memory comes from</th><th>Released by</th></tr>
+        <tr><td>(i) <code>int a = 3;</code></td><td>the stack</td><td>the compiler, when <code>f</code> returns</td></tr>
+        <tr><td>(ii) <code>int b[10];</code></td><td>the stack &mdash; all 40 bytes of it</td><td>the compiler, when <code>f</code> returns</td></tr>
+        <tr><td>(iii) <code>int *p = new int;</code></td><td>the pointer <code>p</code> is on the stack; the <code>int</code> it points at is on the <strong>heap</strong></td><td><strong>you</strong>, with <code>delete p;</code></td></tr>
+        <tr><td>(iv) <code>int *q = new int[10];</code></td><td>same split: <code>q</code> on the stack, the ten <code>int</code>s on the <strong>heap</strong></td><td><strong>you</strong>, with <code>delete [] q;</code></td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> As written, <code>f</code> leaks 4 bytes and then 40 more
+      every time it is called &mdash; lines (iii) and (iv) have no partner <code>delete</code>. Nobody
+      will tell you. The function compiles without a warning and returns the right answer. That is
+      &sect;5.</p>
+      <p>The other thing to notice: in every one of the four rows, some memory came off the stack. A
+      pointer is an ordinary variable. It is what it <em>holds</em> that is unusual.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span><code>new</code> and <code>delete</code>: one variable at a time</h2>
+
+<p>Dynamic memory allocation is performed using two operators, <code>new</code> and <code>delete</code>. The procedure is
+slightly different for single variables and for arrays; we begin with single variables and deal with
+arrays in &sect;3.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>new</code> and <code>delete</code></span></div>
+  <div class="bd">
+    <p><code>new T</code> asks the run-time system for enough heap memory to hold one object of type
+    <code>T</code>, and <strong>returns a pointer to it</strong>. So the result of <code>new int</code> has type
+    <code>int *</code> and must be stored in an <code>int *</code>.</p>
+<pre><code class="language-cpp">int *ip = new int;        // allocate one int on the heap
+*ip = 6;                  // reach it the only way you can: through the pointer</code></pre>
+    <p><code>delete p</code> hands that memory back to the run-time system, so it can be handed out
+    again by some later <code>new</code>. It does <em>not</em> change <code>p</code>, and it does not destroy <code>p</code>.</p>
+<pre><code class="language-cpp">delete ip;                // give the int back</code></pre>
+    <p>Obviously, for a pointer to <code>double</code> we would write <code>new double</code>, and so on for every
+    type.</p>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the allocated variable has no name</span></div>
+  <div class="bd">
+    <p>Every variable you have declared until now had a name you chose. The variable
+    <code>new</code> creates <strong>does not have a name.</strong> It is accessed via the
+    dereference <code>*ip</code> and has no explicit name of its own.</p>
+    <p>That is not a curiosity, it is the central practical fact about the heap: <strong>if you lose
+    the pointer, you lose the variable.</strong> There is no other way to name it, no other way to
+    reach it, and no other way to delete it. Every bug in &sect;5 is a version of losing the
+    pointer.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; two allocate-and-release cycles on one pointer</span></div>
+  <div class="bd">
+    <p>This is the course notes' own program for <code>new</code> and <code>delete</code>, run twice through the same
+    pointer variable. Predict both lines of output, and while you are at it decide whether the
+    second <code>new</code> gives you back the same variable as the first.</p>
+<div class="codewrap"><div class="cap">newdelete.cpp</div><pre><code class="language-cpp">// newdelete.cpp -- new and delete for a single variable, two cycles
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int *ip = new int;      // dynamic memory allocation for single item
+    *ip = 6;
+    cout &lt;&lt; *ip &lt;&lt; endl;
+    delete ip;              // memory release for single item
+
+    // SECOND PASS
+    ip = new int;           // allocate again
+    *ip = 3;
+    cout &lt;&lt; *ip &lt;&lt; endl;
+    delete ip;              // release again
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">6
+3</pre>
+<p>Walk the four interesting statements:</p>
+<table class="trace">
+  <tr><th>Statement</th><th>What happens to the pointer</th><th>What happens on the heap</th></tr>
+  <tr><td><code>int *ip = new int;</code></td><td><code>ip</code> is created on the stack and set to the address of the new block</td><td>one <code>int</code> comes into existence, uninitialized</td></tr>
+  <tr><td><code>delete ip;</code></td><td><strong>nothing.</strong> <code>ip</code> still holds the same address</td><td>the <code>int</code> ceases to exist; the memory returns to the pool</td></tr>
+  <tr><td><code>ip = new int;</code></td><td><code>ip</code> is overwritten with a new address</td><td>a <strong>different</strong> <code>int</code> comes into existence</td></tr>
+  <tr><td><code>delete ip;</code></td><td>nothing</td><td>that second <code>int</code> ceases to exist</td></tr>
+</table>
+<p>The middle row is the one people misread. Note that although the memory was deallocated, the
+pointer <code>ip</code> is still in scope &mdash; it is an ordinary local variable and
+<code>delete</code> is not a magic spell that erases it. That is exactly why the second
+<code>new</code> can reuse it, and it is also exactly why &sect;6 exists.</p>
+<p>And the second question: the variable allocated on the second pass is <strong>not</strong> the
+same variable as the one allocated on the first pass. The first one was deallocated by the first
+<code>delete</code> and no longer exists. If you print the two addresses you may well see the same
+number twice, because the run-time system is free to hand you back the block you just returned
+&mdash; but "the same address was reused" is not "the same variable," and you may not assume either
+way.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the one rule to memorize</span></div>
+  <div class="bd">
+    <p><strong>For every call to operator <code>new</code>, there must be a partner call to operator
+    <code>delete</code>.</strong></p>
+    <p>Not one per pointer &mdash; one per <code>new</code>. Two pointers into the same block get one
+    <code>delete</code> between them; a loop that calls <code>new</code> a hundred times needs a
+    hundred <code>delete</code>s. Count the calls, not the names.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.2</div>
+  <div class="bd">
+    <p>Consider this program.</p>
+<div class="codewrap"><div class="cap">twoptrs.cpp</div><pre><code class="language-cpp">// twoptrs.cpp -- two pointers, one anonymous int
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int *p = new int;
+    *p = 5;
+
+    int *q = p;             // q points at the same anonymous int
+    *q = 9;
+
+    cout &lt;&lt; *p &lt;&lt; endl;
+    cout &lt;&lt; *q &lt;&lt; endl;
+
+    delete p;               // ONE new, so exactly ONE delete
+    p = nullptr;
+    q = nullptr;
+    return 0;
+}</code></pre></div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What are the two lines of output?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">9
+9</pre>
+        <p><code>int *q = p;</code> copies an <em>address</em>, exactly as in Class 7 &sect;5.
+        It does not allocate anything &mdash; there is no <code>new</code> on that line. So
+        <code>p</code> and <code>q</code> are two names for one arrow, both aimed at the single
+        anonymous <code>int</code>, and <code>*q = 9;</code> writes into the same storage that
+        <code>*p</code> reads.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Would adding <code>delete q;</code> after <code>delete p;</code> be correct, harmless, or a bug?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>A bug</strong> &mdash; and a serious one. There was exactly one call to
+        <code>new</code>, so there must be exactly one call to <code>delete</code>.
+        <code>delete p;</code> already returned the block; <code>delete q;</code> would try to return
+        the very same block a second time. That is a <em>double delete</em>, which is undefined
+        behavior. We look at what actually happens in &sect;6.</p>
+        <p>Note the trap: the code <em>looks</em> symmetric. Two pointers, two deletes. Counting
+        pointers is the wrong instinct; count calls to <code>new</code>.</p>
+        <p>As written the program is safe even against this mistake, because both pointers were set
+        to <code>nullptr</code> after the delete, and deleting a null pointer is defined to do
+        nothing at all. That habit is &sect;6 too.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span><code>new[]</code> and <code>delete[]</code>: whole arrays</h2>
+
+<p>Now the version you will actually use. Allocating an array is the same idea with two syntax
+changes, and the second one is genuinely strange.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>new[]</code> and <code>delete[]</code></span></div>
+  <div class="bd">
+    <p><code>new T[n]</code> allocates a contiguous block big enough for <code>n</code> objects of
+    type <code>T</code> and returns a pointer to the first one. For <code>new</code>, you must obviously specify
+    the length of the array &mdash; and <code>n</code> may be any expression, including one whose value the
+    program only learns while it is running.</p>
+<pre><code class="language-cpp">int n = 5;
+int *p = new int[n];      // n ints, contiguous, on the heap
+p[0] = 1;                 // subscript it exactly like an ordinary array</code></pre>
+    <p><code>delete [] p</code> releases the whole block. The syntax is peculiar: you write a pair of
+    <strong>empty</strong> brackets, and the length of the array is <em>not</em> specified. The
+    run-time system already knows how much memory it handed you.</p>
+<pre><code class="language-cpp">delete [] p;              // note the empty brackets, and no length</code></pre>
+  </div>
+</div>
+
+<p>Everything you learned in Class 7 about the pointer/array duality applies unchanged. <code>p[i]</code> is
+<code>*(p + i)</code>, the block is contiguous, and a function that takes a <code>double *</code> parameter cannot tell a
+<code>new[]</code> array from an ordinary one. What is different is only where the memory came from and who has
+to give it back.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the notes' own <code>new[]</code> program</span></div>
+  <div class="bd">
+    <p>Five squares, allocated at run time. Predict the five lines.</p>
+<div class="codewrap"><div class="cap">newarray.cpp</div><pre><code class="language-cpp">// newarray.cpp -- new[] and delete[] for an array
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n = 5;
+    int *p_array = new int[n];        // dynamic memory allocation for array
+
+    for (int i = 0; i &lt; n; ++i)
+        p_array[i] = i * i;           // set some values
+
+    for (int i = 0; i &lt; n; ++i)
+        cout &lt;&lt; p_array[i] &lt;&lt; endl;   // print
+
+    delete [] p_array;                // memory release for array
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0
+1
+4
+9
+16</pre>
+<p>Nothing about the loops is new &mdash; that is the point. Once <code>p_array</code> exists, it
+behaves like any array you have ever written. The only two lines that are about <em>this</em> class
+are the first and the last, and they must come in a pair.</p>
+<p>One detail worth pausing on: the elements are <strong>not</strong> initialized by
+<code>new int[n]</code>. Just like <code>int b[5];</code> on the stack, the five <code>int</code>s
+start out holding whatever bit pattern was in that memory. Reading <code>p_array[0]</code> before
+the first loop would give you garbage, not zero.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now the strange part, and the professor is not shy about it. Here is his own editorial comment on
+the two-form design, verbatim from the notes: <em>"This is terribly inconvenient and causes many
+bugs. I have no idea why C++ was designed this way."</em> He is right. Take the rule seriously
+anyway.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; mixing <code>delete</code> and <code>delete[]</code></span></div>
+  <div class="bd">
+    <p>It is an error to invoke operator <code>delete []</code> (with brackets) for a single variable, or
+    <code>delete</code> (without brackets) to deallocate an array. The two forms are <strong>not</strong>
+    interchangeable, and the compiler cannot check it for you in general, because the type of the
+    pointer is <code>int *</code> either way.</p>
+    <table class="trace">
+      <tr><th>Allocated with</th><th>Released with</th></tr>
+      <tr><td><code>new int</code></td><td><code>delete p;</code></td></tr>
+      <tr><td><code>new int[n]</code></td><td><code>delete [] p;</code></td></tr>
+    </table>
+    <p>Match them by eye, on the same screen, every time you write one.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what a mismatched delete really does</span></div>
+  <div class="bd">
+    <p>"It is an error" is a phrase students discount, because a program with this bug often appears
+    to run fine. So let's look at what the tools say. Here is the bug, on purpose:</p>
+<div class="codewrap"><div class="cap">mismatch.cpp</div><pre><code class="language-cpp">// mismatch.cpp -- delete without brackets on an array. Undefined behavior.
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n = 5;
+    int *p = new int[n];
+    for (int i = 0; i &lt; n; ++i)
+        p[i] = i * i;
+    cout &lt;&lt; p[4] &lt;&lt; endl;
+
+    delete p;          // *** WRONG: allocated with new[], must use delete[] ***
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>First, the good news &mdash; in this simple case <code>g++</code> catches it, and it does so with
+plain <code>-Wall</code>. It is a warning, not an error, so the program still builds:</p>
+<pre class="err">mismatch.cpp: In function 'int main()':
+mismatch.cpp:12:12: warning: 'void operator delete(void*, std::size_t)' called on pointer returned from a mismatched allocation function [-Wmismatched-new-delete]
+   12 |     delete p;          // *** WRONG: allocated with new[], must use delete[] ***
+      |            ^
+mismatch.cpp:7:23: note: returned from 'void* operator new [](std::size_t)'
+    7 |     int *p = new int[n];
+      |                       ^</pre>
+<p>And then it runs, prints <code>16</code>, and exits with status 0. Nothing visible goes wrong.
+This is exactly why the bug survives into shipped programs.</p>
+<p>Run the same executable under <strong>valgrind</strong>, a memory-checking tool, and the picture
+changes. <em>The block below is valgrind's report, not the program's output.</em></p>
+<pre class="shell">valgrind --leak-check=full ./mismatch</pre>
+<pre class="out">==19314== Mismatched new/delete size value: 4
+==19314==    at 0x484A5B9: operator delete(void*, unsigned long) (in vgpreload_memcheck-amd64-linux.so)
+==19314==    by 0x109278: main (mismatch.cpp:12)
+==19314==  Address 0x4e26080 is 0 bytes inside a block of size 20 alloc'd
+==19314==    at 0x48485C3: operator new[](unsigned long) (in vgpreload_memcheck-amd64-linux.so)
+==19314==    by 0x1091FB: main (mismatch.cpp:7)
+==19314== 
+==19314== Mismatched free() / delete / delete []
+==19314== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)</pre>
+<p>Read the two useful lines. <em>"Mismatched new/delete size value: 4"</em> &mdash; the
+<code>delete</code> form thinks it is returning 4 bytes. <em>"a block of size 20 alloc'd"</em>
+&mdash; the block is 20 bytes, five <code>int</code>s. The tool tells you the exact line of the bad
+delete (line 12) and the exact line of the allocation it should have matched (line 7).</p>
+<p>Why it matters beyond bookkeeping: for a class type, <code>delete[]</code> is what runs the
+destructor on <em>every</em> element, and plain <code>delete</code> runs it on only the first. From
+Class 14 onward every array you allocate will hold objects with destructors, and this stops being a
+technicality.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.3</div>
+  <div class="bd">
+    <p>Write the C++ statement or statements for each task. Assume <code>int n = 12;</code> is already in
+    scope.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Allocate a single <code>double</code> on the heap and store 3.5 in it.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">double *pd = new double;
+*pd = 3.5;</code></pre>
+        <p>Or, in one line, <code>double *pd = new double(3.5);</code> &mdash; the parentheses initialize the
+        new object. The two-line form is what the course notes use, and it is what an exam answer
+        should look like.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Allocate an array of <code>n</code> <code>double</code>s and set every element to 0.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">double *pa = new double[n];
+for (int i = 0; i &lt; n; ++i)
+    pa[i] = 0.0;</code></pre>
+        <p>The loop is not optional. <code>new double[n]</code> leaves the elements uninitialized, so without
+        it you have twelve garbage values. (<code>new double[n]()</code> with empty parentheses does
+        zero-initialize, but it is not in this course's vocabulary and it is not what the rubric
+        expects.)</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Release both of the above.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">delete pd;
+delete [] pa;</code></pre>
+        <p>One of each form, matched to how each was allocated. Writing <code>delete [] pd;</code> or
+        <code>delete pa;</code> is the &sect;3 mistake. Note also that you never write the length:
+        <code>delete [12] pa;</code> is not C++ at all.</p>
+        <p>This exact pair of lines is the professor's own rubric answer for the last part of the
+        Fall 2023 Exam 1 pointer question, worth 2 points.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the motivating program, finally correct</span></div>
+  <div class="bd">
+    <p>Back to the score-averaging program from &sect;1. Now the array is exactly as big as the user
+    says, decided while the program runs, with no <code>MAX</code> and no guess.</p>
+<div class="codewrap"><div class="cap">runtimearray.cpp</div><pre><code class="language-cpp">// runtimearray.cpp -- the size is decided at run time, so the array is too
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cout &lt;&lt; "How many scores? ";
+    cin &gt;&gt; n;
+
+    double *scores = new double[n];      // exactly n doubles, no more, no less
+
+    for (int i = 0; i &lt; n; ++i)
+        cin &gt;&gt; scores[i];
+
+    double sum = 0.0;
+    for (int i = 0; i &lt; n; ++i)
+        sum += scores[i];
+    cout &lt;&lt; "average of " &lt;&lt; n &lt;&lt; " scores = " &lt;&lt; sum / n &lt;&lt; endl;
+
+    delete [] scores;                    // hand the memory back
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>Two runs, with the input <code>3</code> then <code>90 80 70</code>, and then <code>6</code> then
+<code>1 2 3 4 5 6</code>:</p>
+<pre class="out">How many scores? average of 3 scores = 80
+How many scores? average of 6 scores = 3.5</pre>
+<p>The input was piped in from a file rather than typed, which is why the digits do not appear after
+the prompt; in a terminal you would see them on the prompt line. The important thing is that the two
+runs allocated different amounts of memory from the same line of source code &mdash; three doubles
+on the first run, six on the second. As the notes put it: <em>if a statement such as
+<code>double *pd = new double[n];</code> is executed multiple times, the value of <code>n</code>
+could be different every time.</em></p>
+<p>That sentence is the entire justification for this class. A statically allocated array cannot do
+it, because its length is fixed when the program is compiled.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; a typo in the course notes worth knowing</span></div>
+  <div class="bd">
+    <p>The slide that makes the point above prints the statement as
+    <code>double pd = new double[n];</code>, with no star. As written that does not compile:
+    <code>new double[n]</code> produces a <code>double *</code>, and you cannot store a <code>double *</code> in a <code>double</code>. The
+    intended line is</p>
+<pre><code class="language-cpp">double *pd = new double[n];</code></pre>
+    <p>The correction is one character, but the error message it produces &mdash; <em>"cannot convert
+    'double*' to 'double' in initialization"</em> &mdash; is one you should be able to read at a
+    glance, because it means you dropped a star somewhere.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.4</div>
+  <div class="bd">
+    <p>Each of the following fragments is wrong. Say what is wrong and give the fix.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>int *p = new int[10]; ... delete p;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Allocated as an array, released as a single object. Fix: <code>delete [] p;</code>. On this compiler
+        <code>-Wall</code> catches it with <em>"called on pointer returned from a mismatched
+        allocation function"</em>, but do not count on that in general &mdash; if the allocation and
+        the delete are in different functions, the compiler cannot see the pair.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>int *p = new int; ... delete [] p;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The mirror image: a single object released with the array form. Fix: <code>delete p;</code>. Also
+        undefined behavior, also often silent.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>int n = 10; int *p = new int[n]; ... delete [n] p;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>You never give the length back. <code>delete [n] p;</code> is a syntax error &mdash; the brackets
+        must be empty. Fix: <code>delete [] p;</code>.</p>
+        <p>The reason the language can get away with empty brackets is that the run-time system
+        recorded the block size when it handed the memory out. It knows; you do not have to
+        tell it.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>double *p = new double[n]; p = q; delete [] p;</code> where <code>q</code> is another valid pointer.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Two bugs from one line. The assignment <code>p = q;</code> overwrites the only copy of the address of
+        the new block, so that block can never be released &mdash; a <strong>memory leak</strong>.
+        And then <code>delete [] p;</code> releases whatever <code>q</code> points at, which the code that owns <code>q</code> will
+        very reasonably also try to release later &mdash; a <strong>double delete</strong>.</p>
+        <p>Fix: release before repointing.</p>
+<pre><code class="language-cpp">delete [] p;
+p = q;</code></pre>
+        <p>Better still, do not let two pointers own the same block at all. When we build classes
+        that hold heap memory in Class 14, this exact situation &mdash; one block, two owners
+        &mdash; is what the copy constructor and the assignment operator exist to prevent.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Allocating in one function, releasing in another</h2>
+
+<p>Here is the property that makes dynamic memory qualitatively different from everything you have
+used so far, and it follows directly from the definition: heap memory <strong>does not go out of
+scope.</strong></p>
+
+<p>Recall the warning from Class 7 &sect;8: a function must never return the address of one of its
+own locals, because that variable dies at the closing brace. The compiler even says so.</p>
+
+<div class="codewrap"><div class="cap">returnlocal.cpp</div><pre><code class="language-cpp">int* makeFive() {
+    int five = 5;
+    return &amp;five;          // returns the address of a variable that is about to die
+}</code></pre></div>
+
+<pre class="err">returnlocal.cpp: In function 'int* makeFive()':
+returnlocal.cpp:6:12: warning: address of local variable 'five' returned [-Wreturn-local-addr]
+    6 |     return &amp;five;          // returns the address of a variable that is about to die
+      |            ^~~~~</pre>
+
+<p>Now change one word &mdash; <code>new</code> instead of a local &mdash; and the same shape of function is
+not just legal but useful, because what it returns a pointer to is not on the stack and therefore
+does not die when the function returns.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>stringToArray</code>, from the course notes</span></div>
+  <div class="bd">
+    <p>The function receives a string, dynamically allocates a <code>char</code> array to hold its individual
+    characters, and returns a pointer to that array. The caller prints it and, when finished,
+    releases it. Predict the output; then, before you open the toggle, answer this: how many
+    characters of memory does the program allocate in total?</p>
+<div class="codewrap"><div class="cap">stringtoarray.cpp</div><pre><code class="language-cpp">// stringtoarray.cpp -- allocate in one function, release in another
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+char* stringToArray(const string &amp;s) {
+    int n = s.size();
+    char *p = new char[n];          // dynamic memory allocation
+    for (int i = 0; i &lt; n; ++i) {
+        p[i] = s[i];
+    }
+    return p;                       // return pointer
+}
+
+int main() {
+    string s1("abcd");
+    string s2("alpha");
+
+    char *p1 = stringToArray(s1);   // memory allocated inside function
+    char *p2 = stringToArray(s2);   // memory allocated inside function
+
+    for (int i = 0; i &lt; static_cast&lt;int&gt;(s1.size()); ++i)
+        cout &lt;&lt; p1[i] &lt;&lt; endl;
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; static_cast&lt;int&gt;(s2.size()); ++i)
+        cout &lt;&lt; p2[i] &lt;&lt; endl;
+
+    delete [] p1;                   // release memory
+    delete [] p2;                   // release memory
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">a
+b
+c
+d
+
+a
+l
+p
+h
+a</pre>
+<p>Nine characters in total: four for <code>"abcd"</code>, five for <code>"alpha"</code>. And the
+program is leak-free &mdash; here is what valgrind says about it, which is what you want every
+allocating program of yours to say:</p>
+<pre class="shell">valgrind --leak-check=full ./stringtoarray</pre>
+<pre class="out">==16041== HEAP SUMMARY:
+==16041==     in use at exit: 0 bytes in 0 blocks
+==16041==   total heap usage: 4 allocs, 4 frees, 77,833 bytes allocated
+==16041== 
+==16041== All heap blocks were freed -- no leaks are possible
+==16041== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</pre>
+<p>(That is valgrind's report, not the program's output. Two of the four allocations are our two
+arrays; the other two are made by the C++ runtime before <code>main</code> even starts, which is why
+the totals are never quite what you counted. What matters is that "allocs" and "frees" are
+equal.)</p>
+<p>The course notes list four things worth noticing about this program, and all four are worth
+having:</p>
+<ol>
+  <li><strong>The length of the input string is not known inside the function at compile time.</strong>
+    The value of <code>n = s.size()</code> can be different on each call &mdash; and it is: 4, then
+    5.</li>
+  <li><strong>A fresh array is allocated on each call.</strong> It is not the same array being
+    reused. <code>p1</code> and <code>p2</code> hold different addresses.</li>
+  <li><strong>The dynamically allocated memory does not go out of scope at function exit.</strong>
+    Dynamically allocated memory is deallocated only when a call to <code>delete[]</code> is made,
+    and no such call happens inside <code>stringToArray</code>. So <code>p1</code> and
+    <code>p2</code> in <code>main</code> point at valid memory.</li>
+  <li><strong>The allocation and the deallocation happen in different subprograms.</strong> The
+    memory is allocated in <code>stringToArray</code> and released in <code>main</code>. There is no
+    reason why they must happen in the same scope &mdash; and this is completely unlike static
+    allocation, where the closing brace decides everything.</li>
+</ol>
+<p>Point 4 is a gift and a liability at once. It is what lets a function build and hand back a
+data structure. It is also why the question <em>"who is responsible for deleting this?"</em> now has
+to be answered in prose, in a comment, because the language will not answer it for you.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; this array is not a C string</span></div>
+  <div class="bd">
+    <p><code>stringToArray</code> allocates <code>s.size()</code> characters and copies exactly that many. It
+    does <strong>not</strong> append a terminating <code>'\0'</code>. The program above is safe because it only
+    ever prints the characters one at a time in a bounded loop &mdash; but a student who writes</p>
+<pre><code class="language-cpp">cout &lt;&lt; p1 &lt;&lt; endl;      // DANGER: p1 is not NUL-terminated</code></pre>
+    <p>gets a buffer overrun: <code>cout</code> will keep printing bytes past the end of the block until it
+    happens to find a zero. If you want the result to be printable as a string, allocate one extra
+    character and terminate it yourself:</p>
+<pre><code class="language-cpp">char *p = new char[n + 1];
+for (int i = 0; i &lt; n; ++i)
+    p[i] = s[i];
+p[n] = '\0';                 // now it is a C string</code></pre>
+    <p>The course notes do not mention this. It is the single most common way this particular
+    example gets students into trouble when they adapt it.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.5</div>
+  <div class="bd">
+    <p>In <code>stringToArray</code>, the local variables <code>n</code> and <code>p</code> are destroyed the instant the function
+    returns.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Why, then, is the array still there for <code>main</code> to use?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because <code>p</code> and the array are two different things. <code>p</code> is an
+        automatic pointer variable living on the stack inside <code>stringToArray</code>, and it
+        <em>is</em> destroyed at the closing brace. The array is on the <strong>heap</strong>, and
+        heap memory is released only by <code>delete</code> or <code>delete[]</code> &mdash; never by
+        a scope ending.</p>
+        <p>What <code>return p;</code> does is copy the <em>address</em> out of the dying local
+        before it dies. The address is just a number; copying it is free. <code>main</code> stores
+        that number in <code>p1</code>, and the block it names is still there.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What would go wrong if the function ended with <code>delete [] p; return p;</code> instead?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>main</code> would receive the address of memory that has already been released
+        &mdash; a <strong>dangling pointer</strong>. Every subsequent <code>p1[i]</code> would be a
+        read of freed memory, which is undefined behavior; and <code>main</code>'s own
+        <code>delete [] p1;</code> would be a double delete on top of that.</p>
+        <p>The function must not release what it is handing over. Somebody has to, later, and here
+        that somebody is <code>main</code>. This is the "who owns it?" question from the worked
+        example, and it is the whole reason the Big Three exists (Class 15).</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; a function that returns a fresh copy of an array</h3>
+
+<p>Write <code>double* copyArray(const double *src, int n)</code>. It should allocate a new array of <code>n</code>
+doubles on the heap, copy the <code>n</code> values from <code>src</code> into it, and return a pointer to it. Then write
+a <code>main</code> that copies a small array, changes one element of the <em>copy</em>, prints both to show
+the original is untouched, and releases the copy.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="20" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+// Allocate n doubles, copy src into them, return the pointer.
+// The CALLER is responsible for delete[]-ing the result.
+double* copyArray(const double *src, int n) {
+
+    return nullptr;   // replace this
+}
+
+int main() {
+    double a[4] = {1.5, 2.5, 3.5, 4.5};
+
+    // double *b = copyArray(a, 4);
+    // change b[0], print both arrays, then release b
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+// Allocate n doubles, copy src into them, return the pointer.
+// The CALLER is responsible for delete[]-ing the result.
+double* copyArray(const double *src, int n) {
+
+    return nullptr;   // replace this
+}
+
+int main() {
+    double a[4] = {1.5, 2.5, 3.5, 4.5};
+
+    // double *b = copyArray(a, 4);
+    // change b[0], print both arrays, then release b
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.6</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The function is three steps: allocate <code>n</code> doubles, loop-copy, return
+      the pointer. The <code>const</code> on the parameter is a promise that <code>copyArray</code> will not modify the
+      caller's array &mdash; exactly the <code>const double *</code> idiom from Class 7 &sect;7. The return type
+      is <code>double *</code>, not <code>const double *</code>, because the caller is going to write into the copy and
+      then delete it.</p>
+      <p>The one design decision worth stating out loud, in a comment: the caller owns the result.
+      Write that comment. On a real project it is the difference between a usable function and a leak
+      generator.</p>
+<div class="codewrap"><div class="cap">copyarray.cpp</div><pre><code class="language-cpp">// copyarray.cpp -- a function that hands back memory the caller must release
+#include &lt;iostream&gt;
+using namespace std;
+
+double* copyArray(const double *src, int n) {
+    double *dest = new double[n];       // allocated here...
+    for (int i = 0; i &lt; n; ++i)
+        dest[i] = src[i];
+    return dest;                        // ...and handed to the caller
+}
+
+int main() {
+    double a[4] = {1.5, 2.5, 3.5, 4.5};
+
+    double *b = copyArray(a, 4);        // b owns a fresh array
+    b[0] = 99.0;                        // change the copy...
+
+    for (int i = 0; i &lt; 4; ++i)
+        cout &lt;&lt; "a[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; a[i] &lt;&lt; "   b[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; b[i] &lt;&lt; endl;
+
+    delete [] b;                        // ...released here, in a different scope
+    b = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">a[0] = 1.5   b[0] = 99
+a[1] = 2.5   b[1] = 2.5
+a[2] = 3.5   b[2] = 3.5
+a[3] = 4.5   b[3] = 4.5</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>Row 0 is the proof. <code>a[0]</code> is still 1.5 after <code>b[0] = 99.0;</code>, so the two arrays really
+          are separate blocks of memory. This is called a <strong>deep copy</strong>, and it is the
+          single most examined idea in the second half of this course &mdash; every copy constructor
+          you write from Class 14 on is this loop.</li>
+        <li>The shallow alternative, <code>double *b = a;</code>, compiles and does something completely
+          different: one array, two names. Then <code>b[0] = 99.0;</code> would change <code>a[0]</code> too, and
+          <code>delete [] b;</code> would try to release a stack array, which crashes.</li>
+        <li><code>99.0</code> prints as <code>99</code>. Default <code>cout</code> formatting drops the trailing zero, as always.</li>
+        <li>Under valgrind this program reports <em>"All heap blocks were freed &mdash; no leaks are
+          possible"</em>, which is the standard every program in this class should meet.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Memory leaks</h2>
+
+<p>Now the failure mode that follows directly from &sect;4. If heap memory is released only when you
+say so, then forgetting to say so means it is never released. That has a name.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; memory leak, garbage</span></div>
+  <div class="bd">
+    <p>A <strong>memory leak</strong> occurs when dynamically allocated memory can no longer be
+    reached by any pointer in the program, and therefore can never be released. The address has been
+    lost; there is no way to deallocate it.</p>
+    <p>The resulting inaccessible memory is called <strong>garbage</strong>. If the quantity of
+    garbage grows to an unacceptable level, other applications may not be able to obtain enough
+    memory to run correctly.</p>
+  </div>
+</div>
+
+<p>Note what a leak is <em>not</em>. It is not a crash, it is not a wrong answer, and it is not
+anything the compiler will mention. A leaking program computes exactly the right result and exits
+with status 0. That is precisely what makes it dangerous: the only symptom is that a long-running
+program slowly consumes memory until the machine is in trouble, hours after the mistake ran.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one changed pointer, four bytes lost forever</span></div>
+  <div class="bd">
+    <p>This is the course notes' leak example: the <code>stringToArray</code> program from &sect;4, rewritten to
+    use one pointer instead of two. The output is identical. Find the leaking statement before you
+    reveal &mdash; and say how many bytes it loses.</p>
+<div class="codewrap"><div class="cap">leak.cpp</div><pre><code class="language-cpp">// leak.cpp -- the same program with one pointer instead of two: a memory leak
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+char* stringToArray(const string &amp;s) {
+    int n = s.size();
+    char *p = new char[n];
+    for (int i = 0; i &lt; n; ++i) {
+        p[i] = s[i];
+    }
+    return p;
+}
+
+int main() {
+    string s1("abcd");
+    string s2("alpha");
+
+    char *p = stringToArray(s1);
+    for (int i = 0; i &lt; static_cast&lt;int&gt;(s1.size()); ++i)
+        cout &lt;&lt; p[i] &lt;&lt; endl;
+
+    p = stringToArray(s2);          // *** memory leak occurs here ***
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; static_cast&lt;int&gt;(s2.size()); ++i)
+        cout &lt;&lt; p[i] &lt;&lt; endl;
+
+    delete [] p;                    // only one deallocation
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">a
+b
+c
+d
+
+a
+l
+p
+h
+a</pre>
+<p>Byte for byte the same output as the correct program in &sect;4. The compiler said nothing. The
+program exited normally. And it lost four bytes.</p>
+<p>Here is the course notes' explanation, and it is exact:</p>
+<ul>
+  <li>The problem occurs when the pointer <code>p</code> is reassigned, in the statement
+    <code>p = stringToArray(s2);</code>.</li>
+  <li>Once <code>p</code> is reassigned to point to the second array, <strong>there is nothing in
+    the program which points to the first dynamically allocated array.</strong></li>
+  <li>The address of the first array has been lost. There is no way to deallocate its memory.</li>
+  <li>This situation is a <strong>memory leak</strong>, and the unreachable memory is
+    <strong>garbage</strong>.</li>
+</ul>
+<table class="trace">
+  <tr><th>Statement</th><th>Block A ("abcd", 4 bytes)</th><th>Block B ("alpha", 5 bytes)</th></tr>
+  <tr><td><code>char *p = stringToArray(s1);</code></td><td>alive, <code>p</code> points at it</td><td>&mdash;</td></tr>
+  <tr><td><code>p = stringToArray(s2);</code></td><td>alive, <strong>nothing points at it</strong></td><td>alive, <code>p</code> points at it</td></tr>
+  <tr><td><code>delete [] p;</code></td><td>alive, unreachable &mdash; <strong>leaked</strong></td><td>released correctly</td></tr>
+</table>
+<p>Now the demonstration. Run the leaking executable under valgrind. <em>Everything below is
+valgrind's report, not the program's output</em> &mdash; and it is the most convincing argument for
+using the tool that I can give you:</p>
+<pre class="shell">valgrind --leak-check=full ./leak</pre>
+<pre class="out">==18223== HEAP SUMMARY:
+==18223==     in use at exit: 4 bytes in 1 blocks
+==18223==   total heap usage: 4 allocs, 3 frees, 77,833 bytes allocated
+==18223== 
+==18223== 4 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==18223==    at 0x48485C3: operator new[](unsigned long) (in vgpreload_memcheck-amd64-linux.so)
+==18223==    by 0x10A3D4: stringToArray(std::__cxx11::basic_string&lt;char&gt;&amp;) (leak.cpp:8)
+==18223==    by 0x10A4B9: main (leak.cpp:19)
+==18223== 
+==18223== LEAK SUMMARY:
+==18223==    definitely lost: 4 bytes in 1 blocks
+==18223==    indirectly lost: 0 bytes in 0 blocks
+==18223==      possibly lost: 0 bytes in 0 blocks
+==18223==    still reachable: 0 bytes in 0 blocks
+==18223== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)</pre>
+<p>Read it line by line, because this report format will be your friend for the rest of the
+semester:</p>
+<ul>
+  <li><em>"4 allocs, 3 frees"</em> &mdash; four allocations went out, three came back. That single
+    line is usually enough to tell you a leak exists.</li>
+  <li><em>"4 bytes in 1 blocks are definitely lost"</em> &mdash; the exact size, and the exact word
+    <strong>definitely</strong>: no pointer anywhere in the program still holds this address.</li>
+  <li>The stack trace beneath it is not where the leak <em>happened</em>; it is where the leaked
+    block was <strong>allocated</strong>. Line 8 of <code>leak.cpp</code> is the
+    <code>new char[n]</code>, reached from line 19 of <code>main</code> &mdash; the first call. The
+    tool cannot know which later line dropped the address, so it tells you which allocation was
+    abandoned and lets you work backwards.</li>
+</ul>
+<p>Compare that with &sect;4's report on the correct program: <em>"All heap blocks were freed &mdash;
+no leaks are possible."</em> Same output, same exit status, completely different verdict.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; check your own program for leaks</span></div>
+  <div class="bd">
+    <ol>
+      <li>Compile with debugging information so the report can name your lines:
+<pre class="shell">g++ -g prog.cpp -o prog</pre>
+      </li>
+      <li>Run it under the checker:
+<pre class="shell">valgrind --leak-check=full ./prog</pre>
+      </li>
+      <li>Look for one sentence: <em>"All heap blocks were freed &mdash; no leaks are possible."</em>
+        Anything else &mdash; "definitely lost", "indirectly lost" &mdash; is a bug in your program,
+        and the stack trace tells you which <code>new</code> was abandoned.</li>
+    </ol>
+    <p>Any program in this course that calls <code>new</code> should be checked this way before you call it
+    finished. It takes ten seconds and it is the only way to see a leak at all.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.7</div>
+  <div class="bd">
+    <p>Repair the leaking program above.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Fix it by adding exactly one statement, keeping the single pointer <code>p</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Release the first array <em>before</em> the address is overwritten:</p>
+<pre><code class="language-cpp">    delete [] p;                    // release the first array BEFORE repointing
+    p = stringToArray(s2);</code></pre>
+        <p>Order is everything. Putting the <code>delete [] p;</code> <em>after</em>
+        <code>p = stringToArray(s2);</code> would release the second array and leak the first
+        &mdash; the same leak, moved. "Delete before you repoint" is the rule, and it is the rule
+        the assignment operator will have to follow when we write it in Class 15.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Give a second, different fix.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Use two pointers and delete both &mdash; which is exactly the &sect;4 program:</p>
+<pre><code class="language-cpp">    char *p1 = stringToArray(s1);
+    char *p2 = stringToArray(s2);
+    // ... use them ...
+    delete [] p1;
+    delete [] p2;</code></pre>
+        <p>Two calls to <code>new[]</code>, two partner calls to <code>delete[]</code>. Either fix is correct; which you
+        choose depends on whether you still need the first array after the second exists.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A student says "the leak does not matter, the memory is given back when the program exits anyway." Are they right?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>They are <em>technically</em> right about this program and <em>practically</em> wrong
+        about programming. Yes &mdash; on any modern operating system, every byte a process
+        allocated is reclaimed when the process ends, leak or no leak. A four-byte leak in a program
+        that runs for a millisecond harms nobody.</p>
+        <p>But look at where the leaking statement was: inside the flow of a function that gets
+        called repeatedly. Put that pattern in a loop, or in a server that runs for a month, or in a
+        class whose objects get created and destroyed thousands of times, and the leak is no longer
+        four bytes &mdash; it is four bytes per iteration, forever, and the program dies of memory
+        exhaustion with no clue as to why.</p>
+        <p>And the graded reason: from Class 14 onward, every destructor you write on an exam exists
+        precisely to prevent this, and a missing <code>delete</code> in a destructor costs points every single
+        time. Learn to see the leak now, while it is four bytes.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Dangling pointers, double delete, and the <code>nullptr</code> habit</h2>
+
+<p>A leak is memory you can no longer reach. This section is the opposite failure: a pointer you can
+still reach that no longer points at anything valid. Of the two, this one is worse, because a leak
+merely wastes memory while this one corrupts it.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; dangling pointer</span></div>
+  <div class="bd">
+    <p>A <strong>dangling pointer</strong> is a pointer that holds the address of memory that has
+    already been released (or of a variable that has already gone out of scope). It looks exactly
+    like a valid pointer &mdash; it is not null, and testing it against <code>nullptr</code> will not catch it
+    &mdash; but the thing it names no longer exists.</p>
+    <p>Dereferencing a dangling pointer is <strong>undefined behavior</strong>. Deleting through one
+    a second time is undefined behavior too, and has its own name: a <strong>double
+    delete</strong>.</p>
+  </div>
+</div>
+
+<p>Where do dangling pointers come from? Almost always from <code>delete</code>, because &mdash; as we saw in
+&sect;2 &mdash; <code>delete p;</code> does absolutely nothing to <code>p</code>. It releases the block and leaves the
+pointer holding the address of memory that is no longer yours.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; reading through a pointer after <code>delete</code></span></div>
+  <div class="bd">
+    <p>Here is the smallest possible dangling-pointer program. Before you reveal: what do you think
+    the second line prints?</p>
+<div class="codewrap"><div class="cap">dangling.cpp</div><pre><code class="language-cpp">// dangling.cpp -- reading through a pointer after delete. Undefined behavior.
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int *p = new int;
+    *p = 42;
+    cout &lt;&lt; "before delete: " &lt;&lt; *p &lt;&lt; endl;
+
+    delete p;                       // the int is gone; p still holds its address
+
+    cout &lt;&lt; "after delete:  " &lt;&lt; *p &lt;&lt; endl;   // *** undefined behavior ***
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p><strong>There is no answer to that question.</strong> The program has undefined behavior, which
+means the language standard places no requirement on what it does at all. What follows is
+<em>one run on one machine</em>, and it is not a prediction of anything:</p>
+<pre class="out">before delete: 42
+after delete:  1446238739</pre>
+<p>Three consecutive runs of the same executable, immediately afterwards, printed
+<code>1694078881</code>, then <code>1664619499</code>, then <code>1456797428</code>. And running it
+under valgrind &mdash; which manages memory differently &mdash; it printed <code>42</code>, as if
+nothing were wrong at all.</p>
+<p>That last outcome is the dangerous one, so let it sink in: <strong>the most likely visible
+symptom of reading freed memory is that it appears to work.</strong> The bytes are often still
+sitting there untouched, right up until some other part of the program allocates that block and
+writes into it. Then your "working" code starts producing values from somewhere else entirely, and
+the bug surfaces a thousand lines from where it lives.</p>
+<p>What valgrind says about it, though, is completely unambiguous. <em>This is the tool's report,
+not the program's output:</em></p>
+<pre class="shell">valgrind ./dangling</pre>
+<pre class="out">==20764== Invalid read of size 4
+==20764==    at 0x109261: main (dangling.cpp:12)
+==20764==  Address 0x4e26080 is 0 bytes inside a block of size 4 free'd
+==20764==    at 0x484A61D: operator delete(void*, unsigned long) (in vgpreload_memcheck-amd64-linux.so)
+==20764==    by 0x109240: main (dangling.cpp:10)
+==20764==  Block was alloc'd at
+==20764==    at 0x4846FA3: operator new(unsigned long) (in vgpreload_memcheck-amd64-linux.so)
+==20764==    by 0x1091DE: main (dangling.cpp:6)
+==20764== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)</pre>
+<p>Three line numbers, and together they are the entire story: the bad read is at line 12, the block
+was freed at line 10, and it was allocated at line 6. You could not ask for a clearer bug report,
+and the program that produced it exited with status 0 and looked fine.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; deleting the same block twice</span></div>
+  <div class="bd">
+    <p>Same shape, one statement different. This one <em>does</em> usually announce itself. Predict
+    whether the last line ever prints.</p>
+<div class="codewrap"><div class="cap">doubledelete.cpp</div><pre><code class="language-cpp">// doubledelete.cpp -- deleting the same block twice. Undefined behavior.
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int *p = new int;
+    *p = 42;
+    cout &lt;&lt; *p &lt;&lt; endl;
+
+    delete p;
+    delete p;             // *** undefined behavior: the block is already gone ***
+
+    cout &lt;&lt; "still running" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>Again: this is undefined behavior, so what follows is one possible outcome, not a guarantee. On
+this machine the C library's heap detects the repeat and kills the program:</p>
+<pre class="out">42
+free(): double free detected in tcache 2
+Aborted</pre>
+<p><code>"still running"</code> never prints. The exit status was 134, not 0. Notice that the
+message came from the run-time library, not from the compiler and not from your code &mdash; the
+compiler compiled this without a murmur.</p>
+<p>And valgrind, as usual, is more precise about it (<em>tool output, not program output</em>):</p>
+<pre class="out">==23622== Invalid free() / delete / delete[] / realloc()
+==23622==    at 0x484A61D: operator delete(void*, unsigned long) (in vgpreload_memcheck-amd64-linux.so)
+==23622==    by 0x109241: main (doubledelete.cpp:11)
+==23622==  Address 0x4e26080 is 0 bytes inside a block of size 4 free'd
+==23622==    at 0x484A61D: operator delete(void*, unsigned long) (in vgpreload_memcheck-amd64-linux.so)
+==23622==    by 0x10922B: main (doubledelete.cpp:10)</pre>
+<p>Line 11 tried to free what line 10 had already freed. A crash is the <em>good</em> outcome here;
+the bad outcome is a program that silently corrupts its own heap and produces wrong answers an hour
+later.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Both of these bugs have the same root: after <code>delete p;</code>, the pointer <code>p</code> still holds a number
+that looks like a perfectly good address. There is a one-line habit that fixes both.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; set the pointer to <code>nullptr</code> after deleting</span></div>
+  <div class="bd">
+    <p>Write these two lines together, always:</p>
+<pre><code class="language-cpp">delete p;
+p = nullptr;</code></pre>
+    <p>This works because the language guarantees two things about null pointers:</p>
+    <ul>
+      <li><strong><code>delete</code> on a null pointer does nothing at all.</strong> It is
+        explicitly defined to be a no-op, so a second delete becomes harmless instead of
+        catastrophic.</li>
+      <li><strong>A null pointer can be tested.</strong> <code>if (p != nullptr)</code> now means something,
+        where before the delete-and-forget it meant nothing.</li>
+    </ul>
+    <p>And dereferencing null crashes immediately and predictably at the guilty line, instead of
+    silently reading a stale value and failing somewhere else an hour later. A reliable crash is
+    worth a great deal.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same double delete, defused</span></div>
+  <div class="bd">
+    <p>The identical double delete, with one line added. Predict what it prints and whether it
+    crashes.</p>
+<div class="codewrap"><div class="cap">safedelete.cpp</div><pre><code class="language-cpp">// safedelete.cpp -- nullptr after delete turns a silent disaster into a clean one
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int *p = new int;
+    *p = 42;
+    cout &lt;&lt; *p &lt;&lt; endl;
+
+    delete p;
+    p = nullptr;          // the one extra line
+
+    delete p;             // deleting a null pointer is guaranteed to do nothing
+
+    if (p == nullptr)
+        cout &lt;&lt; "p points at nothing; nothing to print" &lt;&lt; endl;
+    else
+        cout &lt;&lt; *p &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">42
+p points at nothing; nothing to print</pre>
+<p>Exit status 0, and valgrind reports zero errors and zero leaks. The second <code>delete p;</code>
+executed and did nothing, exactly as specified &mdash; this is <em>not</em> luck and not undefined
+behavior, it is a guarantee in the standard.</p>
+<p>Compare the three programs:</p>
+<table class="trace">
+  <tr><th>Program</th><th>What happened</th><th>Defined?</th></tr>
+  <tr><td><code>dangling.cpp</code></td><td>printed a different garbage number on every run; printed 42 under valgrind</td><td>No &mdash; undefined behavior</td></tr>
+  <tr><td><code>doubledelete.cpp</code></td><td>aborted with "double free detected"</td><td>No &mdash; undefined behavior</td></tr>
+  <tr><td><code>safedelete.cpp</code></td><td>printed a sane message; clean exit</td><td><strong>Yes</strong> &mdash; fully defined</td></tr>
+</table>
+<p>The course notes never mention this habit &mdash; they delete a pointer and then reuse it, which
+is correct as written but leaves the idea untaught. Adopt it anyway. It costs one line and it
+converts the two worst bugs in this class into a null check.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.8</div>
+  <div class="bd">
+    <p>Classify each fragment as <em>memory leak</em>, <em>dangling pointer</em>, <em>double
+    delete</em>, or <em>correct</em>. Assume everything else about the program is fine.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>int *p = new int(5); p = new int(7); delete p;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Memory leak.</strong> Two calls to <code>new</code>, one call to <code>delete</code>. The address of the
+        first <code>int</code> is overwritten on line 2 and lost forever; the four bytes holding 5 become
+        garbage. Valgrind would report <em>"4 bytes in 1 blocks are definitely lost."</em></p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>int *p = new int(5); int *q = p; delete p; cout &lt;&lt; *q;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Dangling pointer.</strong> <code>q</code> holds the same address <code>p</code> did, so when <code>p</code>'s block
+        is deleted, <code>q</code> is left pointing at freed memory. <code>*q</code> is undefined behavior &mdash; and it
+        will very often print 5, which is what makes it so hard to find.</p>
+        <p>Note that setting <code>p = nullptr;</code> after the delete would <em>not</em> save you here: <code>q</code> is
+        a separate variable holding its own copy of the address. This is why two pointers owning one
+        block is a design to avoid, not just a rule to remember.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>int *p = new int[3]; delete [] p; p = nullptr; delete [] p;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Correct</strong> &mdash; pointless, but correct. The second <code>delete [] p;</code> operates
+        on a null pointer and is defined to do nothing. One <code>new[]</code>, one real <code>delete[]</code>, no leak, no
+        undefined behavior.</p>
+        <p>This is the whole payoff of the <code>p = nullptr;</code> habit: the redundant delete became a
+        no-op instead of a crash.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>int *p = new int[3]; delete [] p; delete [] p;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Double delete.</strong> Same as (c) with the one protective line removed. This is
+        undefined behavior; on this machine the run-time library detects it and aborts the program,
+        but you are not entitled to that courtesy.</p>
+        <p><strong>Wrap-up for all four parts.</strong> Every one of these is a mismatch between the
+        number of calls to <code>new</code> and the number of live pointers to the result. Get in the habit of
+        answering two questions about every heap block you create: <em>who deletes this?</em> and
+        <em>how many pointers know about it?</em> If the answer to the second is "more than one," you
+        have work to do &mdash; and that work is the copy constructor, in Class 14.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; a right-sized array from user input</h3>
+
+<p>Write a program that asks how many integers the user has, reads exactly that many into a
+dynamically allocated array, prints them in reverse order, and releases the memory. No fixed-size
+array and no <code>MAX</code> constant anywhere.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="23" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cout &lt;&lt; &quot;How many integers? &quot;;
+    cin &gt;&gt; n;
+
+    // 1. allocate exactly n ints
+
+
+    // 2. read n values into the array
+
+
+    // 3. print them in reverse order
+
+
+    // 4. release the memory, and null the pointer
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cout &lt;&lt; "How many integers? ";
+    cin &gt;&gt; n;
+
+    // 1. allocate exactly n ints
+
+
+    // 2. read n values into the array
+
+
+    // 3. print them in reverse order
+
+
+    // 4. release the memory, and null the pointer
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.9</div>
+  <div class="bd">
+    <p>Complete the exercise above, and give the output for the input <code>5</code> followed by
+    <code>3 1 4 1 5</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Four stages, in the order the comments give them. The only line that
+      needs thought is the allocation: <code>n</code> is not known until after the <code>cin</code>, so the allocation must
+      come after it, and it must be <code>new int[n]</code> rather than a declaration. The reverse-printing loop
+      counts down from <code>n - 1</code> to <code>0</code>; the classic off-by-one is starting at <code>n</code>, which reads one
+      past the end of the block.</p>
+<div class="codewrap"><div class="cap">reverseinput.cpp</div><pre><code class="language-cpp">// reverseinput.cpp -- read a count, then that many integers, print them backwards
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cout &lt;&lt; "How many integers? ";
+    cin &gt;&gt; n;
+
+    int *a = new int[n];                // exactly n ints
+
+    cout &lt;&lt; "Enter " &lt;&lt; n &lt;&lt; " integers: ";
+    for (int i = 0; i &lt; n; ++i)
+        cin &gt;&gt; a[i];
+
+    cout &lt;&lt; "In reverse: ";
+    for (int i = n - 1; i &gt;= 0; --i)
+        cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    delete [] a;                        // partner call for the new[]
+    a = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">How many integers? Enter 5 integers: In reverse: 5 1 4 1 3 </pre>
+      <p>(The input was piped in, so the typed digits do not echo. In a terminal the prompts and the
+      numbers would be interleaved on three separate lines.)</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>delete [] a;</code>, with brackets, because the allocation was <code>new int[n]</code>. Getting this
+          wrong is the single most common error on the professor's dynamic-memory exam questions,
+          and it is worth a point every time.</li>
+        <li>This is very nearly the professor's standard Problem 1 on every midterm &mdash; read a
+          count or a sentinel, <em>"set up just enough space to store those inputs,"</em> then
+          compute and print something. The <code>new[]</code> version and the <code>vector</code> version both earn full
+          credit; the fixed <code>int a[100];</code> version does not.</li>
+        <li>The program has no guard against <code>n</code> being 0 or negative. <code>new int[0]</code> is legal and
+          returns a pointer you must still delete; a negative <code>n</code> throws
+          <code>std::bad_array_new_length</code>. On an exam, a one-line <code>if (n &lt;= 0) return 1;</code> costs
+          nothing and shows you thought about it.</li>
+        <li>Under valgrind: <em>"All heap blocks were freed &mdash; no leaks are possible."</em></li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Arrays of pointers, and 2-D arrays built at run time</h2>
+
+<p>Everything so far has been one block of memory at a time. The last two sections put blocks
+together, and the building material is an idea that sounds like a tongue-twister but is completely
+ordinary: an array whose elements happen to be pointers.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; array of pointers</span></div>
+  <div class="bd">
+    <p>It is perfectly possible to declare an array of pointers:</p>
+<pre><code class="language-cpp">const int n = 10;
+int *array_ptr[n];</code></pre>
+    <p>Observe that the array length is <code>n</code>, and the data type of each element is <em>pointer to
+    int</em>. So <code>array_ptr[3]</code> is an <code>int *</code>, and <code>*array_ptr[3]</code> is the <code>int</code> it points at.</p>
+    <p>Nothing is allocated on the heap by that declaration. It reserves ten pointers, on the stack,
+    all uninitialized. Where they point is up to you.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; rearranging pointers without moving data</span></div>
+  <div class="bd">
+    <p>Four ints, and four pointers aimed at them. The program then reverses the <em>pointers</em>.
+    Predict what happens to <code>a</code> and <code>d</code>.</p>
+<div class="codewrap"><div class="cap">arrayofptr.cpp</div><pre><code class="language-cpp">// arrayofptr.cpp -- an array whose elements are pointers
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int n = 4;
+
+    int a = 10, b = 20, c = 30, d = 40;
+    int *array_ptr[n];          // array of length n; element type is "pointer to int"
+
+    array_ptr[0] = &amp;a;
+    array_ptr[1] = &amp;b;
+    array_ptr[2] = &amp;c;
+    array_ptr[3] = &amp;d;
+
+    for (int i = 0; i &lt; n; ++i)
+        cout &lt;&lt; "array_ptr[" &lt;&lt; i &lt;&lt; "] points at " &lt;&lt; *array_ptr[i] &lt;&lt; endl;
+
+    // reversing the pointers does not move a single int
+    for (int i = 0; i &lt; n / 2; ++i) {
+        int *tmp = array_ptr[i];
+        array_ptr[i] = array_ptr[n - 1 - i];
+        array_ptr[n - 1 - i] = tmp;
+    }
+
+    cout &lt;&lt; "after reversing the pointers:" &lt;&lt; endl;
+    for (int i = 0; i &lt; n; ++i)
+        cout &lt;&lt; "array_ptr[" &lt;&lt; i &lt;&lt; "] points at " &lt;&lt; *array_ptr[i] &lt;&lt; endl;
+    cout &lt;&lt; "a is still " &lt;&lt; a &lt;&lt; " and d is still " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">array_ptr[0] points at 10
+array_ptr[1] points at 20
+array_ptr[2] points at 30
+array_ptr[3] points at 40
+after reversing the pointers:
+array_ptr[0] points at 40
+array_ptr[1] points at 30
+array_ptr[2] points at 20
+array_ptr[3] points at 10
+a is still 10 and d is still 40</pre>
+<p>Not one <code>int</code> moved. The swap loop is the ordinary three-line temp swap from Class 1,
+except that the temporary is an <code>int *</code> and what gets exchanged is a pair of addresses.
+The four variables sat perfectly still while the arrows rearranged themselves above them.</p>
+<p>That is the practical reason arrays of pointers exist. Sorting a thousand large objects by
+swapping pointers moves 8 bytes per swap instead of the whole object, and every pointer that already
+pointed into the collection keeps working. No <code>new</code> was involved here at all &mdash; an
+array of pointers is a useful idea on its own.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now make the array of pointers itself dynamic. It is also perfectly possible to allocate one with
+<code>new</code>, and the notes give the shape directly:</p>
+
+<pre><code class="language-cpp">int **pp = new int*[n];
+// etc
+delete [] pp;</code></pre>
+
+<p>Read the type slowly. <code>new int*[n]</code> allocates <code>n</code> objects of type <code>int *</code>, and returns a pointer
+to the first of them &mdash; a pointer to a pointer to int, so the variable holding it is declared
+<code>int **pp</code>. Class 7 asked "can we declare a pointer to a pointer?" and answered "oh yes"; this is
+where that answer starts earning its keep.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; an array of pointers, each pointing at an array, is a 2-D array</span></div>
+  <div class="bd">
+    <p>A rectangular array of size <code>m</code> by <code>n</code> is <code>m</code> rows, each of which is an array of length <code>n</code>.
+    So: allocate an array of <code>m</code> pointers, then point each one at its own array of <code>n</code> ints. The
+    result supports the subscript syntax you already know &mdash; <code>pp[i][j]</code> &mdash; because
+    <code>pp[i]</code> is a pointer and <code>pp[i][j]</code> is its <code>j</code>-th element.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; build and destroy an <code>m</code> by <code>n</code> array on the heap</span></div>
+  <div class="bd">
+    <p><strong>Allocation is two steps</strong>, and the order is forced:</p>
+<pre><code class="language-cpp">int **pp = new int*[m];        // 1. the array of pointers (length m)
+for (int i = 0; i &lt; m; ++i) {
+    pp[i] = new int[n];        // 2. one row of n ints for each pointer
+}</code></pre>
+    <p><strong>Release is the same two steps in reverse order</strong>, and that order is forced
+    too:</p>
+<pre><code class="language-cpp">for (int i = 0; i &lt; m; ++i) {
+    delete [] pp[i];           // 1. release each row
+}
+delete [] pp;                  // 2. then release the array of pointers</code></pre>
+    <p>Count the calls: <code>m + 1</code> allocations, <code>m + 1</code> releases. Exactly as the rule demands.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; releasing the rows in the wrong order, or not at all</span></div>
+  <div class="bd">
+    <p>Two failures, both easy to write:</p>
+    <ul>
+      <li><strong><code>delete [] pp;</code> on its own.</strong> As the notes put it: <em>it is not adequate to
+        simply write "delete [] pp;", because that does not release all the memory. There must be
+        one call to operator <code>delete []</code> to partner every call to operator <code>new</code>.</em> You released
+        the array of pointers and leaked every row.</li>
+      <li><strong><code>delete [] pp;</code> first, then the row loop.</strong> Worse. Once <code>pp</code> is released,
+        <code>pp[i]</code> is a read of freed memory &mdash; a dangling-pointer read &mdash; and the addresses
+        you get back are garbage that you then pass to <code>delete[]</code>. The rows must go first, because
+        the only record of where they are lives inside <code>pp</code>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a 2 by 3 array, built and released correctly</span></div>
+  <div class="bd">
+    <p>Element <code>[i][j]</code> is set to <code>10*i + j</code>, so you can read the row and column straight off the
+    printed value. Predict the two lines.</p>
+<div class="codewrap"><div class="cap">dyn2d.cpp</div><pre><code class="language-cpp">// dyn2d.cpp -- a 2-D array built at run time out of an array of pointers
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int m = 2;                          // rows    -- could come from cin
+    int n = 3;                          // columns -- could come from cin
+
+    int **pp = new int*[m];             // step 1: the array of pointers
+    for (int i = 0; i &lt; m; ++i) {
+        pp[i] = new int[n];             // step 2: one row at a time
+    }
+
+    for (int i = 0; i &lt; m; ++i)
+        for (int j = 0; j &lt; n; ++j)
+            pp[i][j] = 10 * i + j;
+
+    for (int i = 0; i &lt; m; ++i) {
+        for (int j = 0; j &lt; n; ++j)
+            cout &lt;&lt; pp[i][j] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+
+    for (int i = 0; i &lt; m; ++i) {
+        delete [] pp[i];                // release each row
+    }
+    delete [] pp;                       // release the array of pointers
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0 1 2 
+10 11 12 </pre>
+<p>Here is the picture the code builds. <code>pp</code> is a single pointer on the stack; everything
+to the right of it is on the heap:</p>
+<table class="trace">
+  <tr><th>Lives on the stack</th><th>Heap block 1 &mdash; the array of pointers</th><th>Heap blocks 2 and 3 &mdash; the rows</th></tr>
+  <tr><td rowspan="2"><code>pp</code> (one <code>int **</code>) &rarr;</td><td><code>pp[0]</code> &rarr;</td><td><code>0 1 2</code> (three ints)</td></tr>
+  <tr><td><code>pp[1]</code> &rarr;</td><td><code>10 11 12</code> (three ints)</td></tr>
+</table>
+<p>Three separate calls to <code>new</code>, therefore three separate calls to
+<code>delete[]</code>, and valgrind confirms the balance: <em>"5 allocs, 5 frees &mdash; All heap
+blocks were freed, no leaks are possible."</em> (Five rather than three because the C++ runtime makes
+two allocations of its own before <code>main</code> starts; what matters is that the two numbers are
+equal.)</p>
+<p>One honest caveat about this construction, since you will meet the alternative eventually: the
+rows are <strong>three independent blocks</strong>, not one contiguous rectangle. That is different
+from a statically declared <code>int a[2][3];</code>, which is a single 24-byte block. The
+subscript syntax is identical, which is exactly why it is easy to forget they are not the same
+thing.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what the leaking version looks like to a tool</span></div>
+  <div class="bd">
+    <p>Now the same program with the row-release loop deleted &mdash; the mistake from the warning
+    box above. The program's own output is unchanged, so the only way to see the bug is to ask.</p>
+<div class="codewrap"><div class="cap">bad2dfree.cpp</div><pre><code class="language-cpp">// bad2dfree.cpp -- one delete[] where m+1 were needed
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int m = 2;
+    int n = 3;
+
+    int **pp = new int*[m];
+    for (int i = 0; i &lt; m; ++i) {
+        pp[i] = new int[n];
+    }
+
+    for (int i = 0; i &lt; m; ++i)
+        for (int j = 0; j &lt; n; ++j)
+            pp[i][j] = 10 * i + j;
+
+    for (int i = 0; i &lt; m; ++i) {
+        for (int j = 0; j &lt; n; ++j)
+            cout &lt;&lt; pp[i][j] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+
+    delete [] pp;       // *** the rows are never released ***
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p><em>Valgrind's report, not the program's output:</em></p>
+<pre class="shell">valgrind --leak-check=full ./bad2dfree</pre>
+<pre class="out">==31321== HEAP SUMMARY:
+==31321==     in use at exit: 24 bytes in 2 blocks
+==31321==   total heap usage: 5 allocs, 3 frees, 77,864 bytes allocated
+==31321== 
+==31321== 24 bytes in 2 blocks are definitely lost in loss record 1 of 1
+==31321==    at 0x48485C3: operator new[](unsigned long) (in vgpreload_memcheck-amd64-linux.so)
+==31321==    by 0x109272: main (bad2dfree.cpp:11)
+==31321== 
+==31321== LEAK SUMMARY:
+==31321==    definitely lost: 24 bytes in 2 blocks
+==31321== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)</pre>
+<p>Read the arithmetic: <strong>24 bytes in 2 blocks</strong>. Two rows, three <code>int</code>s
+each, four bytes each &mdash; exactly the two row allocations, and the line number points straight at
+<code>pp[i] = new int[n];</code>. "5 allocs, 3 frees" is the giveaway.</p>
+<p>Scale it up and the number stops being small. A 1000 by 1000 array of <code>int</code> leaked this
+way is four megabytes lost per construction, and the program that built it exits perfectly
+normally.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.10</div>
+  <div class="bd">
+    <p>A program builds a 4 by 7 array of <code>double</code> with the two-step method.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many calls to <code>new</code> are made, and how many calls to <code>delete[]</code> are needed?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Five of each.</strong> One <code>new double*[4]</code> for the array of pointers, plus four
+        calls to <code>new double[7]</code>, one per row. Therefore four <code>delete [] pp[i];</code> calls and one
+        <code>delete [] pp;</code>.</p>
+        <p>The general answer is <code>m + 1</code>, and it does not depend on <code>n</code> at all &mdash; each row is one
+        allocation no matter how wide it is.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write the declaration of the pointer variable, and the allocation.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int m = 4, n = 7;
+double **pp = new double*[m];
+for (int i = 0; i &lt; m; ++i)
+    pp[i] = new double[n];</code></pre>
+        <p>Two stars in the declaration, one star in the <code>new double*[m]</code>. The rule to say out loud:
+        the type of <code>pp[i]</code> is <code>double *</code>, so the array <code>pp</code> points at is an array of
+        <code>double *</code>, so <code>pp</code> itself is a <code>double **</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A student writes the release as <code>delete [] pp;</code> followed by the loop of <code>delete [] pp[i];</code>. What happens?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Undefined behavior.</strong> Once <code>delete [] pp;</code> has run, the array of pointers is
+        gone, so every <code>pp[i]</code> in the loop is a read of freed memory. The values that come back may
+        look like the old addresses, in which case the deletes appear to work; or they may be
+        garbage, in which case you are calling <code>delete[]</code> on an address that was never allocated.</p>
+        <p>Under valgrind this shows up as <em>"Invalid read of size 8"</em> followed by
+        <em>"Invalid free()"</em>. The fix is simply to put the loop first: <strong>rows before the
+        row table</strong>, always, because the row table is the only place the row addresses are
+        recorded.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; a multiplication table on the heap</h3>
+
+<p>Read two numbers <code>m</code> and <code>n</code> from the user, build an <code>m</code> by <code>n</code> array on the heap whose element
+<code>[i][j]</code> is <code>(i+1) * (j+1)</code>, print it as a grid, and release every block in the right order.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="23" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int m, n;
+    cout &lt;&lt; &quot;Rows and columns? &quot;;
+    cin &gt;&gt; m &gt;&gt; n;
+
+    // 1. allocate the array of m pointers
+
+
+    // 2. allocate each of the m rows, n ints wide
+
+
+    // 3. fill in (i+1) * (j+1) and print the grid
+
+
+    // 4. release the rows, then the array of pointers
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int m, n;
+    cout &lt;&lt; "Rows and columns? ";
+    cin &gt;&gt; m &gt;&gt; n;
+
+    // 1. allocate the array of m pointers
+
+
+    // 2. allocate each of the m rows, n ints wide
+
+
+    // 3. fill in (i+1) * (j+1) and print the grid
+
+
+    // 4. release the rows, then the array of pointers
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.11</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the output for the input <code>3 4</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Straight application of the Procedure box: allocate the pointer
+      array, loop to allocate the rows, use it, then free rows-then-table. The only arithmetic is
+      <code>(i+1) * (j+1)</code> so that the table starts at 1 rather than 0. Print with a newline at the end of
+      each row, not each element.</p>
+<div class="codewrap"><div class="cap">multtable.cpp</div><pre><code class="language-cpp">// multtable.cpp -- an m x n multiplication table on the heap
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int m, n;
+    cout &lt;&lt; "Rows and columns? ";
+    cin &gt;&gt; m &gt;&gt; n;
+
+    int **table = new int*[m];              // step 1: array of m pointers
+    for (int i = 0; i &lt; m; ++i)
+        table[i] = new int[n];              // step 2: m rows of n ints
+
+    for (int i = 0; i &lt; m; ++i)
+        for (int j = 0; j &lt; n; ++j)
+            table[i][j] = (i + 1) * (j + 1);
+
+    for (int i = 0; i &lt; m; ++i) {
+        for (int j = 0; j &lt; n; ++j)
+            cout &lt;&lt; table[i][j] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+
+    for (int i = 0; i &lt; m; ++i)
+        delete [] table[i];                 // release each row first
+    delete [] table;                        // then the array of pointers
+    table = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">Rows and columns? 1 2 3 4 
+2 4 6 8 
+3 6 9 12 </pre>
+      <p>(Input piped in again, so <code>3 4</code> does not echo after the prompt; the first row of the table
+      runs on from the prompt line.)</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>Four calls to <code>new</code>, four calls to <code>delete[]</code>, and valgrind agrees: <em>"All heap blocks
+          were freed &mdash; no leaks are possible."</em> Run it yourself on your own answer; the
+          habit is the point of the exercise.</li>
+        <li>Nothing in this program knows <code>m</code> and <code>n</code> at compile time, and nothing needs to. That is
+          the difference between this and <code>int table[3][4];</code>.</li>
+        <li>The release loop uses <code>table[i]</code> <em>before</em> <code>delete [] table;</code> runs. Swap those two
+          and the program is broken even though it still prints the right table.</li>
+        <li>Since <code>m</code> and <code>n</code> come from the user, a real program would check them. <code>new int*[0]</code> is
+          legal; a negative count is not.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Ragged arrays</h2>
+
+<p>One last payoff, and it is the one that cannot be imitated with a static array at all.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; from the course notes</span></div>
+  <div class="bd">
+    <p><strong>A statically allocated array must be rectangular. A dynamically allocated array need
+    not be.</strong></p>
+    <p><code>int a[4][4];</code> gives you sixteen ints in a rectangle and there is no way to ask for anything
+    else. But the rows of a heap-built array are separate allocations, so nothing forces them to be
+    the same length. Such an array is called <strong>ragged</strong> or <strong>jagged</strong>.</p>
+  </div>
+</div>
+
+<p>The notes' motivating case is a triangular calculation: suppose the only elements you need are
+the ones with column index at most the row index. Declaring a rectangular array wastes the entire
+upper half, which matters when the array is large. Row <code>i</code> needs exactly <code>i + 1</code> elements, so ask
+for exactly that many:</p>
+
+<pre><code class="language-cpp">const int m = 4;
+int **pp = new int*[m];         // array of pointers
+for (int i = 0; i &lt; m; ++i) {
+    pp[i] = new int[i + 1];     // allocate triangular array
+}</code></pre>
+
+<p>The arrays <code>pp[i]</code> are allowed to have unequal lengths. The release code is unchanged from
+&sect;7 &mdash; and this is the moment to appreciate why <code>delete[]</code> takes no length: the run-time
+system remembers how big each row was, even though the rows are all different sizes and your program
+no longer has that information anywhere.</p>
+
+<pre><code class="language-cpp">for (int i = 0; i &lt; m; ++i) {
+    delete [] pp[i];            // release memory
+}
+delete [] pp;                   // release memory</code></pre>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; Pascal's triangle in a ragged array</span></div>
+  <div class="bd">
+    <p>Here is a genuinely triangular problem to put in a triangular array. Each entry is the sum of
+    the two above it, with 1s down both edges. Predict the four lines &mdash; and count the total
+    number of <code>int</code>s the program allocates.</p>
+<div class="codewrap"><div class="cap">ragged.cpp</div><pre><code class="language-cpp">// ragged.cpp -- a triangular array: row i has i+1 elements
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int m = 4;
+
+    int **pp = new int*[m];             // array of pointers
+    for (int i = 0; i &lt; m; ++i) {
+        pp[i] = new int[i + 1];         // allocate triangular array
+    }
+
+    // Pascal's triangle, one row at a time
+    for (int i = 0; i &lt; m; ++i) {
+        pp[i][0] = 1;
+        pp[i][i] = 1;
+        for (int j = 1; j &lt; i; ++j)
+            pp[i][j] = pp[i-1][j-1] + pp[i-1][j];
+    }
+
+    for (int i = 0; i &lt; m; ++i) {
+        for (int j = 0; j &lt;= i; ++j)
+            cout &lt;&lt; pp[i][j] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+
+    for (int i = 0; i &lt; m; ++i) {
+        delete [] pp[i];                // release memory
+    }
+    delete [] pp;                       // release memory
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">1 
+1 1 
+1 2 1 
+1 3 3 1 </pre>
+<p><strong>Ten ints</strong> &mdash; 1 + 2 + 3 + 4 &mdash; plus the four pointers. A rectangular
+<code>int a[4][4];</code> would have used sixteen, wasting six. At <code>m = 1000</code> the
+triangular version uses about half a million ints and the rectangular one a full million.</p>
+<p>Three details in the code are worth naming:</p>
+<table class="trace">
+  <tr><th>Line</th><th>Why it is written that way</th></tr>
+  <tr><td><code>pp[i] = new int[i + 1];</code></td><td>Row 0 gets 1 element, row 3 gets 4. The <code>+ 1</code> is because row indices start at 0 but lengths start at 1 &mdash; the usual place to be off by one.</td></tr>
+  <tr><td><code>for (int j = 0; j &lt;= i; ++j)</code></td><td>The printing loop bound is <code>&lt;= i</code>, not <code>&lt; m</code>. Every loop over a ragged array must know that row's own length. Using <code>&lt; m</code> here would read past the end of the short rows &mdash; and it would <em>compile</em>, and it would usually <em>print something</em>.</td></tr>
+  <tr><td><code>pp[i][j] = pp[i-1][j-1] + pp[i-1][j];</code></td><td>Reaching into the previous row, which is shorter. It is safe because <code>j</code> runs only to <code>i - 1</code> here, and row <code>i-1</code> has <code>i</code> elements.</td></tr>
+</table>
+<p>The middle row is the real cost of raggedness: <strong>the array no longer knows its own row
+lengths.</strong> With a rectangle you can carry one <code>n</code> around; with a ragged array you
+have to carry a length per row, or derive it from the structure as we did here. Nothing in the
+pointers themselves records it, and valgrind's <em>"Invalid read of size 4"</em> is what you get
+when you guess wrong.</p>
+<p>The release loop is identical to &sect;7's. Rows first, then the table &mdash; four calls plus
+one, matching the one plus four allocations, and the run is leak-free.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 8.12</div>
+  <div class="bd">
+    <p>You need a ragged array of <code>double</code> with <code>m</code> rows, where row <code>i</code> has <code>2*i + 1</code> elements
+    (so 1, 3, 5, 7, &hellip;).</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write the allocation.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">double **pp = new double*[m];
+for (int i = 0; i &lt; m; ++i)
+    pp[i] = new double[2 * i + 1];</code></pre>
+        <p>The only thing that changes from the triangular case is the length expression. That is the
+        whole flexibility: the row length can be any expression the program can evaluate at the
+        moment the <code>new</code> runs.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write the release.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">for (int i = 0; i &lt; m; ++i)
+    delete [] pp[i];
+delete [] pp;
+pp = nullptr;</code></pre>
+        <p><strong>Character for character the same as the rectangular case.</strong> The release
+        code never mentions a length, so it does not care that the rows differ &mdash; which is the
+        practical answer to "why does <code>delete[]</code> not take a size?" It could not, here: the program
+        itself no longer knows.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Later, some other function receives only <code>pp</code> and <code>m</code>. Can it print the array?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Only if it also knows the rule for the row lengths.</strong> <code>pp</code> is an array of
+        <code>m</code> addresses and nothing more; there is no length stored anywhere a program can read. A
+        function given <code>pp</code> and <code>m</code> can find every row, but it cannot discover how long any of them
+        is.</p>
+        <p>So you must either hard-code the rule (<code>2*i + 1</code>), or pass an array of lengths alongside,
+        or &mdash; the answer that the rest of this course gives &mdash; put the pointer and the
+        lengths inside a <strong>class</strong>, so they cannot be separated. That is Class 9, and it
+        is the reason the syllabus puts classes immediately after this material: everything you have
+        seen today is a data structure held together by discipline instead of by the language, and a
+        class is how you make the language hold it together for you.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 8</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 are the two programs the course notes work through for this lecture, posed
+    here as problems instead of being handed to you finished. Problems 3 and 4 are the professor's
+    own exam questions almost word for word &mdash; Problem 3 is the fill-in-the-skeleton question
+    that has appeared on every one of his final exams, and Problem 4 is the second half of the Fall
+    2023 Exam 1 pointer question, the half that needs <code>new</code> and <code>delete</code>. Problems 5 and 6 are added,
+    in the two formats that carry the most points on his papers: "write a complete C++ program" and a
+    debugging trace.</p>
+    <p>This is the most heavily examined topic in the course. Pointers and dynamic memory appear on
+    <strong>every one</strong> of the professor's ten exams, usually in two separate problems, and
+    everything after Exam 1 &mdash; the destructor, the copy constructor, the assignment operator
+    &mdash; is built directly on it. Write out each answer before opening it. Write-the-code parts
+    pay points for the signature line alone; the <code>delete</code> versus <code>delete[]</code> distinction is worth a
+    point every single time it appears.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Find and fix the memory leak <span class="muted small">(from the course notes)</span></h3>
+
+<p>The program below prints the characters of two strings and appears to work perfectly. Identify
+the statement that causes a memory leak, say exactly how many bytes are lost and why they can never
+be recovered, and give a corrected version.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+char* stringToArray(const string &amp;s) {
+    int n = s.size();
+    char *p = new char[n];
+    for (int i = 0; i &lt; n; ++i) {
+        p[i] = s[i];
+    }
+    return p;
+}
+
+int main() {
+    string s1("abcd");
+    string s2("alpha");
+
+    char *p = stringToArray(s1);
+    for (int i = 0; i &lt; static_cast&lt;int&gt;(s1.size()); ++i)
+        cout &lt;&lt; p[i] &lt;&lt; endl;
+
+    p = stringToArray(s2);
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; static_cast&lt;int&gt;(s2.size()); ++i)
+        cout &lt;&lt; p[i] &lt;&lt; endl;
+
+    delete [] p;
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Count the calls. <code>stringToArray</code> contains one <code>new char[n]</code> and is called
+  twice, so two blocks are allocated. <code>main</code> contains one <code>delete []</code>, so one block is released. Two
+  allocations, one release &mdash; a leak, before you have even read the logic. Then find <em>which</em>
+  block leaks by asking, at each statement, which pointers hold which addresses.</p>
+  <p>The guilty statement is <code>p = stringToArray(s2);</code>. Once <code>p</code> is reassigned to the second array,
+  nothing in the program points to the first one. Its address has been lost, so there is no way to
+  deallocate it. Four bytes &mdash; one <code>char</code> per character of <code>"abcd"</code> &mdash; become
+  <strong>garbage</strong>.</p>
+  <p>The repair is one statement, and its <em>position</em> is the answer: release the first array
+  before the only pointer to it is overwritten.</p>
+<div class="codewrap"><div class="cap">leakfixed.cpp</div><pre><code class="language-cpp">// leakfixed.cpp -- the leaking program, repaired
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+char* stringToArray(const string &amp;s) {
+    int n = s.size();
+    char *p = new char[n];
+    for (int i = 0; i &lt; n; ++i) {
+        p[i] = s[i];
+    }
+    return p;
+}
+
+int main() {
+    string s1("abcd");
+    string s2("alpha");
+
+    char *p = stringToArray(s1);
+    for (int i = 0; i &lt; static_cast&lt;int&gt;(s1.size()); ++i)
+        cout &lt;&lt; p[i] &lt;&lt; endl;
+
+    delete [] p;                    // release the first array BEFORE repointing
+    p = stringToArray(s2);
+
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; static_cast&lt;int&gt;(s2.size()); ++i)
+        cout &lt;&lt; p[i] &lt;&lt; endl;
+
+    delete [] p;                    // release the second array
+    p = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">a
+b
+c
+d
+
+a
+l
+p
+h
+a</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The output is byte for byte identical to the leaking version. That is the lesson: <strong>a
+      leak has no visible symptom.</strong> Neither the compiler nor the program tells you.</li>
+    <li>The only way to see the difference is to ask a tool. The broken version reports <em>"4 bytes
+      in 1 blocks are definitely lost"</em>; this one reports <em>"All heap blocks were freed &mdash;
+      no leaks are possible."</em></li>
+    <li>Position matters more than presence. Putting <code>delete [] p;</code> <em>after</em> the reassignment
+      still gives you one delete for two allocations &mdash; it just leaks the other array.</li>
+    <li>The two-pointer version (<code>p1</code> and <code>p2</code>, two allocations, two releases) is equally correct and
+      is what the notes' original program does. Choose it when you still need the first array after
+      the second exists.</li>
+    <li>This exact pattern &mdash; "release the old block before pointing at the new one" &mdash; is
+      the body of <code>operator=</code> for every class that owns heap memory. You will write it a dozen times
+      from Class 15 on.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; A triangular array <span class="muted small">(from the course notes)</span></h3>
+
+<p>Write a complete program that dynamically allocates a triangular array of <code>int</code> with <code>m = 4</code>
+rows, where row <code>i</code> has <code>i + 1</code> elements. Fill it so that entry <code>[i][j]</code> is the number of the cell
+counting from the top left (0, then 1 2, then 3 4 5, and so on), print it as a triangle, and release
+all the memory. State how many <code>int</code>s are allocated and how many calls to <code>delete[]</code> are made.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The allocation is the &sect;7 two-step with one change: the row length is
+  <code>i + 1</code> instead of a constant <code>n</code>. Filling with a running counter is simplest &mdash; declare
+  <code>int k = 0;</code> before the loops and post-increment it as you store. Printing needs the row-aware
+  bound <code>j &lt;= i</code>, because using <code>j &lt; m</code> would run off the end of the short rows. Release is
+  rows-then-table, unchanged.</p>
+  <p>Counting: <code>1 + 2 + 3 + 4 = 10</code> ints, in four separate blocks, plus one block of four pointers
+  &mdash; so five calls to <code>new</code> and five calls to <code>delete[]</code>.</p>
+<div class="codewrap"><div class="cap">triangle.cpp</div><pre><code class="language-cpp">// triangle.cpp -- a dynamically allocated triangular array
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int m = 4;
+
+    int **pp = new int*[m];             // array of pointers
+    for (int i = 0; i &lt; m; ++i) {
+        pp[i] = new int[i + 1];         // row i has i+1 elements
+    }
+
+    int k = 0;
+    for (int i = 0; i &lt; m; ++i)
+        for (int j = 0; j &lt;= i; ++j)
+            pp[i][j] = k++;
+
+    for (int i = 0; i &lt; m; ++i) {
+        for (int j = 0; j &lt;= i; ++j)
+            cout &lt;&lt; pp[i][j] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+    cout &lt;&lt; "allocated " &lt;&lt; k &lt;&lt; " ints in " &lt;&lt; m &lt;&lt; " rows" &lt;&lt; endl;
+
+    for (int i = 0; i &lt; m; ++i) {
+        delete [] pp[i];                // release each row
+    }
+    delete [] pp;                       // release the array of pointers
+    pp = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">0 
+1 2 
+3 4 5 
+6 7 8 9 
+allocated 10 ints in 4 rows</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>A statically declared array cannot do this at all. <code>int a[4][4];</code> is rectangular by
+      definition, and would use sixteen ints to hold ten. The notes make exactly this point: a
+      statically allocated array must be rectangular; a dynamically allocated one need not be.</li>
+    <li><code>j &lt;= i</code> appears in both the filling loop and the printing loop. Every loop over a ragged
+      array has to know that row's own length &mdash; there is nowhere the program could look it
+      up.</li>
+    <li>The release loop is identical to the rectangular case, because <code>delete[]</code> takes no length.
+      Here that is not a convenience but a necessity: the four rows have four different lengths and
+      the program has stopped tracking them.</li>
+    <li><code>pp[i][j] = k++;</code> uses post-increment exactly as in Class 3: store the current <code>k</code>, then
+      increase it.</li>
+    <li>Valgrind on this program: <em>"All heap blocks were freed &mdash; no leaks are
+      possible."</em> Five allocations of ours, five frees.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Complete the code skeleton <span class="muted small">(from the Summer 2025 Final, Problem 1)</span></h3>
+
+<p>Given the following code skeleton in C++, complete the code by performing the tasks in the
+comments. This is the professor's question with his own point split printed in it.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    string course = "OOP in C++";
+    int grades[5] = {78, 85, 92, 88, 96};
+
+    /* Task 1: Pointer Declaration [2 pts]
+       - Create a pointer pCourse that points to 'course'
+       - Create a pointer pGrades that points to 'grades'
+    */
+
+    /* Task 2: Single Value Dynamic Allocation [2 pts]
+       - Create a dynamic variable dynCourse that copies the value from pCourse
+    */
+
+    /* Task 3: Array Dynamic Allocation [4 pts]
+       - Create a dynamic array dynGrades that copies values from pGrades
+    */
+
+    /* Task 4: Memory Management [2 pts]
+       - Properly delete all dynamically allocated memory
+    */
+
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Task 1 &mdash; the two pointer declarations.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">string *pCourse = &amp;course;        // 1 point
+int *pGrades = grades;            // 1 point</code></pre>
+    <p>These are the professor's rubric answers verbatim, and the contrast between the two lines is
+    the entire reason both are asked. <code>course</code> is a single object, so you need the
+    <strong>address-of</strong> operator. <code>grades</code> is an array name, which already <em>is</em> the
+    address of <code>grades[0]</code> &mdash; so no <code>&amp;</code>. Writing <code>int *pGrades = &amp;grades;</code> is a compile
+    error: <em>"cannot convert 'int (*)[5]' to 'int*'"</em>.</p>
+    <p>This is Class 7 &sect;6 material showing up as points on a final exam.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Task 2 &mdash; the dynamic single value.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">string *dynCourse = new string;   // 1 point
+*dynCourse = *pCourse;            // 1 point</code></pre>
+    <p>Two statements, one point each: allocate, then copy. Read the second line carefully &mdash;
+    <strong>both sides are dereferenced.</strong> <code>*dynCourse = *pCourse;</code> copies a <code>string</code> value
+    from one object into another. Writing <code>dynCourse = pCourse;</code> copies an <em>address</em> instead,
+    which leaves both pointers aimed at <code>course</code>, leaks the new <code>string</code>, and then deletes a stack
+    variable at Task 4. It is the Class 7 &sect;5 distinction, and it is worth two points here.</p>
+    <p><code>new string(*pCourse);</code> in one line is also correct and arguably better, but the two-line form
+    matches the rubric.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Task 3 &mdash; the dynamic array.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int *dynGrades = new int[5];                          // 2 points
+for(int i = 0; i &lt; 5; i++) dynGrades[i] = pGrades[i]; // 2 points</code></pre>
+    <p>Again the rubric's own answer. The loop is not optional and it is worth half the marks for
+    this task: <code>dynGrades = pGrades;</code> would not copy anything, it would just make a second pointer to
+    the same five ints. An element-by-element loop is the only way to copy an array, and this loop is
+    a <strong>deep copy</strong> &mdash; the exact code you will write inside a copy constructor from
+    Class 14 onward.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Task 4 &mdash; the memory management. Then assemble the whole thing into a program that proves the copies are independent, and give its output.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">delete dynCourse;        // 1 point
+delete [] dynGrades;     // 1 point</code></pre>
+    <p>One of each form. <code>dynCourse</code> came from <code>new string</code>, so plain <code>delete</code>; <code>dynGrades</code> came from
+    <code>new int[5]</code>, so <code>delete []</code>. Note what is <em>not</em> deleted: <code>pCourse</code> and <code>pGrades</code> point at
+    <code>course</code> and <code>grades</code>, which are ordinary local variables. Calling <code>delete</code> on either would be a
+    serious error &mdash; you may only delete what <code>new</code> gave you.</p>
+    <p>Assembled, with two extra lines that mutate the originals so you can see that the copies are
+    genuinely separate:</p>
+<div class="codewrap"><div class="cap">exam_s25f_p1.cpp</div><pre><code class="language-cpp">// exam_s25f_p1.cpp -- exam-style: complete the skeleton
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    string course = "OOP in C++";
+    int grades[5] = {78, 85, 92, 88, 96};
+
+    // Task 1: pointer declarations
+    string *pCourse = &amp;course;              // scalar: address-of
+    int *pGrades = grades;                  // array name: no &amp;
+
+    // Task 2: single value dynamic allocation
+    string *dynCourse = new string;
+    *dynCourse = *pCourse;
+
+    // Task 3: array dynamic allocation
+    int *dynGrades = new int[5];
+    for (int i = 0; i &lt; 5; i++)
+        dynGrades[i] = pGrades[i];
+
+    // proof that the copies are real and independent
+    course = "changed";
+    grades[0] = 0;
+    cout &lt;&lt; "*dynCourse = " &lt;&lt; *dynCourse &lt;&lt; endl;
+    cout &lt;&lt; "dynGrades  = ";
+    for (int i = 0; i &lt; 5; i++)
+        cout &lt;&lt; dynGrades[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    // Task 4: memory management
+    delete dynCourse;
+    delete [] dynGrades;
+    return 0;
+}</code></pre></div>
+<pre class="out">*dynCourse = OOP in C++
+dynGrades  = 78 85 92 88 96 </pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>The originals were changed to <code>"changed"</code> and <code>0</code>, and the copies did not move. That is
+        what "copies the value" in the question means, and it is what the loop buys you.</li>
+      <li>The skeleton as printed on the exam has no <code>#include &lt;string&gt;</code>. It compiles anyway on
+        most compilers because <code>&lt;iostream&gt;</code> drags the declaration in, but add the include in
+        your own code.</li>
+      <li>The professor has asked this same question, with different identifiers, on the Fall 2023,
+        Summer 2024, Winter 2025 and Summer 2025 finals and on the Challenge Exam &mdash; five papers
+        out of five. The nouns change (<code>pString</code>/<code>pScores</code>, <code>pv</code>/<code>pa</code>, <code>pCourse</code>/<code>pGrades</code>); the four
+        tasks do not. Learn the shape.</li>
+      <li>Valgrind: leak-free. <em>"All heap blocks were freed &mdash; no leaks are possible."</em></li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 4 &mdash; Write C++ statements <span class="muted small">(from the Fall 2023 Exam 1, Problem 2)</span></h3>
+
+<p>Write C++ statements to carry out the following tasks. Do not write complete programs, just give
+a single line, or a few lines of C++ instructions. Assume that the following declarations have been
+made and the declared variables have been set to have legal values:</p>
+
+<pre><code class="language-cpp">int x = 7, y[3] = {3, 1, 4};
+int *p1 = new int, *p2 = new int[3];</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Copy the data in <code>x</code> into the dynamic variable that <code>p1</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">*p1 = x;</code></pre>
+    <p>One dereference, on the left. <code>p1</code> already points at a heap <code>int</code>; the task is to put a value
+    <em>into</em> it, so the star is required. <code>p1 = x;</code> does not compile (<em>"invalid conversion
+    from 'int' to 'int*'"</em>), and <code>p1 = &amp;x;</code> compiles but is wrong twice over &mdash; it
+    copies nothing and leaks the heap <code>int</code>.</p>
+    <p>The professor's published rubric for this part reads <code>*py = x;</code>, which refers to a pointer
+    that does not exist in this question. It is an error in his answer key, not a variant answer.
+    Answer what the question asks.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Copy the data in the array <code>y</code> into the dynamic array that <code>p2</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">for (int i = 0; i &lt; 3; i++)
+    p2[i] = y[i];</code></pre>
+    <p>The rubric's own answer, written on one line as <code>for(int i = 0; i &lt; 3; i++) p2[i] = y[i];</code>.
+    An element-wise loop is the only way. <code>p2 = y;</code> makes <code>p2</code> point at the stack array <code>y</code> &mdash;
+    it copies no data, leaks the three heap ints, and turns part (c)'s <code>delete [] p2;</code> into an
+    attempt to free a stack array.</p>
+    <p><code>*(p2 + i) = *(y + i);</code> is identical and equally acceptable.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Release the memory for <code>p1</code> and <code>p2</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">delete p1;
+delete [] p2;</code></pre>
+    <p>Both rubric answers, and the two forms are the entire point of the part. <code>p1</code> came from
+    <code>new int</code>; <code>p2</code> came from <code>new int[3]</code>. Swap the forms and you have written undefined behavior in
+    two statements.</p>
+    <p>This is one of the two parts on which the professor allows partial credit, which tells you
+    how many students get exactly one of the two lines right.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Assemble (a)&ndash;(c) into a complete program that prints what was copied, and give its output.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">exam1_p2_dyn.cpp</div><pre><code class="language-cpp">// exam1_p2_dyn.cpp -- exam-style: write single C++ statements (the new/delete half)
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int x = 7, y[3] = {3, 1, 4};
+    int *p1 = new int, *p2 = new int[3];
+
+    *p1 = x;                            // (a) copy x into the dynamic int
+
+    for (int i = 0; i &lt; 3; i++)         // (b) copy y into the dynamic array
+        p2[i] = y[i];
+
+    cout &lt;&lt; "*p1 = " &lt;&lt; *p1 &lt;&lt; endl;
+    cout &lt;&lt; "p2  = ";
+    for (int i = 0; i &lt; 3; i++)
+        cout &lt;&lt; p2[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    delete p1;                          // (c) release both
+    delete [] p2;
+    return 0;
+}</code></pre></div>
+<pre class="out">*p1 = 7
+p2  = 3 1 4 </pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>Look at the given declaration line: <code>int *p1 = new int, *p2 = new int[3];</code> declares
+        <em>two</em> pointers because the star is repeated. Written <code>int* p1 = new int, p2 = ...</code>
+        it would not even compile. This is Class 7 &sect;2's rule, and the professor's own exam
+        depends on it.</li>
+      <li>Every one of these five sub-tasks is one or two lines, worth two points, with no partial
+        credit except on the last two. Nothing here rewards length; it rewards getting the stars and
+        the brackets right.</li>
+      <li>The first two parts of this exam question &mdash; declaring <code>px</code> and <code>py</code> &mdash; were
+        Class 7's Practice Problem 5. Together the five parts are a complete tour of both pointer
+        classes in ten lines.</li>
+      <li>Valgrind: leak-free.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; Write a complete C++ program <span class="muted small">(added, in the format of the professor's midterm Problem 1)</span></h3>
+
+<p>Write a complete C++ program that asks the user how many numbers they have, reads exactly that
+many numbers into <em>just enough space</em> to store them, computes their average, and then prints
+every input that is above the average. Do not use a fixed-size array and do not use a <code>vector</code>
+&mdash; the point of this version is the <code>new[]</code> / <code>delete[]</code> pair. Sample run:</p>
+
+<pre class="out">How many numbers? 6
+Enter 6 numbers: 10 20 30 40 50 60
+average = 35
+above average: 40 50 60 </pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Four stages, and the professor's rubric for this format pays for each
+  one separately: the standard beginning and ending; declaring and filling the storage; computing
+  the aggregate; printing the filtered subset. Because the count comes first, the allocation is
+  straightforward &mdash; read <code>n</code>, then <code>new double[n]</code>. Two passes over the data are needed, one to
+  total and one to filter, and both are cheap because the array is still there. (Had the input been
+  sentinel-terminated, as on some of his papers, you would not know <code>n</code> in advance and a <code>vector</code>
+  would be the better tool. Read the question.)</p>
+<div class="codewrap"><div class="cap">aboveaverage.cpp</div><pre><code class="language-cpp">// aboveaverage.cpp -- exam-style: read n, store exactly n values, report the above-average ones
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cout &lt;&lt; "How many numbers? ";
+    cin &gt;&gt; n;
+
+    double *a = new double[n];              // just enough space, decided at run time
+
+    cout &lt;&lt; "Enter " &lt;&lt; n &lt;&lt; " numbers: ";
+    for (int i = 0; i &lt; n; ++i)
+        cin &gt;&gt; a[i];
+
+    double sum = 0.0;
+    for (int i = 0; i &lt; n; ++i)
+        sum += a[i];
+    double avg = sum / n;
+
+    cout &lt;&lt; "average = " &lt;&lt; avg &lt;&lt; endl;
+    cout &lt;&lt; "above average: ";
+    for (int i = 0; i &lt; n; ++i)
+        if (a[i] &gt; avg)
+            cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    delete [] a;
+    a = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">How many numbers? Enter 6 numbers: average = 35
+above average: 40 50 60 </pre>
+  <p>(The input was piped in from a file, so the digits do not echo after the prompts. In a terminal
+  the transcript looks exactly like the sample run in the question.)</p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><strong><code>sum</code> is a <code>double</code>, and <code>sum / n</code> is therefore a floating-point division.</strong>
+      Had <code>sum</code> been an <code>int</code>, <code>sum / n</code> would be integer division and the average of 10 through 60
+      would come out as 35 by luck here but as 34 for <code>10 20 30 40 50 61</code>. Integer division is the
+      most common silent wrong answer in this course.</li>
+    <li>The array is read once and used twice. Storing the input is what makes the second pass
+      possible &mdash; a program that only accumulated a running total could print the average but
+      could never go back and filter.</li>
+    <li>The comparison is strict: <code>a[i] &gt; avg</code>. A value exactly equal to the average is not "above"
+      it. Say which you chose if the question is ambiguous.</li>
+    <li><code>delete [] a;</code> with brackets, then <code>a = nullptr;</code>. The rubric pays for the release; the null
+      assignment is free insurance.</li>
+    <li>Valgrind: <em>"All heap blocks were freed &mdash; no leaks are possible."</em></li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Four bugs in twelve lines <span class="muted small">(added)</span></h3>
+
+<p>The program below has four distinct memory bugs. Name each one, say what class of error it is
+(leak, dangling pointer, double delete, mismatched delete), and rewrite the program correctly.</p>
+
+<div class="codewrap"><div class="cap">bughunt.cpp</div><pre><code class="language-cpp">// bughunt.cpp -- four memory bugs in twelve lines
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n = 4;
+    int *a = new int[n];
+    for (int i = 0; i &lt; n; ++i)
+        a[i] = i;
+
+    int *b = new int;
+    *b = 100;
+
+    a = b;
+    delete a;
+    delete b;
+    cout &lt;&lt; *b &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Do not read for intent; read for bookkeeping. Two calls to <code>new</code>, so
+  there must be exactly two calls to <code>delete</code> (one of each form), and every pointer must still be
+  valid at the moment it is used. Walk down the four suspicious lines and ask, each time, <em>which
+  block does this name refer to right now?</em></p>
+  <table class="trace">
+    <tr><th>Line</th><th>Bug</th><th>Class of error</th></tr>
+    <tr><td><code>a = b;</code></td><td>The address of the four-int array is overwritten. Nothing points at it any more; it can never be released.</td><td><strong>Memory leak</strong> &mdash; 16 bytes</td></tr>
+    <tr><td><code>delete a;</code></td><td>By now <code>a</code> holds <code>b</code>'s address, so this deletes the single <code>int</code>. It also uses the wrong form for what the name suggests &mdash; <code>a</code> was allocated with <code>new[]</code>, and if the line above were removed this would be a mismatched delete.</td><td><strong>Deletes the wrong block</strong></td></tr>
+    <tr><td><code>delete b;</code></td><td><code>a</code> and <code>b</code> hold the same address, so this frees the same block a second time.</td><td><strong>Double delete</strong></td></tr>
+    <tr><td><code>cout &lt;&lt; *b &lt;&lt; endl;</code></td><td>Reads through <code>b</code> after the block it names has been released.</td><td><strong>Dangling pointer</strong> (use after free)</td></tr>
+  </table>
+  <p>Run it and the heap detects the double free and aborts &mdash; that is one possible outcome of
+  undefined behavior, not a guarantee. Under valgrind the diagnosis is exact. <em>The block below is
+  valgrind's report, not the program's output:</em></p>
+<pre class="out">==17462== Invalid free() / delete / delete[] / realloc()
+==17462==    by 0x10929E: main (bughunt.cpp:16)
+==17462==  Address 0x4e260d0 is 0 bytes inside a block of size 4 free'd
+==17462==    by 0x109288: main (bughunt.cpp:15)
+==17462== Invalid read of size 4
+==17462==    at 0x1092A3: main (bughunt.cpp:17)
+==17462== 16 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==17462==    by 0x10921B: main (bughunt.cpp:7)
+==17462== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)</pre>
+  <p>Three separate findings, and the line numbers name every one: the double free at line 16, the
+  use-after-free at line 17, and the 16 leaked bytes allocated at line 7.</p>
+  <p>Here is the repair. The fix is not to shuffle the deletes &mdash; it is to stop the two pointers
+  from ever owning the same block.</p>
+<div class="codewrap"><div class="cap">bughunt_fixed.cpp</div><pre><code class="language-cpp">// bughunt_fixed.cpp -- the same program with every bug repaired
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n = 4;
+    int *a = new int[n];
+    for (int i = 0; i &lt; n; ++i)
+        a[i] = i;
+
+    int *b = new int;
+    *b = 100;
+
+    for (int i = 0; i &lt; n; ++i)     // print a before letting go of it
+        cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    delete [] a;                    // array: delete[]
+    a = nullptr;
+
+    cout &lt;&lt; *b &lt;&lt; endl;             // read b while it is still alive
+
+    delete b;                       // single object: delete
+    b = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">0 1 2 3 
+100</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Two <code>new</code>s, two <code>delete</code>s, one of each form, and every read happens before the corresponding
+      release. Valgrind reports zero errors and zero leaks.</li>
+    <li>The original <code>a = b;</code> looked like the most innocent line in the program. Assignment between
+      pointers is never innocent when one of them owns heap memory: it leaks what the left-hand side
+      used to own and duplicates ownership of what the right-hand side owns. Both halves of that
+      sentence are bugs.</li>
+    <li>Fixing that one line properly &mdash; delete the old block, allocate a new one, copy the
+      contents &mdash; is precisely what <code>operator=</code> has to do for a class that holds a pointer.
+      Class 15 spends an entire session on those four steps. You have now seen why they are all
+      necessary.</li>
+    <li>Both <code>nullptr</code> assignments are optional as the code stands. Leave them in. They cost nothing
+      and they turn a future mistake into a null dereference at the guilty line instead of a silent
+      corruption somewhere else.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li><strong>Static (automatic) allocation</strong> is decided by the compiler and released
+        automatically when the variable goes out of scope. <strong>Dynamic allocation</strong>
+        happens at run time, comes from the <strong>heap</strong>, and is released
+        <strong>only</strong> when you call <code>delete</code> or <code>delete[]</code>.</li>
+      <li>The honest reason to use the heap is that <strong>the size is not known until run
+        time</strong>. <code>double a[n];</code> with a variable <code>n</code> is not standard C++, however willingly
+        <code>g++</code> accepts it.</li>
+      <li><code>new T</code> returns a <code>T *</code> to one anonymous object; <code>delete p</code> releases it. The allocated
+        variable <strong>has no name</strong> &mdash; lose the pointer and you lose the variable.</li>
+      <li><code>new T[n]</code> returns a <code>T *</code> to <code>n</code> objects; <code>delete [] p</code> releases them. The brackets are
+        <strong>empty</strong>: you never give the length back.</li>
+      <li><strong>For every call to <code>new</code> there must be a partner call to <code>delete</code></strong>, of the
+        matching form. Count calls to <code>new</code>, not pointer variables.</li>
+      <li>Heap memory <strong>does not go out of scope</strong>, so a function may allocate and
+        return a pointer that its caller later deletes. Which means somebody has to write down who
+        owns it.</li>
+      <li>A <strong>memory leak</strong> is heap memory no pointer can reach any more; the
+        unreachable memory is <strong>garbage</strong>. A leaking program does not crash and does not
+        warn &mdash; only a tool such as <code>valgrind</code> will tell you.</li>
+      <li>After <code>delete p;</code> the pointer is unchanged and now <strong>dangling</strong>. Dereferencing
+        it or deleting through it again is <strong>undefined behavior</strong>. Write
+        <code>p = nullptr;</code> immediately after every <code>delete</code>: deleting null is a guaranteed no-op, and
+        null can be tested.</li>
+      <li>A <strong>2-D array</strong> on the heap is an array of pointers, each pointing at a row:
+        <code>m + 1</code> allocations, and <code>m + 1</code> releases in the reverse order &mdash; <strong>rows first,
+        then the array of pointers</strong>.</li>
+      <li>Because the rows are separate blocks, they may have <strong>different lengths</strong>: a
+        <strong>ragged</strong> array. A statically declared array must be rectangular; this one need
+        not be. The price is that nothing records the row lengths for you.</li>
+    </ul>
+    <p><strong>Coming up in Class 9:</strong> we finally build our own types &mdash; the
+    <code>class</code> keyword, data members and member functions, the dot operator, and the arrow
+    operator you need to reach a member of an object that <code>new</code> created.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 7 &middot; Pointers I</div><div class="pending">posts Tue Sep 22</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 9 &middot; Classes I</div><div class="pending">posts Tue Sep 29</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

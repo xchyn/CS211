@@ -1,0 +1,2756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 4 — File I/O | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 4 &middot; File I/O</span><span class="sep">|</span><span class="where">Thu Sep 10</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 4 &middot; CSCI 211</div>
+  <h1>File I/O and Random Numbers</h1>
+  <p class="sub">Two ways to get data into and out of a program that do not involve a person typing at the keyboard &mdash; and the one file-reading loop that quietly loses your last record.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain what <em>pseudorandom</em> means, and why a program that never seeds its generator prints the same "random" numbers on every run.</li>
+      <li>Use <code>srand</code> and <code>rand</code> to produce integers in a stated range, and write the scaling expression correctly the first time.</li>
+      <li>Use the <code>&lt;random&gt;</code> header's generator-plus-distribution recipe, and say when a fixed seed is the right choice.</li>
+      <li>Open a file for reading with <code>ifstream</code> and for writing with <code>ofstream</code>, and check that the open actually succeeded.</li>
+      <li>Read a file field by field with <code>&gt;&gt;</code> and line by line with <code>getline</code>, and choose between them.</li>
+      <li>Write the standard read loop &mdash; and explain exactly why the <code>eof()</code>-based loop that looks equivalent is not.</li>
+      <li>Write to a file in <em>overwrite</em> mode and in <em>append</em> mode, and predict what is on disk after two runs.</li>
+      <li>Put all of it together into a program that reads records from a file, computes something, and writes a report.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Pseudorandom numbers: why "pseudo"</a></li>
+    <li><a href="#s2"><code>srand</code>, seeding, and scaling into a range</a></li>
+    <li><a href="#s3">The <code>&lt;random&gt;</code> recipe: generators and distributions</a></li>
+    <li><a href="#s4">File streams: opening a file and checking it worked</a></li>
+    <li><a href="#s5">Reading with <code>&gt;&gt;</code> &mdash; and the loop that eats your data</a></li>
+    <li><a href="#s6">Reading whole lines with <code>getline</code></a></li>
+    <li><a href="#s7">Writing to a file: overwrite mode and append mode</a></li>
+    <li><a href="#s8">The complete example, end to end</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Pseudorandom numbers: why "pseudo"</h2>
+
+<p>Every program you have written so far gets its data from exactly one place: a person typing at the
+keyboard, through <code>cin</code>. That is fine for a ten-line exercise and useless for anything else. Today we
+add the two other sources every real program uses &mdash; a <strong>random number generator</strong>,
+for simulations, games and test data, and a <strong>file on disk</strong>, for data that has to
+survive the program exiting.</p>
+
+<p>Start with the random numbers, because there is a surprise waiting in them.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; pseudorandom, PRNG</span></div>
+  <div class="bd">
+    <p>C++ provides a set of good-quality routines to generate <strong>pseudorandom</strong> numbers.
+    They are called "pseudorandom" because a sequence of <em>truly</em> random numbers is difficult to
+    obtain. Computer-generated sequences of "random numbers" are approximations to truly random
+    numbers.</p>
+    <p>A <strong>pseudorandom number generator</strong> has the acronym <strong>PRNG</strong>.</p>
+    <p>Concretely: a PRNG is a function that takes its current internal state, scrambles it with some
+    arithmetic, and returns a number. The scrambling is completely deterministic. Given the state, the
+    next number is fixed &mdash; there is nothing random about it at all. What makes the output
+    <em>look</em> random is only that the scrambling is hard to see through.</p>
+  </div>
+</div>
+
+<p>The simplest generator in C++ is the pair <code>rand</code> and <code>srand</code>, which live in the header
+<code>&lt;cstdlib&gt;</code>. <code>rand()</code> returns the next integer in the sequence, somewhere between <code>0</code> and a
+large implementation-defined maximum called <code>RAND_MAX</code>. Here is the whole interface in one program
+&mdash; and here is the surprise.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; five "random" numbers, twice</span></div>
+  <div class="bd">
+    <p>This program prints five values from <code>rand()</code>. Then we run the executable a second time,
+    immediately, without recompiling. Before you open the toggle, commit to an answer: will the second
+    run print the same five numbers or five different ones?</p>
+<div class="codewrap"><div class="cap">unseeded.cpp</div><pre><code class="language-cpp">// unseeded.cpp -- rand() with no seed: the same sequence every single run
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;          // rand()
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "five numbers from rand():" &lt;&lt; endl;
+    for (int i = 0; i &lt; 5; ++i) {
+        cout &lt;&lt; rand() &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<pre class="shell">g++ unseeded.cpp -o unseeded
+./unseeded
+./unseeded</pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">five numbers from rand():
+1804289383
+846930886
+1681692777
+1714636915
+1957747793
+five numbers from rand():
+1804289383
+846930886
+1681692777
+1714636915
+1957747793</pre>
+<p><strong>Identical.</strong> Not similar &mdash; identical, digit for digit, and they will be
+identical on the hundredth run too. Nothing is broken. This is exactly what the definition promised:
+the generator is a deterministic machine, and a deterministic machine started from the same state
+produces the same output.</p>
+<p>The state it starts from is called the <strong>seed</strong>. If you never set a seed, C++ behaves
+as though you had called <code>srand(1)</code>, so every run begins from the same place and walks the same path.
+That is a deliberate design choice, not an oversight &mdash; it means a program that misbehaves on
+random data can be run again and misbehave in exactly the same way, which is the only realistic way
+to debug a simulation.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A PRNG is a <em>sequence</em>, not a lottery. The seed picks which point in the sequence you
+    start at. <strong>Same seed, same sequence, every time.</strong> If you want a different game every
+    time you play, you have to hand the generator a different seed every time it starts.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.1</div>
+  <div class="bd">
+    <p>A student writes a card game. Every time they run it, the deck comes out in the same order.
+    They are convinced <code>rand()</code> is broken.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Is <code>rand()</code> broken? Explain what is actually happening in one sentence.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. The program never seeds the generator, so every run starts the same deterministic
+        sequence from the same place &mdash; the shuffle is doing exactly what it was told, with
+        exactly the same numbers.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Give one situation in which "the same sequence every run" is the behavior you <em>want</em>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Testing and debugging. If a simulation crashes on the 4,312th random value, you need to be
+        able to reproduce that run exactly. It is also what makes a printed expected output possible at
+        all &mdash; every random-number program on this page uses a fixed seed for precisely that
+        reason.</p>
+        <p>A third case: grading. If an autograder has to compare your output against a reference, the
+        sequence had better not depend on what time it is.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span><code>srand</code>, seeding, and scaling into a range</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; seed, <code>srand</code>, <code>rand</code></span></div>
+  <div class="bd">
+    <p>The <strong>seed</strong> is the starting state of a pseudorandom number generator.</p>
+    <p><code>srand(n)</code> sets the seed to <code>n</code>. <code>rand()</code> returns the next value in the sequence, an <code>int</code>
+    between <code>0</code> and <code>RAND_MAX</code> inclusive. Both are declared in <code>&lt;cstdlib&gt;</code>.</p>
+    <p>Call <code>srand</code> <strong>once</strong>, near the top of <code>main</code>, before the first <code>rand()</code>. Calling
+    it again mid-program does not make the numbers "more random"; it restarts the sequence.</p>
+  </div>
+</div>
+
+<p><code>rand()</code> on its own gives you a huge integer, which is almost never what you want. You want a die
+roll from 1 to 6, or a test score from 60 to 100. Getting from one to the other is the modulus
+operator, and it is worth deriving rather than memorizing.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; scaling a random integer into <code>lo..hi</code></span></div>
+  <div class="bd">
+    <ol>
+      <li><code>rand() % k</code> is the remainder after dividing by <code>k</code>, so its possible values are
+        <code>0, 1, 2, &hellip;, k-1</code>. That is <strong>k different values starting at zero</strong>.
+        Fix that fact in your head; everything else follows from it.</li>
+      <li>You want the values <code>lo, lo+1, &hellip;, hi</code>. How many is that? Count them:
+        <code>hi - lo + 1</code>. The <code>+ 1</code> is there because both endpoints are included.</li>
+      <li>So take <code>k = hi - lo + 1</code> and shift the result up by <code>lo</code>:
+<pre><code class="language-cpp">int value = lo + rand() % (hi - lo + 1);</code></pre>
+      </li>
+      <li>Sanity-check the two ends. When <code>rand() % k</code> is <code>0</code> you get <code>lo</code>; when it is <code>k-1</code> you get
+        <code>lo + hi - lo + 1 - 1</code>, which is <code>hi</code>. Both endpoints are reachable, so the formula
+        is right.</li>
+    </ol>
+    <p>For a die, <code>lo</code> is 1 and <code>hi</code> is 6, so <code>k</code> is 6 and the expression is
+    <code>1 + rand() % 6</code>. Notice the <code>1 +</code> is <em>outside</em> the modulus.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; dice and scores, with a fixed seed</span></div>
+  <div class="bd">
+    <p>This program seeds with <code>srand(42)</code>. A fixed seed is used here <em>deliberately</em>, so that the
+    output printed below is the output you will get if you compile and run it yourself. A real game
+    would seed from the clock instead &mdash; we get to that in a moment.</p>
+    <p>Predict the shape of the answer before you open it: how many values on each line, and what
+    range should each line stay inside?</p>
+<div class="codewrap"><div class="cap">dice.cpp</div><pre><code class="language-cpp">// dice.cpp -- scaling rand() into a range, with a fixed seed so the run repeats
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;          // rand(), srand()
+using namespace std;
+
+int main() {
+    srand(42);              // fixed seed: reproducible on purpose
+
+    cout &lt;&lt; "ten dice rolls (1..6):" &lt;&lt; endl;
+    for (int i = 0; i &lt; 10; ++i) {
+        int roll = 1 + rand() % 6;
+        cout &lt;&lt; roll &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; "five scores (60..100):" &lt;&lt; endl;
+    for (int i = 0; i &lt; 5; ++i) {
+        int score = 60 + rand() % (100 - 60 + 1);
+        cout &lt;&lt; score &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">ten dice rolls (1..6):
+1 1 6 4 5 5 2 1 6 6
+five scores (60..100):
+74 66 84 70 91</pre>
+<p>Ten values on the first line, all between 1 and 6; five on the second, all between 60 and 100.
+Two details worth pausing on:</p>
+<ul>
+  <li>The sequence opens <code>1 1</code> &mdash; two identical values in a row. Students routinely
+    report this as a bug. It is not. Genuine randomness produces repeats; a sequence with no repeats at
+    all would be the suspicious one.</li>
+  <li><code>(100 - 60 + 1)</code> is left unsimplified on purpose. Writing the count as
+    <code>hi - lo + 1</code> rather than as the number <code>41</code> keeps the reasoning visible, and if the
+    range changes you edit two numbers instead of recomputing anything.</li>
+</ul>
+<p>Run it again and you get the same twenty-five characters, because the seed is fixed. That is the
+whole point of a fixed seed.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the off-by-one in <code>rand() % 6</code></span></div>
+  <div class="bd">
+    <p>The most common bug in this material is writing <code>rand() % 6</code> when you meant a die. Here are both
+    expressions run from the same seed, side by side:</p>
+<div class="codewrap"><div class="cap">offbyone.cpp</div><pre><code class="language-cpp">srand(42);
+cout &lt;&lt; "rand() % 6      : ";
+for (int i = 0; i &lt; 10; ++i) cout &lt;&lt; rand() % 6 &lt;&lt; " ";
+cout &lt;&lt; endl;
+
+srand(42);
+cout &lt;&lt; "1 + rand() % 6  : ";
+for (int i = 0; i &lt; 10; ++i) cout &lt;&lt; 1 + rand() % 6 &lt;&lt; " ";
+cout &lt;&lt; endl;</code></pre></div>
+<pre class="out">rand() % 6      : 0 0 5 3 4 4 1 0 5 5
+1 + rand() % 6  : 1 1 6 4 5 5 2 1 6 6</pre>
+    <p>The first line contains a <code>0</code>, which no die has, and never contains a <code>6</code>. The bug is
+    invisible until a <code>0</code> happens to show up, which on a small test run it may not. Get in the habit of
+    printing a hundred values and eyeballing the smallest and largest before you trust a range
+    expression.</p>
+    <p>Equally wrong, and equally common: <code>1 + rand() % 7</code> (range 1&ndash;7) and
+    <code>rand() % (1 + 6)</code> (range 0&ndash;6). Derive the formula, do not recall it.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.2</div>
+  <div class="bd">
+    <p>Write a single C++ expression, using <code>rand()</code>, for each of the following.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A random integer from 1 to 100 inclusive.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int n = 1 + rand() % 100;</code></pre>
+        <p>Count the values: 1 through 100 is <code>100 - 1 + 1 = 100</code> of them, so the modulus is
+        <code>100</code> and the shift is <code>1</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A random integer from 5 to 15 inclusive.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int n = 5 + rand() % 11;      // 15 - 5 + 1 == 11</code></pre>
+        <p>Check both ends: remainder <code>0</code> gives 5, remainder <code>10</code> gives 15. Correct.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A random <em>even</em> integer from 0 to 20 inclusive.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>There are eleven even numbers in that range: 0, 2, 4, &hellip;, 20. So pick one of eleven
+        values and double it.</p>
+<pre><code class="language-cpp">int n = 2 * (rand() % 11);</code></pre>
+        <p><strong>Things to notice.</strong> The tempting wrong answer is
+        <code>rand() % 21</code> followed by "keep it if it is even", which throws away half your
+        values and needs a loop. Whenever the values you want are evenly spaced, generate the
+        <em>index</em> and then map it &mdash; do not generate-and-reject.</p>
+        <p>The parentheses matter. <code>2 * rand() % 11</code> would multiply first and then take the
+        remainder, giving 0 through 10 &mdash; and not even always even, since
+        <code>%</code> and <code>*</code> have the same precedence and group left to right.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<p>Now the other half of the story. A game needs a <em>different</em> sequence each time it runs, so it
+needs a seed that changes. The standard source of a changing number is the clock:</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; seeding from the clock</span></div>
+  <div class="bd">
+    <p><code>time(0)</code>, declared in <code>&lt;ctime&gt;</code>, returns the current time as a whole number of seconds
+    since a fixed point in the past. Because that number is different every second, it makes a
+    convenient seed:</p>
+<pre><code class="language-cpp">#include &lt;ctime&gt;
+srand(time(0));      // a different sequence on (almost) every run</code></pre>
+    <p>"Almost" is doing real work in that sentence. Two runs inside the same second get the same seed
+    and therefore the same sequence.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a clock-seeded run (values are representative)</span></div>
+  <div class="bd">
+    <p>This one cannot have a printed expected output in the usual sense &mdash; by construction it
+    prints something different every time. The values below are from three real runs, roughly a second
+    apart. <strong>Yours will differ, and that is the point.</strong></p>
+<div class="codewrap"><div class="cap">timeseed.cpp</div><pre><code class="language-cpp">// timeseed.cpp -- seeding from the clock: a different sequence every run
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;          // rand(), srand()
+#include &lt;ctime&gt;            // time()
+using namespace std;
+
+int main() {
+    srand(time(0));         // seed from the current time
+
+    for (int i = 0; i &lt; 6; ++i) {
+        cout &lt;&lt; 1 + rand() % 6 &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">4 5 4 1 4 2
+6 5 6 3 4 5
+6 4 6 5 6 5</pre>
+<p>Three runs, three different sequences. Compare that with <code>unseeded.cpp</code> in &sect;1, where three runs
+gave one sequence three times.</p>
+<p>Because the seed comes from the clock, these values are <em>representative</em> only: nothing on
+this page can tell you what your copy will print, and any exam question about a <code>time(0)</code>-seeded
+program can only ask about the <em>range</em> of the values, never their identity.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; <code>srand</code> inside the loop</span></div>
+  <div class="bd">
+    <p>Seeding feels like "make it random", so people put it where the randomness is wanted &mdash;
+    inside the loop. Watch what that does:</p>
+<div class="codewrap"><div class="cap">srandinside.cpp</div><pre><code class="language-cpp">for (int i = 0; i &lt; 8; ++i) {
+    srand(time(0));                  // WRONG: re-seeds on every iteration
+    cout &lt;&lt; 1 + rand() % 6 &lt;&lt; " ";
+}
+cout &lt;&lt; endl;</code></pre></div>
+<pre class="out">5 5 5 5 5 5 5 5</pre>
+    <p>Eight identical values. All eight iterations run within the same second, so <code>time(0)</code> returns
+    the same number eight times, so the sequence is restarted from the same seed eight times, so
+    <code>rand()</code> returns its first value eight times.</p>
+    <p>The rule: <strong><code>srand</code> is called exactly once per program, before the first <code>rand()</code>.</strong>
+    If you find yourself writing <code>srand</code> inside a loop, or inside a function that gets called
+    repeatedly, you have made this mistake.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.3</div>
+  <div class="bd">
+    <p>Here are three seeding strategies. For each one, say what the program prints on two consecutive
+    runs.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> No <code>srand</code> call at all.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both runs print the identical sequence. With no <code>srand</code>, the generator behaves as if
+        <code>srand(1)</code> had been called, so every run replays the same numbers &mdash; exactly what
+        <code>unseeded.cpp</code> demonstrated.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>srand(42);</code> as the first statement of <code>main</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both runs print the identical sequence &mdash; a different sequence from (a), because the
+        seed is different, but the same as each other. This is the reproducible-on-purpose choice, and
+        it is what every printed output on this page relies on.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>srand(time(0));</code> as the first statement of <code>main</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The two runs print different sequences &mdash; <em>unless</em> you launch them within the
+        same second, in which case <code>time(0)</code> gives the same seed twice and the sequences match. Try it
+        with a shell loop that runs the program three times as fast as it can and you will very often
+        see two identical lines.</p>
+        <p><strong>Things to notice.</strong> This is why "did my program produce different output?" is
+        a bad test of whether seeding works, and why a fixed seed is the right choice for anything you
+        need to be able to grade, compare or debug.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>The <code>&lt;random&gt;</code> recipe: generators and distributions</h2>
+
+<p><code>rand</code> and <code>srand</code> come from C, and they are showing their age: the quality of the numbers is
+mediocre, and the <code>%</code> trick above is very slightly biased when the range does not divide <code>RAND_MAX</code>
+evenly. C++ ships a better toolkit in the header <code>&lt;random&gt;</code>, and the course reading uses it. It
+takes four steps instead of two, and the extra two steps are the interesting part.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; generator and distribution</span></div>
+  <div class="bd">
+    <p>A <strong>generator</strong> (or <em>engine</em>) is the object that holds the internal state and
+    produces raw pseudorandom bits. <code>default_random_engine</code> is the one the standard library hands you
+    when you do not care which algorithm is used.</p>
+    <p>A <strong>distribution</strong> is an object that <em>shapes</em> those raw bits into the values
+    you actually want &mdash; a whole number from 1 to 100, a real number from &minus;1.0 to 1.0, a
+    bell curve, and so on. <code>uniform_int_distribution&lt;int&gt;</code> and
+    <code>uniform_real_distribution&lt;double&gt;</code> are the two we use.</p>
+    <p>The split is the whole design. One engine can feed many distributions, and you get to say what
+    shape you want without knowing anything about how the bits are made.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the four steps</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Include the header.</strong> <code>#include &lt;random&gt;</code></li>
+      <li><strong>Instantiate a generator.</strong> <code>default_random_engine generator;</code></li>
+      <li><strong>Seed it.</strong> <code>generator.seed(iseed);</code> &mdash; the value of the seed is up to you.
+        Use the same seed every time and you obtain the same sequence every time; that is why the
+        numbers are "pseudorandom" and not truly random.</li>
+      <li><strong>Declare your distributions, then call them with the generator as the argument.</strong>
+<pre><code class="language-cpp">uniform_int_distribution&lt;int&gt; i_prng(1, 100);
+int a = i_prng(generator);</code></pre>
+        The distribution is the thing you call; the generator is what you hand it.</li>
+    </ol>
+    <p>Other statistical distributions are supported too &mdash; normal, Poisson, exponential and more.
+    The two uniform ones cover everything we need this semester.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the course reading's PRNG program</span></div>
+  <div class="bd">
+    <p>This is the program from the additional reading, with a fixed seed of <code>0</code>. The integers are
+    uniformly distributed from 1 to 100; the doubles are uniformly distributed from &minus;1.0 to 1.0.
+    Predict the <em>shape</em> of the output &mdash; how many lines, and what is on each one &mdash;
+    before you look.</p>
+<div class="codewrap"><div class="cap">prng.cpp</div><pre><code class="language-cpp">// prng.cpp -- the &lt;random&gt; recipe: one generator, two distributions
+#include &lt;iostream&gt;
+#include &lt;random&gt;
+using namespace std;
+
+int main() {
+    int iseed = 0;                                       // initial seed
+
+    default_random_engine generator;
+    generator.seed( iseed );
+
+    uniform_int_distribution&lt;int&gt; i_prng(1, 100);        // int 1 to 100
+    uniform_real_distribution&lt;double&gt; r_prng(-1.0, 1.0); // double -1.0 to 1.0
+
+    int n = 10;
+    for (int i = 0; i &lt; n; ++i) {
+        int a = i_prng(generator);                // call prng for int
+        double d = r_prng(generator);             // call prng for double
+        cout &lt;&lt; a &lt;&lt; " " &lt;&lt; d &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">1 0.511211
+46 -0.562082
+5 0.358593
+94 0.0388327
+84 -0.893077
+53 -0.984604
+39 -0.165028
+69 0.860873
+85 -0.81607
+66 0.402381</pre>
+<p>Ten lines, each an integer in 1&ndash;100 followed by a double in &minus;1.0&ndash;1.0. Note the
+formatting on line 4: <code>0.0388327</code> is printed to six significant digits, the <code>cout</code> default we met in
+Class 1, and <code>-0.81607</code> on line 9 has a trailing zero dropped.</p>
+<p>Both distributions draw from the <em>same</em> generator, so the calls interleave: the integer on
+line 2 does not continue from the integer on line 1, it continues from wherever the double on line 1
+left the engine. That is fine &mdash; it is one sequence of bits being shared &mdash; but it does mean
+you cannot reason about the integers in isolation.</p>
+<p>One caution about reproducibility. The standard does not say <em>which</em> algorithm
+<code>default_random_engine</code> names, so a different compiler's standard library can legitimately print
+different numbers for seed 0. The output above is from <code>g++</code> with libstdc++, which is what we use in
+this course. Within one toolchain, seed 0 always gives exactly this.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the reading's program will not link as printed</span></div>
+  <div class="bd">
+    <p>In the course reading this program's function is called <code>random_main</code>, not <code>main</code>, and no <code>main</code>
+    is supplied anywhere. Compile it exactly as printed and you get this:</p>
+<pre class="err">/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+(.text+0x1b): undefined reference to `main'
+collect2: error: ld returned 1 exit status</pre>
+    <p>Read that message carefully, because it is a different animal from the compiler errors you are
+    used to. There is no file name, no line number and no <code>error:</code> from <code>g++</code> itself &mdash;
+    the message comes from <code>ld</code>, the <strong>linker</strong>, which runs <em>after</em> compilation
+    succeeds. Your code is syntactically perfect. The linker's complaint is that the startup code needs
+    a function called <code>main</code> to hand control to, and there isn't one.</p>
+    <p>The fix is to rename <code>random_main</code> to <code>main</code>, which is what the version above does. Any time you
+    see <em>"undefined reference to"</em>, ask what is <em>missing</em> from the program rather than
+    what is wrong with the line you last edited.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.4</div>
+  <div class="bd">
+    <p>Using the <code>&lt;random&gt;</code> recipe (not <code>rand</code>):</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write the three lines that set up a generator seeded with 7 and a distribution producing integers from 1 to 6.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">default_random_engine generator;
+generator.seed(7);
+uniform_int_distribution&lt;int&gt; die(1, 6);</code></pre>
+        <p>Note that the range endpoints go in the <em>distribution's</em> constructor and are
+        <strong>inclusive on both ends</strong>. There is no <code>+ 1</code> anywhere and no <code>%</code> &mdash; that is
+        the main practical advantage of this interface over <code>rand()</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write the statement that rolls the die once into an <code>int</code> called <code>roll</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int roll = die(generator);</code></pre>
+        <p>The distribution is called like a function, with the generator as its argument. Writing
+        <code>generator(die)</code> &mdash; the other way round &mdash; is the mistake people make once and never
+        again.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> What has to change so that the program produces a different sequence on every run?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Only the seed. Replace the constant with the clock:</p>
+<pre><code class="language-cpp">#include &lt;ctime&gt;
+generator.seed(time(0));</code></pre>
+        <p><strong>Things to notice.</strong> The engine and the distribution are unchanged &mdash;
+        reproducibility is entirely a property of the seed, exactly as it was with <code>srand</code>. And the
+        same caveat applies: two runs in the same second share a seed.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; flip a coin a hundred times</h3>
+
+<p>Write a program that flips a fair coin 100 times and reports how many heads and how many tails came
+up. Use <code>srand(42)</code> so your answer matches everyone else's, and use the remainder of <code>rand()</code> divided
+by 2 to decide each flip.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="19" data-starter="#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+using namespace std;
+
+int main() {
+    srand(42);                       // fixed seed: reproducible
+
+    int heads = 0;
+    int tails = 0;
+
+    // flip 100 times; count each outcome
+
+
+    // print the two counts
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+using namespace std;
+
+int main() {
+    srand(42);                       // fixed seed: reproducible
+
+    int heads = 0;
+    int tails = 0;
+
+    // flip 100 times; count each outcome
+
+
+    // print the two counts
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.5</div>
+  <div class="bd">
+    <p>Complete the coin-flip exercise above and give the exact output. Then say what the two counts
+    would have to add up to, and why that is a useful check.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> A fair coin is a two-way choice, so <code>rand() % 2</code> is exactly the right
+      tool: it produces <code>0</code> or <code>1</code> and nothing else. Call one of them heads and the other tails, count
+      in a loop, print at the end. No scaling formula is needed because the range starts at zero
+      already.</p>
+<div class="codewrap"><div class="cap">excoins.cpp</div><pre><code class="language-cpp">// excoins.cpp -- 100 coin flips, counted
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+using namespace std;
+
+int main() {
+    srand(42);                       // fixed seed: reproducible
+
+    int heads = 0;
+    int tails = 0;
+    for (int i = 0; i &lt; 100; ++i) {
+        if (rand() % 2 == 0) {
+            ++heads;
+        } else {
+            ++tails;
+        }
+    }
+    cout &lt;&lt; "heads = " &lt;&lt; heads &lt;&lt; endl;
+    cout &lt;&lt; "tails = " &lt;&lt; tails &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">heads = 47
+tails = 53</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The counts must sum to 100, because every iteration takes exactly one of the two branches.
+          Printing a total that is not the loop count means you have a path through the loop that
+          counts nothing &mdash; usually an <code>if</code> with no <code>else</code>, or an <code>else if</code> chain with a gap. This
+          kind of invariant is the cheapest debugging tool you own.</li>
+        <li>47 and 53 is a perfectly ordinary result for 100 flips. Do not expect 50/50; expect
+          something within about ten of it. If you got exactly 50/50 every time, the generator would be
+          broken in the opposite direction.</li>
+        <li><code>rand() % 2 == 0</code> reads as "the value is even". Any other split of the two outcomes works
+          equally well &mdash; <code>rand() % 2 == 1</code>, or comparing against <code>RAND_MAX / 2</code> &mdash; but the
+          modulus version is the one everybody recognizes.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>File streams: opening a file and checking it worked</h2>
+
+<p>Now for the second half of the class. Everything your programs have produced so far vanished when
+the program exited. Files fix that, and the C++ interface to them is deliberately built to look like
+something you already know.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; file streams</span></div>
+  <div class="bd">
+    <p>To read and write from and to files in C++, we employ <strong>file streams</strong>:</p>
+    <ul>
+      <li>an <strong><code>ifstream</code></strong> (input file stream) reads <em>from</em> a file &mdash; it is
+        the file-shaped version of <code>cin</code>;</li>
+      <li>an <strong><code>ofstream</code></strong> (output file stream) writes <em>to</em> a file &mdash; it is
+        the file-shaped version of <code>cout</code>.</li>
+    </ul>
+    <p>Both require <code>#include &lt;fstream&gt;</code>. Once you have one, you use it with <code>&gt;&gt;</code> and
+    <code>&lt;&lt;</code> exactly as you use <code>cin</code> and <code>cout</code>.</p>
+  </div>
+</div>
+
+<p>Read the letters. The <code>i</code> and the <code>o</code> say <em>input</em> and <em>output</em>, and the <code>f</code> says
+<em>file</em>. <code>ifstream</code> is input, so it reads; <code>ofstream</code> is output, so it writes. Students mix these
+up constantly for about a week and then never again.</p>
+
+<p>You create a stream by handing the file name to its constructor:</p>
+
+<pre><code class="language-cpp">#include &lt;fstream&gt;
+#include &lt;string&gt;
+
+string infile("scores.txt");
+ifstream ifs(infile);              // open scores.txt for reading
+
+ofstream ofs("report.txt");        // open report.txt for writing</code></pre>
+
+<p>A plain string literal works just as well as a <code>string</code> variable. Note that these are
+<em>relative</em> file names: the program looks for <code>scores.txt</code> in whatever directory it is
+<em>run</em> from, which is not necessarily where the source file lives. If your program insists a file
+is missing and you can see it right there, that is nearly always the reason.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the asymmetry that catches everybody</span></div>
+  <div class="bd">
+    <p><strong>If the output file does not exist, the <code>ofstream</code> will create it. If the input file does
+    not exist, the <code>ifstream</code> open will fail.</strong></p>
+    <p>That is not arbitrary. "Write to a file that isn't there yet" has an obvious sensible meaning
+    &mdash; make one. "Read from a file that isn't there" has none. The consequence for you is that
+    <em>every</em> <code>ifstream</code> needs its open checked, and an unchecked one produces a program that
+    silently reads nothing and reports a happy, wrong answer.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; checking that the open succeeded</span></div>
+  <div class="bd">
+    <p>There is no file called <code>nosuchfile.txt</code> in the directory. Note that the constructor does not
+    throw, crash, or print anything &mdash; it just quietly puts the stream into a failed state, which
+    is why you have to ask.</p>
+<div class="codewrap"><div class="cap">openfail.cpp</div><pre><code class="language-cpp">// openfail.cpp -- what happens when the input file is not there
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    string infile("nosuchfile.txt");
+    ifstream ifs(infile);
+
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "Could not open " &lt;&lt; infile &lt;&lt; endl;
+        return 1;
+    }
+
+    cout &lt;&lt; "Opened " &lt;&lt; infile &lt;&lt; " successfully." &lt;&lt; endl;
+    ifs.close();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Could not open nosuchfile.txt</pre>
+<p>The program printed its message and stopped. Three things to take from this:</p>
+<ul>
+  <li>The <code>return 1;</code> is deliberate. Returning a nonzero value from <code>main</code> tells whatever launched the
+    program that it failed &mdash; the convention we met in Class 1. Returning <code>0</code> after an error
+    reports success, which is a lie.</li>
+  <li><code>is_open()</code> asks the direct question: <em>did this stream attach to a file?</em> Two other tests
+    are common and mean effectively the same thing right after construction:
+<pre><code class="language-cpp">if (!ifs)          { /* failed */ }        // streams convert to bool
+if (ifs.fail())    { /* failed */ }</code></pre>
+    The course reading uses a third, <code>if (ifs.good() == false)</code>. That works here but is a weaker test:
+    <code>good()</code> reports "no error bit of any kind is set", which conflates the open failing with several
+    other conditions. Prefer <code>is_open()</code> for an open check and <code>!ifs</code> for a general one.</li>
+  <li>Do the check <em>immediately</em>, before any reading. A failed stream does not refuse to be
+    read; it just never gives you any data.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; forgetting <code>&lt;fstream&gt;</code></span></div>
+  <div class="bd">
+    <p><code>iostream</code> gives you <code>cin</code> and <code>cout</code>. It does <em>not</em> give you <code>ifstream</code> and <code>ofstream</code>.
+    Leave out the header and <code>g++</code> says something distinctly unhelpful:</p>
+<pre class="err">nofstream.cpp: In function 'int main()':
+nofstream.cpp:6:17: error: variable 'std::ifstream ifs' has initializer but incomplete type
+    6 |     ifstream ifs("scores.txt");
+      |                 ^</pre>
+    <p>Note that it did <em>not</em> say "<code>ifstream</code> was not declared in this scope". The name is
+    visible &mdash; other standard headers declare that it exists &mdash; but its definition is not, so
+    the compiler knows the type by name only and cannot work out how big it is or how to construct it.
+    That is what <em>"incomplete type"</em> means, and the fix is always the same: include the header
+    that defines the thing.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.6</div>
+  <div class="bd">
+    <p>A program contains this, and nothing else touches the streams:</p>
+<pre><code class="language-cpp">ifstream in("data.txt");
+ofstream out("results.txt");
+int x;
+in &gt;&gt; x;
+out &lt;&lt; x &lt;&lt; endl;</code></pre>
+    <p>Neither <code>data.txt</code> nor <code>results.txt</code> exists when the program starts.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of the two opens succeeds?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The <code>ofstream</code>. Opening a file for output <em>creates</em> it, so <code>results.txt</code> now exists
+        (and is empty at that moment). The <code>ifstream</code> fails, because there is nothing named <code>data.txt</code>
+        to attach to.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> The program compiles and runs without crashing. What ends up in <code>results.txt</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>A line containing <code>0</code>.</p>
+        <p>Here is the chain. <code>in &gt;&gt; x</code> on a failed stream does not read anything, and since
+        C++11 a failed extraction <strong>sets <code>x</code> to zero</strong> rather than leaving it untouched.
+        So <code>x</code> is <code>0</code>, and <code>out &lt;&lt; x</code> faithfully writes <code>0</code> to the file that the <code>ofstream</code>
+        happily created for it.</p>
+        <p>This is the worst possible failure mode: no crash, no message, no compiler warning &mdash;
+        just a plausible-looking wrong answer sitting in a file. It is the entire argument for checking
+        the open.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Add the missing safety check, and say where it has to go.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">ifstream in("data.txt");
+if (!in.is_open()) {
+    cout &lt;&lt; "Could not open data.txt" &lt;&lt; endl;
+    return 1;
+}
+ofstream out("results.txt");
+int x;
+in &gt;&gt; x;
+out &lt;&lt; x &lt;&lt; endl;</code></pre>
+        <p><strong>Things to notice.</strong> The check goes immediately after the construction and
+        before the <code>ofstream</code> is even created &mdash; otherwise you leave behind an empty
+        <code>results.txt</code> from a run that did nothing, which is its own small trap for whoever looks at the
+        directory later.</p>
+        <p>Checking the <code>ofstream</code> too is not wasted effort. It can fail for reasons that have nothing
+        to do with the file existing: a read-only directory, a full disk, a path with a typo in a
+        directory name.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Reading with <code>&gt;&gt;</code> &mdash; and the loop that eats your data</h2>
+
+<p>Reading from an <code>ifstream</code> uses the same operator as reading from the keyboard. The course reading
+puts it plainly: <em>the syntax <code>ifs &gt;&gt; variable</code> is the same as <code>cin &gt;&gt; variable</code></em>.
+Whitespace &mdash; spaces, tabs, newlines &mdash; separates one value from the next, and the
+<em>type</em> of the variable decides how much text gets consumed and how it is interpreted.</p>
+
+<p>Here is the data file we will use for the rest of this section. It is the one from the course
+reading: three rows, each holding an <code>int</code>, a <code>double</code> and a <code>string</code>.</p>
+
+<pre class="shell">cat infile.txt</pre>
+<pre class="out">6 2.2 Alice
+2 1.6 Bob
+5 3.4 Charlie</pre>
+
+<p>So one record is read by</p>
+
+<pre><code class="language-cpp">int a;
+double d;
+string s;
+ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s;</code></pre>
+
+<p>which chains three extractions left to right: <code>a</code> gets <code>6</code>, <code>d</code> gets <code>2.2</code>, <code>s</code> gets <code>Alice</code>. Three
+rows means three records, and now we need a loop &mdash; and this is where the trouble starts, because
+a program does not know in advance how many rows a file has.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the read loop exactly as the course reading writes it</span></div>
+  <div class="bd">
+    <p>This is the reading's loop, unchanged: read a record, ask whether we hit end of file, and if so
+    break out. It looks completely reasonable. Predict the output &mdash; how many records does it
+    print, and what does the counter say? &mdash; and only then open the toggle.</p>
+<div class="codewrap"><div class="cap">readbug.cpp</div><pre><code class="language-cpp">// readbug.cpp -- the read loop exactly as the handout writes it
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("infile.txt");
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "File not found" &lt;&lt; endl;
+        return 1;
+    }
+
+    int count = 0;
+    while (true) {
+        int a;
+        double d;
+        string s;
+        ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s;                          // read from file
+        if (ifs.eof() == true) break;                // end of file? break out
+        cout &lt;&lt; a &lt;&lt; " " &lt;&lt; d &lt;&lt; " " &lt;&lt; s &lt;&lt; endl;
+        ++count;
+    }
+    ifs.close();
+
+    cout &lt;&lt; "records read: " &lt;&lt; count &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">6 2.2 Alice
+2 1.6 Bob
+records read: 2</pre>
+<p><strong>Charlie is gone.</strong> The file has three records; the program read two and reported two,
+with no error, no warning and no crash. If the next thing the program did was compute the longest
+string, it would answer <code>Alice</code> &mdash; a wrong answer that looks entirely reasonable.</p>
+<p>Here is the trace. Watch the third iteration:</p>
+<table class="trace">
+  <tr><th>Iteration</th><th><code>ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s</code></th><th><code>ifs.eof()</code> just after</th><th>What the loop does</th></tr>
+  <tr><td>1</td><td>succeeds &mdash; 6, 2.2, Alice</td><td><code>false</code></td><td>prints, counts</td></tr>
+  <tr><td>2</td><td>succeeds &mdash; 2, 1.6, Bob</td><td><code>false</code></td><td>prints, counts</td></tr>
+  <tr><td>3</td><td><strong>succeeds</strong> &mdash; 5, 3.4, Charlie</td><td><strong><code>true</code></strong></td><td><strong>breaks &mdash; before printing or counting</strong></td></tr>
+</table>
+<p>The third read <em>worked</em>. The variables <code>a</code>, <code>d</code> and <code>s</code> hold 5, 3.4 and Charlie at the moment
+the <code>if</code> runs. But reading the word <code>Charlie</code> consumed the last character in the file, and a stream
+that has been pushed to the very end sets its end-of-file flag <em>on that same successful read</em>.
+So <code>eof()</code> is true, the <code>break</code> fires, and a record that was successfully read is thrown away
+unprocessed.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Before we fix it, one detail: why did this happen here and not on somebody else's machine? Because
+of a single invisible byte.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same program on a file that ends with a newline</span></div>
+  <div class="bd">
+    <p>Here are two files. Printed, they look identical. Look at the last byte of each:</p>
+<pre class="shell">od -c infile.txt
+od -c infile2.txt
+wc -l infile.txt infile2.txt</pre>
+<pre class="out">0000000   6       2   .   2       A   l   i   c   e  \n   2       1   .
+0000020   6       B   o   b  \n   5       3   .   4       C   h   a   r
+0000040   l   i   e
+0000043
+0000000   6       2   .   2       A   l   i   c   e  \n   2       1   .
+0000020   6       B   o   b  \n   5       3   .   4       C   h   a   r
+0000040   l   i   e  \n
+0000044
+ 2 infile.txt
+ 3 infile2.txt</pre>
+    <p><code>infile2.txt</code> ends with a newline; <code>infile.txt</code> does not. (<code>wc -l</code> counts newline characters,
+    which is why it reports 2 for a file you would describe as having three lines.) Now run the
+    <em>same</em> broken program against <code>infile2.txt</code>. What happens?</p>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">6 2.2 Alice
+2 1.6 Bob
+5 3.4 Charlie
+records read: 3</pre>
+<p>All three records. The bug has vanished &mdash; not because it was fixed, but because the extra
+newline means reading <code>Charlie</code> stops one character short of the end, so <code>eof()</code> is still false when
+the <code>if</code> runs. The next iteration's read then fails on the empty remainder and sets <code>eof()</code>, and the
+break happens in the right place.</p>
+<p>Sit with how bad that is. <strong>The correctness of the program depends on whether somebody
+remembered to press Enter at the end of the data file.</strong> Most editors add the final newline
+silently, which is why this bug can hide for months and then surface the day a file arrives from a
+spreadsheet export, a web download, or a classmate's editor.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>And the mirror image of the same misunderstanding is the loop most textbooks warn about, where the
+test is at the top:</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>while (!ifs.eof())</code>, on the well-formed file</span></div>
+  <div class="bd">
+    <p>This time the file is <code>infile2.txt</code>, the one that <em>does</em> end with a newline &mdash; the
+    well-behaved file that made the previous program work. Predict the output.</p>
+<div class="codewrap"><div class="cap">readbug_dup.cpp</div><pre><code class="language-cpp">// readbug_dup.cpp -- the other classic eof() loop: while (!ifs.eof())
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("infile2.txt");      // this file DOES end with a newline
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "File not found" &lt;&lt; endl;
+        return 1;
+    }
+
+    int a;
+    double d;
+    string s;
+    int count = 0;
+    while (!ifs.eof()) {
+        ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s;
+        cout &lt;&lt; a &lt;&lt; " " &lt;&lt; d &lt;&lt; " " &lt;&lt; s &lt;&lt; endl;
+        ++count;
+    }
+    ifs.close();
+
+    cout &lt;&lt; "records read: " &lt;&lt; count &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">6 2.2 Alice
+2 1.6 Bob
+5 3.4 Charlie
+5 3.4 Charlie
+records read: 4</pre>
+<p><strong>Charlie twice.</strong> Three records in the file, four records processed.</p>
+<p>The fourth iteration is the interesting one. After Charlie is read, the file position sits just
+before the final newline, so <code>eof()</code> is <em>false</em> and the loop condition lets us in again. The
+extraction inside then finds nothing but whitespace, fails, and sets both the fail bit and the
+end-of-file bit &mdash; but <code>a</code>, <code>d</code> and <code>s</code> still hold Charlie's values from last time, and the body
+prints them regardless, because nothing in the body ever asked whether the read worked.</p>
+<table class="trace">
+  <tr><th>Iteration</th><th>Condition <code>!ifs.eof()</code></th><th>The read inside</th><th>What gets printed</th></tr>
+  <tr><td>1</td><td>true</td><td>succeeds</td><td>6 2.2 Alice</td></tr>
+  <tr><td>2</td><td>true</td><td>succeeds</td><td>2 1.6 Bob</td></tr>
+  <tr><td>3</td><td>true</td><td>succeeds</td><td>5 3.4 Charlie</td></tr>
+  <tr><td>4</td><td><strong>true</strong> &mdash; the newline is not yet consumed</td><td><strong>fails</strong></td><td><strong>5 3.4 Charlie again</strong> &mdash; stale values</td></tr>
+  <tr><td>5</td><td>false &mdash; now <code>eof()</code> is finally set</td><td>&mdash;</td><td>loop ends</td></tr>
+</table>
+<p>So the two <code>eof()</code> loops fail in opposite directions on opposite files: the reading's version
+<em>drops</em> the last record when the file has no trailing newline, and this version
+<em>duplicates</em> it when the file has one. Both bugs have exactly the same root cause.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; <code>eof()</code> is a report, not a forecast</span></div>
+  <div class="bd">
+    <p>Here is the sentence to memorize:</p>
+    <p><strong><code>eof()</code> tells you whether a read has <em>already</em> failed by running off the end of
+    the file. It does not tell you whether the <em>next</em> read will succeed.</strong></p>
+    <p>Every <code>eof()</code>-controlled loop is built on the hope that those two things are the same, and they
+    are not. A stream carries several independent status bits:</p>
+    <table class="trace">
+      <tr><th>Test</th><th>Means</th><th>Set when</th></tr>
+      <tr><td><code>eof()</code></td><td>end of file has been reached</td><td>a read consumed the last character, <em>or</em> a read ran off the end</td></tr>
+      <tr><td><code>fail()</code></td><td>the last operation did not produce a value</td><td>ran out of input, <em>or</em> the text did not match the variable's type</td></tr>
+      <tr><td><code>good()</code></td><td>no error bit at all is set</td><td>&mdash;</td></tr>
+    </table>
+    <p>Notice the second row. A stream can fail without being at end of file &mdash; give it the word
+    <code>Alice</code> when it wants an <code>int</code> and it fails on the spot, with plenty of file left. A loop
+    that only watches <code>eof()</code> will spin forever on that input, re-reading the same character and failing
+    again. So the <code>eof()</code> loop is not merely wrong at the boundary; it misses a whole category of
+    error.</p>
+    <p><strong>The correct idiom asks the only question that matters &mdash; did this read work?</strong></p>
+<pre><code class="language-cpp">while (ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s) {
+    // the body runs only when all three extractions succeeded
+}</code></pre>
+    <p>That works because <code>ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s</code> is an expression whose value is the
+    stream itself, and a stream used where a <code>bool</code> is wanted converts to <code>true</code> exactly when
+    no error bit is set. Read it out loud as <em>"while reading a record succeeds"</em>. It handles the
+    trailing newline, the missing trailing newline, the empty file and the malformed line, all with the
+    same four words.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the corrected loop, on the file that broke the original</span></div>
+  <div class="bd">
+    <p>Same data file as the first program in this section &mdash; <code>infile.txt</code>, the one with no
+    trailing newline that lost Charlie. Only the loop has changed.</p>
+<div class="codewrap"><div class="cap">readgood.cpp</div><pre><code class="language-cpp">// readgood.cpp -- the correct idiom: test the read itself
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("infile.txt");       // the file with NO trailing newline
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "File not found" &lt;&lt; endl;
+        return 1;
+    }
+
+    int a;
+    double d;
+    string s;
+    int count = 0;
+    while (ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s) {                  // read AND test in one step
+        cout &lt;&lt; a &lt;&lt; " " &lt;&lt; d &lt;&lt; " " &lt;&lt; s &lt;&lt; endl;
+        ++count;
+    }
+    ifs.close();
+
+    cout &lt;&lt; "records read: " &lt;&lt; count &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">6 2.2 Alice
+2 1.6 Bob
+5 3.4 Charlie
+records read: 3</pre>
+<p>Three records, including Charlie. Run the identical program against <code>infile2.txt</code> and you get
+character-for-character the same output &mdash; the trailing newline has stopped mattering, which is
+what "correct" means here.</p>
+<p>Two structural improvements came along for free:</p>
+<ul>
+  <li>The declarations of <code>a</code>, <code>d</code> and <code>s</code> moved <em>above</em> the loop, because the condition needs
+    them. In the original they were inside, redeclared on every iteration.</li>
+  <li>The <code>while (true)</code> and the <code>break</code> are gone. A loop whose exit condition is written in its own
+    header is easier to reason about than one that exits from the middle &mdash; there is exactly one
+    way out, and it is the first line you read.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.7</div>
+  <div class="bd">
+    <p>The file <code>scores.txt</code> contains three lines, each a name then a score:</p>
+<pre class="out">Alice 88
+Bob 92
+Carol 79</pre>
+    <p>A student reads it with the fields in the wrong order:</p>
+<pre><code class="language-cpp">int score;
+string name;
+int count = 0;
+while (ifs &gt;&gt; score &gt;&gt; name) {   // wrong order
+    cout &lt;&lt; score &lt;&lt; " " &lt;&lt; name &lt;&lt; endl;
+    ++count;
+}
+cout &lt;&lt; "records read: " &lt;&lt; count &lt;&lt; endl;
+cout &lt;&lt; "fail() = " &lt;&lt; ifs.fail() &lt;&lt; ", eof() = " &lt;&lt; ifs.eof() &lt;&lt; endl;</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many records does the loop process?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>None. The very first extraction, <code>ifs &gt;&gt; score</code>, is asked to turn the text <code>Alice</code>
+        into an <code>int</code>. It cannot, so the extraction fails immediately, the <code>&amp;&amp;</code>-like chaining of
+        the second <code>&gt;&gt;</code> does nothing on an already-failed stream, and the condition is false the
+        first time it is evaluated. The body never runs.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What do the two status flags print? This is the whole point of the question.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Here is the real output of the program:</p>
+<pre class="out">records read: 0
+fail() = 1, eof() = 0</pre>
+        <p><strong><code>fail()</code> is 1 and <code>eof()</code> is 0.</strong> The stream is broken, and it is nowhere near
+        the end of the file &mdash; not one character has been consumed.</p>
+        <p>That single line is the strongest possible argument against <code>eof()</code>-controlled loops. A loop
+        written as <code>while (!ifs.eof())</code> would see <code>eof()</code> false, enter the body, try to read, fail
+        again without moving, see <code>eof()</code> false again, and spin forever. The <code>while (ifs &gt;&gt; ...)</code>
+        form stops instantly, because it asks about the operation rather than about the position.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Fix it, and say what would have happened if <code>score</code> had been declared as a <code>string</code> instead of an <code>int</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The fix is to read the fields in the order they appear in the file:</p>
+<pre><code class="language-cpp">string name;
+int score;
+while (ifs &gt;&gt; name &gt;&gt; score) {
+    cout &lt;&lt; name &lt;&lt; " " &lt;&lt; score &lt;&lt; endl;
+}</code></pre>
+        <p>If <code>score</code> were a <code>string</code>, nothing would fail at all. <code>&gt;&gt;</code> into a <code>string</code> accepts any
+        run of non-whitespace characters, so the first pair would come back as
+        <code>score = "Alice"</code>, <code>name = "88"</code>, and the loop would happily process all
+        three records with every field in the wrong variable.</p>
+        <p><strong>Things to notice.</strong> A type mismatch is a gift &mdash; it turns a logic error
+        into a loud, immediate failure. Reading everything into <code>string</code>s throws that gift away. Declare
+        each field with the type it actually has, and let the stream do the checking for you.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; repair the loop</h3>
+
+<p>Below is the broken reading loop again, this time over <code>scores.txt</code> (a name and a score on each
+line). Rewrite it so that it reads every record correctly no matter how the file ends, and prints the
+total at the end.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs(&quot;scores.txt&quot;);
+    // 1. check the open here
+
+    int total = 0;
+    // 2. replace this loop with the correct idiom
+    while (true) {
+        string name;
+        int score;
+        ifs &gt;&gt; name &gt;&gt; score;
+        if (ifs.eof() == true) break;
+        total += score;
+    }
+
+    cout &lt;&lt; &quot;total = &quot; &lt;&lt; total &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("scores.txt");
+    // 1. check the open here
+
+    int total = 0;
+    // 2. replace this loop with the correct idiom
+    while (true) {
+        string name;
+        int score;
+        ifs &gt;&gt; name &gt;&gt; score;
+        if (ifs.eof() == true) break;
+        total += score;
+    }
+
+    cout &lt;&lt; "total = " &lt;&lt; total &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.8</div>
+  <div class="bd">
+    <p>Complete the exercise above. Give the finished program, its output on the three-line
+    <code>scores.txt</code>, and say which line of the original was doing the damage.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Two changes. First, add the <code>is_open</code> check, because an unchecked
+      <code>ifstream</code> on a missing file prints <code>total = 0</code> and looks fine. Second, hoist the two
+      declarations above the loop and move the read into the loop condition, so that the body runs only
+      on a successful read.</p>
+<div class="codewrap"><div class="cap">fixloop.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("scores.txt");
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "Could not open scores.txt" &lt;&lt; endl;
+        return 1;
+    }
+
+    string name;
+    int score;
+    int total = 0;
+    while (ifs &gt;&gt; name &gt;&gt; score) {
+        total += score;
+    }
+    ifs.close();
+
+    cout &lt;&lt; "total = " &lt;&lt; total &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">total = 259</pre>
+      <p>88 + 92 + 79 = 259. The broken version would have reported <strong>180</strong> on a file with
+      no trailing newline &mdash; Carol's 79 silently dropped &mdash; and 259 on a file with one.</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The damage was done by <code>if (ifs.eof() == true) break;</code> sitting <em>after</em> the
+          read. It breaks on a read that succeeded.</li>
+        <li><code>ifs.close()</code> is optional here: the stream closes itself when <code>ifs</code> goes out of scope at
+          the end of <code>main</code>. Write it anyway when the stream lives a long time or when you are about to
+          reopen the same file &mdash; and always write it when the professor's own examples do, since
+          it costs nothing and documents intent.</li>
+        <li>Notice that this version never mentions <code>eof</code> at all. That is the mark of a correctly
+          written read loop: if <code>eof()</code> appears in your file-reading code, look hard at it.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Reading whole lines with <code>getline</code></h2>
+
+<p><code>&gt;&gt;</code> splits on whitespace, which is exactly what you want when a record is a fixed set of
+fields and exactly what you do not want when a field can contain a space. A person's full name, a
+street address, a book title &mdash; read any of those with <code>&gt;&gt;</code> and they arrive in pieces.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>getline</code></span></div>
+  <div class="bd">
+    <p><code>getline(stream, str)</code> reads characters from <code>stream</code> into the <code>string</code> <code>str</code> until it reaches a
+    newline. The newline is consumed but is <strong>not</strong> stored in <code>str</code>.</p>
+    <p>It is a free function, not a member, so it is written <code>getline(ifs, line)</code> and not
+    <code>ifs.getline(line)</code>. Like <code>&gt;&gt;</code>, it returns the stream, so it drops straight into a loop
+    condition:</p>
+<pre><code class="language-cpp">string line;
+while (getline(ifs, line)) {
+    // one whole line, spaces and all
+}</code></pre>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same file, read both ways</span></div>
+  <div class="bd">
+    <p><code>roster.txt</code> holds three lines, each a first name, a last name and a score:</p>
+<pre class="out">Alice Nguyen 88
+Bob Ortiz 92
+Carol Diaz 79</pre>
+    <p>The program reads it twice: once with <code>&gt;&gt;</code> into a <code>string</code>, once with <code>getline</code>. Each value
+    is printed inside square brackets so you can see exactly where it starts and ends. How many lines of
+    output does each half produce?</p>
+<div class="codewrap"><div class="cap">readlines.cpp</div><pre><code class="language-cpp">// readlines.cpp -- &gt;&gt; stops at whitespace; getline takes the whole line
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("roster.txt");
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "File not found" &lt;&lt; endl;
+        return 1;
+    }
+
+    string word;
+    cout &lt;&lt; "--- with &gt;&gt; ---" &lt;&lt; endl;
+    while (ifs &gt;&gt; word) {
+        cout &lt;&lt; "[" &lt;&lt; word &lt;&lt; "]" &lt;&lt; endl;
+    }
+    ifs.close();
+
+    ifstream ifs2("roster.txt");
+    string line;
+    int n = 0;
+    cout &lt;&lt; "--- with getline ---" &lt;&lt; endl;
+    while (getline(ifs2, line)) {
+        ++n;
+        cout &lt;&lt; n &lt;&lt; ": [" &lt;&lt; line &lt;&lt; "]" &lt;&lt; endl;
+    }
+    ifs2.close();
+
+    cout &lt;&lt; "lines: " &lt;&lt; n &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">--- with &gt;&gt; ---
+[Alice]
+[Nguyen]
+[88]
+[Bob]
+[Ortiz]
+[92]
+[Carol]
+[Diaz]
+[79]
+--- with getline ---
+1: [Alice Nguyen 88]
+2: [Bob Ortiz 92]
+3: [Carol Diaz 79]
+lines: 3</pre>
+<p>Nine values from <code>&gt;&gt;</code>, three from <code>getline</code>. Neither is "right" &mdash; they answer different
+questions:</p>
+<table class="trace">
+  <tr><th></th><th><code>&gt;&gt;</code></th><th><code>getline</code></th></tr>
+  <tr><td>Unit read</td><td>one whitespace-delimited token</td><td>one whole line</td></tr>
+  <tr><td>Result type</td><td>whatever you extract into &mdash; <code>int</code>, <code>double</code>, <code>string</code>, &hellip;</td><td>always a <code>string</code></td></tr>
+  <tr><td>Leading whitespace</td><td>skipped automatically</td><td>kept</td></tr>
+  <tr><td>Fails when</td><td>the text does not match the type, or input runs out</td><td>only when input runs out</td></tr>
+  <tr><td>Use it for</td><td>fixed columns of typed data</td><td>free text, or when you need the line intact</td></tr>
+</table>
+<p>Note the second <code>ifstream</code>. Once a stream has been read to the end it stays in its end-of-file
+state, so the second loop needs a fresh stream on the same file. (Reopening is the simplest way; there
+are calls to rewind a stream in place, but they are not worth learning today.)</p>
+<p>Also note that <code>getline</code> returned three lines even though <code>roster.txt</code>, like every well-formed text
+file, ends with a newline. <code>getline</code> does not hand you a phantom fourth empty line, because after
+consuming the final newline the stream is genuinely out of input and the next call fails.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; mixing <code>&gt;&gt;</code> and <code>getline</code></span></div>
+  <div class="bd">
+    <p>This is the single most reported "getline is broken" bug, and it bites in exactly one situation:
+    an <code>&gt;&gt;</code> extraction followed by a <code>getline</code>. The file <code>names.txt</code> starts with a count and then
+    lists that many full names:</p>
+<pre class="out">3
+Alice Nguyen
+Bob Ortiz
+Carol Diaz</pre>
+<div class="codewrap"><div class="cap">mixbug.cpp</div><pre><code class="language-cpp">int howMany;
+ifs &gt;&gt; howMany;                 // reads 3, leaves the newline behind
+
+string name;
+for (int i = 0; i &lt; howMany; ++i) {
+    getline(ifs, name);
+    cout &lt;&lt; i &lt;&lt; ": [" &lt;&lt; name &lt;&lt; "]" &lt;&lt; endl;
+}</code></pre></div>
+<pre class="out">0: []
+1: [Alice Nguyen]
+2: [Bob Ortiz]</pre>
+    <p>An empty first name, everything shifted down one, and Carol missing entirely.</p>
+    <p><strong>Why.</strong> <code>ifs &gt;&gt; howMany</code> reads the digit <code>3</code> and stops. It does
+    <em>not</em> consume the newline after it &mdash; <code>&gt;&gt;</code> stops at whitespace and leaves it in
+    the stream. So the first <code>getline</code> starts at that leftover newline, immediately finds its
+    terminator, and hands back the empty string between the <code>3</code> and the end of that line.</p>
+    <p><strong>The fix</strong> is one line: read and discard the rest of the header line before
+    switching modes.</p>
+<div class="codewrap"><div class="cap">mixfix.cpp</div><pre><code class="language-cpp">int howMany;
+ifs &gt;&gt; howMany;
+
+string junk;
+getline(ifs, junk);             // swallow the rest of the header line
+
+string name;
+for (int i = 0; i &lt; howMany; ++i) {
+    getline(ifs, name);
+    cout &lt;&lt; i &lt;&lt; ": [" &lt;&lt; name &lt;&lt; "]" &lt;&lt; endl;
+}</code></pre></div>
+<pre class="out">0: [Alice Nguyen]
+1: [Bob Ortiz]
+2: [Carol Diaz]</pre>
+    <p>The rule to carry away: <strong>after any <code>&gt;&gt;</code>, the newline is still sitting in the
+    stream.</strong> If the very next thing you do is a <code>getline</code>, clear it first. This applies to <code>cin</code>
+    identically &mdash; the same bug shows up whenever you read a number from the keyboard and then try
+    to read a full name.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.9</div>
+  <div class="bd">
+    <p>For each task, say whether you would read with <code>&gt;&gt;</code> or with <code>getline</code>, and why.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A file of exam results, one per line, formatted as an ID number then a grade: <code>10432 87</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>&gt;&gt;</code>, into an <code>int</code> and an <code>int</code>: <code>while (ifs &gt;&gt; id &gt;&gt; grade)</code>. The fields
+        are fixed, typed and space-separated, which is exactly what <code>&gt;&gt;</code> is for &mdash; and you
+        get the type checking for free.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A file of book titles, one per line, where a title may contain spaces and punctuation.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>getline</code>. A title is not a token; <code>&gt;&gt;</code> would deliver
+        <code>[The]</code> <code>[C++]</code> <code>[Programming]</code> <code>[Language]</code> as four
+        separate reads with no way to tell where one title ended.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A file whose first line is a count, and whose remaining lines are each a full name followed by a score, like <code>Alice Nguyen 88</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both, and this is where the trap in the box above lives. Read the count with <code>&gt;&gt;</code>,
+        then swallow the rest of that line with a throwaway <code>getline</code>, then read each remaining line
+        with <code>getline</code> and pull it apart yourself.</p>
+        <p>Or &mdash; often simpler &mdash; restructure the file so the score comes first:
+        <code>88 Alice Nguyen</code>. Then <code>ifs &gt;&gt; score</code> followed by <code>getline(ifs, name)</code> works
+        directly, because the score's own trailing space is skipped by <code>getline</code>'s search for the
+        newline&hellip; almost. The name would come back as <code>" Alice Nguyen"</code> with a leading
+        space, since <code>getline</code> keeps leading whitespace.</p>
+        <p><strong>Things to notice.</strong> Whenever a design forces you to mix the two, ask first
+        whether the <em>file format</em> can be changed. Putting the free-text field last on the line
+        and every typed field before it makes the reading code trivial. A lot of file-parsing pain is
+        self-inflicted at the point the format is chosen.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Writing to a file: overwrite mode and append mode</h2>
+
+<p>Writing is the easy half. You create an <code>ofstream</code> and use <code>&lt;&lt;</code> on it exactly as you use
+<code>cout</code> &mdash; the course reading says simply that <em>writing to a file is similar to writing to the
+console</em>, and it means that literally. The one decision you have to make is what should happen to
+whatever is already in the file.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; overwrite mode and append mode</span></div>
+  <div class="bd">
+    <p>An <code>ofstream</code> can be opened in different modes:</p>
+    <ol>
+      <li><strong>"Overwrite mode"</strong> overwrites anything already in the output file. Written
+        <code>ofstream ofs1(outfile, ios::out);</code></li>
+      <li><strong>"Append mode"</strong> appends to the end of the output file. Written
+        <code>ofstream ofs2(outfile, ios::app);</code></li>
+      <li>The default is <strong>overwrite</strong> mode &mdash; so <code>ofstream ofs(outfile);</code> with no
+        second argument throws away the old contents.</li>
+    </ol>
+    <p>In both cases, <strong>if the file does not exist the <code>ofstream</code> will create it</strong>.</p>
+  </div>
+</div>
+
+<p>"Overwrite" deserves a sharper word: opening in <code>ios::out</code> truncates the file to zero length the
+moment the stream is constructed, before you have written a single character. If you open a file for
+output and then decide not to write anything, you have still destroyed it.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; both modes on one file</span></div>
+  <div class="bd">
+    <p>This program writes three lines in overwrite mode, closes the stream, then reopens the
+    <em>same</em> file in append mode and adds three more. It finishes by reading the file back so we
+    can see what actually landed on disk. Predict the six lines.</p>
+<div class="codewrap"><div class="cap">writefile.cpp</div><pre><code class="language-cpp">// writefile.cpp -- write a file in overwrite mode, then add to it in append mode
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    string outfile("report.txt");
+
+    ofstream ofs1(outfile, ios::out);          // "overwrite" mode
+    ofs1 &lt;&lt; "Alice 88" &lt;&lt; endl;
+    ofs1 &lt;&lt; "Bob 92" &lt;&lt; endl;
+    ofs1 &lt;&lt; "Carol 79" &lt;&lt; endl;
+    ofs1.close();
+
+    ofstream ofs2(outfile, ios::app);          // "append" mode
+    ofs2 &lt;&lt; endl;
+    ofs2 &lt;&lt; "append mode: add to end of file" &lt;&lt; endl;
+    ofs2 &lt;&lt; "3 students" &lt;&lt; endl;
+    ofs2.close();
+
+    // read it back so we can see what landed on disk
+    ifstream ifs(outfile);
+    string line;
+    cout &lt;&lt; "--- contents of " &lt;&lt; outfile &lt;&lt; " ---" &lt;&lt; endl;
+    while (getline(ifs, line)) {
+        cout &lt;&lt; line &lt;&lt; endl;
+    }
+    ifs.close();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">--- contents of report.txt ---
+Alice 88
+Bob 92
+Carol 79
+
+append mode: add to end of file
+3 students</pre>
+<p>Six lines, the fourth of them blank &mdash; that blank line is the lone <code>ofs2 &lt;&lt; endl;</code>, which
+writes a newline and nothing else. The append-mode stream started exactly where the overwrite-mode
+stream stopped.</p>
+<p>The teaching point is the pair of stream objects. <code>ofs1</code> and <code>ofs2</code> name the <em>same file</em> but
+are two different objects opened in two different modes, and <code>ofs1.close()</code> in between is what makes
+that safe. Opening a second stream on a file that is still open for writing is asking for trouble.</p>
+<p>And run the program a second time: the output is identical. The overwrite-mode open at the top wipes
+the file clean each run, so the append later in the same run always starts from the same three
+lines.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what the modes do across separate runs</span></div>
+  <div class="bd">
+    <p>The difference between the modes only really shows up when a program is run more than once. This
+    one writes a single line to <code>over.txt</code> in overwrite mode and a single line to <code>log.txt</code> in append
+    mode, then counts the lines in each. It is run three times in a row. Predict all three lines of
+    output.</p>
+<div class="codewrap"><div class="cap">appenddemo.cpp</div><pre><code class="language-cpp">// appenddemo.cpp -- append mode accumulates across runs; overwrite mode does not
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ofstream over("over.txt", ios::out);   // overwrite: starts empty every run
+    over &lt;&lt; "one line" &lt;&lt; endl;
+    over.close();
+
+    ofstream app("log.txt", ios::app);     // append: grows every run
+    app &lt;&lt; "one line" &lt;&lt; endl;
+    app.close();
+
+    ifstream a("over.txt");
+    ifstream b("log.txt");
+    string line;
+    int na = 0, nb = 0;
+    while (getline(a, line)) ++na;
+    while (getline(b, line)) ++nb;
+    cout &lt;&lt; "over.txt has " &lt;&lt; na &lt;&lt; " line(s); log.txt has " &lt;&lt; nb &lt;&lt; " line(s)" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">over.txt has 1 line(s); log.txt has 1 line(s)
+over.txt has 1 line(s); log.txt has 2 line(s)
+over.txt has 1 line(s); log.txt has 3 line(s)</pre>
+<p><code>over.txt</code> is stuck at one line forever; <code>log.txt</code> grows by one every run. That is the whole
+distinction, and it is why the two modes exist:</p>
+<ul>
+  <li><strong>Overwrite</strong> is for a <em>result</em>: the current report, the current output, the
+    answer for this run. You want yesterday's version gone.</li>
+  <li><strong>Append</strong> is for a <em>history</em>: a log, an audit trail, a running record. You
+    want yesterday's version kept.</li>
+</ul>
+<p>Note that <code>log.txt</code> had to be deleted before the first of these three runs, or the count would have
+started higher. Append mode has a memory, and that is exactly what it is for.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.10</div>
+  <div class="bd">
+    <p>A file <code>data.txt</code> currently contains two lines, <code>alpha</code> and <code>beta</code>. A program runs this and
+    nothing else:</p>
+<pre><code class="language-cpp">ofstream ofs("data.txt");
+ofs &lt;&lt; "gamma" &lt;&lt; endl;
+ofs.close();</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does <code>data.txt</code> contain afterwards?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>One line: <code>gamma</code>. <code>alpha</code> and <code>beta</code> are gone.</p>
+        <p>No mode was given, and <strong>the default is overwrite</strong>. The file was truncated to
+        nothing at the moment <code>ofs</code> was constructed, before <code>gamma</code> was written.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Change one thing so that <code>data.txt</code> ends up with three lines.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">ofstream ofs("data.txt", ios::app);
+ofs &lt;&lt; "gamma" &lt;&lt; endl;
+ofs.close();</code></pre>
+        <p>Adding <code>ios::app</code> leaves the existing contents alone and starts writing at the end, giving
+        <code>alpha</code>, <code>beta</code>, <code>gamma</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A classmate opens a file for output at the top of <code>main</code> "just in case the program needs to write something later", then takes an early <code>return</code> when the input is bad and never writes anything. What is the state of that file?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Empty &mdash; and if it previously held data, that data is destroyed.</p>
+        <p>The truncation happens at construction, not at the first <code>&lt;&lt;</code>. The stream never needed
+        to be written to for the damage to be done.</p>
+        <p><strong>Things to notice.</strong> Open an output file at the point you are actually ready to
+        write to it, not at the top of <code>main</code> out of habit. This is the file-handling analogue of a rule
+        you already know: declare a variable where you first need it, not at the top of the function.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; number the lines of a file</h3>
+
+<p>Write a program that reads <code>roster.txt</code> line by line and writes a new file <code>numbered.txt</code> in which
+every line is prefixed with its line number and a colon. Report how many lines were copied.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="21" data-starter="#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs(&quot;roster.txt&quot;);
+    // check the open
+
+    ofstream ofs(&quot;numbered.txt&quot;, ios::out);
+
+    string line;
+    int n = 0;
+    // read each line, increment n, write &quot;n: line&quot; to ofs
+
+
+    cout &lt;&lt; &quot;wrote &quot; &lt;&lt; n &lt;&lt; &quot; numbered lines to numbered.txt&quot; &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("roster.txt");
+    // check the open
+
+    ofstream ofs("numbered.txt", ios::out);
+
+    string line;
+    int n = 0;
+    // read each line, increment n, write "n: line" to ofs
+
+
+    cout &lt;&lt; "wrote " &lt;&lt; n &lt;&lt; " numbered lines to numbered.txt" &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.11</div>
+  <div class="bd">
+    <p>Complete the line-numbering exercise. Give the program, its console output, and the contents of
+    <code>numbered.txt</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> This is a read loop and a write loop fused into one: one <code>getline</code> from
+      the input, one <code>&lt;&lt;</code> to the output, per iteration. <code>getline</code> is the right reader because the
+      lines contain spaces and we want them preserved exactly. The counter has to be incremented
+      <em>before</em> it is printed if we want numbering to start at 1.</p>
+<div class="codewrap"><div class="cap">exlinenum.cpp</div><pre><code class="language-cpp">// exlinenum.cpp -- copy a file, adding line numbers
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("roster.txt");
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "Could not open roster.txt" &lt;&lt; endl;
+        return 1;
+    }
+    ofstream ofs("numbered.txt", ios::out);
+
+    string line;
+    int n = 0;
+    while (getline(ifs, line)) {
+        ++n;
+        ofs &lt;&lt; n &lt;&lt; ": " &lt;&lt; line &lt;&lt; endl;
+    }
+    ifs.close();
+    ofs.close();
+
+    cout &lt;&lt; "wrote " &lt;&lt; n &lt;&lt; " numbered lines to numbered.txt" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">wrote 3 numbered lines to numbered.txt</pre>
+      <p>And <code>numbered.txt</code> afterwards:</p>
+<pre class="out">1: Alice Nguyen 88
+2: Bob Ortiz 92
+3: Carol Diaz 79</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The input and output streams are open at the same time on <em>different</em> files. That is
+          completely normal. Doing it on the same file is not &mdash; the <code>ofstream</code> would truncate the
+          file the <code>ifstream</code> is reading.</li>
+        <li><code>ios::out</code> is the default, so <code>ofstream ofs("numbered.txt");</code> would behave identically.
+          Writing the mode explicitly is worth the eight characters, because the reader no longer has
+          to remember which default applies.</li>
+        <li>If <code>roster.txt</code> were empty the program would print <code>wrote 0 numbered lines</code> and
+          create an empty <code>numbered.txt</code>. No crash, no special case &mdash; a <code>while (getline(...))</code>
+          loop handles the empty file for free by simply never running its body. Compare that with
+          <code>while (!ifs.eof())</code>, which would run once on an empty file and write a spurious
+          <code>1: </code>.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>The complete example, end to end</h2>
+
+<p>Everything in &sect;&sect;4&ndash;7 comes together in the course reading's full program. The task, in
+the reading's own words: <em>after reading in the data, we find the largest int, smallest double and
+longest string. We print the largest int, smallest double and longest string to an output file using
+"overwrite" mode. Next we print the largest int, smallest double and longest string to the same output
+file using "append" mode.</em></p>
+
+<p>The max/min/longest computation is, as the reading says, <em>just an exercise to do something with
+the input data &mdash; it has no relevance to file I/O</em>. Read the program for its structure: open,
+check, read-loop, guard, compute, write, append, close.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; read records, compute, write a report</span></div>
+  <div class="bd">
+    <p>The input is <code>infile.txt</code> &mdash; the file with <em>no</em> trailing newline, the one that broke
+    the original loop in &sect;5. Predict two things: the three debugging lines on the console, and the
+    six lines that end up in <code>outfile.txt</code>.</p>
+<div class="codewrap"><div class="cap">records.cpp</div><pre><code class="language-cpp">// records.cpp -- read infile.txt, find max int / min double / longest string,
+//                write the answers with overwrite mode, then append a summary
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;          // header for file I/O
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; iv;
+    vector&lt;double&gt; dv;
+    vector&lt;string&gt; sv;
+
+    string infile("infile.txt");     // input file name
+    string outfile("outfile.txt");   // output file name
+
+    ifstream ifs(infile);            // ifstream object
+    if (!ifs.is_open()) {            // check if the file opened successfully
+        cout &lt;&lt; "File not found: " &lt;&lt; infile &lt;&lt; endl;
+        return 1;
+    }
+
+    int a;
+    double d;
+    string s;
+    while (ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s) {                     // read AND test
+        cout &lt;&lt; a &lt;&lt; " " &lt;&lt; d &lt;&lt; " " &lt;&lt; s &lt;&lt; endl;   // print for debugging
+        iv.push_back(a);
+        dv.push_back(d);
+        sv.push_back(s);
+    }
+    ifs.close();   // optional: the file closes when ifs goes out of scope
+
+    if (iv.empty()) {                                // guard: no data at all
+        cout &lt;&lt; "No records in " &lt;&lt; infile &lt;&lt; endl;
+        return 1;
+    }
+
+    // find max int, min double, longest string
+    int a_max = iv[0];
+    double d_min = dv[0];
+    string s_long = sv[0];
+    for (size_t i = 0; i &lt; iv.size(); ++i) {
+        if (a_max &lt; iv[i]) a_max = iv[i];
+        if (d_min &gt; dv[i]) d_min = dv[i];
+        if (s_long.length() &lt; sv[i].length()) s_long = sv[i];
+    }
+
+    ofstream ofs1(outfile, ios::out);     // "write mode": overwrites outfile
+    ofs1 &lt;&lt; a_max &lt;&lt; endl;
+    ofs1 &lt;&lt; d_min &lt;&lt; endl;                // write to file
+    ofs1 &lt;&lt; s_long &lt;&lt; endl;
+    ofs1.close();                         // close the file
+
+    ofstream ofs2(outfile, ios::app);     // "append mode": add to end of file
+    ofs2 &lt;&lt; endl;
+    ofs2 &lt;&lt; "append mode: add to end of file" &lt;&lt; endl;
+    ofs2 &lt;&lt; a_max &lt;&lt; " " &lt;&lt; d_min &lt;&lt; " " &lt;&lt; s_long &lt;&lt; endl;
+    ofs2.close();                         // close the file
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>On the console:</p>
+<pre class="out">6 2.2 Alice
+2 1.6 Bob
+5 3.4 Charlie</pre>
+<p>And in <code>outfile.txt</code>:</p>
+<pre class="out">6
+1.6
+Charlie
+
+append mode: add to end of file
+6 1.6 Charlie</pre>
+<p>Three records read, including Charlie. The answers are the largest of 6, 2 and 5; the smallest of
+2.2, 1.6 and 3.4; and the longest of Alice (5 letters), Bob (3) and Charlie (7).</p>
+<p>Walk the structure, because this is the shape of nearly every file-processing program you will
+write:</p>
+<table class="trace">
+  <tr><th>Stage</th><th>Code</th><th>Why it is there</th></tr>
+  <tr><td>Open</td><td><code>ifstream ifs(infile);</code></td><td>Attach a stream to the file.</td></tr>
+  <tr><td>Check</td><td><code>if (!ifs.is_open()) return 1;</code></td><td>An input file that isn't there must stop the program, not be read as empty.</td></tr>
+  <tr><td>Read</td><td><code>while (ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s)</code></td><td>The only loop form that is correct for all four awkward files: no trailing newline, trailing newline, empty, malformed.</td></tr>
+  <tr><td>Store</td><td><code>iv.push_back(a);</code></td><td>You cannot know how many records there are, so a <code>vector</code> is the right container. Arrays would need a fixed guess.</td></tr>
+  <tr><td>Guard</td><td><code>if (iv.empty()) return 1;</code></td><td>Everything below reads <code>iv[0]</code>.</td></tr>
+  <tr><td>Compute</td><td>the max/min/longest loop</td><td>The actual work &mdash; nothing to do with files.</td></tr>
+  <tr><td>Write</td><td><code>ofstream ofs1(outfile, ios::out);</code></td><td>A fresh report, so overwrite.</td></tr>
+  <tr><td>Append</td><td><code>ofstream ofs2(outfile, ios::app);</code></td><td>Added to the end, so append &mdash; and a second object, after the first is closed.</td></tr>
+</table>
+<p>One detail in the output that has nothing to do with files: <code>d_min</code> is a <code>double</code> holding 1.6 and it
+prints as <code>1.6</code>, while a <code>double</code> holding 2.0 would print as <code>2</code>. That is the six-significant-digit
+<code>cout</code> default from Class 1, and it applies to <code>ofstream</code> exactly as it does to <code>cout</code> &mdash; the file
+streams share all of <code>cout</code>'s formatting behavior.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; <code>iv[0]</code> on a file that turned out to be empty</span></div>
+  <div class="bd">
+    <p>The <code>if (iv.empty())</code> guard in the program above is not decoration. Remove it, point the program
+    at an existing but empty file, and this is a real run:</p>
+<pre class="shell">touch empty.txt
+./records_noguard</pre>
+<pre class="out">Segmentation fault</pre>
+    <p><code>iv[0]</code> on an empty <code>vector</code> is <strong>undefined behavior</strong>. There is no bounds check on
+    <code>operator[]</code>; the program computes an address just past the vector's (null) storage and reads it.
+    Under <code>valgrind</code> the diagnosis is unambiguous:</p>
+<pre class="out">Invalid read of size 4
+   at 0x10A954: main
+ Address 0x0 is not stack'd, malloc'd or (recently) free'd
+Process terminating with default action of signal 11 (SIGSEGV)</pre>
+    <p>Note that the file <em>opened perfectly well</em> &mdash; <code>is_open()</code> was true, because an empty
+    file is a real file. "The open succeeded" and "there is data" are two different claims, and you have
+    to check both. Any time your code indexes element <code>0</code> of a container it filled from input, ask what
+    happens when the input was empty.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 4.12</div>
+  <div class="bd">
+    <p>Still with <code>records.cpp</code> in front of you.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>infile.txt</code> is edited so that the last row reads <code>5 3.4</code> &mdash; the name is missing. What does the program print and write?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Two records on the console (Alice and Bob), and <code>outfile.txt</code> gets <code>6</code>, <code>1.6</code>, <code>Alice</code>, then
+        the appended block.</p>
+        <p>The third iteration's condition reads <code>5</code> into <code>a</code> and <code>3.4</code> into <code>d</code> successfully, then the
+        extraction into <code>s</code> runs out of input and fails. The whole chained expression is therefore
+        false, so the loop stops without processing the partial record. Half-read values are discarded
+        along with it &mdash; which is the right behavior, because half a record is not a record.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Both <code>ofs1</code> and <code>ofs2</code> name <code>outfile.txt</code>. Why does the second one not wipe out what the first one wrote?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because of the mode. <code>ofs1</code> is opened with <code>ios::out</code>, which truncates; <code>ofs2</code> is opened with
+        <code>ios::app</code>, which positions the write cursor at the end and never truncates. Swap <code>ios::app</code> for
+        <code>ios::out</code> on the second stream and the file ends up with only the appended block &mdash; the
+        <code>6 / 1.6 / Charlie</code> lines would be destroyed.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> The program calls <code>ifs.close()</code> and both <code>ofsN.close()</code>. Which of these calls, if any, could you delete without changing the behavior?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>ifs.close()</code> and <code>ofs2.close()</code> could go: each stream closes itself when its object is
+        destroyed, and both objects live to the end of <code>main</code>.</p>
+        <p><strong><code>ofs1.close()</code> must stay.</strong> It is what flushes <code>ofs1</code>'s buffered output to
+        disk and releases the file <em>before</em> <code>ofs2</code> opens the same file. Without it you have two
+        output streams open on one file at once, with two independent buffers, and what ends up on disk
+        depends on the order the buffers happen to be flushed. That is not a hypothetical worth
+        risking.</p>
+        <p><strong>Things to notice.</strong> The rule that follows: <em>close a stream explicitly when
+        something else is about to touch the same file, or when the stream would otherwise stay open far
+        longer than it is needed.</em> Otherwise it is optional &mdash; but the course reading writes
+        <code>close()</code> every time, and matching that costs nothing.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 4</span></div>
+  <div class="bd">
+    <p><strong>Every problem in this section is marked <code>(added)</code>, and that is worth explaining.</strong>
+    The course reading on random numbers and file I/O poses no exercises at all &mdash; its only
+    exercise-flavored text is the professor's own framing of the max/min/longest computation, which we
+    worked through in &sect;8. And file I/O has never appeared on any exam in this course: not one
+    graded paper or problem set mentions a file stream. So there is no bank of his own questions to
+    draw on here.</p>
+    <p>The five problems below are therefore written for these notes, but written in the two formats
+    this professor uses for exactly this kind of material: <em>"write C++ statements to carry out the
+    following tasks"</em> (Problem 1) and <em>"write a complete C++ program that&hellip;"</em>
+    (Problems 2&ndash;5). Work each one before opening the answer; on his exams the write-code parts pay
+    points for the signature and the standard beginning and ending, so get into the habit of writing
+    the <code>#include</code>s and the <code>return 0;</code> even when you are in a hurry.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Write C++ statements <span class="muted small">(added)</span></h3>
+
+<p>Do not write complete programs, just give a single line, or a few lines, of C++ instructions for
+each task. Assume the standard headers are already included.</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare an input file stream called <code>ifs</code> attached to the file <code>scores.txt</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">ifstream ifs("scores.txt");</code></pre>
+    <p>The file name goes in the constructor. <code>ifstream ifs;</code> followed by <code>ifs.open("scores.txt");</code> is
+    equally correct and is what you need when the name is not known until later.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Print an error message and leave <code>main</code> with a failure status if that file could not be opened.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">if (!ifs.is_open()) {
+    cout &lt;&lt; "Could not open scores.txt" &lt;&lt; endl;
+    return 1;
+}</code></pre>
+    <p><code>if (!ifs)</code> and <code>if (ifs.fail())</code> are accepted alternatives. <code>return 1;</code> &mdash; not <code>return 0;</code>
+    &mdash; because the program did not do its job.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Read every <code>name score</code> pair from <code>ifs</code> into a <code>string</code> and an <code>int</code>, printing each pair as it is read.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">string name;
+int score;
+while (ifs &gt;&gt; name &gt;&gt; score) {
+    cout &lt;&lt; name &lt;&lt; " " &lt;&lt; score &lt;&lt; endl;
+}</code></pre>
+    <p>The read goes in the condition. Any answer built on <code>eof()</code> loses the marks for this part, for
+    the reasons worked through in &sect;5.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Declare an output file stream called <code>ofs</code> that adds to the end of <code>log.txt</code> rather than replacing it.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">ofstream ofs("log.txt", ios::app);</code></pre>
+    <p>The second argument is the whole answer. Omit it and you get overwrite mode, which is the
+    opposite of what was asked. If <code>log.txt</code> does not exist it is created either way.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Write the last name and score read to <code>ofs</code> on one line, then close both streams.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">ofs &lt;&lt; name &lt;&lt; " " &lt;&lt; score &lt;&lt; endl;
+ifs.close();
+ofs.close();</code></pre>
+    <p><strong>Things to notice.</strong> <code>name</code> and <code>score</code> must be declared <em>outside</em> the loop
+    in part (c) for this to compile &mdash; if they were declared inside, they would be out of scope
+    here. That is one more reason the corrected read-loop form, which forces the declarations above the
+    loop, is the better habit.</p>
+    <p>Writing to <code>ofs</code> looks exactly like writing to <code>cout</code>. That is not a coincidence or a
+    convenience; it is the same operator on the same family of stream types, and it is why the course
+    reading can dispose of the entire topic with "writing to file is similar to writing to the
+    console."</p>
+  </div></details>
+</div>
+
+<h3>Problem 2 &mdash; Read a file, compute an average, write a report <span class="muted small">(added)</span></h3>
+
+<p>Write a complete C++ program that reads <code>scores.txt</code>, a file with one <code>name score</code> pair per line.
+The program should store the names and scores in vectors, compute the average score, and write to a
+new file <code>above.txt</code> the average followed by every student whose score is strictly above it. Print a
+one-line confirmation to the console. Handle a missing file and an empty file.</p>
+
+<p>Use this input:</p>
+<pre class="out">Alice 88
+Bob 92
+Carol 79</pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> This is a two-pass problem: you cannot decide who is above average until you
+  have seen everybody, so the data has to be stored, not streamed. Two parallel <code>vector</code>s hold the
+  names and the scores. The averaging step needs one piece of care &mdash; <code>total</code> and <code>size()</code> are both
+  integer-like, so dividing them directly would give integer division and truncate 86.33 to 86. Cast one
+  operand to <code>double</code> first. Then open <code>above.txt</code> in overwrite mode, since it is a fresh report, and
+  loop a second time writing the ones that qualify.</p>
+<div class="codewrap"><div class="cap">p2_average.cpp</div><pre><code class="language-cpp">// p2_average.cpp -- read name/score pairs from a file, report who beat the average
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("scores.txt");
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "Could not open scores.txt" &lt;&lt; endl;
+        return 1;
+    }
+
+    vector&lt;string&gt; names;
+    vector&lt;int&gt; scores;
+    string name;
+    int score;
+    while (ifs &gt;&gt; name &gt;&gt; score) {
+        names.push_back(name);
+        scores.push_back(score);
+    }
+    ifs.close();
+
+    if (names.empty()) {
+        cout &lt;&lt; "No records found." &lt;&lt; endl;
+        return 1;
+    }
+
+    int total = 0;
+    for (size_t i = 0; i &lt; scores.size(); ++i) {
+        total += scores[i];
+    }
+    double average = static_cast&lt;double&gt;(total) / scores.size();
+
+    ofstream ofs("above.txt", ios::out);
+    ofs &lt;&lt; "average = " &lt;&lt; average &lt;&lt; endl;
+    for (size_t i = 0; i &lt; names.size(); ++i) {
+        if (scores[i] &gt; average) {
+            ofs &lt;&lt; names[i] &lt;&lt; " " &lt;&lt; scores[i] &lt;&lt; endl;
+        }
+    }
+    ofs.close();
+
+    cout &lt;&lt; "read " &lt;&lt; names.size() &lt;&lt; " records, average = " &lt;&lt; average &lt;&lt; endl;
+    cout &lt;&lt; "wrote above.txt" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+  <p>Console:</p>
+<pre class="out">read 3 records, average = 86.3333
+wrote above.txt</pre>
+  <p>And <code>above.txt</code>:</p>
+<pre class="out">average = 86.3333
+Alice 88
+Bob 92</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>static_cast&lt;double&gt;(total) / scores.size()</code> is the fix for integer division. Without the
+      cast, 259 divided by 3 is 86, and Carol's 79 would still be below it, so the program would
+      <em>look</em> right on this data and be wrong on other data. That is the most dangerous kind of
+      bug there is &mdash; test the arithmetic separately from the file handling.</li>
+    <li>The two guards do different jobs. <code>is_open()</code> catches "the file is not there"; <code>names.empty()</code>
+      catches "the file is there but has nothing in it", which would otherwise divide by zero.</li>
+    <li>The average prints as <code>86.3333</code> &mdash; six significant digits, the <code>cout</code> default. If you want
+      two decimal places you need <code>&lt;iomanip&gt;</code> and <code>setprecision</code>, which is Class 3's material.</li>
+    <li>Parallel vectors are the honest answer with the tools we have today. Once we have classes, a
+      single <code>vector&lt;Student&gt;</code> replaces both and makes it impossible for the two lists to fall out
+      of step &mdash; which is the argument for classes in a nutshell, and where Class 9 picks up.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Predict the output <span class="muted small">(added)</span></h3>
+
+<p>The file <code>infile2.txt</code> contains exactly this, <em>with</em> a newline at the end of the last line:</p>
+<pre class="out">6 2.2 Alice
+2 1.6 Bob
+5 3.4 Charlie</pre>
+
+<p>Give the exact output of each of the following loops. Assume <code>ifs</code> is a freshly opened <code>ifstream</code> on
+that file in each case, and that <code>a</code>, <code>d</code>, <code>s</code> are declared <code>int</code>, <code>double</code>, <code>string</code>.</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> <code>while (ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s) cout &lt;&lt; s &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Alice
+Bob
+Charlie</pre>
+    <p>Three successful reads, then a fourth that fails on the empty remainder and ends the loop. The
+    correct idiom, the correct answer.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> <code>while (!ifs.eof()) { ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s; cout &lt;&lt; s &lt;&lt; endl; }</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Alice
+Bob
+Charlie
+Charlie</pre>
+    <p>Four lines. After Charlie is read the final newline has not yet been consumed, so <code>eof()</code> is
+    still false and the loop runs a fourth time. That read fails, leaving <code>s</code> holding its previous
+    value, and the body prints it anyway.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> The same as (b), but on a copy of the file with the final newline deleted.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Alice
+Bob
+Charlie</pre>
+    <p>Three lines &mdash; the right answer, from the wrong loop. Reading <code>Charlie</code> consumes the last
+    character, so <code>eof()</code> becomes true immediately and the fourth iteration never starts.</p>
+    <p><strong>Things to notice.</strong> Put (b) and (c) side by side: the identical loop gives
+    different answers on two files that look identical on screen. And the version in the course reading
+    &mdash; read first, <code>if (ifs.eof()) break;</code> after &mdash; fails the other way round, printing three
+    lines here and only two on the file without the newline.</p>
+    <p>Three loops, four combinations of loop and file, and only one of them is right on both files:
+    <code>while (ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s)</code>. Output-prediction questions like this one
+    carry no partial credit on this professor's exams, so the way to get them right is not to memorize
+    the four cases but to internalize the one sentence: <em><code>eof()</code> reports a read that has already
+    failed; it does not predict the next one.</em></p>
+  </div></details>
+</div>
+
+<h3>Problem 4 &mdash; Dice histogram to a file <span class="muted small">(added)</span></h3>
+
+<p>Write a complete C++ program that rolls two six-sided dice 1000 times, counts how often each total
+from 2 to 12 comes up, and writes the eleven counts to <code>histogram.txt</code>, one <code>total count</code>
+pair per line. Seed with <code>srand(42)</code> so your run matches the one below.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The counts want an array indexed by the total itself &mdash; declare
+  <code>int count[13]</code> and use elements 2 through 12, leaving 0 and 1 unused. Wasting two <code>int</code>s buys you
+  <code>count[a + b]++</code> instead of <code>count[a + b - 2]++</code>, and every off-by-one in the problem disappears.
+  Initialize with <code>= {0}</code>, which zeroes the whole array. Each roll is two independent calls to the
+  scaling expression &mdash; two calls, not one call used twice, or the dice are always equal.</p>
+<div class="codewrap"><div class="cap">p4_histogram.cpp</div><pre><code class="language-cpp">// p4_histogram.cpp -- roll two dice 1000 times and write a histogram to a file
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;cstdlib&gt;
+using namespace std;
+
+int main() {
+    srand(42);                       // fixed seed so the run is reproducible
+
+    const int ROLLS = 1000;
+    int count[13] = {0};             // count[2] .. count[12]
+
+    for (int i = 0; i &lt; ROLLS; ++i) {
+        int a = 1 + rand() % 6;
+        int b = 1 + rand() % 6;
+        count[a + b]++;
+    }
+
+    ofstream ofs("histogram.txt", ios::out);
+    if (!ofs.is_open()) {
+        cout &lt;&lt; "Could not open histogram.txt" &lt;&lt; endl;
+        return 1;
+    }
+    for (int sum = 2; sum &lt;= 12; ++sum) {
+        ofs &lt;&lt; sum &lt;&lt; " " &lt;&lt; count[sum] &lt;&lt; endl;
+    }
+    ofs.close();
+
+    cout &lt;&lt; "wrote histogram.txt" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+  <p>Console:</p>
+<pre class="out">wrote histogram.txt</pre>
+  <p>And <code>histogram.txt</code>:</p>
+<pre class="out">2 20
+3 59
+4 72
+5 106
+6 132
+7 194
+8 151
+9 100
+10 84
+11 54
+12 28</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The counts sum to 1000 &mdash; check it. Any histogram whose bars do not add up to the number of
+      trials has a bucket you forgot.</li>
+    <li>The shape is the real payoff: 7 is the most common total by a wide margin (194 out of 1000, near
+      the theoretical 1/6) and 2 and 12 are the rarest (20 and 28, near the theoretical 1/36 which would
+      be about 28). Two dice are not a uniform distribution over 2&ndash;12, because there are six ways
+      to make a 7 and only one way to make a 2. If your histogram comes out flat, you generated the
+      <em>total</em> directly with <code>2 + rand() % 11</code> instead of rolling two dice.</li>
+    <li><code>srand(42)</code> is stated in the problem so that the expected output can be printed. A real
+      simulation would use <code>srand(time(0))</code>, and then no two runs would agree in the last digits &mdash;
+      though the <em>shape</em> would be the same every time, which is the whole reason simulations are
+      worth running.</li>
+    <li>The <code>is_open()</code> check on an <code>ofstream</code> is not paranoia. Output opens fail on read-only
+      directories and bad paths, and a silent failure here would leave you staring at a file that never
+      changes.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 5 &mdash; A run log <span class="muted small">(added)</span></h3>
+
+<p>Write a complete C++ program that keeps a log of how many times it has been run. On each run it
+should count the lines already in <code>runlog.txt</code> (treating a missing file as zero), append a new line
+reading <code>run N</code> where <code>N</code> is one more than that count, and print the run number to the
+console. Running it three times in a row should produce a three-line log.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Two passes over the same file, in two different modes, and they must not
+  overlap. First open it for <em>reading</em> and count lines with <code>getline</code> &mdash; and here a failed
+  open is not an error, it just means this is the first run, so the count stays zero. Close it. Then
+  open it for <em>appending</em> and write one line. Getting the order wrong is fatal: open the
+  <code>ofstream</code> first in overwrite mode and you erase the very history you were about to count.</p>
+<div class="codewrap"><div class="cap">p5_runlog.cpp</div><pre><code class="language-cpp">// p5_runlog.cpp -- number each run by counting the lines already in the log
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    string logfile("runlog.txt");
+
+    // pass 1: count the lines already there (missing file counts as zero)
+    int runs = 0;
+    ifstream ifs(logfile);
+    if (ifs.is_open()) {
+        string line;
+        while (getline(ifs, line)) {
+            ++runs;
+        }
+        ifs.close();
+    }
+
+    // pass 2: append this run
+    ofstream ofs(logfile, ios::app);
+    if (!ofs.is_open()) {
+        cout &lt;&lt; "Could not open " &lt;&lt; logfile &lt;&lt; " for writing" &lt;&lt; endl;
+        return 1;
+    }
+    ofs &lt;&lt; "run " &lt;&lt; (runs + 1) &lt;&lt; endl;
+    ofs.close();
+
+    cout &lt;&lt; "this is run number " &lt;&lt; (runs + 1) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+  <p>Three consecutive runs, starting with no <code>runlog.txt</code> at all:</p>
+<pre class="out">this is run number 1
+this is run number 2
+this is run number 3</pre>
+  <p>And <code>runlog.txt</code> afterwards:</p>
+<pre class="out">run 1
+run 2
+run 3</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>This is the one place in these notes where a failed <code>ifstream</code> open is <em>not</em> an error.
+      The <code>if (ifs.is_open())</code> wraps the counting instead of aborting the program, because "the log does
+      not exist yet" is a perfectly normal state on the first run. Checking the open is mandatory;
+      what you do about a failure is a design decision.</li>
+    <li><code>ifs.close()</code> before the <code>ofstream</code> is constructed is the important line, exactly as
+      <code>ofs1.close()</code> was in &sect;8. Two streams open on one file at once is a situation to avoid on
+      purpose, not by luck.</li>
+    <li><code>ios::app</code> is essential. With the default overwrite mode the file would be truncated at the
+      moment <code>ofs</code> is constructed, the count would restart from zero on the very next run, and the log
+      would never grow past one line.</li>
+    <li>An alternative design stores the number itself rather than counting lines &mdash; read one
+      <code>int</code>, add one, write it back in overwrite mode. That is fewer lines of code and loses the
+      history. Which one is better depends entirely on whether anyone will ever want to look at the
+      history, which is the sort of question worth asking before you pick a file format.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>A <strong>PRNG</strong> is deterministic. The <strong>seed</strong> chooses where in the
+        sequence you start, so the <strong>same seed gives the same sequence every run</strong>. With no
+        <code>srand</code> at all, every run repeats.</li>
+      <li><code>srand(n)</code> seeds; <code>rand()</code> draws; both need <code>&lt;cstdlib&gt;</code>. Call <code>srand</code> <em>once</em>,
+        before the first <code>rand()</code>. <code>srand(time(0))</code> from <code>&lt;ctime&gt;</code> gives a different sequence per
+        run; a fixed seed like <code>srand(42)</code> gives a reproducible one, which is what you want for testing
+        and grading.</li>
+      <li>To get a value in <code>lo..hi</code>: <code>lo + rand() % (hi - lo + 1)</code>. Derive it,
+        do not recall it &mdash; <code>rand() % 6</code> is 0 to 5, not 1 to 6.</li>
+      <li>The <code>&lt;random&gt;</code> recipe is four steps: include, instantiate a <code>default_random_engine</code>,
+        <code>seed()</code> it, then declare a distribution such as <code>uniform_int_distribution&lt;int&gt;</code> and call
+        it with the generator as its argument. Both endpoints are inclusive and no <code>%</code> is needed.</li>
+      <li><code>#include &lt;fstream&gt;</code> gives you <code>ifstream</code> (reads, like <code>cin</code>) and <code>ofstream</code> (writes,
+        like <code>cout</code>). <strong>An output file is created if it does not exist; an input file open simply
+        fails.</strong> Check every open with <code>is_open()</code> or <code>!ifs</code>.</li>
+      <li><strong>The read loop is <code>while (ifs &gt;&gt; a &gt;&gt; d &gt;&gt; s) { ... }</code>.</strong>
+        Any loop controlled by <code>eof()</code> is wrong: it drops the last record on a file with no trailing
+        newline, duplicates it on a file with one, and spins forever on a type mismatch. <code>eof()</code> reports
+        a read that has <em>already</em> failed; it never predicts the next one.</li>
+      <li><code>&gt;&gt;</code> reads one whitespace-delimited token with type checking; <code>getline(ifs, line)</code> reads
+        a whole line into a <code>string</code>. After any <code>&gt;&gt;</code>, the newline is still in the stream &mdash;
+        swallow it with a throwaway <code>getline</code> before switching modes.</li>
+      <li><code>ofstream ofs(name, ios::out)</code> <strong>overwrites</strong> (and truncates the moment it is
+        constructed); <code>ios::app</code> <strong>appends</strong>. Overwrite is for a result, append is for a
+        history. <code>close()</code> is optional in general but required before another stream touches the same
+        file.</li>
+      <li>Guard anything that indexes element <code>0</code> of a container you filled from a file. An empty file
+        opens successfully and gives you an empty vector, and <code>iv[0]</code> on that is a segfault.</li>
+    </ul>
+    <p><strong>Coming up in Class 5:</strong> we look properly at the container we have been leaning on
+    all through this class &mdash; <code>vector</code>, the "generalized array" that grows to fit however many
+    records the file turned out to have.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 3 &middot; Operators &amp; Loops</div><div class="pending">posts Tue Sep 8</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 5 &middot; Vectors I</div><div class="pending">posts Tue Sep 15</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

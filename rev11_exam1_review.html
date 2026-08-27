@@ -1,0 +1,2888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 11 — Exam 1 Review | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 11 &middot; Exam 1 Review</span><span class="sep">|</span><span class="where">Tue Oct 6</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 11 &middot; CSCI 211</div>
+  <h1>Review for Exam 1</h1>
+  <p class="sub">Everything from Classes 1&ndash;10, reorganized into the shapes the exam actually uses &mdash; and an honest account of how the paper is marked.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today you should be able to:</p>
+    <ol>
+      <li>State the structure of Exam 1 &mdash; how many questions, in which formats, worth how many points, and how many minutes each one can afford.</li>
+      <li>Say which parts of the paper carry partial credit and which are all-or-nothing, and budget the fifty minutes accordingly.</li>
+      <li>Choose between a value, reference, <code>const</code> reference and pointer parameter, and justify the choice in one sentence.</li>
+      <li>Write the sentinel-controlled input loop that every "write a complete C++ program" question is built on, from memory and without a compiler.</li>
+      <li>Write the five pointer-and-dynamic-memory statements &mdash; declare, allocate, copy through, use, release &mdash; without hesitating over <code>.</code> versus <code>-&gt;</code>, or <code>delete</code> versus <code>delete []</code>.</li>
+      <li>Implement a small class's <code>set</code>, accessor and arithmetic methods, and a free function that has to reach private data through the getters.</li>
+      <li>Trace a <code>cout</code> chain full of <code>++</code> and <code>--</code>, a <code>break</code> loop against its <code>continue</code> twin, and a vector built by conditional <code>push_back</code>/<code>pop_back</code> &mdash; and get every digit right.</li>
+      <li>Run the checklist in &sect;7 and name the two or three things you still need to practice tonight.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">What Exam 1 actually looks like</a></li>
+    <li><a href="#s2">Passing data to a function</a></li>
+    <li><a href="#s3">Vectors, and the write-a-program question</a></li>
+    <li><a href="#s4">Pointers and dynamic memory</a></li>
+    <li><a href="#s5">Classes: private data and the way in</a></li>
+    <li><a href="#s6">The output-prediction traps</a></li>
+    <li><a href="#s7">The night-before checklist</a></li>
+    <li><a href="#prac">Practice Problems &mdash; a full timed exam</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>What Exam 1 actually looks like</h2>
+
+<p>Exam 1 is next class. It covers Classes 1 through 10 &mdash; the C++ refresher, references and
+parameter passing, the increment operators and loop control, file I/O, vectors, pointers, dynamic
+memory, and your first two classes on classes. Today is not new material. Today is the same
+material, re-sorted into the four shapes the paper uses, so that when you turn it over nothing on it
+is a surprise.</p>
+
+<p>One thing worth knowing now rather than in November: <strong>every exam in this course is
+cumulative.</strong> Each one may draw on everything up to the day it is given. That matters most
+for pointers and dynamic memory &mdash; they are on this paper, and they are underneath almost
+everything on the next two. Material you learn properly this week you will not have to learn
+twice.</p>
+
+<p>Start with the paper itself, because a lot of exam anxiety is really just not knowing what the
+questions look like. Here is the actual structure of this course's Exam 1.</p>
+
+<table class="trace">
+  <tr><th>Q</th><th>Format</th><th>What it is about</th><th>Points</th><th>Partial credit?</th></tr>
+  <tr><td>1</td><td>"Write a complete C++ program that does the following."</td><td>A sentinel-controlled input loop into a vector, then a computation and a filtered print.</td><td>10</td><td><strong>Yes</strong>, generously</td></tr>
+  <tr><td>2</td><td>"Write C++ statements to carry out the following tasks." Five lettered one-liners.</td><td>Pointers and dynamic memory: declare, allocate, copy through, use, release.</td><td>10 (2 each)</td><td>Barely &mdash; 1 pt on two parts</td></tr>
+  <tr><td>3</td><td>"What is the output for each of the following lines?" Lines (a)&ndash;(e).</td><td><code>++</code>/<code>--</code> inside a <code>cout</code> chain, <code>break</code> versus <code>continue</code>, a vector's <code>size()</code> and <code>back()</code>.</td><td>10 (2 each)</td><td><strong>No</strong></td></tr>
+  <tr><td>4</td><td>"Give an implementation for the &hellip; method."</td><td>A small class: a <code>set</code> method, an arithmetic method, and a free function that goes through the getters.</td><td>10 (2 + 2 + 6)</td><td>On the 6-point part only</td></tr>
+</table>
+
+<p>Four questions, <strong>40 points</strong>, <strong>50 minutes</strong>. That is the shape of the
+Fall 2023 paper, and the first three problems of every later midterm in this course are the same
+three formats with the identifiers, the sentinel value and the array literals swapped. The formats
+are stable. Use that.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the whole exam is code in, code out</span></div>
+  <div class="bd">
+    <p>There is no true/false on this paper. No multiple choice. No "define encapsulation in your own
+    words." Every single question either asks you to <strong>write C++</strong> or asks you to say
+    <strong>exactly what C++ prints</strong>. Studying by re-reading definitions is therefore the
+    least efficient thing you could do tonight. Studying by writing the four question types out by
+    hand, on paper, without a compiler, is the most efficient.</p>
+  </div>
+</div>
+
+<h3>How the marking actually works</h3>
+
+<p>The two halves of the paper are graded on opposite principles, and knowing which is which changes
+how you should spend your last ten minutes.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; output prediction is all or nothing</span></div>
+  <div class="bd">
+    <p>On Question 3, each of the five lines is worth <strong>2 points, with no partial credit</strong>.
+    <code>3678</code> earns 2 points; <code>3679</code> earns zero. There is no credit for "the right
+    method." Four digits, all four correct, or nothing.</p>
+    <p>The same rule holds for four of the five parts of Question 2. The rubric for the Fall 2023
+    paper allows one point of partial credit on parts (d) and (e) &mdash; the copy loop and the two
+    <code>delete</code> statements &mdash; "for answers that are almost correct except for a tiny error," and
+    nowhere else.</p>
+    <p>Practical consequence: on a trace question, <strong>re-derive, do not re-read</strong>. Skimming
+    your own trace a second time will not catch the error, because you will make the same mistake the
+    same way. Work the line again from the top on scratch paper and compare the two answers.</p>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; write-code questions pay for the signature alone</span></div>
+  <div class="bd">
+    <p>The rubrics for the write-code questions pay you before you have written any logic at all:</p>
+    <ul>
+      <li><strong>1 to 2 points for the "standard beginning and standard ending"</strong> &mdash; the
+        <code>#include</code> lines, <code>using namespace std;</code>, <code>int main() {</code>, and <code>return 0;</code> with the closing
+        brace. That is up to 20&nbsp;% of Question 1 for four lines you can write in fifteen seconds.</li>
+      <li><strong>2 points for the title line</strong> of any function you are asked to write &mdash;
+        just the signature, spelled correctly, with the right return type and parameter list.</li>
+      <li>Then points per functional stage: reading the input, computing the thing, printing the
+        thing. Each one is marked on its own.</li>
+      <li>And a standing instruction to the grader: <em>"If a program follows a different (but
+        reasonable) plan, try to award partial credit for meeting similar goals in the program."</em></li>
+    </ul>
+    <p>So: <strong>never leave a write-code question blank.</strong> If you cannot finish it, write
+    the includes, the <code>main</code>, the signature and the parts you are sure of. A half-written Question 1
+    is worth several points. A blank one is worth zero.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; how to spend the fifty minutes</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Two minutes.</strong> Read all four questions before writing anything. You are
+        looking for which one you can do fastest, not for the answers.</li>
+      <li><strong>Do the cheap points first.</strong> On every write-code question, write the
+        includes, <code>main</code>, <code>return 0;</code> and the function signatures immediately, for every question,
+        before solving anything. That is 4&ndash;6 points banked in about a minute.</li>
+      <li><strong>Then Question 3</strong>, the trace, while you are fresh. It is short, it is worth
+        10 points, and it is the one that punishes a tired brain hardest.</li>
+      <li><strong>Then Questions 2 and 4</strong>, which are mostly recall.</li>
+      <li><strong>Question 1 last</strong>, because it is the one that rewards partial work &mdash; if
+        the clock beats you, the fragments still score.</li>
+      <li><strong>Last five minutes.</strong> Re-derive line (a) of the trace from scratch. Check
+        every <code>new</code> has a matching <code>delete</code>. Check every class body ends with <code>};</code>.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.1</div>
+  <div class="bd">
+    <p>Two students sit the Fall 2023 paper. On Question 3 (five lines, 2 points each, no partial
+    credit) Ana gets four lines exactly right and one line right except for the last digit. Ben gets
+    three lines exactly right and leaves two blank. On Question 1 (10 points) Ana writes nothing at
+    all; Ben writes the includes, <code>main</code>, <code>return 0;</code> and a correct input loop, but never prints
+    anything.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does each student score on Question 3?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Ana: <strong>8 out of 10</strong>. Four correct lines at 2 points each. The line with one
+        wrong digit earns nothing &mdash; there is no partial credit on this question.</p>
+        <p>Ben: <strong>6 out of 10</strong>. Three correct lines, and blanks score zero.</p>
+        <p>Notice how little separates them. One mis-copied digit costs the same as not attempting
+        the line at all, which is exactly why re-deriving beats re-reading.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What does each score on Question 1, given the published point split of 1 point for the standard beginning and ending, 5 points for declaring the vector, prompting, and reading the inputs into it, and 2 + 2 points for printing the two groups?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Ana: <strong>0</strong>. A blank answer earns nothing, no matter how much of the material
+        she knows.</p>
+        <p>Ben: <strong>6 out of 10</strong> &mdash; the 1 point for the standard beginning and
+        ending, plus the 5 points for the declaration, the prompt and the input loop. He loses only
+        the 2 + 2 for the printing he never wrote.</p>
+        <p>Ben got more than half of a question he did not finish. This is the single most valuable
+        piece of exam technique in this course.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Over the two questions, who is ahead, and by how much?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Ana has 8. Ben has 12. Ben is ahead by <strong>4 points out of 20</strong>, which on a
+        40-point paper is a full letter grade &mdash; and he answered fewer things correctly than she
+        did.</p>
+        <p>The lesson is not "guess wildly." It is that the two halves of this paper reward opposite
+        behaviors. On the trace, precision is everything and there is no credit for effort. On the
+        write-code questions, effort is worth real points and precision can wait. Spend your
+        certainty on Question 3 and your remaining minutes on Questions 1, 2 and 4.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>Where the weight sits</h3>
+
+<p>All ten classes are examinable. The weight, however, is not spread evenly, and it is worth knowing
+where it lands before you plan tonight.</p>
+
+<table class="trace">
+  <tr><th>Topic</th><th>Class</th><th>How it shows up on an Exam 1 style paper</th></tr>
+  <tr><td>Pointers and dynamic memory</td><td>7, 8</td><td>Its own question, every time, and again inside the class question. The most pervasive topic in the whole course.</td></tr>
+  <tr><td>Vectors</td><td>5, 6</td><td>The container the program question is built on, plus part (e) of the trace.</td></tr>
+  <tr><td>Classes: members, methods, <code>private</code>, accessors</td><td>9, 10</td><td>The whole of Question 4.</td></tr>
+  <tr><td><code>++</code>, <code>--</code>, <code>break</code>, <code>continue</code></td><td>3</td><td>Parts (a) through (d) of the trace.</td></tr>
+  <tr><td><code>cout</code> formatting of a <code>double</code></td><td>3</td><td>Never asked directly &mdash; but it decides whether an answer of <code>4</code> or <code>4.0</code> is right, and it appears inside program questions that divide.</td></tr>
+  <tr><td>References and parameter passing</td><td>2</td><td>Never the subject of a question; required in almost every answer, and worth signature points.</td></tr>
+  <tr><td>Arrays</td><td>7</td><td>Constantly, mixed in with the pointer material &mdash; <code>int *py = y;</code> for an array against <code>int *px = &amp;x;</code> for a scalar is an explicitly graded distinction.</td></tr>
+  <tr><td>File I/O</td><td>4</td><td>Has not appeared on a past Exam 1 or midterm paper &mdash; the input always arrives through <code>cin</code>. Know it anyway; the loop discipline is the same one the input loops need, and past papers are evidence, not a promise.</td></tr>
+</table>
+
+<h2 id="s2"><span class="num">2.</span>Passing data to a function</h2>
+
+<p>This is the topic that never gets its own question and shows up in every answer. Every function
+you write on this paper &mdash; the <code>product</code> function in Question 4, any helper you invent for
+Question 1 &mdash; forces the choice, and the signature is where the first points are.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the four parameter forms, compressed</span></div>
+  <div class="bd">
+    <p>All four of these come from Classes 1, 2 and 7. Restated in one place:</p>
+    <ul>
+      <li><strong>Call by value</strong>, <code>void f(int n)</code> &mdash; the parameter is a brand-new local
+        variable holding a <em>copy</em>. The function cannot touch the caller's variable.</li>
+      <li><strong>Call by reference</strong>, <code>void f(int &amp;n)</code> &mdash; the parameter is another
+        <em>name</em> for the caller's variable. One object, two names. Writes land on the original.</li>
+      <li><strong><code>const</code> reference</strong>, <code>void f(const string &amp;s)</code> &mdash; no copy is made, and
+        the function promises not to modify it. The right default for anything bigger than a number.</li>
+      <li><strong>Pointer parameter</strong>, <code>void f(int *n)</code> &mdash; the function receives an
+        <em>address</em>. It can change the caller's variable through <code>*n</code>, but the call site must
+        write <code>&amp;</code> and the pointer may be null.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; three swaps, one of which does nothing</span></div>
+  <div class="bd">
+    <p>The oldest example in the course, and still the fastest way to check that the distinction is
+    solid. Three functions that all look like they swap two integers. Work out all three lines of
+    output before you open the answer.</p>
+<div class="codewrap"><div class="cap">swaps.cpp</div><pre><code class="language-cpp">// swaps.cpp -- the three swaps: broken, reference, pointer
+#include &lt;iostream&gt;
+using namespace std;
+
+void swap1(int u, int v)   { int t = u;  u = v;   v = t;  }
+void swap2(int &amp;u, int &amp;v) { int t = u;  u = v;   v = t;  }
+void swap3(int *u, int *v) { int t = *u; *u = *v; *v = t; }
+
+int main() {
+    int a = 3, b = 4, c = 5, d = 6, e = 7, f = 8;
+
+    swap1(a, b);
+    swap2(c, d);
+    swap3(&amp;e, &amp;f);
+
+    cout &lt;&lt; "swap1: " &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; "swap2: " &lt;&lt; c &lt;&lt; " " &lt;&lt; d &lt;&lt; endl;
+    cout &lt;&lt; "swap3: " &lt;&lt; e &lt;&lt; " " &lt;&lt; f &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">swap1: 3 4
+swap2: 6 5
+swap3: 8 7</pre>
+    <table class="trace">
+      <tr><th>Function</th><th>What the parameter <em>is</em></th><th>Effect on <code>main</code></th></tr>
+      <tr><td><code>swap1</code></td><td>Two fresh local <code>int</code>s holding copies of 3 and 4.</td><td>None. It swaps its own locals perfectly, then they are destroyed.</td></tr>
+      <tr><td><code>swap2</code></td><td>Two other names for <code>main</code>'s <code>c</code> and <code>d</code>.</td><td><code>c</code> and <code>d</code> really change.</td></tr>
+      <tr><td><code>swap3</code></td><td>Two addresses. <code>*u</code> names <code>main</code>'s <code>e</code>.</td><td><code>e</code> and <code>f</code> really change &mdash; but the call had to say <code>swap3(&amp;e, &amp;f)</code>.</td></tr>
+    </table>
+    <p>The thing to carry into the exam: <strong>the call site of <code>swap1</code> and <code>swap2</code> is spelled
+    identically</strong>. <code>swap1(a, b)</code> and <code>swap2(c, d)</code> look the same. Whether the caller's
+    variables change is decided entirely by two ampersands in the parameter list, which is why a
+    trace question can hinge on a single character you have to go back up the page to find.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same point without the swap</span></div>
+  <div class="bd">
+    <p>Three one-line functions that each try to set their argument to 99, and one that only reads.
+    Predict all four lines.</p>
+<div class="codewrap"><div class="cap">params.cpp</div><pre><code class="language-cpp">// params.cpp -- the four ways to hand a variable to a function
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+void byValue(int n)        { n = 99; }
+void byReference(int &amp;n)   { n = 99; }
+void byPointer(int *n)     { *n = 99; }
+int  lengthOf(const string &amp;s) { return s.size(); }   // read-only, no copy
+
+int main() {
+    int a = 1, b = 1, c = 1;
+
+    byValue(a);
+    byReference(b);
+    byPointer(&amp;c);
+
+    cout &lt;&lt; "a = " &lt;&lt; a &lt;&lt; endl;
+    cout &lt;&lt; "b = " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; "c = " &lt;&lt; c &lt;&lt; endl;
+
+    string title = "Object-Oriented Programming";
+    cout &lt;&lt; "length = " &lt;&lt; lengthOf(title) &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">a = 1
+b = 99
+c = 99
+length = 27</pre>
+    <p><code>a</code> is untouched because <code>byValue</code> was handed a copy. <code>b</code> and <code>c</code> both change, by two
+    different mechanisms that reach the same place. And <code>lengthOf</code> never copies the 27-character
+    string at all &mdash; the <code>const string &amp;</code> gives it read access to <code>main</code>'s own object, with
+    a compile-time guarantee that it will not scribble on it.</p>
+    <p>That last one is the form to reach for by reflex when a parameter is a <code>string</code>, a <code>vector</code>,
+    or an object of a class you wrote. It is faster than a copy and safer than a plain reference.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.2</div>
+  <div class="bd">
+    <p>For each function below, give the parameter list you would write on the exam, and one sentence
+    of justification.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A function that takes a <code>vector</code> of test scores and returns their average. It must not modify the vector.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">double average(const vector&lt;int&gt; &amp;scores)</code></pre>
+        <p>Read-only, and a vector can be arbitrarily large, so a <code>const</code> reference: no copy, and the
+        <code>const</code> documents and enforces the promise. Passing it by value, <code>vector&lt;int&gt; scores</code>, is not
+        <em>wrong</em> &mdash; the professor's own model answers sometimes do exactly that &mdash; but
+        it copies every element for no reason.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A function that adds one more score to a vector the caller owns.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">void addScore(vector&lt;int&gt; &amp;scores, int s)</code></pre>
+        <p>A plain reference, because the whole point is to modify the caller's vector. <code>const</code> here
+        would be a compile error the moment you called <code>push_back</code>. The <code>int</code> goes by value: it is
+        small and it is only read.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A function that fills an array of <code>n</code> integers that the caller allocated with <code>new[]</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">void fill(int *a, int n)</code></pre>
+        <p>An array reaches a function as a pointer to its first element &mdash; you can write
+        <code>int a[]</code> instead, which means exactly the same thing. Either way the array is
+        <strong>not</strong> copied, so the function writes straight into the caller's storage. And
+        the length has to come along as a separate parameter, because a pointer does not carry one.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> A function that returns the product of two <code>Rational</code> objects, where <code>Rational</code> has private data and public getters.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Rational product(Rational x, Rational y)</code></pre>
+        <p>This is the signature from the Fall 2023 paper itself, and it takes both objects
+        <strong>by value</strong>. <code>const Rational &amp;x</code> would be better style, but it needs the
+        getters to be <code>const</code> member functions &mdash; and on that exam they are not, so the
+        <code>const</code> reference version would not compile. Match the stem you are given.</p>
+        <p><strong>The wrap-up for all four parts:</strong> the parameter list is worth points on its
+        own. Get the return type, the names and the <code>&amp;</code> right, and you have banked the signature
+        credit before writing a single statement of the body.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Vectors, and the write-a-program question</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; vector, compressed from Classes 5 and 6</span></div>
+  <div class="bd">
+    <p>A <strong>vector</strong> is a generalized array: it stores a sequence of same-typed elements,
+    it knows its own length, and it can grow while the program runs. It needs
+    <code>#include &lt;vector&gt;</code>, and the element type goes in angle brackets.</p>
+    <p>The only members this exam has ever used are <code>push_back</code>, <code>pop_back</code>, <code>size()</code>, <code>back()</code> and
+    the subscript <code>[]</code>. It has never asked for an iterator, <code>insert</code>, <code>erase</code>, <code>at()</code> or <code>resize()</code>.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the four declaration forms, and the ends</span></div>
+  <div class="bd">
+    <p>Four ways to declare a vector, and what each one puts in the elements. Predict all four lines
+    of output &mdash; the last one is printed with no separator, which is exactly how the exam does
+    it.</p>
+<div class="codewrap"><div class="cap">vecrecall.cpp</div><pre><code class="language-cpp">// vecrecall.cpp -- everything about vector that Exam 1 can ask for
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; empty;              // size 0
+    vector&lt;int&gt; sized(4);           // 4 elements, all 0
+    vector&lt;int&gt; filled(3, 7);       // 3 elements, all 7
+    vector&lt;int&gt; listed{1, 2, 4};    // exactly these three
+
+    cout &lt;&lt; empty.size()  &lt;&lt; " " &lt;&lt; sized.size()  &lt;&lt; " "
+         &lt;&lt; filled.size() &lt;&lt; " " &lt;&lt; listed.size() &lt;&lt; endl;
+    cout &lt;&lt; sized[0] &lt;&lt; " " &lt;&lt; filled[0] &lt;&lt; " " &lt;&lt; listed[2] &lt;&lt; endl;
+
+    empty.push_back(10);
+    empty.push_back(20);
+    empty.push_back(30);
+    cout &lt;&lt; empty.size() &lt;&lt; " " &lt;&lt; empty.front() &lt;&lt; " " &lt;&lt; empty.back() &lt;&lt; endl;
+
+    empty.pop_back();
+    cout &lt;&lt; empty.size() &lt;&lt; empty.back() &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0 4 3 3
+0 7 4
+3 10 30
+220</pre>
+    <p>Line by line:</p>
+    <ul>
+      <li>Sizes 0, 4, 3, 3. <strong>Parentheses describe the vector; braces list its contents.</strong>
+        <code>vector&lt;int&gt; filled(3, 7)</code> is three sevens; <code>vector&lt;int&gt; listed{1, 2, 4}</code> is those three
+        numbers, and its size is 3, not 4.</li>
+      <li><code>sized[0]</code> is <code>0</code> &mdash; the sized form value-initializes every element. <code>filled[0]</code> is the
+        fill value 7. <code>listed[2]</code> is the <em>third</em> element, 4.</li>
+      <li>After three <code>push_back</code> calls the size is 3, the front is 10 and the back is 30.</li>
+      <li>The last line is the exam's favorite spelling: <code>size()</code> and <code>back()</code> printed with nothing
+        between them. Size 2, back 20, so it reads <code>220</code>. Not "two hundred and twenty" and
+        not "2 20."</li>
+    </ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; assigning to an index that does not exist</span></div>
+  <div class="bd">
+    <p><code>v[i] = x;</code> on an empty vector does not create an element. It writes into memory the vector
+    does not own &mdash; undefined behavior, which on a good day crashes and on a bad day silently
+    keeps going and corrupts something else. <strong>The only way to create elements is
+    <code>push_back</code></strong>, or a declaration that sizes the vector up front.</p>
+  </div>
+</div>
+
+<h3>The anatomy of Question 1</h3>
+
+<p>Every "write a complete C++ program" question in this course is the same program with different
+nouns. Fall 2023 asked for the evens and odds of a list terminated by <code>0</code>. Winter 2025 asked for the
+average and the values above it, terminated by <code>0</code>. Summer 2025 asked for the maximum and the values
+below half of it, terminated by <code>-1</code>. One recipe covers all three.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the write-a-complete-program pattern</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>The standard beginning.</strong> <code>#include &lt;iostream&gt;</code>, <code>#include &lt;vector&gt;</code>,
+        <code>using namespace std;</code>, <code>int main() {</code>. Write it before you think about anything else &mdash;
+        it is worth a point or two on its own.</li>
+      <li><strong>Declare</strong> the input variable and the container: <code>int x;</code> and
+        <code>vector&lt;int&gt; v;</code>. If the question asks you to "set up just enough space to store those
+        inputs," a vector <em>is</em> the answer &mdash; or a dynamic array, if you would rather do
+        the <code>new[]</code>/<code>delete[]</code> bookkeeping.</li>
+      <li><strong>Prompt, then read the first value</strong>, then loop: this is the sentinel pattern,
+        and its shape matters.
+<pre><code class="language-cpp">    cout &lt;&lt; "Enter some integers until 0 to stop: ";
+    cin &gt;&gt; x;
+    while (x != 0) {
+        v.push_back(x);
+        cin &gt;&gt; x;
+    }</code></pre>
+        One <code>cin &gt;&gt; x;</code> before the loop, one at the bottom of the body. The sentinel is tested, never
+        stored.</li>
+      <li><strong>Compute</strong> whatever the question wants &mdash; a running total, a running
+        maximum &mdash; either inside the input loop or in a second pass over the vector.</li>
+      <li><strong>Print</strong>, walking the vector with an ordinary indexed <code>for</code> loop and an <code>if</code>
+        for the filter.</li>
+      <li><strong>The standard ending.</strong> <code>return 0;</code> and the closing brace.</li>
+    </ol>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; the program question, from memory</h3>
+
+<p>Close the notes. Write the Fall 2023 Question 1 program: read integers until <code>0</code>, store them, then
+print the evens and the odds on separate lines. Time yourself; on the day you get about twelve
+minutes for this.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; Question 1, from memory</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="18" data-starter="#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int x;
+    vector&lt;int&gt; v;
+
+    // 1. prompt, read the first value, loop until the sentinel 0
+
+    // 2. print &quot;Evens: &quot; then every even element
+
+    // 3. print &quot;Odds: &quot; then every odd element
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int x;
+    vector&lt;int&gt; v;
+
+    // 1. prompt, read the first value, loop until the sentinel 0
+
+    // 2. print "Evens: " then every even element
+
+    // 3. print "Odds: " then every odd element
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.3</div>
+  <div class="bd">
+    <p>Write the complete program, then compare it against this one. The sample run in the exam is
+    <code>Enter some integers until 0 to stop: 2 4 3 1 5 8 9 6 7 0</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">evenodd.cpp</div><pre><code class="language-cpp">// evenodd.cpp -- Fall 2023 Exam 1 Problem 1
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int x;
+    vector&lt;int&gt; v;
+    cout &lt;&lt; "Enter some integers until 0 to stop: ";
+    cin &gt;&gt; x;
+    while (x != 0) {
+        v.push_back(x);
+        cin &gt;&gt; x;
+    }
+
+    cout &lt;&lt; "Evens: ";
+    for (int i = 0; i &lt; (int)v.size(); i++) {
+        if (v[i] % 2 == 0) cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; "Odds: ";
+    for (int i = 0; i &lt; (int)v.size(); i++) {
+        if (v[i] % 2 != 0) cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<pre class="out">Enter some integers until 0 to stop: Evens: 2 4 8 6
+Odds: 3 1 5 9 7</pre>
+      <p>(The input was piped in from a file rather than typed, so the digits do not echo after the
+      prompt. In a terminal they appear on the same line, exactly as the exam's sample run shows.)</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>Two passes over the same vector is the simplest correct plan and it is the one the
+          rubric's first model answer uses. The rubric also shows a two-vector version that sorts the
+          numbers as they arrive. Both get full marks; pick whichever you can write without
+          hesitating.</li>
+        <li><code>v.size()</code> returns an unsigned type, so comparing it to an <code>int i</code> makes <code>-Wall</code>
+          complain. The cast <code>(int)v.size()</code> silences that. On paper nobody will mark you down for
+          <code>i &lt; v.size()</code> &mdash; the professor's own answers write it that way &mdash; but knowing
+          why the warning appears is worth a moment.</li>
+        <li>Test <code>x != 0</code> at the top, <code>push_back</code> inside. If you write the read at the top of the
+          loop body instead, you will store the sentinel and print a stray <code>0</code>.</li>
+        <li><code>% 2 != 0</code> rather than <code>% 2 == 1</code>: for a negative odd number, <code>%</code> in C++ yields <code>-1</code>, so
+          the <code>== 1</code> version silently drops negatives. The exam's sample data is all positive, but
+          this is a free correctness point.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.4</div>
+  <div class="bd">
+    <p>A student's program for the Winter 2025 version &mdash; print the average, then every input
+    above it &mdash; declares <code>int total = 0;</code> and <code>int average;</code>, sums correctly into <code>total</code>, and
+    then writes <code>average = total / v.size();</code>. For the sample input <code>3 1 4 1 5 9 2 6</code> the
+    correct average is <code>3.875</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does the program print for the average, and why?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It prints <code>3</code>. The sum is 31 and the size is 8, and <strong>both are integer
+        types</strong>, so <code>total / v.size()</code> is integer division: 31 divided by 8 is 3, remainder
+        discarded. Storing the result in an <code>int</code> would have thrown away the fraction even if the
+        division had produced one.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Fix it with the smallest possible change.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Declare the accumulator as a <code>double</code>:</p>
+<pre><code class="language-cpp">    double total = 0;
+    ...
+    double average = total / v.size();</code></pre>
+        <p>One operand is now floating point, so the division is floating point and
+        <code>31.0 / 8</code> is <code>3.875</code>. Casting at the point of division,
+        <code>(double)total / v.size()</code>, works just as well.</p>
+        <p>Then a second trap follows immediately: the filter must compare with the <code>double</code>
+        average, <code>if (v[i] &gt; average)</code>. Compare against an <code>int</code> copy of it and 4 would be excluded
+        from a list that should contain it.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> The Summer 2025 version of this question asks for the inputs "less than half the maximum," and its sample run has a maximum of 12 with 6 among the inputs &mdash; and 6 is <em>not</em> printed. What does that tell you about the comparison the model answer uses, and how would you write it?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>6 is exactly half of 12, and it is excluded, so the comparison is <strong>strictly less
+        than</strong>, not <code>&lt;=</code>. The model answer writes:</p>
+<pre><code class="language-cpp">        if (v[i] &lt; maximum / 2.0) cout &lt;&lt; v[i] &lt;&lt; " ";</code></pre>
+        <p>Two things at once here. The <code>2.0</code> forces floating-point division, so an odd maximum like
+        13 gives a half of 6.5 rather than 6. And the <code>&lt;</code> rather than <code>&lt;=</code> is what the sample run
+        tells you. Read the sample run: on this professor's papers it is the specification, and it
+        settles boundary questions the prose leaves open.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.5</div>
+  <div class="bd">
+    <p>The same loop discipline, one class earlier. No past Exam 1 paper has read from a file, but the
+    reading loop is the input loop with the stream swapped, and it is on the syllabus &mdash; so it
+    is worth ninety seconds tonight. A file <code>scores.txt</code> holds a name and a score per
+    line.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write the loop that reads every record into two vectors, opening the file and checking the open succeeded.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">readfile.cpp</div><pre><code class="language-cpp">// readfile.cpp -- the standard read loop
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    ifstream ifs("scores.txt");
+    if (!ifs.is_open()) {
+        cout &lt;&lt; "could not open scores.txt" &lt;&lt; endl;
+        return 1;
+    }
+
+    vector&lt;string&gt; names;
+    vector&lt;int&gt; scores;
+    string name;
+    int score;
+
+    while (ifs &gt;&gt; name &gt;&gt; score) {      // the read is the loop condition
+        names.push_back(name);
+        scores.push_back(score);
+    }
+    ifs.close();
+
+    cout &lt;&lt; "records read: " &lt;&lt; names.size() &lt;&lt; endl;
+    cout &lt;&lt; "last record:  " &lt;&lt; names.back() &lt;&lt; " " &lt;&lt; scores.back() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">records read: 3
+last record:  Cleo 91</pre>
+        <p><code>#include &lt;fstream&gt;</code> gives you <code>ifstream</code>. An input file that does not exist opens
+        <em>unsuccessfully</em> &mdash; unlike an output file, which is created &mdash; so the
+        <code>is_open()</code> check is not optional. And note how closely this mirrors the exam's input loop:
+        the same <code>push_back</code> into the same kind of vector, with <code>ifs</code> in place of <code>cin</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A student writes <code>while (!ifs.eof()) { ifs &gt;&gt; name &gt;&gt; score; ... }</code> instead. On this three-record file, what goes wrong?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It processes the last record twice:</p>
+<pre class="out">1: Ana 88
+2: Ben 74
+3: Cleo 91
+4: Cleo 91</pre>
+        <p>After reading <code>Cleo 91</code> the file still has a newline left in it, so <code>eof()</code> is still false
+        and the loop goes round again. The extraction on that pass fails, <code>name</code> and <code>score</code> keep
+        their previous values, and the body prints them a second time.</p>
+        <p><code>eof()</code> reports a read that has <strong>already</strong> failed; it never predicts the next
+        one. That is why the read itself belongs in the condition:
+        <code>while (ifs &gt;&gt; name &gt;&gt; score)</code> tests the result of the read that just happened.</p>
+        <p><strong>The wrap-up:</strong> exactly the same reasoning applies to <code>cin</code>. Test the thing
+        you just did, not the thing you are about to do.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Pointers and dynamic memory</h2>
+
+<p>This is the biggest topic on the paper and the one with its own dedicated question. Everything in
+Classes 7 and 8, compressed to what the exam asks for.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the vocabulary, compressed from Classes 7 and 8</span></div>
+  <div class="bd">
+    <ul>
+      <li>A <strong>pointer</strong> is a variable that holds the address of another variable.
+        <code>int *p;</code> declares one; the star attaches to the name, so <code>int *p, q;</code> gives one pointer and
+        one plain <code>int</code>.</li>
+      <li><code>&amp;x</code> is <strong>address-of</strong>: it produces a pointer to <code>x</code>. <code>*p</code> is
+        <strong>dereference</strong>: it names the variable <code>p</code> points at, and may sit on either side
+        of an assignment.</li>
+      <li><strong>Dynamic allocation</strong> is memory taken from the <strong>heap</strong> at run
+        time by <code>new</code>, and it lives until you call <code>delete</code>. It has no name &mdash; the only way to
+        reach it is through the pointer.</li>
+      <li>A <strong>memory leak</strong> is heap memory that no pointer can reach any more. A leaking
+        program does not crash and does not warn.</li>
+      <li>A <strong>dangling pointer</strong> is a pointer to memory that has already been released.
+        Dereferencing or re-deleting it is undefined behavior.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the five basic pointer operations</span></div>
+  <div class="bd">
+    <p>These five statements are a whole exam question in this course, in its "complete the code
+    skeleton" form. Say what each of the five prints or does before revealing.</p>
+<div class="codewrap"><div class="cap">ptrbasics.cpp</div><pre><code class="language-cpp">// ptrbasics.cpp -- five statements over one int and one pointer
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int var = 20;
+    int *ptr;
+
+    ptr = &amp;var;                     // (a) assign the address of var to ptr
+    cout &lt;&lt; *ptr &lt;&lt; endl;           // (b) print the value of var using ptr
+    *ptr = 30;                      // (c) change the value of var to 30 using ptr
+    cout &lt;&lt; &amp;var &lt;&lt; endl;           // (d) print the address of var using var
+    cout &lt;&lt; ptr &lt;&lt; endl;            // (e) print the address of var using ptr
+
+    cout &lt;&lt; var &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">20
+0x7fffb0816d5c
+0x7fffb0816d5c
+30</pre>
+    <p>The two addresses are <strong>machine-dependent</strong> &mdash; running the same binary a
+    second time printed <code>0x7ffe52b5e7bc</code>. The values shown are representative. What is
+    <em>not</em> machine-dependent, and what an exam answer must get right, is that lines (d) and (e)
+    print <strong>the same address as each other</strong>, and that the final <code>var</code> is 30 because
+    line (c) wrote through the pointer.</p>
+    <table class="trace">
+      <tr><th>Task</th><th>Statement</th><th>Why this and not something else</th></tr>
+      <tr><td>Point at a variable</td><td><code>ptr = &amp;var;</code></td><td><code>&amp;</code> on a scalar. Not <code>ptr = var;</code>, which tries to store an <code>int</code> in a pointer.</td></tr>
+      <tr><td>Read through it</td><td><code>cout &lt;&lt; *ptr;</code></td><td>The star is the dereference operator here, not part of a declaration.</td></tr>
+      <tr><td>Write through it</td><td><code>*ptr = 30;</code></td><td><code>*ptr</code> on the left names <code>var</code> itself.</td></tr>
+      <tr><td>Print the address</td><td><code>cout &lt;&lt; &amp;var;</code> or <code>cout &lt;&lt; ptr;</code></td><td>Both print the same number. <code>cout &lt;&lt; ptr;</code> does not print 30 &mdash; a pointer prints as an address.</td></tr>
+    </table>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the Fall 2023 five-statement question</span></div>
+  <div class="bd">
+    <p>The real thing. You are given these declarations and asked for five statements:</p>
+<pre><code class="language-cpp">    int x = 7, y[3] = {3, 1, 4};
+    int *p1 = new int, *p2 = new int[3];</code></pre>
+    <p>(a) declare a pointer <code>px</code> that points to <code>x</code>; (b) declare a pointer <code>py</code> that points to the
+    array <code>y</code>; (c) copy the data in <code>x</code> into the dynamic variable <code>p1</code> points to; (d) copy the array
+    <code>y</code> into the dynamic array <code>p2</code> points to; (e) release the memory for <code>p1</code> and <code>p2</code>.</p>
+    <p>Write your five answers down before opening this. Then check every one against the state the
+    driver prints.</p>
+<div class="codewrap"><div class="cap">ptrstmts.cpp</div><pre><code class="language-cpp">// ptrstmts.cpp -- Fall 2023 Exam 1 Problem 2, all five answers, in a driver
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int x = 7, y[3] = {3, 1, 4};
+    int *p1 = new int, *p2 = new int[3];
+
+    int *px = &amp;x;                                   // (a)
+    int *py = y;                                    // (b)
+    *p1 = x;                                        // (c)
+    for (int i = 0; i &lt; 3; i++) p2[i] = y[i];       // (d)
+
+    cout &lt;&lt; "*px  = " &lt;&lt; *px &lt;&lt; endl;
+    cout &lt;&lt; "*py  = " &lt;&lt; *py &lt;&lt; "  py[2] = " &lt;&lt; py[2] &lt;&lt; endl;
+    cout &lt;&lt; "*p1  = " &lt;&lt; *p1 &lt;&lt; endl;
+    cout &lt;&lt; "p2   = " &lt;&lt; p2[0] &lt;&lt; p2[1] &lt;&lt; p2[2] &lt;&lt; endl;
+    cout &lt;&lt; "y    = " &lt;&lt; y[0] &lt;&lt; y[1] &lt;&lt; y[2] &lt;&lt; endl;
+
+    delete p1;                                      // (e)
+    delete [] p2;
+    p1 = nullptr;
+    p2 = nullptr;
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">*px  = 7
+*py  = 3  py[2] = 4
+*p1  = 7
+p2   = 314
+y    = 314</pre>
+    <p>The four distinctions this question exists to test:</p>
+    <table class="trace">
+      <tr><th>Part</th><th>Answer</th><th>The distinction</th></tr>
+      <tr><td>(a)</td><td><code>int *px = &amp;x;</code></td><td>A scalar needs <code>&amp;</code>.</td></tr>
+      <tr><td>(b)</td><td><code>int *py = y;</code></td><td>An <strong>array name is already a pointer</strong> to its first element. <code>&amp;y</code> is a different type &mdash; pointer to array of 3 &mdash; and will not compile here.</td></tr>
+      <tr><td>(c)</td><td><code>*p1 = x;</code></td><td>Copy a <em>value</em> into the existing dynamic <code>int</code>. <code>p1 = &amp;x;</code> would copy an <em>address</em>, repoint <code>p1</code>, and leak the block <code>new</code> gave you.</td></tr>
+      <tr><td>(d)</td><td>a <code>for</code> loop</td><td><code>p2 = y;</code> does not copy anything &mdash; it repoints, leaks the array, and leaves <code>p2</code> aimed at <code>y</code>. Arrays are copied element by element.</td></tr>
+      <tr><td>(e)</td><td><code>delete p1; delete [] p2;</code></td><td>One <code>new</code>, one <code>delete</code>. One <code>new[]</code>, one <code>delete []</code>. The brackets are <strong>empty</strong>.</td></tr>
+    </table>
+    <p>Run under <code>valgrind</code>, this program reports 4 allocations, 4 frees, and "All heap blocks were
+    freed &mdash; no leaks are possible."</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; a mistake in the published answer key</span></div>
+  <div class="bd">
+    <p>The distributed answer key for that question gives part (c) as</p>
+<pre><code class="language-cpp">(c) *py = x;</code></pre>
+    <p>which is <strong>not</strong> what the question asks for. <code>py</code> is the pointer created in part
+    (b), and it points at the array <code>y</code>. Writing through it clobbers <code>y[0]</code> and never touches the
+    dynamic variable <code>p1</code> owns. Compile the key's version and the state comes out like this:</p>
+<pre class="out">*px  = 7
+y    = 714
+p2   = 714</pre>
+    <p><code>y[0]</code> has become 7, the copy in part (d) has faithfully propagated the damage into <code>p2</code>, and
+    the block <code>p1</code> points at still holds whatever <code>new int</code> left there. <strong>The correct answer is
+    <code>*p1 = x;</code></strong> &mdash; and it is worth understanding why, because "write through the pointer
+    you were asked about" is the entire point of the question.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.6</div>
+  <div class="bd">
+    <p>Given <code>int a = 5, b = 9; int *p = &amp;a, *q = &amp;b;</code>, say what each of these does and what <code>a</code>,
+    <code>b</code> end up as. Treat each part as starting from the original state.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>p = q;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Copies an <strong>address</strong>. Now both pointers point at <code>b</code>; nothing named <code>a</code> or
+        <code>b</code> changed, so <code>a</code> is 5 and <code>b</code> is 9. Nobody points at <code>a</code> any more.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>*p = *q;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Copies a <strong>value</strong>. <code>a</code> becomes 9, <code>b</code> stays 9, and both pointers still point
+        where they did.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>*p = q;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>A compile error: the left side is an <code>int</code> and the right side is an <code>int *</code>.</p>
+<pre class="err">error: invalid conversion from 'int*' to 'int' [-fpermissive]</pre>
+        <p>This is a good error to have seen once. It means you put a star on exactly one side too
+        few or too many.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> Why is <code>p1 = p2;</code> a disaster in a question like Fall 2023 Problem 2, even though it compiles?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because both pointers now name the same block, and the block <code>p1</code> used to own has become
+        unreachable &mdash; a <strong>leak</strong>. Worse, the later <code>delete p1; delete [] p2;</code> now
+        deletes the <em>same</em> memory twice, which is undefined behavior.</p>
+        <p><strong>The wrap-up for all four parts:</strong> one star is the difference between moving
+        an arrow and changing a value. Say the statement out loud in those words before you write it
+        down &mdash; "copy the address" or "copy the value" &mdash; and this question stops being
+        tricky.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>Dynamic memory: allocate, use, release</h3>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; "just enough space," with new[] instead of a vector</span></div>
+  <div class="bd">
+    <p>Some versions of the program question say "set up just enough space to store those inputs."
+    A vector is the easy answer. If you would rather show the dynamic-array machinery, this is the
+    shape &mdash; and it is the shape the class question will need after the exam. The run below was
+    fed the input <code>4 3 1 4 1</code>.</p>
+<div class="codewrap"><div class="cap">dynarray.cpp</div><pre><code class="language-cpp">// dynarray.cpp -- "set up just enough space" with a dynamic array
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cout &lt;&lt; "How many values? ";
+    cin &gt;&gt; n;
+
+    int *a = new int[n];            // exactly n ints, decided at run time
+    for (int i = 0; i &lt; n; i++) cin &gt;&gt; a[i];
+
+    int sum = 0;
+    for (int i = 0; i &lt; n; i++) sum += a[i];
+
+    cout &lt;&lt; "sum     = " &lt;&lt; sum &lt;&lt; endl;
+    cout &lt;&lt; "average = " &lt;&lt; sum / (double)n &lt;&lt; endl;
+
+    delete [] a;                    // one new[], one delete[]
+    a = nullptr;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">How many values? sum     = 9
+average = 2.25</pre>
+    <p>(Input piped in again, so the typed numbers do not echo.)</p>
+    <ul>
+      <li><code>new int[n]</code> with a variable <code>n</code> is the honest reason the heap exists: the size is not known
+        until the program runs.</li>
+      <li><code>sum / (double)n</code> &mdash; without the cast this is <code>9 / 4</code>, integer division, and it prints
+        <code>2</code>. The cast is not decoration.</li>
+      <li><code>delete [] a;</code> with empty brackets, then <code>a = nullptr;</code>. If the rubric asks for a dynamic
+        array, releasing it is explicitly part of the marks.</li>
+    </ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; counting news against deletes</span></div>
+  <div class="bd">
+    <p>Three allocations, one <code>delete</code>. Before you look: how many blocks leak, and how many bytes?</p>
+<div class="codewrap"><div class="cap">leakdemo.cpp</div><pre><code class="language-cpp">// leakdemo.cpp -- three allocations, one delete: where did the other two go?
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int *p = new int(1);
+    cout &lt;&lt; *p &lt;&lt; endl;
+
+    p = new int(2);                 // the first block is now unreachable
+    cout &lt;&lt; *p &lt;&lt; endl;
+
+    int *q = new int[3];
+    q[0] = 3;
+    cout &lt;&lt; q[0] &lt;&lt; endl;
+
+    delete p;                       // releases only the second block
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">1
+2
+3</pre>
+    <p>The program prints exactly what you expect and exits normally. That is the danger: nothing in
+    the output tells you anything is wrong. Here is what <code>valgrind --leak-check=full</code> says:</p>
+<pre class="out">==14238== HEAP SUMMARY:
+==14238==     in use at exit: 16 bytes in 2 blocks
+==14238==   total heap usage: 5 allocs, 3 frees, 77,844 bytes allocated
+==14238==
+==14238== 4 bytes in 1 blocks are definitely lost in loss record 1 of 2</pre>
+    <p>Two leaked blocks: the first <code>int</code> (4 bytes), orphaned the moment <code>p</code> was reassigned, and the
+    three-<code>int</code> array (12 bytes), never deleted at all. <strong>Count calls to <code>new</code>, not pointer
+    variables.</strong> Three <code>new</code>s here, one <code>delete</code>. The fix is <code>delete p;</code> before reassigning
+    <code>p</code>, and <code>delete [] q;</code> at the end.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the four ways this question goes wrong</span></div>
+  <div class="bd">
+    <ul>
+      <li><strong><code>delete</code> on an array.</strong> <code>new[]</code> must be matched by <code>delete []</code>. Mixing them
+        is undefined behavior, and on an exam it is simply the wrong answer.</li>
+      <li><strong>Putting the length back in the brackets.</strong> <code>delete [3] p2;</code> does not compile.
+        The brackets are empty.</li>
+      <li><strong><code>p = &amp;y;</code> for an array.</strong> An array name is already a pointer; write
+        <code>p = y;</code>.</li>
+      <li><strong>Deleting a pointer you never allocated.</strong> <code>delete px;</code> where <code>px = &amp;x;</code>
+        points at a local variable is undefined behavior. Only pointers that came from <code>new</code> are ever
+        deleted.</li>
+    </ul>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; the five statements, from memory</h3>
+
+<p>The 2024&ndash;2025 papers use a variant of the same question built on a tiny class with public
+data. Given this <code>Rectangle</code>, write the five statements: declare an object and set it to 4 by 6;
+declare a pointer that dynamically allocates a rectangle; copy the data across; print through the
+pointer; release it.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; five statements, from memory</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    int width, height;
+    void display() { cout &lt;&lt; &quot;[&quot; &lt;&lt; width &lt;&lt; &quot; x &quot; &lt;&lt; height &lt;&lt; &quot;]&quot; &lt;&lt; endl; }
+};
+
+int main() {
+    // (a) declare a rectangle object r and set it to 4 by 6
+
+    // (b) declare a pointer rptr that dynamically allocates a rectangle
+
+    // (c) copy the data in r into the rectangle rptr points to
+
+    // (d) print the rectangle rptr points to
+
+    // (e) release the memory for rptr
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    int width, height;
+    void display() { cout &lt;&lt; "[" &lt;&lt; width &lt;&lt; " x " &lt;&lt; height &lt;&lt; "]" &lt;&lt; endl; }
+};
+
+int main() {
+    // (a) declare a rectangle object r and set it to 4 by 6
+
+    // (b) declare a pointer rptr that dynamically allocates a rectangle
+
+    // (c) copy the data in r into the rectangle rptr points to
+
+    // (d) print the rectangle rptr points to
+
+    // (e) release the memory for rptr
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.7</div>
+  <div class="bd">
+    <p>Write the five statements, then check them.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">rectstmts.cpp</div><pre><code class="language-cpp">// rectstmts.cpp -- Summer 2025 Midterm Problem 2, all five answers, in a driver
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    int width, height;
+    void display() { cout &lt;&lt; "[" &lt;&lt; width &lt;&lt; " x " &lt;&lt; height &lt;&lt; "]" &lt;&lt; endl; }
+};
+
+int main() {
+    Rectangle r;                            // (a)
+    r.width = 4;
+    r.height = 6;
+
+    Rectangle *rptr = new Rectangle;        // (b)
+
+    rptr-&gt;width  = r.width;                 // (c)
+    rptr-&gt;height = r.height;
+
+    rptr-&gt;display();                        // (d)
+
+    delete rptr;                            // (e)
+    rptr = nullptr;
+
+    return 0;
+}</code></pre></div>
+<pre class="out">[4 x 6]</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>Part (a) is legitimately three statements. The instruction says "a single line, or a few
+          lines of C++ instructions" &mdash; you are not being asked for one-liners, you are being
+          asked not to write a whole program.</li>
+        <li><code>new Rectangle</code> with <strong>no parentheses and no arguments</strong>: this class has no
+          constructor, so there is nothing to pass. The members are indeterminate until you set
+          them.</li>
+        <li><code>rptr-&gt;width</code> and <code>(*rptr).width</code> are the same thing and both score. The arrow is
+          "pointer member of." Use <code>.</code> when the left-hand side is an object, <code>-&gt;</code> when it is a
+          pointer.</li>
+        <li><code>delete rptr;</code> &mdash; a single object, so no brackets. Setting the pointer to <code>nullptr</code>
+          afterwards is the habit that defuses double deletes; it is not required by the rubric but
+          it costs nothing.</li>
+        <li>The published version of this question is headed "Give the following class Point" and
+          then shows a class called <code>Rectangle</code>. Left-over text from the previous term's paper.
+          Answer the code you are shown, and if a stem and its code disagree on the exam, say in one
+          line which one you assumed.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Classes: private data and the way in</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; compressed from Classes 9 and 10</span></div>
+  <div class="bd">
+    <ul>
+      <li>A <strong>class</strong> is a type you write yourself; an <strong>object</strong> is an
+        instance of it. The declaration ends with a <strong>semicolon after the closing brace</strong>.</li>
+      <li>A variable declared inside the class is a <strong>data member</strong>; a function declared
+        inside it is a <strong>method</strong>. The dot operator reaches both: <code>r1.set(2, 3)</code>.</li>
+      <li><strong><code>public</code></strong> members are reachable from anywhere; <strong><code>private</code></strong>
+        members are reachable <em>inside the class only</em>. That one keyword is what makes
+        <strong>encapsulation</strong> real.</li>
+      <li>An <strong>accessor</strong> ("get") returns a data member and should be <code>const</code>; a
+        <strong>mutator</strong> ("set") changes one and cannot be.</li>
+      <li>With no constructor, a new object's members are <strong>indeterminate</strong>, not zero.
+        Constructors arrive in Class 13 &mdash; after this exam.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; everything Classes 9 and 10 gave you, in one file</span></div>
+  <div class="bd">
+    <p>Private data, a method defined outside the class with <code>::</code>, <code>const</code> accessors, an object on the
+    stack reached with <code>.</code>, and an object on the heap reached with <code>-&gt;</code>. Four lines of output. Predict
+    them.</p>
+<div class="codewrap"><div class="cap">pointclass.cpp</div><pre><code class="language-cpp">// pointclass.cpp -- everything Classes 9 and 10 gave you, in one file
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+    private:
+        double x, y;
+    public:
+        void set(double a, double b);       // declared here, defined below
+        double getX() const { return x; }
+        double getY() const { return y; }
+        void print() const;
+};
+
+void Point::set(double a, double b) {       // :: says "the set that belongs to Point"
+    x = a;
+    y = b;
+}
+
+void Point::print() const {
+    cout &lt;&lt; "(" &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ")" &lt;&lt; endl;
+}
+
+int main() {
+    Point p;
+    p.set(3, 4);
+    p.print();                              // object  -&gt; dot
+
+    Point *q = new Point;
+    q-&gt;set(1.5, 2.5);
+    q-&gt;print();                             // pointer -&gt; arrow
+    (*q).print();                           // the same thing, spelled out
+
+    cout &lt;&lt; q-&gt;getX() + p.getY() &lt;&lt; endl;
+
+    delete q;
+    q = nullptr;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">(3, 4)
+(1.5, 2.5)
+(1.5, 2.5)
+5.5</pre>
+    <ul>
+      <li><code>p.set(3, 4)</code> passes two <code>int</code> literals to <code>double</code> parameters, which converts silently.
+        <code>p.print()</code> shows <code>(3, 4)</code>, not <code>(3.0, 4.0)</code> &mdash; <code>cout</code> drops
+        trailing zeros on a <code>double</code> whose value is whole. That rule from Class 3 does not stop
+        applying just because the number came out of an object.</li>
+      <li>The <code>::</code> in <code>void Point::print() const</code> is the scope-resolution operator: it says which
+        class this body belongs to. The <code>const</code> must appear in <strong>both</strong> the declaration
+        and the definition, or the compiler sees two different functions.</li>
+      <li><code>q-&gt;print()</code> and <code>(*q).print()</code> are identical, and both print the same thing here. The
+        arrow exists because <code>.</code> binds tighter than <code>*</code>, so <code>*q.print()</code> would mean
+        <code>*(q.print())</code> &mdash; a compile error.</li>
+      <li>The last line, <code>q-&gt;getX() + p.getY()</code>, is 1.5 + 4, printed as <code>5.5</code>. Accessors
+        are how outside code reads private data, and marking them <code>const</code> is what lets them be called
+        on a <code>const</code> object later.</li>
+    </ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the Fall 2023 class question, complete</span></div>
+  <div class="bd">
+    <p>The exam gives you a <code>Rational</code> class with <code>numerator</code> and <code>denominator</code> <strong>private</strong>,
+    with <code>getn()</code>, <code>getd()</code> and <code>print()</code> already written, and asks for three things: an
+    implementation of <code>set</code>, an implementation of <code>add1</code> (add 1 to the rational number, given the
+    hint that <code>p/q + 1 = (p+q)/q</code>), and an implementation of a free function <code>product</code> that
+    returns the product of two rationals without simplifying.</p>
+    <p>Here is the whole thing, assembled and compiled. Work out the three bodies yourself first, and
+    predict the three lines of output.</p>
+<div class="codewrap"><div class="cap">rational.cpp</div><pre><code class="language-cpp">// rational.cpp -- Fall 2023 Exam 1 Problem 4, complete
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+    private:
+        int numerator, denominator;
+    public:
+        void set(int a, int b) {                    // part (a)
+            numerator = a;
+            denominator = b;
+        }
+        int getn() { return numerator; }
+        int getd() { return denominator; }
+        void add1() {                               // part (b)
+            numerator = numerator + denominator;
+        }
+        void print() { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+};
+
+Rational product(Rational x, Rational y) {          // part (c)
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();              // add1 adds 1 to the rational number
+    r1.print();             // 5/3
+    r2.print();             // 4/5
+    Rational p = product(r1, r2);
+    p.print();              // 20/15
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">5/3
+4/5
+20/15</pre>
+    <p>Part by part, with the published point split:</p>
+    <table class="trace">
+      <tr><th>Part</th><th>Points</th><th>The thing being tested</th></tr>
+      <tr><td><code>set</code></td><td>2, no partial credit</td><td>That you assign the parameters to the members, and in the right order. Two lines.</td></tr>
+      <tr><td><code>add1</code></td><td>2, no partial credit</td><td>That you can turn the hint <code>p/q + 1 = (p+q)/q</code> into code. The denominator does not change. One line.</td></tr>
+      <tr><td><code>product</code></td><td>6, with partial credit: 2 for declaring a <code>Rational</code> and returning it, 2 for computing the numerator and denominator through the <code>.get</code> methods, 2 for setting them on the new object</td><td>That you know a free function cannot touch private data, and must go through the public interface.</td></tr>
+    </table>
+    <p>The shape of <code>product</code> is worth memorizing, because it is the answer to a whole family of
+    questions: <strong>declare a local object, compute the parts through the accessors, <code>set</code> them on
+    the local object, return it.</strong></p>
+    <p>And note that 2/3 + 1 is 5/3 &mdash; the numerator becomes 2 + 3 &mdash; while the product of
+    5/3 and 4/5 is printed as <code>20/15</code>. The question says explicitly that you do not need
+    to simplify, and the expected-output comment in the stem confirms it. Do not "improve" the answer
+    by reducing the fraction; you would be answering a different question.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; why product cannot just read the members</span></div>
+  <div class="bd">
+    <p>The obvious-looking version of <code>product</code> does not compile:</p>
+<pre><code class="language-cpp">Rational product(Rational x, Rational y) {
+    Rational answer;
+    answer.set(x.numerator * y.numerator, x.denominator * y.denominator);
+    return answer;
+}</code></pre>
+<pre class="err">privbad.cpp: In function 'Rational product(Rational, Rational)':
+privbad.cpp:15:18: error: 'int Rational::numerator' is private within this context
+   15 |     answer.set(x.numerator * y.numerator, x.denominator * y.denominator);
+      |                  ^~~~~~~~~
+privbad.cpp:6:13: note: declared private here
+privbad.cpp:15:18: note: field 'int Rational::numerator' can be accessed via 'int Rational::getn()'</pre>
+    <p><code>product</code> is a <strong>free function</strong>, not a member, so <code>private</code> shuts it out. That is
+    exactly why the class was given getters, and why the rubric pays two of the six points
+    specifically for using them. Read the error's last line: g++ names the accessor for you.</p>
+    <p>Two other things about that question as printed. The stem writes <code>Class Rational {</code> with a
+    capital C, which is not a C++ keyword, and it spells the return type of <code>product</code> as <code>Ration</code> in
+    both the stem and the answer key. Both are typos in the paper. Write <code>class</code> and <code>Rational</code> in
+    your answer &mdash; you will not be penalized for correcting them, and reproducing them faithfully
+    would give you code that does not compile.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; the class question, from memory</h3>
+
+<p>Close the notes again. Fill in the three bodies. You have about ten minutes for this on the day,
+and two of the three are one or two lines each.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; the three implementations</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+    private:
+        int numerator, denominator;
+    public:
+        void set(int a, int b) {
+            // (a) set the two members
+        }
+        int getn() { return numerator; }
+        int getd() { return denominator; }
+        void add1() {
+            // (b) add 1 to the rational number:  p/q + 1 = (p+q)/q
+        }
+        void print() { cout &lt;&lt; numerator &lt;&lt; &quot;/&quot; &lt;&lt; denominator &lt;&lt; endl; }
+};
+
+// (c) the free function: Rational product(Rational x, Rational y)
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();
+    r1.print();             // should print 5/3
+    r2.print();             // should print 4/5
+    Rational p = product(r1, r2);
+    p.print();              // should print 20/15
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+    private:
+        int numerator, denominator;
+    public:
+        void set(int a, int b) {
+            // (a) set the two members
+        }
+        int getn() { return numerator; }
+        int getd() { return denominator; }
+        void add1() {
+            // (b) add 1 to the rational number:  p/q + 1 = (p+q)/q
+        }
+        void print() { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+};
+
+// (c) the free function: Rational product(Rational x, Rational y)
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();
+    r1.print();             // should print 5/3
+    r2.print();             // should print 4/5
+    Rational p = product(r1, r2);
+    p.print();              // should print 20/15
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.8</div>
+  <div class="bd">
+    <p>Three short questions about the class you just wrote.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>add1</code> changes the numerator but not the denominator. Why is <code>numerator += denominator;</code> correct, and what would <code>numerator + denominator;</code> on its own do?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Adding 1 to <code>p/q</code> means adding <code>q/q</code>, which gives
+        <code>(p+q)/q</code> &mdash; a new numerator over the <em>same</em> denominator. So
+        <code>numerator = numerator + denominator;</code>, or the shorter <code>numerator += denominator;</code>.</p>
+        <p><code>numerator + denominator;</code> on its own computes the sum and throws it away. It compiles,
+        it does nothing, and <code>-Wall</code> warns about a statement with no effect. This is a real exam
+        answer that students write under time pressure.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Could <code>product</code> have been written as a member function instead, <code>Rational Rational::product(Rational y)</code>? What would change at the call site?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes, and as a member it <em>would</em> be allowed to read <code>numerator</code> and <code>denominator</code>
+        directly on both objects &mdash; access control is per class, not per object. The call site
+        would change from <code>product(r1, r2)</code> to <code>r1.product(r2)</code>.</p>
+        <p>But the exam's <code>main</code> is printed for you and it calls <code>product(r1, r2)</code>. Match the call
+        you are given. Changing the design to one that does not compile against the supplied <code>main</code>
+        is the expensive way to be clever.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> The <code>main</code> says <code>Rational p = product(r1, r2);</code>. Nothing here has a constructor. Why does that line work anyway, and what would break if <code>product</code> returned before calling <code>set</code> on <code>answer</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It works because the compiler writes the four basic operations for you &mdash; create,
+        copy, assign, destroy &mdash; and the copy it generates copies the object member by member.
+        <code>Rational p = product(...)</code> copy-initializes <code>p</code> from the returned object, member by member,
+        and for two plain <code>int</code>s that is exactly right.</p>
+        <p>If <code>product</code> returned <code>answer</code> without ever calling <code>set</code>, <code>answer</code>'s members would be
+        <strong>indeterminate</strong>, not zero. The copy would faithfully copy the garbage, and
+        <code>p.print()</code> would print two arbitrary numbers &mdash; different ones on different runs, with
+        no crash and no warning. Every object in this course is born with garbage until Class 13
+        gives us constructors.</p>
+        <p><strong>The wrap-up:</strong> a class body ends with <code>};</code>. Every year the rubric hands out
+        points for that semicolon, and every year people lose them.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.9</div>
+  <div class="bd">
+    <p>A student marks a method <code>const</code> and then modifies a member inside it:</p>
+<pre><code class="language-cpp">class Point {
+    private:
+        double x, y;
+    public:
+        void set(double a, double b) { x = a; y = b; }
+        void shift(double d) const { x = x + d; }
+};</code></pre>
+    <p>What does g++ say, and what is the fix?</p>
+    <details class="soln"><summary></summary><div class="ans">
+<pre class="err">constbad.cpp: In member function 'void Point::shift(double) const':
+constbad.cpp:9:40: error: assignment of member 'Point::x' in read-only object
+    9 |         void shift(double d) const { x = x + d; }   // promises not to change, then changes
+      |                                      ~~^~~~~~~</pre>
+      <p>Inside a <code>const</code> method every data member is read-only, so the assignment is rejected. The
+      fix is to drop the <code>const</code>: <code>shift</code> is a <strong>mutator</strong>, and mutators are never
+      <code>const</code>.</p>
+      <p>The rule to carry in: <strong>accessors <code>const</code>, mutators not.</strong> <code>getX()</code>, <code>getY()</code>
+      and <code>print()</code> are <code>const</code>; <code>set()</code> and <code>shift()</code> are not. The related error you will meet after
+      the exam, when objects start being passed as <code>const</code> references, is <em>"passing 'const Point'
+      as 'this' argument discards qualifiers"</em> &mdash; the same rule seen from the call site.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>The output-prediction traps</h2>
+
+<p>Question 3 is ten points in about five minutes of writing, and it is the question that decides
+grades. There are four traps in it and they are the same four traps every term.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; two questions per operator</span></div>
+  <div class="bd">
+    <p>For each of <code>++x</code>, <code>x++</code>, <code>--x</code>, <code>x--</code>, ask two separate questions:</p>
+    <ol>
+      <li><strong>What does the variable become?</strong> Always the same answer: up or down by one.</li>
+      <li><strong>What does the expression hand to <code>cout</code>?</strong> The <em>prefix</em> forms hand
+        over the <strong>new</strong> value; the <em>postfix</em> forms hand over the
+        <strong>old</strong> one.</li>
+    </ol>
+    <p>Write the variable's running value in the margin as you go. The exam's second line always
+    depends on what the first line left behind.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the Fall 2023 trace, all five lines</span></div>
+  <div class="bd">
+    <p>This is Question 3 from the actual Fall 2023 paper, unchanged. Five lines, 2 points each, no
+    partial credit. Work out all five before you reveal.</p>
+<div class="codewrap"><div class="cap">trace_f23.cpp</div><pre><code class="language-cpp">// trace_f23.cpp -- Fall 2023 Exam 1, Problem 3
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int x = 3, y = 5, z = 7, w = 9;
+    cout &lt;&lt; x++ &lt;&lt; ++y &lt;&lt; z-- &lt;&lt; --w &lt;&lt; endl;                    // line (a)
+    cout &lt;&lt; x &lt;&lt; y &lt;&lt; z &lt;&lt; w &lt;&lt; endl;                            // line (b)
+
+    for (int i = 3; i &lt; 9; i++) { if (i % 5 == 0) break;    cout &lt;&lt; i; }   // line (c)
+    cout &lt;&lt; endl;
+    for (int j = 3; j &lt; 9; j++) { if (j % 5 == 0) continue; cout &lt;&lt; j; }   // line (d)
+    cout &lt;&lt; endl;
+
+    vector&lt;int&gt; v;
+    for (int n = 1; n &lt; 10; n++) {
+        if (n % 2 == 0) v.push_back(n);
+        if (n % 3 == 0) v.pop_back();
+    }
+    cout &lt;&lt; v.size() &lt;&lt; v.back() &lt;&lt; endl;                        // line (e)
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">3678
+4668
+34
+34678
+14</pre>
+    <p><strong>Line (a).</strong> The operands of <code>&lt;&lt;</code> are taken strictly left to right, side effects
+    included:</p>
+    <table class="trace">
+      <tr><th>Item</th><th>Printed</th><th>Variable afterwards</th></tr>
+      <tr><td><code>x++</code></td><td><code>3</code> (the old value)</td><td><code>x</code> is 4</td></tr>
+      <tr><td><code>++y</code></td><td><code>6</code> (the new value)</td><td><code>y</code> is 6</td></tr>
+      <tr><td><code>z--</code></td><td><code>7</code> (the old value)</td><td><code>z</code> is 6</td></tr>
+      <tr><td><code>--w</code></td><td><code>8</code> (the new value)</td><td><code>w</code> is 8</td></tr>
+    </table>
+    <p>So <code>3678</code>. Nothing separates the four numbers, because nothing in the code asked
+    for a separator.</p>
+    <p><strong>Line (b).</strong> This is where the marks go. It prints the variables as line (a)
+    left them: 4, 6, 6, 8, so <code>4668</code>. Students who answer line (a) correctly and then
+    reprint the <em>original</em> values here lose 2 points.</p>
+    <p><strong>Line (c).</strong> <code>i</code> runs 3, 4, 5, &hellip; and the body prints <code>i</code> unless
+    <code>i % 5 == 0</code> triggers a <code>break</code>. So it prints 3, prints 4, and at <code>i == 5</code> breaks out of the loop
+    entirely: <code>34</code>.</p>
+    <p><strong>Line (d).</strong> The same loop with <code>continue</code>. At <code>i == 5</code> it skips the printing but
+    the update still runs and the test is still performed, so the loop carries on: 3, 4, (skip 5), 6,
+    7, 8 &mdash; that is <code>34678</code>.</p>
+    <p><strong>Line (e).</strong> Trace the vector one <code>n</code> at a time. Both <code>if</code>s are checked on every
+    pass, so <code>n = 6</code> both pushes and pops.</p>
+    <table class="trace">
+      <tr><th><code>n</code></th><th><code>n % 2 == 0</code>?</th><th><code>n % 3 == 0</code>?</th><th>Vector afterwards</th></tr>
+      <tr><td>1</td><td>no</td><td>no</td><td>empty</td></tr>
+      <tr><td>2</td><td>push 2</td><td>no</td><td>2</td></tr>
+      <tr><td>3</td><td>no</td><td>pop</td><td>empty</td></tr>
+      <tr><td>4</td><td>push 4</td><td>no</td><td>4</td></tr>
+      <tr><td>5</td><td>no</td><td>no</td><td>4</td></tr>
+      <tr><td>6</td><td>push 6</td><td>pop</td><td>4</td></tr>
+      <tr><td>7</td><td>no</td><td>no</td><td>4</td></tr>
+      <tr><td>8</td><td>push 8</td><td>no</td><td>4, 8</td></tr>
+      <tr><td>9</td><td>no</td><td>pop</td><td>4</td></tr>
+    </table>
+    <p>Size 1, back 4, printed with no separator: <code>14</code>. Not "fourteen", and not "1 4".</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the four ways to lose all ten points</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Reprinting the original values on line (b).</strong> The side effects of line (a)
+        are permanent. Carry them forward.</li>
+      <li><strong>Answering <code>break</code> and <code>continue</code> the same way.</strong> <code>break</code> leaves the loop
+        &mdash; no more body, <em>no update, no test</em>. <code>continue</code> skips the rest of this body but
+        the update <em>does</em> run and the test <em>is</em> performed.</li>
+      <li><strong>Reading <code>14</code> as a number.</strong> Part (e) prints two values with no separator.
+        Say "size one, back four" and write <code>14</code>.</li>
+      <li><strong>Inserting spaces that are not in the code.</strong> <code>cout &lt;&lt; a &lt;&lt; b</code> prints
+        <code>ab</code>. If your answer has spaces in it and the code has no <code>" "</code>, it is wrong.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.10</div>
+  <div class="bd">
+    <p>The same question, one term later, with array subscripts instead of scalars. Give the output
+    of each line. This is the whole of a real 10-point question &mdash; take five minutes and do all
+    five parts before opening any of them.</p>
+<div class="codewrap"><div class="cap">trace_w25.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int k = 4, x[8] = {3, 1, 4, 1, 5, 9, 2, 6};
+    cout &lt;&lt; x[++k] &lt;&lt; x[k]++ &lt;&lt; x[k] &lt;&lt; k &lt;&lt; endl;               // line (a)
+    cout &lt;&lt; x[k--] &lt;&lt; --x[k] &lt;&lt; x[k] &lt;&lt; k &lt;&lt; endl;               // line (b)
+
+    for (int i = 2; i &lt; 7; i++) { if (x[i] % 5 == 0) break;    cout &lt;&lt; x[i]; }  // line (c)
+    cout &lt;&lt; endl;
+    for (int j = 2; j &lt; 7; j++) { if (x[j] % 5 == 0) continue; cout &lt;&lt; x[j]; }  // line (d)
+    cout &lt;&lt; endl;
+
+    vector&lt;int&gt; v;
+    for (int n = 3; n &lt; 11; n++) {
+        if (n / 10 == 0) v.push_back(n);
+        if (n / 10 &gt; 0)  v.pop_back();
+    }
+    cout &lt;&lt; v.size() &lt;&lt; v.back() &lt;&lt; endl;                        // line (e)
+
+    return 0;
+}</code></pre></div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>cout &lt;&lt; x[++k] &lt;&lt; x[k]++ &lt;&lt; x[k] &lt;&lt; k &lt;&lt; endl;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>99105</code>. Left to right, with <code>k</code> starting at 4 and the array
+        <code>{3,1,4,1,5,9,2,6}</code>:</p>
+        <table class="trace">
+          <tr><th>Item</th><th>Prints</th><th>State afterwards</th></tr>
+          <tr><td><code>x[++k]</code></td><td><code>9</code></td><td><code>k</code> is 5; <code>x[5]</code> is 9</td></tr>
+          <tr><td><code>x[k]++</code></td><td><code>9</code> &mdash; postfix hands back the <em>old</em> value</td><td><code>x[5]</code> becomes 10</td></tr>
+          <tr><td><code>x[k]</code></td><td><code>10</code></td><td>&mdash;</td></tr>
+          <tr><td><code>k</code></td><td><code>5</code></td><td>&mdash;</td></tr>
+        </table>
+        <p>Concatenated: <code>9</code>, <code>9</code>, <code>10</code>, <code>5</code> &rarr;
+        <code>99105</code>. The two-digit element is not a mistake; it is the trap.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>cout &lt;&lt; x[k--] &lt;&lt; --x[k] &lt;&lt; x[k] &lt;&lt; k &lt;&lt; endl;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>10444</code>. Starting from <code>k == 5</code> and the array now
+        <code>{3,1,4,1,5,10,2,6}</code>:</p>
+        <table class="trace">
+          <tr><th>Item</th><th>Prints</th><th>State afterwards</th></tr>
+          <tr><td><code>x[k--]</code></td><td><code>10</code> &mdash; the subscript is the old <code>k</code>, 5</td><td><code>k</code> is 4</td></tr>
+          <tr><td><code>--x[k]</code></td><td><code>4</code> &mdash; <code>x[4]</code> was 5, decremented first</td><td><code>x[4]</code> is 4</td></tr>
+          <tr><td><code>x[k]</code></td><td><code>4</code></td><td>&mdash;</td></tr>
+          <tr><td><code>k</code></td><td><code>4</code></td><td>&mdash;</td></tr>
+        </table>
+        <p>So <code>10444</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> The <code>break</code> loop.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>414</code>. The array is now <code>{3,1,4,1,4,10,2,6}</code> &mdash; lines (a) and
+        (b) changed <code>x[5]</code> to 10 and <code>x[4]</code> to 4. <code>i</code> runs from 2: <code>x[2]</code> is 4, printed; <code>x[3]</code> is 1,
+        printed; <code>x[4]</code> is 4, printed; <code>x[5]</code> is 10, and 10 % 5 == 0, so <code>break</code>.</p>
+        <p>Prints 4, 1, 4 &rarr; <code>414</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> The <code>continue</code> loop.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>4142</code>. Same elements, but at <code>x[5] == 10</code> it skips only that one iteration and
+        carries on to <code>x[6]</code>, which is 2.</p>
+        <p>Prints 4, 1, 4, (skip), 2 &rarr; <code>4142</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(e)</span> The vector line.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>68</code>. The condition here is <code>n / 10</code>, integer division, not <code>%</code>. For
+        <code>n = 3..9</code> that is 0, so those seven values are pushed. For <code>n = 10</code> it is 1, so one pop. The
+        loop stops at <code>n == 10</code> inclusive, since the test is <code>n &lt; 11</code>.</p>
+        <table class="trace">
+          <tr><th><code>n</code></th><th><code>n / 10</code></th><th>Action</th><th>Size afterwards</th></tr>
+          <tr><td>3&ndash;9</td><td>0</td><td>push each</td><td>7 (last element 9)</td></tr>
+          <tr><td>10</td><td>1</td><td>pop</td><td>6 (last element 8)</td></tr>
+        </table>
+        <p>Size 6, back 8, no separator: <code>68</code>.</p>
+        <p><strong>The wrap-up for all five parts:</strong> two habits get you full marks here.
+        First, keep a running picture of the array and of <code>k</code> in the margin, updated after every
+        item, and carry it into lines (c), (d) and (e) &mdash; those loops read the
+        <em>mutated</em> array. Second, notice that g++ with <code>-Wall</code> actually warns
+        <em>"operation on 'k' may be undefined"</em> on lines (a) and (b): mixing a subscript with an
+        increment of that same subscript in one expression is code nobody should write. The C++17
+        rule that fixes the order of the <code>&lt;&lt;</code> operands makes the result deterministic, and the
+        professor's key matches what g++ prints &mdash; but on your own code, split the line.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>The formatting trap that hides inside the other questions</h3>
+
+<p>Question 3 never asks about <code>double</code> formatting directly. Questions 1 and 4 depend on it, because
+they print computed values, and the expected-output comments in the stems are written the way <code>cout</code>
+actually prints.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; how cout prints a double when you say nothing</span></div>
+  <div class="bd">
+    <p>Eight lines. Predict every one, including the ones that look like they cannot possibly be
+    interesting.</p>
+<div class="codewrap"><div class="cap">floatfmt.cpp</div><pre><code class="language-cpp">// floatfmt.cpp -- how cout prints a double when you say nothing
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; 4.0 &lt;&lt; endl;
+    cout &lt;&lt; 73.5 &lt;&lt; endl;
+    cout &lt;&lt; 3.875 &lt;&lt; endl;
+    cout &lt;&lt; 100.0 / 3.0 &lt;&lt; endl;
+    cout &lt;&lt; 1234567.0 &lt;&lt; endl;
+    cout &lt;&lt; 7 / 2 &lt;&lt; endl;
+    cout &lt;&lt; 7 / 2.0 &lt;&lt; endl;
+    cout &lt;&lt; 12 / 2.0 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">4
+73.5
+3.875
+33.3333
+1.23457e+06
+3
+3.5
+6</pre>
+    <ul>
+      <li><code>4.0</code> prints as <code>4</code>. With no formatting instructions <code>cout</code> shows a
+        <code>double</code> to <strong>six significant digits</strong> and drops trailing zeros and the bare
+        decimal point. Writing <code>4.0</code> as your answer is wrong.</li>
+      <li><code>73.5</code> and <code>3.875</code> print in full &mdash; they need four significant
+        digits and are entitled to six. These two numbers are the expected outputs of real questions
+        in this course's exam bank.</li>
+      <li><code>100.0 / 3.0</code> is <code>33.3333</code>: six significant digits, so four after the
+        point here.</li>
+      <li><code>1234567.0</code> needs seven digits, so <code>cout</code> switches to scientific notation:
+        <code>1.23457e+06</code>.</li>
+      <li><code>7 / 2</code> is <strong>integer division</strong> &mdash; <code>3</code>. Change one
+        operand and <code>7 / 2.0</code> is <code>3.5</code>.</li>
+      <li><code>12 / 2.0</code> is the <code>double</code> 6.0, printed as <code>6</code>. Floating-point
+        arithmetic that lands on a whole number is invisible in the output.</li>
+    </ul>
+    <p>The consequence for the program question: if a rubric's sample run shows
+    <code>Average of those inputs: 3.875</code>, that tells you the average was computed as a
+    <code>double</code>. If your program prints <code>3</code>, you divided two integers.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.11</div>
+  <div class="bd">
+    <p>Exactly what does each of these print? Assume <code>int a = 9, b = 2;</code> and <code>double d = 4.0;</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>cout &lt;&lt; a / b &lt;&lt; " " &lt;&lt; a % b &lt;&lt; endl;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>4 1</code>. Integer division gives 4, and <code>%</code> gives the remainder 1. Here the spaces
+        <em>are</em> in the code, so they are in the answer.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>cout &lt;&lt; a / (double)b &lt;&lt; endl;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>4.5</code>. One <code>double</code> operand makes the whole division floating point.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>cout &lt;&lt; d &lt;&lt; d / 2 &lt;&lt; endl;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>42</code>. <code>d</code> is 4.0 and prints as <code>4</code>; <code>d / 2</code> is 2.0 and prints as
+        <code>2</code>; there is no separator between them. Two <code>double</code>s, and the output looks like
+        the integer forty-two.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>cout &lt;&lt; b + a &lt;&lt; endl;</code> and <code>cout &lt;&lt; "sum = " &lt;&lt; a + b &lt;&lt; endl;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>11</code> and <code>sum = 11</code>. <code>+</code> binds tighter than <code>&lt;&lt;</code>, so the addition
+        happens first in both cases &mdash; you do not need the parentheses here, though they never
+        hurt.</p>
+        <p><strong>The wrap-up:</strong> before writing any answer on a trace question, read off the
+        <em>type</em> of every expression. In C++ the type is what decides whether you get 4 or 4.5,
+        and it decides whether a whole-valued result shows a decimal point at all.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>The night-before checklist</h2>
+
+<p>Run down this list tonight. For each row, do the thing on paper &mdash; do not just decide that
+you could. The rows you hesitate on are your revision list, and there should not be many.</p>
+
+<table class="trace">
+  <tr><th>Can you, without looking anything up&hellip;</th><th>Where it was taught</th><th>Where it is examined</th></tr>
+  <tr><td>Write <code>#include</code> lines, <code>using namespace std;</code>, <code>int main()</code> and <code>return 0;</code> in fifteen seconds?</td><td>Class 1</td><td>Free points on Q1</td></tr>
+  <tr><td>Say what <code>swap1</code> does and why, and fix it with two characters?</td><td>Classes 1&ndash;2</td><td>Every signature you write</td></tr>
+  <tr><td>Choose between <code>int n</code>, <code>int &amp;n</code>, <code>const string &amp;s</code> and <code>int *n</code>, and justify it?</td><td>Class 2</td><td>Signature points, Q1 and Q4</td></tr>
+  <tr><td>Give the printed value <em>and</em> the resulting variable for each of <code>++x</code>, <code>x++</code>, <code>--x</code>, <code>x--</code>?</td><td>Class 3</td><td>Q3 (a), (b)</td></tr>
+  <tr><td>Say precisely what <code>break</code> and <code>continue</code> do to the body, the update and the test?</td><td>Class 3</td><td>Q3 (c), (d)</td></tr>
+  <tr><td>Predict how <code>cout</code> prints <code>4.0</code>, <code>100.0/3.0</code> and <code>7/2</code>?</td><td>Class 3</td><td>Q1 and Q4, silently</td></tr>
+  <tr><td>Write the standard file-reading loop <code>while (ifs &gt;&gt; a &gt;&gt; b)</code> and say why an <code>eof()</code> loop is wrong?</td><td>Class 4</td><td>Not on past papers &mdash; know it anyway</td></tr>
+  <tr><td>Declare a vector in all four forms and say what is in the elements?</td><td>Class 5</td><td>Q1</td></tr>
+  <tr><td>Write a sentinel-controlled input loop that does not store the sentinel?</td><td>Classes 4&ndash;5</td><td>Q1</td></tr>
+  <tr><td>Trace <code>push_back</code>/<code>pop_back</code> and read <code>size()</code> and <code>back()</code> printed adjacently?</td><td>Classes 5&ndash;6</td><td>Q3 (e)</td></tr>
+  <tr><td>Explain <code>p = q;</code> against <code>*p = *q;</code> in one sentence each?</td><td>Class 7</td><td>Q2</td></tr>
+  <tr><td>Write <code>int *px = &amp;x;</code> for a scalar and <code>int *py = y;</code> for an array, and say why they differ?</td><td>Class 7</td><td>Q2</td></tr>
+  <tr><td>Pair every <code>new</code> with <code>delete</code> and every <code>new[]</code> with <code>delete []</code>, brackets empty?</td><td>Class 8</td><td>Q2</td></tr>
+  <tr><td>Copy one dynamic array into another with a loop, and say why assignment will not do it?</td><td>Class 8</td><td>Q2</td></tr>
+  <tr><td>Declare a class with <code>private</code> data and <code>public</code> methods, ending in <code>};</code>?</td><td>Classes 9&ndash;10</td><td>Q4</td></tr>
+  <tr><td>Write a <code>set</code> method, a <code>const</code> accessor, and say which can be <code>const</code>?</td><td>Class 10</td><td>Q4</td></tr>
+  <tr><td>Say when to write <code>.</code> and when to write <code>-&gt;</code>, and what <code>(*p).x</code> means?</td><td>Class 10</td><td>Q2 and Q4</td></tr>
+  <tr><td>Write a free function that reaches private data through the getters?</td><td>Class 10</td><td>Q4, worth 6 points</td></tr>
+</table>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the five things people actually lose points for</span></div>
+  <div class="bd">
+    <ol>
+      <li>Reprinting the <em>old</em> variable values on line (b) of the trace.</li>
+      <li>Putting spaces in a trace answer where the code has no separator, or reading <code>14</code> as
+        fourteen.</li>
+      <li><code>delete</code> where <code>delete []</code> was needed, or the array length written inside the brackets.</li>
+      <li>Integer division where the sample run clearly shows a fraction.</li>
+      <li>Leaving a write-code question blank because there were only four minutes left. The
+        signature and the standard beginning were worth points.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 11.12</div>
+  <div class="bd">
+    <p>Sixty-second recall drill. Answer each from memory before opening it.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Two lines of code that create a dynamic array of <code>n</code> doubles and release it.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    double *a = new double[n];
+    delete [] a;</code></pre>
+        <p>Empty brackets on the <code>delete</code>. The <code>n</code> appears exactly once, in the allocation.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> The one-line difference between an accessor and a mutator, in code.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    int getn() const { return numerator; }   // accessor: const, returns
+    void setn(int a) { numerator = a; }      // mutator: not const, assigns</code></pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> What is printed by <code>cout &lt;&lt; v.size() &lt;&lt; v.back();</code> for a vector holding <code>{4}</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>14</code>. Size 1, back 4, no separator.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> The two statements that make a pointer point at an existing <code>int</code> called <code>total</code>, and then set <code>total</code> to 0 through the pointer.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    int *p = &amp;total;
+    *p = 0;</code></pre>
+        <p><code>&amp;</code> to take the address, <code>*</code> to write through it. If you wrote <code>p = total;</code> or
+        <code>p = 0;</code> re-read Quick Check 11.6.</p>
+        <p><strong>The wrap-up:</strong> if all four of these came out in under a minute, you are
+        ready. If one of them did not, that is the section to reread &mdash; not the whole set of
+        notes.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; a full timed exam, then two extra</span></div>
+  <div class="bd">
+    <p><strong>Problems 1&ndash;4 are a complete Exam 1.</strong> They are the four questions of the
+    Fall 2023 paper, in the original order, with the original point values: 10 points each, 40 points
+    total, <strong>50 minutes</strong>. Sit them in one block, on paper, with the notes closed and no
+    compiler. Suggested times are marked on each one and add up to 40 minutes, leaving ten to check
+    your work.</p>
+    <p><strong>Problems 5 and 6 are a second pass</strong> in the same two formats, taken from the
+    Summer 2025 and Winter 2025 midterm papers &mdash; the same question types with different
+    numbers. Use them after you have marked the first four.</p>
+    <p>Every problem here is the professor's own, from his exam bank; nothing in this section was
+    invented for these notes. Two of them have errors in their published answer keys, and the
+    solutions say so and give the verified answer.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Write a complete C++ program <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+
+<p class="muted small">[10 points] &middot; about 12 minutes</p>
+
+<p>Write a complete C++ program that does the following. (Programs that correctly carry out some of
+the tasks will receive partial credit.)</p>
+<ol>
+  <li>The program asks the user to enter some integers until 0 to stop.</li>
+  <li>Stores those numbers into a vector or vectors.</li>
+  <li>Then prints the even and odd numbers separately.</li>
+</ol>
+<p>An example run of the program follows.</p>
+<pre class="out">Enter some integers until 0 to stop: 2 4 3 1 5 8 9 6 7 0
+Evens: 2 4 8 6
+Odds: 3 1 5 9 7</pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Three stages, and the point split follows them exactly: 1 point for the
+  standard beginning and ending, 5 points for declaring the vector, prompting and reading the inputs
+  into it, then 2 + 2 for the two printing loops. Read one value before the loop and one at the
+  bottom of the body, so the sentinel is tested but never stored. Then walk the vector twice, once
+  with <code>% 2 == 0</code> and once with <code>% 2 != 0</code>. Two passes is simpler to get right under time pressure
+  than one pass with two vectors, and the rubric accepts either.</p>
+<div class="codewrap"><div class="cap">evenodd.cpp</div><pre><code class="language-cpp">// evenodd.cpp -- Fall 2023 Exam 1 Problem 1
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int x;
+    vector&lt;int&gt; v;
+    cout &lt;&lt; "Enter some integers until 0 to stop: ";
+    cin &gt;&gt; x;
+    while (x != 0) {
+        v.push_back(x);
+        cin &gt;&gt; x;
+    }
+
+    cout &lt;&lt; "Evens: ";
+    for (int i = 0; i &lt; (int)v.size(); i++) {
+        if (v[i] % 2 == 0) cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; "Odds: ";
+    for (int i = 0; i &lt; (int)v.size(); i++) {
+        if (v[i] % 2 != 0) cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<pre class="out">Enter some integers until 0 to stop: Evens: 2 4 8 6
+Odds: 3 1 5 9 7</pre>
+  <p>(Input piped in from a file, so the typed digits do not echo after the prompt.)</p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The published rubric offers two model answers: this one, and a version with
+      <code>vector&lt;int&gt; evens, odds;</code> that sorts each value as it arrives. The second needs only one pass
+      but two containers. Both are full marks.</li>
+    <li>The sentinel <code>0</code> is never stored, because the test happens before the <code>push_back</code>. Reading at
+      the top of the body instead would print a spurious <code>0</code> among the evens.</li>
+    <li><code>#include &lt;vector&gt;</code> is not optional. The rubric for the later papers says explicitly that if
+      vectors are used, the library must be imported.</li>
+    <li>Write the includes, <code>int main() {</code>, and <code>return 0; }</code> first &mdash; before you have decided
+      anything about the algorithm. That is a guaranteed point out of ten, and it takes seconds.</li>
+    <li>Marking yourself: award the 5-point block if the vector is declared, the prompt is printed
+      and the loop reads into the vector. You do not have to have finished the printing to earn
+      it.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Write C++ statements <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+
+<p class="muted small">[10 points, 2 per part] &middot; about 8 minutes</p>
+
+<p>Write C++ statements to carry out the following tasks. Do not write complete programs, just give a
+single line, or a few lines of C++ instructions. Assume that the following declarations have been
+made and the declared variables have been set to have legal values.</p>
+
+<pre><code class="language-cpp">    int x = 7, y[3] = {3, 1, 4};
+    int *p1 = new int, *p2 = new int[3];</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare a pointer <code>px</code> that points to the variable <code>x</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    int *px = &amp;x;</code></pre>
+    <p><code>&amp;</code> is the address-of operator, and <code>x</code> is a scalar, so this is the straightforward case.
+    The declaration and the initialization are one statement; <code>int *px; px = &amp;x;</code> is equally
+    correct.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Declare a pointer <code>py</code> that points to the array <code>y</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    int *py = y;</code></pre>
+    <p>No <code>&amp;</code> here. <strong>An array name already is a pointer</strong> to its first element, so
+    <code>y</code> is exactly the <code>int *</code> you need. Writing <code>int *py = &amp;y;</code> is a type error: <code>&amp;y</code> is a
+    pointer to an <em>array of three ints</em>, a different type, and g++ rejects it. This
+    distinction &mdash; <code>&amp;x</code> for a scalar, plain <code>y</code> for an array &mdash; is the whole reason
+    parts (a) and (b) are two separate questions.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Copy the data in <code>x</code> into the dynamic variable <code>p1</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    *p1 = x;</code></pre>
+    <p>"Copy the data into the thing <code>p1</code> points to" means dereference <code>p1</code> and assign. <code>p1 = &amp;x;</code>
+    would be the wrong answer twice over: it copies an <em>address</em> rather than a value, and it
+    abandons the block <code>new int</code> handed you, which then leaks and cannot be deleted.</p>
+    <div class="box warn">
+      <div class="hd">Warning<span class="tag">&mdash; the published key is wrong here</span></div>
+      <div class="bd">
+        <p>Both the distributed rubric and the distributed solution give this part as
+        <code>*py = x;</code>. That writes 7 into <code>y[0]</code>, using the pointer from part (b), and never
+        touches <code>p1</code> at all. Compiled and run, the key's version leaves the array as
+        <code>714</code> and part (d) then copies the damage into <code>p2</code>. The correct answer is
+        <code>*p1 = x;</code>. If you wrote that, you were right.</p>
+      </div>
+    </div>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Copy the data in the array <code>y</code> into the array the dynamic pointer <code>p2</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    for (int i = 0; i &lt; 3; i++) p2[i] = y[i];</code></pre>
+    <p>Arrays are copied <strong>element by element</strong>. <code>p2 = y;</code> compiles and does something
+    entirely different: it repoints <code>p2</code> at <code>y</code>, leaks the three-<code>int</code> block, and makes the later
+    <code>delete [] p2;</code> undefined behavior. This part and part (e) are the only two on this question that
+    the rubric allows a point of partial credit on, "for answers that are almost correct except for a
+    tiny error" &mdash; an off-by-one in the loop bound, for instance.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Release the memory for <code>p1</code> and <code>p2</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    delete p1;
+    delete [] p2;</code></pre>
+    <p>One <code>new</code>, one plain <code>delete</code>. One <code>new[]</code>, one <code>delete []</code> &mdash; with <strong>empty</strong>
+    brackets. <code>delete [3] p2;</code> does not compile, and <code>delete p2;</code> for an array is undefined
+    behavior.</p>
+    <p><strong>Things to notice, across all five parts.</strong></p>
+    <ul>
+      <li>Assembled into a driver and run, the five answers leave <code>*px</code> as 7, <code>*p1</code> as 7, and both
+        <code>y</code> and <code>p2</code> as <code>314</code>. Under <code>valgrind</code>: 4 allocations, 4 frees, no leaks.</li>
+      <li>Say each task out loud as "copy the address" or "copy the value" before writing it. Every
+        wrong answer on this question is the other one of those two.</li>
+      <li>Adding <code>p1 = nullptr; p2 = nullptr;</code> after the deletes is good practice and costs nothing,
+        though the rubric does not require it.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 3 &mdash; What is the output for each of the following lines? <span class="muted small">(from the Summer 2025 Midterm)</span></h3>
+
+<p class="muted small">[10 points, 2 per part, no partial credit] &middot; about 10 minutes</p>
+
+<p>Consider the following C++ program. What output would the program print for each of the lettered
+lines?</p>
+
+<div class="codewrap"><div class="cap">trace_s25.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int m = 2, y[8] = {1, 5, 7, 8, 3, 6, 2, 4};
+    cout &lt;&lt; y[++m] &lt;&lt; y[m]++ &lt;&lt; y[m] &lt;&lt; m &lt;&lt; endl;               // line (a)
+    cout &lt;&lt; y[m--] &lt;&lt; --y[m] &lt;&lt; y[m] &lt;&lt; m &lt;&lt; endl;               // line (b)
+
+    for (int i = 1; i &lt; 6; i++) { if (y[i] % 4 == 0) break;    cout &lt;&lt; y[i]; }  // line (c)
+    cout &lt;&lt; endl;
+    for (int j = 1; j &lt; 6; j++) { if (y[j] % 4 == 0) continue; cout &lt;&lt; y[j]; }  // line (d)
+    cout &lt;&lt; endl;
+
+    vector&lt;int&gt; data;
+    for (int n = 5; n &lt; 13; n++) {
+        if (n / 10 == 0) data.push_back(n);
+        if (n / 10 &gt; 0)  data.pop_back();
+    }
+    cout &lt;&lt; data.size() &lt;&lt; data.back() &lt;&lt; endl;                  // line (e)
+
+    return 0;
+}</code></pre></div>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> <code>cout &lt;&lt; y[++m] &lt;&lt; y[m]++ &lt;&lt; y[m] &lt;&lt; m &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><code>8893</code>. Start with <code>m == 2</code> and the array <code>{1,5,7,8,3,6,2,4}</code>:</p>
+    <table class="trace">
+      <tr><th>Item</th><th>Prints</th><th>State afterwards</th></tr>
+      <tr><td><code>y[++m]</code></td><td><code>8</code> &mdash; <code>m</code> becomes 3 first, and <code>y[3]</code> is 8</td><td><code>m</code> is 3</td></tr>
+      <tr><td><code>y[m]++</code></td><td><code>8</code> &mdash; <strong>postfix hands back the old value</strong></td><td><code>y[3]</code> becomes 9</td></tr>
+      <tr><td><code>y[m]</code></td><td><code>9</code></td><td>&mdash;</td></tr>
+      <tr><td><code>m</code></td><td><code>3</code></td><td>&mdash;</td></tr>
+    </table>
+    <p>So <code>8893</code>. The second field is the trap: <code>y[m]++</code> prints 8 and leaves 9 behind.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> <code>cout &lt;&lt; y[m--] &lt;&lt; --y[m] &lt;&lt; y[m] &lt;&lt; m &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><code>9662</code>. Starting from <code>m == 3</code> and the array now
+    <code>{1,5,7,9,3,6,2,4}</code>:</p>
+    <table class="trace">
+      <tr><th>Item</th><th>Prints</th><th>State afterwards</th></tr>
+      <tr><td><code>y[m--]</code></td><td><code>9</code> &mdash; the subscript is the old <code>m</code>, 3</td><td><code>m</code> is 2</td></tr>
+      <tr><td><code>--y[m]</code></td><td><code>6</code> &mdash; <code>y[2]</code> was 7, decremented first</td><td><code>y[2]</code> is 6</td></tr>
+      <tr><td><code>y[m]</code></td><td><code>6</code></td><td>&mdash;</td></tr>
+      <tr><td><code>m</code></td><td><code>2</code></td><td>&mdash;</td></tr>
+    </table>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> The <code>break</code> loop.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><code>56936</code> &mdash; the loop never breaks at all.</p>
+    <p>The array has been mutated by lines (a) and (b): it is now
+    <code>{1,5,6,9,3,6,2,4}</code>, with <code>y[3]</code> changed from 8 to 9 and <code>y[2]</code> from 7 to 6. The loop
+    runs <code>i</code> from 1 to 5 and tests <code>y[i] % 4 == 0</code>. The only element in that range divisible by 4 was
+    <code>y[3] == 8</code>, and it is not 8 any more. So nothing triggers the <code>break</code> and every element in the
+    range prints: <code>y[1]</code>=5, <code>y[2]</code>=6, <code>y[3]</code>=9, <code>y[4]</code>=3, <code>y[5]</code>=6 &rarr; <code>56936</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> The <code>continue</code> loop.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><code>56936</code> &mdash; identical to (c), for the same reason. When no element satisfies the
+    condition, <code>break</code> and <code>continue</code> are indistinguishable: neither ever fires.</p>
+    <p>That is worth pausing on. These two lines usually differ, and the whole design of the question
+    is to test whether you know how they differ. Here the mutation from lines (a) and (b) has
+    accidentally made them the same, which is a strong hint that you should always trace (c) and (d)
+    against the <em>current</em> state of the array rather than the literal in the declaration.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> The vector line.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><code>26</code>. The condition is <code>n / 10</code>, integer division:</p>
+    <table class="trace">
+      <tr><th><code>n</code></th><th><code>n / 10</code></th><th>Action</th><th>Contents afterwards</th></tr>
+      <tr><td>5&ndash;9</td><td>0</td><td>push each</td><td>5 6 7 8 9</td></tr>
+      <tr><td>10</td><td>1</td><td>pop</td><td>5 6 7 8</td></tr>
+      <tr><td>11</td><td>1</td><td>pop</td><td>5 6 7</td></tr>
+      <tr><td>12</td><td>1</td><td>pop</td><td>5 6</td></tr>
+    </table>
+    <p>Five pushes, three pops: size 2, back 6, no separator &rarr; <code>26</code>.</p>
+    <div class="box warn">
+      <div class="hd">Warning<span class="tag">&mdash; the published key is wrong on all five parts</span></div>
+      <div class="bd">
+        <p>The distributed rubric for this question gives <code>8993 / 9622 / 57 / 5736 / 49</code>.
+        Every one of those is wrong. Compiled with <code>g++</code> and run, the program prints:</p>
+<pre class="out">8893
+9662
+56936
+56936
+26</pre>
+        <table class="trace">
+          <tr><th>Part</th><th>Key says</th><th>Actual</th><th>What went wrong in the key</th></tr>
+          <tr><td>(a)</td><td><code>8993</code></td><td><code>8893</code></td><td>It used the post-increment's <em>new</em> value for the second field.</td></tr>
+          <tr><td>(b)</td><td><code>9622</code></td><td><code>9662</code></td><td>The third field re-reads <code>y[2]</code>, which is 6, not <code>m</code>.</td></tr>
+          <tr><td>(c)</td><td><code>57</code></td><td><code>56936</code></td><td>It traced the loop against the <em>original</em> array, ignoring the mutations from (a) and (b).</td></tr>
+          <tr><td>(d)</td><td><code>5736</code></td><td><code>56936</code></td><td>Same cause.</td></tr>
+          <tr><td>(e)</td><td><code>49</code></td><td><code>26</code></td><td>No reading of the loop produces <code>49</code>.</td></tr>
+        </table>
+        <p>The same question set on the Winter 2025 paper <em>does</em> carry the mutations forward
+        into lines (c) and (d), and its key is correct throughout. Carry the side effects forward.
+        That is the rule the professor teaches, it is what the compiler does, and it is what the other
+        three keys in the exam bank do.</p>
+      </div>
+    </div>
+    <p><strong>Things to notice, across all five parts.</strong></p>
+    <ul>
+      <li>Keep the array and the index in the margin and update them after <em>every</em> item.
+        Lines (c), (d) and (e) all depend on that running state.</li>
+      <li>g++ with <code>-Wall</code> prints <em>"operation on 'm' may be undefined"</em> for lines (a) and (b).
+        The C++17 rule that the operands of <code>&lt;&lt;</code> are evaluated left to right makes the result
+        deterministic, and the values above are what it produces &mdash; but never write a line like
+        this in your own code.</li>
+      <li>All five parts are 2 points with no partial credit. Budget two minutes per line and then
+        re-derive line (a) from scratch at the end.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 4 &mdash; Give an implementation for these methods <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+
+<p class="muted small">[10 points: 2 + 2 + 6] &middot; about 10 minutes</p>
+
+<p>Given the following program with a <code>Rational</code> class:</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+    private:
+        int numerator, denominator;
+    public:
+        void set(int a, int b) { ... }          // part (a)
+        int getn() { return numerator; }
+        int getd() { return denominator; }
+        void add1() { ... }                     // part (b)
+        void print() { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+};
+
+Rational product(Rational x, Rational y) { ... }        // part (c)
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();              // add1 adds 1 to the rational number
+    r1.print();             // prints 5/3
+    r2.print();             // prints 4/5
+    Rational p = product(r1, r2);
+    p.print();              // prints 20/15
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Give an implementation for the <code>set</code> method that sets the values for <code>numerator</code> and <code>denominator</code> respectively. <span class="muted small">[2 points, no partial credit]</span></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">        void set(int a, int b) {
+            numerator = a;
+            denominator = b;
+        }</code></pre>
+    <p>"Respectively" fixes the order: the first parameter is the numerator. Inside a method the bare
+    member names refer to <em>this object's</em> data, which is why no <code>r1.</code> prefix appears.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Give an implementation for the <code>add1</code> method that adds 1 to the rational number. Hint: <code>p/q + 1 = (p+q)/q</code>. <span class="muted small">[2 points, no partial credit]</span></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">        void add1() {
+            numerator = numerator + denominator;
+        }</code></pre>
+    <p>One line. The denominator is unchanged &mdash; that is what the hint is telling you. Check it
+    against the driver: <code>r1</code> is 2/3, and after <code>add1()</code> it prints <code>5/3</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Give an implementation for the <code>product</code> function that returns the product of two rational numbers. Hint: <code>(x/y)&middot;(w/z) = (xw)/(yz)</code>. You do not need to simplify the result. <span class="muted small">[6 points, with partial credit]</span></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> <code>product</code> is a <em>free</em> function, not a member, so it cannot touch
+    <code>numerator</code> or <code>denominator</code> directly &mdash; they are private. Everything it needs must come
+    through <code>getn()</code> and <code>getd()</code>, and everything it writes must go through <code>set()</code>. The published
+    point split follows exactly that: 2 points for declaring a local <code>Rational</code> and returning it, 2
+    for computing the numerator and denominator through the <code>.get</code> methods, 2 for setting them on the
+    new object.</p>
+<div class="codewrap"><div class="cap">rational.cpp</div><pre><code class="language-cpp">// rational.cpp -- Fall 2023 Exam 1 Problem 4, complete
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+    private:
+        int numerator, denominator;
+    public:
+        void set(int a, int b) {                    // part (a)
+            numerator = a;
+            denominator = b;
+        }
+        int getn() { return numerator; }
+        int getd() { return denominator; }
+        void add1() {                               // part (b)
+            numerator = numerator + denominator;
+        }
+        void print() { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+};
+
+Rational product(Rational x, Rational y) {          // part (c)
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();
+    r1.print();             // 5/3
+    r2.print();             // 4/5
+    Rational p = product(r1, r2);
+    p.print();              // 20/15
+    return 0;
+}</code></pre></div>
+<pre class="out">5/3
+4/5
+20/15</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>Reaching for <code>x.numerator</code> instead of <code>x.getn()</code> is a compile error &mdash; <em>"'int
+        Rational::numerator' is private within this context"</em> &mdash; and costs the two points
+        the rubric assigns to using the accessors. This question exists to test exactly that.</li>
+      <li><code>20/15</code> is the required answer. The question says you do not need to simplify,
+        and the stem's own comment says the line prints <code>20/15</code>. Reducing it to 4/3 gives
+        a different output from the one you were asked for.</li>
+      <li>The stem as printed says <code>Class Rational {</code> with a capital C and spells the return type
+        <code>Ration product(...)</code> &mdash; both typos, repeated in the answer key. Write <code>class</code> and
+        <code>Rational</code>.</li>
+      <li>If you run out of time on part (c), write the signature and
+        <code>Rational answer; ... return answer;</code>. Those two lines alone are 2 of the 6 points.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; Write a complete C++ program, second pass <span class="muted small">(from the Winter 2025 Midterm)</span></h3>
+
+<p class="muted small">[15 points] &middot; about 12 minutes</p>
+
+<p>Write a complete C++ program that does the following. (Programs that correctly carry out some of
+the tasks will receive partial credit.)</p>
+<ul>
+  <li>The program asks the user to enter some positive integers until 0 to stop.</li>
+  <li>The program should set up just enough space to store those inputs.</li>
+  <li>Then print the average of those input values and all the inputs above the average.</li>
+</ul>
+<p>An example run of the program follows.</p>
+<pre class="out">Enter some positive integers (0 to stop): 3 1 4 1 5 9 2 6 0
+Average of those inputs: 3.875
+Inputs above the average: 4 5 9 6</pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The same skeleton as Problem 1, with an accumulator added. Two decisions
+  carry all the risk. First, the accumulator must be a <code>double</code>, or the average comes out as
+  <code>3</code> instead of <code>3.875</code> &mdash; the sample run tells you which one the grader
+  expects. Second, the filter must compare against that same <code>double</code>. Everything else is the
+  sentinel loop you already know. The published split is 2 points for the standard beginning and
+  ending, 2 for declaring the container, 4 for reading the inputs, 4 for computing and printing the
+  average, and 3 for printing the values above it.</p>
+<div class="codewrap"><div class="cap">avgfilter.cpp</div><pre><code class="language-cpp">// avgfilter.cpp -- Winter 2025 Midterm Problem 1
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int x;
+    vector&lt;int&gt; v;
+    double total = 0;
+
+    cout &lt;&lt; "Enter some positive integers (0 to stop): ";
+    cin &gt;&gt; x;
+    while (x != 0) {
+        v.push_back(x);
+        total += x;
+        cin &gt;&gt; x;
+    }
+
+    double average = total / v.size();
+    cout &lt;&lt; "Average of those inputs: " &lt;&lt; average &lt;&lt; endl;
+
+    cout &lt;&lt; "Inputs above the average: ";
+    for (int i = 0; i &lt; (int)v.size(); i++) {
+        if (v[i] &gt; average) cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<pre class="out">Enter some positive integers (0 to stop): Average of those inputs: 3.875
+Inputs above the average: 4 5 9 6</pre>
+  <p>(Input piped in, so the typed digits do not echo.)</p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>3.875</code> needs four significant digits and <code>cout</code> gives six by default, so it
+      prints in full with no <code>setprecision</code> needed. Had the average been 3.0 it would have printed as
+      <code>3</code>.</li>
+    <li>"Set up just enough space" is satisfied by a vector, which grows to exactly the number of
+      inputs. The alternative &mdash; asking for a count first and using <code>new int[n]</code> &mdash; also
+      satisfies it, but then the rubric expects a matching <code>delete []</code>.</li>
+    <li>If every input were the sentinel, <code>v.size()</code> would be 0 and <code>total / v.size()</code> would divide
+      by zero. Under time pressure nobody writes that guard and no rubric asks for it, but a
+      one-line <code>if (v.empty())</code> is cheap insurance and shows judgment.</li>
+    <li><strong>On the published answer key.</strong> The distributed rubric's model solution for this
+      question does not work: it is missing the semicolon after <code>cin &gt;&gt; x</code>, it accumulates into a
+      variable named <code>total</code> that is never declared, and it then computes
+      <code>average = average / v.size();</code> &mdash; dividing the still-zero <code>average</code> by the size instead
+      of the sum. As printed it neither compiles nor computes an average. The version above is what
+      the question asks for, verified against the paper's own sample run.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Write C++ statements, second pass <span class="muted small">(from the Summer 2025 Midterm)</span></h3>
+
+<p class="muted small">[15 points, 3 per part] &middot; about 8 minutes</p>
+
+<p>Write C++ statements to carry out the following tasks. Do not write complete programs, just give a
+single line, or a few lines of C++ instructions. Given the following class:</p>
+
+<pre><code class="language-cpp">class Rectangle {
+public:
+    int width, height;
+    void display() { cout &lt;&lt; "[" &lt;&lt; width &lt;&lt; " x " &lt;&lt; height &lt;&lt; "]" &lt;&lt; endl; }
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare a rectangle object <code>r</code> and set its value to 4 by 6.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Rectangle r;
+    r.width = 4;
+    r.height = 6;</code></pre>
+    <p>Three statements, and that is fine &mdash; the instruction allows "a few lines." The members
+    are <code>public</code>, so <code>main</code> may assign them directly. There is no constructor in this class, so
+    <code>Rectangle r(4, 6);</code> would not compile.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Declare a pointer <code>rptr</code> that dynamically allocates memory for a rectangle.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Rectangle *rptr = new Rectangle;</code></pre>
+    <p>A pointer to an object works exactly like a pointer to an <code>int</code>. No brackets &mdash; this is
+    one object, not an array &mdash; and no arguments, because there is no constructor to pass them
+    to.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Copy the data in <code>r</code> into the rectangle <code>rptr</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    rptr-&gt;width  = r.width;
+    rptr-&gt;height = r.height;</code></pre>
+    <p>Or, equivalently, <code>(*rptr).width = r.width;</code>. Both score. The arrow is the shorthand: <code>p-&gt;m</code>
+    <em>is</em> <code>(*p).m</code>. It exists because <code>.</code> binds tighter than <code>*</code>, so <code>*rptr.width</code> would be
+    parsed as <code>*(rptr.width)</code> and rejected.</p>
+    <p>Note the shape of this: <code>.</code> on the left of the object, <code>-&gt;</code> on the left of the pointer, in
+    the same statement. Getting which is which right is the entire content of the part.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Print the rectangle that <code>rptr</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    rptr-&gt;display();</code></pre>
+    <p>A method is reached through the arrow exactly like a data member. <code>(*rptr).display();</code> is the
+    same thing. Writing <code>cout &lt;&lt; rptr;</code> would print an <em>address</em>; writing
+    <code>cout &lt;&lt; *rptr;</code> does not compile, because nobody has taught this class how to print itself to a
+    stream &mdash; that is <code>operator&lt;&lt;</code>, and it arrives in Class 18.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Release the memory for <code>rptr</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    delete rptr;
+    rptr = nullptr;      // optional, and a good habit</code></pre>
+    <p>One object, so plain <code>delete</code> with no brackets. Setting the pointer to null afterwards is not
+    required by the rubric, but it turns a later accidental <code>delete rptr;</code> into a guaranteed no-op
+    rather than undefined behavior.</p>
+    <p><strong>Things to notice, across all five parts.</strong></p>
+    <ul>
+      <li>Assembled and run, the five statements print <code>[4 x 6]</code>, and <code>valgrind</code> reports
+        no leaks.</li>
+      <li>3 points per part, and the earlier version of this question on the Fall 2023 paper was
+        worth 2. Either way the five parts are independent: a wrong (c) does not cost you (d).</li>
+      <li>The printed stem for this question begins "Give the following class Point" and then shows
+        <code>Rectangle</code>. It is left-over text from the previous term. Answer the code.</li>
+    </ul>
+  </div></details>
+</div>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li><strong>The paper.</strong> Four questions, 40 points, 50 minutes: write a complete program,
+        write five pointer statements, predict the output of five lines, implement three class
+        members. Every question is code in or code out. Nothing on it is prose.</li>
+      <li><strong>The marking.</strong> Output prediction is 2 points per line with
+        <strong>no partial credit</strong>. Write-code questions pay 1&ndash;2 points for the standard
+        beginning and ending and 2 points for a correct signature, before any logic. Never leave one
+        blank.</li>
+      <li><strong>Parameters.</strong> <code>int n</code> copies; <code>int &amp;n</code> is another name for the caller's
+        variable; <code>const string &amp;s</code> is read-only access with no copy; <code>int *n</code> is an address and
+        needs <code>&amp;</code> at the call site. The call sites of the first two look identical &mdash; read
+        the declaration.</li>
+      <li><strong>Vectors.</strong> <code>v;</code> is empty, <code>v(n);</code> is n zeros, <code>v(n, 7);</code> is n sevens,
+        <code>v{1,2,4};</code> is those three. Parentheses describe, braces list. <code>push_back</code> is the only way to
+        create elements. <code>size()</code> and <code>back()</code> printed adjacently give <code>14</code> for "size 1,
+        back 4."</li>
+      <li><strong>The program question</strong> is always the same recipe: standard beginning, declare,
+        prompt, read one value, <code>while (x != sentinel)</code> with the next read at the bottom, compute,
+        print with a filtered loop, <code>return 0;</code>.</li>
+      <li><strong>Pointers.</strong> <code>&amp;x</code> for a scalar, plain <code>y</code> for an array. <code>p = q;</code> moves an
+        arrow; <code>*p = *q;</code> changes a value. Arrays are copied element by element, never by assignment.
+        One <code>new</code> per <code>delete</code>, one <code>new[]</code> per <code>delete []</code>, brackets empty.</li>
+      <li><strong>Classes.</strong> <code>private</code> data, <code>public</code> methods, <code>};</code> at the end. Accessors are
+        <code>const</code>, mutators are not. <code>.</code> for an object, <code>-&gt;</code> for a pointer, and a free function must
+        go through the getters &mdash; which is worth two of the six points on that question.</li>
+      <li><strong>The traps.</strong> Prefix hands back the new value, postfix the old. Line (b)
+        prints what line (a) left behind. <code>break</code> abandons the loop; <code>continue</code> runs the update and
+        the test. And with no formatting instructions, <code>cout</code> prints a <code>double</code> to six significant
+        digits and drops trailing zeros, so <code>4.0</code> appears as <code>4</code>.</li>
+      <li><strong>Tonight.</strong> Run the checklist in &sect;7, on paper. Then sit Problems
+        1&ndash;4 in one 50-minute block with the notes closed. Marking your own attempt against the
+        published point splits is worth more than another hour of reading.</li>
+    </ul>
+    <p><strong>Coming up in Class 12:</strong> Exam 1 &mdash; the four questions above, with different
+    numbers. Bring a pen; leave the electronics at home.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 10 &middot; Classes II</div><div class="pending">posts Thu Oct 1</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 13 &middot; Constructors</div><div class="pending">posts Thu Oct 15</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

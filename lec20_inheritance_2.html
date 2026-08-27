@@ -1,0 +1,2913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 20 — Inheritance II | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 20 &middot; Inheritance II</span><span class="sep">|</span><span class="where">Tue Nov 10</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 20 &middot; CSCI 211</div>
+  <h1>Inheritance II &mdash; Construction Order and the Big Three</h1>
+  <p class="sub">A derived object is built from the inside out: the base part first, then the members, then the body &mdash; and taken apart in exactly the opposite order. Everything else today follows from that one sentence.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Write a derived-class constructor that initializes its base sub-object with a base initializer such as <code>Square(double e, bool c) : Rectangle(e, e)</code>.</li>
+      <li>Say what happens when a derived constructor names no base constructor, and recognize the g++ error you get when the base has no default constructor.</li>
+      <li>State the construction order &mdash; base sub-object, then members in <em>declaration</em> order, then the constructor body &mdash; and produce the printed trace for a given program.</li>
+      <li>State the destruction order and explain why it is exactly the reverse.</li>
+      <li>Call a specific base-class version of a method with <code>Rectangle::print()</code> and explain when that is the right design.</li>
+      <li>Implement the professor's <code>Square</code> class completely: both constructors, the destructor, <code>edge()</code> and an overriding <code>print()</code>.</li>
+      <li>Write a derived copy constructor that forwards to the base copy constructor, and a derived <code>operator=</code> that calls <code>Rectangle::operator=(rhs)</code>.</li>
+      <li>Predict, from the printed messages alone, what a class's special members did &mdash; and spot the silent bug when the base part of a copy is left default-constructed.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Where we left off: the <code>Rectangle</code> base class</a></li>
+    <li><a href="#s2">Constructors of a derived class</a></li>
+    <li><a href="#s3">What if you don't name the base?</a></li>
+    <li><a href="#s4">Construction order, in full</a></li>
+    <li><a href="#s5">Destruction order: exactly the reverse</a></li>
+    <li><a href="#s6">Calling a base-class version on purpose</a></li>
+    <li><a href="#s7">The Big Three for a derived class</a></li>
+    <li><a href="#s8">Reading a construction trace</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Where we left off: the <code>Rectangle</code> base class</h2>
+
+<p>In Class 19 you met inheritance: <code>class Square : public Rectangle</code> says that a <code>Square</code>
+IS-A <code>Rectangle</code>, that every <code>Square</code> object physically contains a <code>Rectangle</code> sub-object, and
+that a <code>Square</code> can use the base class's <code>protected</code> and <code>public</code> members as if they were its
+own. What you have not seen is a single line of <code>Square</code>'s implementation. Class 19 ended with two
+open questions:</p>
+
+<ul>
+  <li>How do you write constructors for a derived class? <em>"The answer is not so obvious."</em></li>
+  <li>What about the Big Three &mdash; copy, assign, destroy?</li>
+</ul>
+
+<p>Today we answer both, and along the way we nail down the single most-traced behavior in this
+course: the exact order in which the pieces of a derived object come into existence and go out of
+it. Here is the base class again, complete. Read it once; every example on this page uses it.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the base class, with instrumentation</span></div>
+  <div class="bd">
+    <p>Notice that every special member prints its own name. That is not decoration &mdash; it is
+    the instrument we will use all day to <em>see</em> the order of events. The professor's exams do
+    exactly the same thing, which is what makes an output-prediction question gradeable.</p>
+<div class="codewrap"><div class="cap">rectsquare.cpp (base class)</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() {
+        h = 1.0;
+        w = 1.0;
+        cout &lt;&lt; "Rectangle: default constructor" &lt;&lt; endl;
+    }
+
+    Rectangle(double ht, double wd) {
+        h = ht;
+        w = wd;
+        cout &lt;&lt; "Rectangle: non-default constructor" &lt;&lt; endl;
+    }
+
+    ~Rectangle() {
+        cout &lt;&lt; "Rectangle: destructor" &lt;&lt; endl;
+    }
+
+    double height() const { return h; }
+    double width()  const { return w; }
+    double area()   const { return fabs(h * w); }
+
+    void print() const {
+        cout &lt;&lt; "Rectangle::print ";
+        cout &lt;&lt; "(" &lt;&lt; 0 &lt;&lt; "," &lt;&lt; 0 &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; w &lt;&lt; "," &lt;&lt; 0 &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; w &lt;&lt; "," &lt;&lt; h &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; 0 &lt;&lt; "," &lt;&lt; h &lt;&lt; ")";
+        cout &lt;&lt; endl;
+    }
+
+protected:
+    double h, w;
+};</code></pre></div>
+<details class="soln reveal noout"><summary></summary><div class="ans">
+    <p>Four things to have straight before we build on it:</p>
+    <ul>
+      <li><code>h</code> and <code>w</code> are <code>protected</code>, not <code>private</code>. That is the whole reason <code>Square</code> will be able
+        to read them directly. A <code>private</code> member would be locked out even from a derived class.</li>
+      <li>There are two constructors. The default one produces the unit square 1 by 1; the
+        non-default one takes a height and a width.</li>
+      <li>The destructor does nothing useful &mdash; <code>Rectangle</code> allocates no memory &mdash; but it
+        prints, so we can watch it run.</li>
+      <li><code>print()</code> puts the bottom-left corner of the rectangle at the origin. The class stores no
+        position at all, so that is a fixed convention, not a choice you can change per object.</li>
+    </ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; two corrections to the original listing</span></div>
+  <div class="bd">
+    <p>The version of <code>Rectangle</code> printed in the course notes writes <code>return abs(h*w);</code> with no
+    <code>#include &lt;cmath&gt;</code>. If only the C headers happen to be in scope, <code>abs</code> is the <strong>integer</strong>
+    <code>abs(int)</code>, so <code>abs(2.5 * 2.5)</code> truncates to <code>6</code> instead of <code>6.25</code>. In a class about <code>double</code>
+    arithmetic that is a real hazard. Use <code>#include &lt;cmath&gt;</code> and <code>fabs</code>, as above.</p>
+    <p>The same listing also uses <code>cout</code> and <code>endl</code> without <code>#include &lt;iostream&gt;</code> or
+    <code>using namespace std;</code> &mdash; they came from the enclosing program on the slide. Both are added
+    here so the file compiles on its own.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; you cannot forward-declare a derived class</span></div>
+  <div class="bd">
+    <p>The course notes abbreviate long listings by writing the class headers with a semicolon:</p>
+<pre><code class="language-cpp">class Rectangle;
+class Square : public Rectangle;</code></pre>
+    <p>That is shorthand for the reader, not C++. A forward declaration announces that a name is a
+    class; it may not carry a base list, and you could not derive from <code>Rectangle</code> there anyway
+    because at that point <code>Rectangle</code> is an incomplete type &mdash; the compiler does not yet know
+    how big its sub-object is. Really compiling it gives</p>
+<pre class="err">fwddecl.cpp:5:32: error: expected '{' before ';' token
+    5 | class Square : public Rectangle;
+      |                                ^</pre>
+    <p>A base class must be <strong>fully defined</strong> before any class derives from it. In
+    practice that means the base's complete definition &mdash; or the header that contains it &mdash;
+    comes first in the file.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.1</div>
+  <div class="bd">
+    <p><code>Square</code> is declared as <code>class Square : public Rectangle</code> and adds one <code>protected</code> data
+    member, <code>bool centered</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many <code>double</code> values does a single <code>Square</code> object contain, and where do they live?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Two</strong> &mdash; <code>h</code> and <code>w</code>. They live in the <code>Rectangle</code> sub-object that sits
+        inside every <code>Square</code>. <code>Square</code> itself declares no <code>double</code> at all; it inherits those two.
+        The full object is "a <code>Rectangle</code> part, plus a <code>bool</code>".</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Inside a <code>Square</code> method, can you write <code>h = 5.0;</code>? Could you if <code>h</code> were <code>private</code> in <code>Rectangle</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Yes</strong> to the first &mdash; <code>protected</code> means "private to the outside world,
+        public to derived classes", so <code>Square</code>'s methods may read and write <code>h</code> by name.</p>
+        <p><strong>No</strong> to the second. <code>private</code> is an absolute lock-out. It does not matter
+        that a <code>Square</code> IS-A <code>Rectangle</code> or that the <code>Rectangle</code> sub-object is physically inside the
+        <code>Square</code>; a derived class cannot touch a private base member, and would have to go through a
+        public accessor or mutator instead.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>Constructors of a derived class</h2>
+
+<p>Here is the problem. When you write <code>Square s;</code>, some code has to put a value into <code>h</code>, a value
+into <code>w</code>, and a value into <code>centered</code>. But <code>Square</code>'s constructor is not allowed to be the thing
+that initializes <code>h</code> and <code>w</code> &mdash; those belong to <code>Rectangle</code>, and <code>Rectangle</code> already has
+perfectly good constructors that know how to set them. Duplicating that logic inside <code>Square</code>
+would be exactly the copy-and-paste that inheritance exists to eliminate.</p>
+
+<p>So C++ takes a different route. A derived constructor does not initialize the base data itself;
+it <strong>asks the base class's constructor to do it</strong>, and it asks in the member
+initializer list.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; base initializer</span></div>
+  <div class="bd">
+    <p>A <strong>base initializer</strong> is an entry in a constructor's member initializer list
+    that names the <em>base class</em> instead of a data member:</p>
+<pre><code class="language-cpp">Square::Square(double e, bool c) : Rectangle(e, e) {
+    centered = c;
+}</code></pre>
+    <p>It means: <em>build my <code>Rectangle</code> sub-object by calling <code>Rectangle(e, e)</code>.</em> It looks
+    like a member initializer because it <strong>is</strong> one &mdash; the base sub-object is just
+    another thing inside the object that has to be initialized, and it is initialized in the same
+    list, using the same syntax. The only difference is that it names a class rather than a
+    variable.</p>
+  </div>
+</div>
+
+<p>The professor puts it in one sentence, and it is worth memorizing verbatim:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>Objects of derived classes are constructed in sequence. The base class constructor is
+    invoked first, then the derived class constructor.</strong></p>
+    <p>You are not initializing "the height of the square". You are initializing <em>the <code>Rectangle</code>
+    component of the <code>Square</code> object</em>, and then filling in what <code>Square</code> adds on top.</p>
+  </div>
+</div>
+
+<p>That gives us <code>Square</code>'s two constructors. The default one hands the job to <code>Rectangle</code>'s default
+constructor; the non-default one hands it to <code>Rectangle</code>'s non-default constructor. A square has
+equal sides, so we pass the same edge length twice:</p>
+
+<div class="codewrap"><div class="cap">rectsquare.cpp (Square's constructors)</div><pre><code class="language-cpp">Square::Square() : Rectangle() {
+    centered = false;
+    cout &lt;&lt; "Square: default constructor" &lt;&lt; endl;
+}
+
+Square::Square(double e, bool c) : Rectangle(e, e) {
+    centered = c;
+    cout &lt;&lt; "Square: non-default constructor" &lt;&lt; endl;
+}</code></pre></div>
+
+<p>Read the second one out loud: <em>"to build a <code>Square</code> of edge <code>e</code>, first build a <code>Rectangle</code>
+whose height and width are both <code>e</code>, then set <code>centered</code> to <code>c</code>."</em> That is the whole idea.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A derived class constructor <strong>can call any constructor it likes</strong> in the base
+    class &mdash; there is no rule that a default constructor must pair with a default constructor.
+    In practice pairing default-with-default and non-default-with-non-default is what usually makes
+    sense, but <code>Square(double e, bool c) : Rectangle()</code> is legal C++ if that is genuinely what you
+    want. What you may <em>not</em> do is name two base constructors, or name the base twice.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.2</div>
+  <div class="bd">
+    <p>For each derived constructor below, say which <code>Rectangle</code> constructor runs and what <code>h</code> and
+    <code>w</code> end up holding. Use the <code>Rectangle</code> class from &sect;1.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>Square::Square(double e, bool c) : Rectangle(e, e) { centered = c; }</code> called as <code>Square s(4.0, true);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The <strong>non-default</strong> <code>Rectangle(double, double)</code> runs with <code>ht = 4.0</code> and
+        <code>wd = 4.0</code>, so <code>h == 4.0</code> and <code>w == 4.0</code>. Then the body sets <code>centered = true</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Square::Square(double e, bool c) : Rectangle() { centered = c; }</code> called as <code>Square s(4.0, true);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The <strong>default</strong> <code>Rectangle()</code> runs, so <code>h == 1.0</code> and <code>w == 1.0</code>. The
+        argument <code>4.0</code> is never used for anything &mdash; it is silently thrown away. This compiles
+        without a single warning, and it is one of the easier ways to lose points on an exam. Legal,
+        but almost never what you meant.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>Square::Square(double e, bool c) : Rectangle(e, e), centered(c) { }</code> &mdash; is this legal, and is it different from (a)?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Legal, and slightly better.</strong> <code>centered</code> is a member of <code>Square</code>, so it can
+        appear in <code>Square</code>'s initializer list right alongside the base initializer. It is now
+        <em>initialized</em> rather than default-initialized-and-then-assigned. For a <code>bool</code> the
+        difference is invisible, but for a member with an expensive constructor &mdash; a <code>string</code>,
+        a <code>vector</code> &mdash; initializing in the list instead of assigning in the body is the habit
+        worth having.</p>
+        <p>Note the order in the list: the base initializer comes first. That is a convention, not a
+        rule &mdash; and &sect;4 explains why the compiler ignores the order you write anyway.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write <code>Square</code>'s two constructors</h3>
+
+<p>Given the <code>Rectangle</code> base class from &sect;1, fill in the two <code>Square</code> constructors. Each one
+must delegate to the right <code>Rectangle</code> constructor, set <code>centered</code>, and print its own message.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+// ... class Rectangle exactly as in section 1 ...
+
+class Square : public Rectangle {
+public:
+    Square();
+    Square(double e, bool c);
+    ~Square();
+    double edge() const { return height(); }
+protected:
+    bool centered;
+};
+
+Square::Square() {
+    // give Rectangle&#39;s DEFAULT constructor the job, then set centered
+
+}
+
+Square::Square(double e, bool c) {
+    // a square of edge e is a Rectangle of height e and width e
+
+}
+
+Square::~Square() { cout &lt;&lt; &quot;Square: destructor&quot; &lt;&lt; endl; }
+
+int main() {
+    Square a;
+    Square b(4.0, true);
+    cout &lt;&lt; b.edge() &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+// ... class Rectangle exactly as in section 1 ...
+
+class Square : public Rectangle {
+public:
+    Square();
+    Square(double e, bool c);
+    ~Square();
+    double edge() const { return height(); }
+protected:
+    bool centered;
+};
+
+Square::Square() {
+    // give Rectangle's DEFAULT constructor the job, then set centered
+
+}
+
+Square::Square(double e, bool c) {
+    // a square of edge e is a Rectangle of height e and width e
+
+}
+
+Square::~Square() { cout &lt;&lt; "Square: destructor" &lt;&lt; endl; }
+
+int main() {
+    Square a;
+    Square b(4.0, true);
+    cout &lt;&lt; b.edge() &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.3</div>
+  <div class="bd">
+    <p>Write the two constructors from the exercise above, then state exactly what the <code>main</code> in the
+    starter code prints.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The base initializer goes after a colon, between the parameter list
+      and the opening brace, and it names the class <code>Rectangle</code>. Once the base is handled, the body
+      does only the work that belongs to <code>Square</code>.</p>
+<pre><code class="language-cpp">Square::Square() : Rectangle() {
+    centered = false;
+    cout &lt;&lt; "Square: default constructor" &lt;&lt; endl;
+}
+
+Square::Square(double e, bool c) : Rectangle(e, e) {
+    centered = c;
+    cout &lt;&lt; "Square: non-default constructor" &lt;&lt; endl;
+}</code></pre>
+      <p>And the output. Remember that <code>a</code> and <code>b</code> are both destroyed at the end of <code>main</code>, in
+      reverse order of construction &mdash; <code>b</code> first, then <code>a</code>:</p>
+<pre class="out">Rectangle: default constructor
+Square: default constructor
+Rectangle: non-default constructor
+Square: non-default constructor
+4
+Square: destructor
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor</pre>
+      <p><strong>Things to notice.</strong> <code>cout &lt;&lt; b.edge()</code> prints <code>4</code>, not <code>4.0</code> &mdash; <code>cout</code>
+      drops trailing zeros by default. The professor's exam rubrics depend on that; writing <code>4.0</code> on
+      an output-prediction question is marked wrong.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>What if you don't name the base?</h2>
+
+<p>Nothing forces you to write a base initializer. So what does the compiler do when you leave it
+out? It does not skip the base &mdash; it <em>cannot</em>, because the base sub-object exists
+whether you mention it or not and its members have to be given values by somebody. Instead it
+quietly supplies the one initializer that needs no arguments:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>If a derived constructor's initializer list does not name the base class, the compiler
+    inserts a call to the base class's <strong>default constructor</strong>. If the base has no
+    default constructor, that is a <strong>compile error</strong>, not a silent skip.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the base default constructor runs anyway</span></div>
+  <div class="bd">
+    <p>This <code>Square</code> takes an edge length and never passes it anywhere. Before you look: how many
+    lines does it print, and what does <code>s.edge()</code> report?</p>
+<div class="codewrap"><div class="cap">implicitbase.cpp</div><pre><code class="language-cpp">class Square : public Rectangle {
+public:
+    // NOTE: no ": Rectangle(...)" anywhere in this constructor
+    Square(double e) {
+        centered = false;
+        cout &lt;&lt; "Square: constructor, edge asked for = " &lt;&lt; e &lt;&lt; endl;
+    }
+    ~Square() { cout &lt;&lt; "Square: destructor" &lt;&lt; endl; }
+    double edge() const { return height(); }
+protected:
+    bool centered;
+};
+
+int main() {
+    Square s(7.0);
+    cout &lt;&lt; "s.edge() = " &lt;&lt; s.edge() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Rectangle: default constructor
+Square: constructor, edge asked for = 7
+s.edge() = 1
+Square: destructor
+Rectangle: destructor</pre>
+    <p>The first line is the giveaway. Nobody wrote <code>Rectangle()</code> anywhere, yet <code>Rectangle</code>'s
+    default constructor ran &mdash; the compiler inserted it. So <code>h</code> and <code>w</code> are <code>1.0</code>, the <code>7.0</code>
+    was received into the parameter <code>e</code>, printed, and then dropped on the floor. The object is a
+    perfectly valid unit square that has nothing to do with the 7 the caller asked for.</p>
+    <p>This compiles clean with <code>-Wall</code>. There is no warning to save you. The only thing that
+    catches it is reading the trace, which is exactly the skill the exam tests.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; "calling" the base constructor in the body</span></div>
+  <div class="bd">
+    <p>Every semester somebody notices that the base data is wrong and fixes it like this:</p>
+<div class="codewrap"><div class="cap">tempbase.cpp</div><pre><code class="language-cpp">Square(double e) {
+    Rectangle(e, e);            // WRONG: this builds a throw-away temporary
+    centered = false;
+    cout &lt;&lt; "Square: constructor" &lt;&lt; endl;
+}</code></pre></div>
+    <p>It compiles. It does not do what you want:</p>
+<pre class="out">Rectangle: default constructor
+Rectangle: non-default constructor
+Rectangle: destructor
+Square: constructor
+s.edge() = 1
+Square: destructor
+Rectangle: destructor</pre>
+    <p>Read those first three lines. The real base sub-object was already default-constructed before
+    the body started. Then the statement <code>Rectangle(e, e);</code> built a brand-new, nameless
+    <em>temporary</em> <code>Rectangle</code>, which was destroyed at the semicolon. Your object never saw it,
+    and <code>s.edge()</code> is still <code>1</code>.</p>
+    <p>Initializing the base is not something a statement can do. It happens <strong>before</strong>
+    the body runs, and the only place to say what you want is the initializer list.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; when the base has no default constructor</span></div>
+  <div class="bd">
+    <p>Now delete <code>Rectangle</code>'s default constructor, leaving only <code>Rectangle(double, double)</code>, and
+    keep a <code>Square</code> constructor with no base initializer. There is now no zero-argument constructor
+    for the compiler to fall back on.</p>
+<div class="codewrap"><div class="cap">nodefaultbase.cpp</div><pre><code class="language-cpp">class Rectangle {
+public:
+    Rectangle(double ht, double wd) {          // the ONLY constructor
+        h = ht; w = wd;
+        cout &lt;&lt; "Rectangle: non-default constructor" &lt;&lt; endl;
+    }
+    ~Rectangle() { cout &lt;&lt; "Rectangle: destructor" &lt;&lt; endl; }
+    double height() const { return h; }
+protected:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    Square(double e) {                 // &lt;-- no base initializer
+        centered = false;
+        cout &lt;&lt; "Square: constructor" &lt;&lt; endl;
+    }
+protected:
+    bool centered;
+};</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">nodefaultbase.cpp: In constructor 'Square::Square(double)':
+nodefaultbase.cpp:19:22: error: no matching function for call to 'Rectangle::Rectangle()'
+   19 |     Square(double e) {                 // &lt;-- no base initializer
+      |                      ^
+nodefaultbase.cpp:7:5: note: candidate: 'Rectangle::Rectangle(double, double)'
+    7 |     Rectangle(double ht, double wd) {
+      |     ^~~~~~~~~
+nodefaultbase.cpp:7:5: note:   candidate expects 2 arguments, 0 provided</pre>
+    <p>Learn to read this one, because it is the error you will actually hit. Three details tell you
+    everything:</p>
+    <ul>
+      <li>The error is reported <em>in</em> <code>Square::Square(double)</code> &mdash; the derived constructor
+        is the thing at fault.</li>
+      <li>The caret points at the <strong>opening brace</strong> of the derived constructor. That is
+        the compiler saying "here is where the base initializer should have been."</li>
+      <li><code>no matching function for call to 'Rectangle::Rectangle()'</code> &mdash; a call you never wrote,
+        because the compiler wrote it for you and then could not find it.</li>
+    </ul>
+    <p>The fix is one clause: <code>Square(double e) : Rectangle(e, e) { ... }</code>.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.4</div>
+  <div class="bd">
+    <p>A base class <code>Account</code> has exactly one constructor, <code>Account(string owner)</code>. A derived class
+    <code>Savings</code> is written as</p>
+<pre><code class="language-cpp">class Savings : public Account {
+public:
+    Savings(string owner, double r) {
+        rate = r;
+    }
+private:
+    double rate;
+};</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Does this compile? If not, quote the shape of the error.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> The compiler inserts a call to <code>Account::Account()</code>, which does not
+        exist &mdash; declaring <em>any</em> constructor suppresses the implicitly generated default
+        one. You get <code>error: no matching function for call to 'Account::Account()'</code>,
+        reported inside <code>Savings::Savings(std::string, double)</code> with the caret on the opening
+        brace.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Fix it, without changing <code>Account</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Savings(string owner, double r) : Account(owner) {
+    rate = r;
+}</code></pre>
+        <p>Or better, initialize <code>rate</code> in the list too:
+        <code>Savings(string owner, double r) : Account(owner), rate(r) { }</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Suppose instead you add <code>Account() { }</code> to the base and leave <code>Savings</code> as printed. It now compiles. Is the bug gone?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No &mdash; it got worse.</strong> It compiled, which means nothing complains any
+        more, but the <code>owner</code> argument is still being discarded and every <code>Savings</code> object now has
+        whatever empty owner <code>Account()</code> leaves behind. A loud compile error is a much better outcome
+        than a quiet wrong answer. Adding a default constructor "so it compiles" is the wrong
+        reflex; supplying the base initializer is the right one.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Construction order, in full</h2>
+
+<p>We have said "base first, then derived". The complete rule has three stages, and the middle one
+is where the exam trips people.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; what happens when a derived object is constructed</span></div>
+  <div class="bd">
+    <ol>
+      <li>The <strong>base sub-object</strong> is constructed &mdash; using the base initializer you
+        wrote, or the base's default constructor if you wrote none. (If the base itself derives from
+        something, this whole procedure repeats there first, all the way down to the root of the
+        inheritance chain.)</li>
+      <li>The derived class's <strong>data members</strong> are constructed, in the order they are
+        <strong>declared in the class</strong> &mdash; <em>not</em> the order you listed them in the
+        initializer list.</li>
+      <li>The <strong>body</strong> of the derived constructor runs.</li>
+    </ol>
+    <p>By the time the first statement of your constructor body executes, everything the object is
+    made of already exists. That is the point of the whole arrangement: your body can safely use
+    <code>h</code>, <code>w</code>, and any member, because they are all built.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; all three stages, visible</span></div>
+  <div class="bd">
+    <p>To see stage 2 we need members that announce themselves, so here is a tiny <code>Part</code> class whose
+    only job is to print on construction and destruction. <code>Base</code> has two <code>Part</code> members and <code>Derived</code>
+    has two more. Work out the exact sequence of lines before you open the answer &mdash; there are
+    fourteen of them.</p>
+<div class="codewrap"><div class="cap">order.cpp</div><pre><code class="language-cpp">// A tiny class whose only job is to announce its own construction and destruction.
+class Part {
+public:
+    Part(string n) {
+        name = n;
+        cout &lt;&lt; "    Part " &lt;&lt; name &lt;&lt; ": constructor" &lt;&lt; endl;
+    }
+    ~Part() {
+        cout &lt;&lt; "    Part " &lt;&lt; name &lt;&lt; ": destructor" &lt;&lt; endl;
+    }
+private:
+    string name;
+};
+
+class Base {
+public:
+    Base() : first("Base::first"), second("Base::second") {
+        cout &lt;&lt; "  Base: constructor BODY" &lt;&lt; endl;
+    }
+    ~Base() {
+        cout &lt;&lt; "  Base: destructor BODY" &lt;&lt; endl;
+    }
+protected:
+    Part first, second;             // declared first, then second
+};
+
+class Derived : public Base {
+public:
+    Derived() : Base(), alpha("Derived::alpha"), beta("Derived::beta") {
+        cout &lt;&lt; "Derived: constructor BODY" &lt;&lt; endl;
+    }
+    ~Derived() {
+        cout &lt;&lt; "Derived: destructor BODY" &lt;&lt; endl;
+    }
+private:
+    Part alpha, beta;               // declared alpha, then beta
+};
+
+int main() {
+    cout &lt;&lt; "--- building d ---" &lt;&lt; endl;
+    Derived d;
+    cout &lt;&lt; "--- d is ready ---" &lt;&lt; endl;
+    cout &lt;&lt; "--- leaving main ---" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">--- building d ---
+    Part Base::first: constructor
+    Part Base::second: constructor
+  Base: constructor BODY
+    Part Derived::alpha: constructor
+    Part Derived::beta: constructor
+Derived: constructor BODY
+--- d is ready ---
+--- leaving main ---
+Derived: destructor BODY
+    Part Derived::beta: destructor
+    Part Derived::alpha: destructor
+  Base: destructor BODY
+    Part Base::second: destructor
+    Part Base::first: destructor</pre>
+    <p>Every printed line, mapped to the construct that caused it:</p>
+    <table class="trace">
+      <tr><th>#</th><th>Printed line</th><th>What produced it</th></tr>
+      <tr><td>1</td><td><code>--- building d ---</code></td><td>the <code>cout</code> in <code>main</code></td></tr>
+      <tr><td>2</td><td><code>Part Base::first: constructor</code></td><td>stage 1: <code>Base</code> sub-object starts; its <em>first-declared</em> member is built</td></tr>
+      <tr><td>3</td><td><code>Part Base::second: constructor</code></td><td><code>Base</code>'s second-declared member</td></tr>
+      <tr><td>4</td><td><code>Base: constructor BODY</code></td><td><code>Base</code>'s constructor body &mdash; the base sub-object is now complete</td></tr>
+      <tr><td>5</td><td><code>Part Derived::alpha: constructor</code></td><td>stage 2: <code>Derived</code>'s own members, in declaration order</td></tr>
+      <tr><td>6</td><td><code>Part Derived::beta: constructor</code></td><td>&hellip;<code>beta</code> is declared second, so it is built second</td></tr>
+      <tr><td>7</td><td><code>Derived: constructor BODY</code></td><td>stage 3: only now does your constructor body run</td></tr>
+      <tr><td>8&ndash;9</td><td><code>--- d is ready ---</code> &hellip; <code>--- leaving main ---</code></td><td>the two <code>cout</code>s in <code>main</code></td></tr>
+      <tr><td>10</td><td><code>Derived: destructor BODY</code></td><td><code>d</code> goes out of scope; the derived destructor body runs <em>first</em></td></tr>
+      <tr><td>11</td><td><code>Part Derived::beta: destructor</code></td><td>derived members destroyed in <strong>reverse</strong> declaration order</td></tr>
+      <tr><td>12</td><td><code>Part Derived::alpha: destructor</code></td><td>&hellip;<code>alpha</code> last, because it was built first</td></tr>
+      <tr><td>13</td><td><code>Base: destructor BODY</code></td><td>only now is the base sub-object taken apart</td></tr>
+      <tr><td>14&ndash;15</td><td><code>Part Base::second/first: destructor</code></td><td>base members, also in reverse</td></tr>
+    </table>
+    <p>Read down the construction half and back up the destruction half: the two halves are exact
+    mirror images. That is the whole rule in one picture.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the initializer list does not set the order</span></div>
+  <div class="bd">
+    <p>Members are constructed in <strong>declaration order</strong>, no matter what order you write
+    them in the initializer list. If the two disagree, the list is a lie about what will happen, and
+    g++ tells you so:</p>
+<div class="codewrap"><div class="cap">reorder.cpp</div><pre><code class="language-cpp">class Muddle {
+public:
+    // written second-then-first; runs first-then-second anyway
+    Muddle() : second("second"), first("first") { }
+private:
+    Part first, second;
+};</code></pre></div>
+<pre class="err">reorder.cpp: In constructor 'Muddle::Muddle()':
+reorder.cpp:19:17: warning: 'Muddle::second' will be initialized after [-Wreorder]
+   19 |     Part first, second;
+      |                 ^~~~~~
+reorder.cpp:19:10: warning:   'Part Muddle::first' [-Wreorder]
+   19 |     Part first, second;
+      |          ^~~~~
+reorder.cpp:17:5: warning:   when initialized here [-Wreorder]
+   17 |     Muddle() : second("second"), first("first") { }
+      |     ^~~~~~</pre>
+<pre class="out">Part first: constructor
+Part second: constructor
+Part second: destructor
+Part first: destructor</pre>
+    <p>It is only a warning, and only with <code>-Wall</code>, and the program still runs &mdash; in declaration
+    order. This bites for real when one member is initialized <em>from</em> another
+    (<code>Muddle() : total(count * 2), count(5)</code> reads <code>count</code> before it exists). Keep the initializer
+    list in declaration order, with the base initializer first, and the problem never arises.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.5</div>
+  <div class="bd">
+    <p>Using the <code>Rectangle</code> and <code>Square</code> classes from &sect;1 and &sect;2, state the exact output of</p>
+<pre><code class="language-cpp">int main() {
+    Square sdef;
+    cout &lt;&lt; sdef.height() &lt;&lt; endl;
+    cout &lt;&lt; sdef.width()  &lt;&lt; endl;
+    cout &lt;&lt; sdef.edge()   &lt;&lt; endl;
+    cout &lt;&lt; sdef.area()   &lt;&lt; endl;
+    return 0;
+}</code></pre>
+    <p>where <code>double Square::edge() const { return height(); }</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Rectangle: default constructor
+Square: default constructor
+1
+1
+1
+1
+Square: destructor
+Rectangle: destructor</pre>
+      <p><strong>Line by line.</strong></p>
+      <table class="trace">
+        <tr><th>Printed line</th><th>Cause</th></tr>
+        <tr><td><code>Rectangle: default constructor</code></td><td><code>Square sdef;</code> runs <code>Square::Square()</code>, whose base initializer <code>: Rectangle()</code> fires first</td></tr>
+        <tr><td><code>Square: default constructor</code></td><td>then the body of <code>Square::Square()</code></td></tr>
+        <tr><td><code>1</code> &times; 4</td><td><code>h == w == 1.0</code>; <code>edge()</code> just returns <code>height()</code>; <code>area()</code> is <code>fabs(1*1)</code>. <code>cout</code> prints <code>1</code>, not <code>1.0</code></td></tr>
+        <tr><td><code>Square: destructor</code></td><td><code>sdef</code> dies at the end of <code>main</code>; the derived destructor runs first</td></tr>
+        <tr><td><code>Rectangle: destructor</code></td><td>then the base sub-object is destroyed, automatically</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> <code>Square</code> does not override <code>height()</code>, <code>width()</code> or
+      <code>area()</code> &mdash; and it should not. The area of a square is given by the same formula as the
+      area of a rectangle, so there is nothing to change. <code>edge()</code> is new: it is a name that makes
+      sense for a square and not for a rectangle. A derived class is free to add methods the base
+      never had; it is not restricted to overriding.</p>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.6</div>
+  <div class="bd">
+    <p>Suppose <code>class C : public B</code> and <code>class B : public A</code>, and each of the three has a
+    constructor that prints its own name.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does <code>C c;</code> print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>A</code>, then <code>B</code>, then <code>C</code>. The rule applies recursively: before <code>B</code>'s sub-object can be
+        built, <em>its</em> base <code>A</code> must be built. Construction starts at the root of the
+        inheritance chain and works outward.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Can <code>C</code>'s constructor write <code>: A()</code> in its initializer list to skip past <code>B</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> <code>C</code>'s direct base is <code>B</code>, and <code>B</code> is the only class <code>C</code> may name in
+        a base initializer. <code>A</code> is not <code>C</code>'s business &mdash; choosing which <code>A</code> constructor to run
+        is <code>B</code>'s job, and <code>C</code> influences it only by choosing which <code>B</code> constructor to call. Trying it
+        gives <code>error: type 'A' is not a direct base of 'C'</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Destruction order: exactly the reverse</h2>
+
+<p>Destructors are the easy half of today, because there is nothing to decide. A class has many
+constructors but exactly <strong>one</strong> destructor, so there is never a question of "which
+destructor" to call. And you never write a call to the base destructor:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>The destructor of the derived class does not explicitly call the destructor of the
+    base class. The compiler does that automatically for us.</strong></p>
+    <p>And: <strong>objects are destroyed in the opposite order to how they are constructed.</strong>
+    The derived destructor body runs first, destroying the "<code>Square</code> part"; then the base destructor
+    runs, destroying the implicit <code>Rectangle</code> object.</p>
+  </div>
+</div>
+
+<p>So <code>Square</code>'s destructor looks exactly like the destructor of any non-derived class:</p>
+
+<div class="codewrap"><div class="cap">rectsquare.cpp (Square's destructor)</div><pre><code class="language-cpp">Square::~Square() {
+    cout &lt;&lt; "Square: destructor" &lt;&lt; endl;
+}</code></pre></div>
+
+<p><code>Square</code> allocates no memory, so there is nothing to release. If it did &mdash; if it held a
+pointer to something built with <code>new</code> &mdash; the <code>delete</code> would go here, in the derived destructor,
+and <code>Rectangle</code>'s destructor would still be responsible only for <code>Rectangle</code>'s own resources. Each
+destructor cleans up exactly what its own class added, and the chain covers the whole object.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; what happens when a derived object is destroyed</span></div>
+  <div class="bd">
+    <ol>
+      <li>The <strong>body of the derived destructor</strong> runs. Release anything the derived
+        class allocated.</li>
+      <li>The derived class's <strong>data members</strong> are destroyed, in <strong>reverse</strong>
+        declaration order.</li>
+      <li>The <strong>base destructor</strong> is called automatically, and repeats these three steps
+        for itself, all the way down the chain.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>new</code>, <code>delete</code>, and the same two orders</span></div>
+  <div class="bd">
+    <p>The professor's second <code>main</code> builds its squares on the heap, "just for practice". It also
+    shows the two <code>print()</code> behaviors, which we take apart in &sect;6 &mdash; for now, focus on where
+    the constructor and destructor lines fall relative to <code>new</code> and <code>delete</code>.</p>
+<div class="codewrap"><div class="cap">rectsquare2.cpp</div><pre><code class="language-cpp">int main() {
+    double len = 3.0;
+    Square *ps = new Square(len, true);
+    ps-&gt;print();
+    delete ps;
+
+    ps = new Square(len, false);
+    ps-&gt;print();
+    cout &lt;&lt; ps-&gt;height() &lt;&lt; endl;
+    cout &lt;&lt; ps-&gt;width()  &lt;&lt; endl;
+    cout &lt;&lt; ps-&gt;edge()   &lt;&lt; endl;
+    cout &lt;&lt; ps-&gt;area()   &lt;&lt; endl;
+    delete ps;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Rectangle: non-default constructor
+Square: non-default constructor
+Square::print (-1.5,-1.5), (1.5,-1.5), (1.5,1.5), (-1.5,1.5)
+Square: destructor
+Rectangle: destructor
+Rectangle: non-default constructor
+Square: non-default constructor
+Rectangle::print (0,0), (3,0), (3,3), (0,3)
+3
+3
+3
+9
+Square: destructor
+Rectangle: destructor</pre>
+    <p>Two <code>Square</code> objects, built and destroyed one after the other. <code>new Square(len, true)</code> does
+    two things: it obtains memory, then it runs the constructor chain &mdash; base first, exactly as
+    for a local object. <code>delete ps</code> runs the destructor chain &mdash; derived first &mdash; and then
+    releases the memory. The lifetime is now controlled by you rather than by scope, but the
+    <em>order</em> is identical.</p>
+    <p>Because the second square is not centered, its <code>print()</code> hands off to <code>Rectangle::print()</code>
+    and you see the base class's line. That is &sect;6.</p>
+    <p>Every <code>new</code> here is matched by a <code>delete</code>, so the program is leak-clean:</p>
+<pre class="shell">valgrind --leak-check=full ./rectsquare2</pre>
+<pre class="out">==1894== HEAP SUMMARY:
+==1894==     in use at exit: 0 bytes in 0 blocks
+==1894==   total heap usage: 4 allocs, 4 frees, 77,872 bytes allocated
+==1894==
+==1894== All heap blocks were freed -- no leaks are possible</pre>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; this is safe only because the pointer is a <code>Square *</code></span></div>
+  <div class="bd">
+    <p><code>delete ps</code> runs the right destructors above because <code>ps</code> is declared <code>Square *</code>, so the
+    compiler knows at compile time that a <code>Square</code> is being deleted. Write
+    <code>Rectangle *pr = new Square(3.0, true); delete pr;</code> instead and only <code>~Rectangle</code> runs &mdash;
+    <code>~Square</code> is skipped entirely, which is undefined behavior and leaks anything the derived class
+    owned. The cure is a <code>virtual</code> destructor, which we reach in Class 24. Until then, delete
+    through a pointer of the object's own type.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.7</div>
+  <div class="bd">
+    <p>Give the exact output of this program, using the <code>Rectangle</code>/<code>Square</code> classes from &sect;1
+    and &sect;2.</p>
+<pre><code class="language-cpp">int main() {
+    Square a(2.0, false);
+    {
+        Square b;
+        Square c(5.0, true);
+    }
+    Rectangle r(1.0, 4.0);
+    return 0;
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Two rules do all the work. Construction: base then derived, in the
+      order the declarations are reached. Destruction: reverse order of construction, and objects in
+      an inner block die at the closing brace, not at the end of <code>main</code>.</p>
+<pre class="out">Rectangle: non-default constructor
+Square: non-default constructor
+Rectangle: default constructor
+Square: default constructor
+Rectangle: non-default constructor
+Square: non-default constructor
+Square: destructor
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor
+Rectangle: non-default constructor
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor</pre>
+      <table class="trace">
+        <tr><th>#</th><th>Printed line</th><th>Cause</th></tr>
+        <tr><td>1&ndash;2</td><td><code>Rectangle: non-default</code> / <code>Square: non-default</code></td><td><code>Square a(2.0, false);</code> &mdash; base initializer <code>Rectangle(2.0, 2.0)</code> first</td></tr>
+        <tr><td>3&ndash;4</td><td><code>Rectangle: default</code> / <code>Square: default</code></td><td><code>Square b;</code> inside the inner block</td></tr>
+        <tr><td>5&ndash;6</td><td><code>Rectangle: non-default</code> / <code>Square: non-default</code></td><td><code>Square c(5.0, true);</code></td></tr>
+        <tr><td>7&ndash;8</td><td><code>Square: destructor</code> / <code>Rectangle: destructor</code></td><td>closing brace of the inner block; <code>c</code> dies first (built last)</td></tr>
+        <tr><td>9&ndash;10</td><td><code>Square: destructor</code> / <code>Rectangle: destructor</code></td><td>then <code>b</code></td></tr>
+        <tr><td>11</td><td><code>Rectangle: non-default constructor</code></td><td><code>Rectangle r(1.0, 4.0);</code> &mdash; a plain base object, so one line only</td></tr>
+        <tr><td>12</td><td><code>Rectangle: destructor</code></td><td>end of <code>main</code>: <code>r</code> was declared last of the survivors, so it dies first &mdash; and it is a plain <code>Rectangle</code>, so it contributes a single line</td></tr>
+        <tr><td>13&ndash;14</td><td><code>Square: destructor</code> / <code>Rectangle: destructor</code></td><td>then <code>a</code>, derived body first, base sub-object second</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> Two independent things decide the order here: an object
+      dies at the closing brace of <em>its own</em> block, and within one scope the objects die in
+      reverse declaration order. <code>b</code> and <code>c</code> are gone long before <code>r</code> is even created.</p>
+      <p>Use the counts as a check. Four <code>Rectangle</code> sub-objects were constructed (<code>a</code>, <code>b</code>, <code>c</code>,
+      and <code>r</code> itself) and there are four <code>Rectangle: destructor</code> lines. Three <code>Square</code>s were
+      constructed and there are three <code>Square: destructor</code> lines. If those totals do not match, you
+      have dropped a line somewhere.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Calling a base-class version on purpose</h2>
+
+<p><code>Square</code> inherits <code>height()</code>, <code>width()</code> and <code>area()</code> and overrides none of them &mdash; there is
+nothing to change. But <code>print()</code> is different. <code>Rectangle::print()</code> puts the bottom-left corner at
+the origin. For a square we would sometimes rather put the <em>center</em> at the origin, which is
+what the <code>centered</code> flag is for. So <code>Square</code> needs its own <code>print()</code>.</p>
+
+<p>Here is the design the professor lands on, and it is a nice one because it only half-overrides:</p>
+
+<ul>
+  <li>If <code>centered</code> is <code>true</code>, print the four vertices at &plusmn;half an edge &mdash; that is
+    genuinely new behavior.</li>
+  <li>If <code>centered</code> is <code>false</code>, the base class already does the right thing. <strong>Use it.</strong></li>
+</ul>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; explicit qualification</span></div>
+  <div class="bd">
+    <p>Writing <code>Rectangle::print();</code> inside a <code>Square</code> method calls <strong>the <code>Rectangle</code> version
+    specifically</strong>, bypassing the normal name lookup that would find <code>Square::print</code>. The
+    <code>ClassName::</code> prefix is called a <strong>qualified name</strong>, and it lets you name any
+    version in the inheritance chain.</p>
+    <p>The professor's general rule: <em>"if the base class is <code>A</code> and <code>B</code> derives from <code>A</code> and <code>C</code>
+    derives from <code>B</code>, then we select the specific function we want by writing <code>A::print()</code> or
+    <code>B::print()</code> or <code>C::print()</code>."</em> As always, this reaches only <strong>public and
+    protected</strong> methods &mdash; a derived class cannot call the private methods of its
+    parent.</p>
+    <p>All of this resolution happens at compile time from the <em>declared</em> type of the object
+    &mdash; the <strong>static binding</strong> you met in Class 19. Writing a qualified name is
+    simply telling the compiler which candidate to bind to. When we make methods <code>virtual</code> in
+    Class 24 the unqualified call starts being resolved at run time instead, and <code>Base::method()</code>
+    becomes the only way left to reach the version you overrode.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the complete <code>Square</code></span></div>
+  <div class="bd">
+    <p>This is the whole class, declaration and bodies. Notice <code>print()</code>: one branch does the new
+    thing, the other delegates. Also notice <code>edge()</code>, which is not in <code>Rectangle</code> at all &mdash; a
+    derived class may add methods the base never had.</p>
+<div class="codewrap"><div class="cap">rectsquare.cpp (the complete Square)</div><pre><code class="language-cpp">class Square : public Rectangle {
+public:
+    Square();
+    Square(double e, bool c);
+    ~Square();
+
+    double edge() const { return height(); }
+
+    void print() const;
+
+protected:
+    bool centered;
+};
+
+Square::Square() : Rectangle() {
+    centered = false;
+    cout &lt;&lt; "Square: default constructor" &lt;&lt; endl;
+}
+
+Square::Square(double e, bool c) : Rectangle(e, e) {
+    centered = c;
+    cout &lt;&lt; "Square: non-default constructor" &lt;&lt; endl;
+}
+
+Square::~Square() {
+    cout &lt;&lt; "Square: destructor" &lt;&lt; endl;
+}
+
+void Square::print() const {
+    if (centered == false) {
+        Rectangle::print();             // call the base class method
+    } else {
+        double d = edge() * 0.5;
+        cout &lt;&lt; "Square::print ";
+        cout &lt;&lt; "(" &lt;&lt; -d &lt;&lt; "," &lt;&lt; -d &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt;  d &lt;&lt; "," &lt;&lt; -d &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt;  d &lt;&lt; "," &lt;&lt;  d &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; -d &lt;&lt; "," &lt;&lt;  d &lt;&lt; ")";
+        cout &lt;&lt; endl;
+    }
+}</code></pre></div>
+    <p>Build one of each and call <code>print()</code> on both. The constructor messages come first, then the
+    two very different lines:</p>
+<pre><code class="language-cpp">int main() {
+    Square centered(3.0, true);
+    Square corner(3.0, false);
+    cout &lt;&lt; "----" &lt;&lt; endl;
+    centered.print();
+    corner.print();
+    return 0;
+}</code></pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Rectangle: non-default constructor
+Square: non-default constructor
+Rectangle: non-default constructor
+Square: non-default constructor
+----
+Square::print (-1.5,-1.5), (1.5,-1.5), (1.5,1.5), (-1.5,1.5)
+Rectangle::print (0,0), (3,0), (3,3), (0,3)
+Square: destructor
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor</pre>
+    <table class="trace">
+      <tr><th>Piece</th><th>Why it is written that way</th></tr>
+      <tr><td><code>double edge() const { return height(); }</code></td><td>For a square, height and width are equal, so returning either one is the edge length. <code>edge()</code> is pure convenience &mdash; but it gives the class a vocabulary that fits what it actually is.</td></tr>
+      <tr><td><code>void print() const;</code></td><td>Same signature as <code>Rectangle::print()</code>. Calling <code>print()</code> on a <code>Square</code> object now finds this one.</td></tr>
+      <tr><td><code>Rectangle::print();</code></td><td>Explicit qualification. Without the <code>Rectangle::</code> prefix this would find <code>Square::print</code> and call <em>itself</em> &mdash; infinite recursion, then a crash.</td></tr>
+      <tr><td><code>double d = edge() * 0.5;</code></td><td>Half an edge. The four vertices are all combinations of <code>-d</code> and <code>+d</code>, printed in the same order as the base class uses: bottom-left, bottom-right, top-right, top-left.</td></tr>
+    </table>
+    <p>The vertex order matters when you read the output: <code>(-1.5,-1.5)</code> is the bottom-left corner
+    and <code>(-1.5,1.5)</code> is the top-left, so the signs cycle
+    <code>--</code>, <code>+-</code>, <code>++</code>, <code>-+</code>. Misreading that pattern is
+    easy; check it against the rectangle's <code>(0,0), (3,0), (3,3), (0,3)</code>, which walks the same way
+    around.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; two things the original listing gets wrong</span></div>
+  <div class="bd">
+    <p><strong>1. <code>edge()</code> is defined twice.</strong> The course notes give it once outside the class
+    as <code>double Square::edge() const { return height(); }</code> and again inline inside the class body. If
+    both were compiled you would get a redefinition error. Pick one; the version above uses the
+    inline form.</p>
+    <p><strong>2. <code>print()</code> computes the half-edge from <code>w</code>.</strong> The original writes
+    <code>double d = w*0.5;</code>. That works only because <code>Square</code>'s constructors always set <code>h == w</code>. But
+    <code>h</code> and <code>w</code> are <code>protected</code> and nothing enforces that invariant, so a future derived class could
+    set them apart and <code>print()</code> would silently draw a non-square. Using <code>edge() * 0.5</code> says what is
+    meant. This is a small instance of a famous problem: <code>Square</code> inheriting from <code>Rectangle</code> looks
+    natural in English, yet a <code>Rectangle</code> promises you can change its height and width independently
+    and a <code>Square</code> cannot honor that promise. IS-A in geometry is not always IS-A in code.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; add a <code>describe()</code> that reuses the base</h3>
+
+<p>Give <code>Square</code> a method <code>void describe() const</code> that prints one line of its own &mdash; the edge
+length &mdash; and then calls <code>Rectangle::print()</code> for the vertices. Do not duplicate any of the
+base class's printing code.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="20" data-starter="#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+// ... class Rectangle exactly as in section 1 ...
+// ... class Square as in section 6, plus: ...
+
+void Square::describe() const {
+    // 1. print &quot;Square with edge = &quot; followed by the edge length
+    // 2. then let the BASE class print the vertices
+
+}
+
+int main() {
+    Square s(4.0, false);
+    s.describe();
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+// ... class Rectangle exactly as in section 1 ...
+// ... class Square as in section 6, plus: ...
+
+void Square::describe() const {
+    // 1. print "Square with edge = " followed by the edge length
+    // 2. then let the BASE class print the vertices
+
+}
+
+int main() {
+    Square s(4.0, false);
+    s.describe();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.8</div>
+  <div class="bd">
+    <p>Write <code>describe()</code> as described above and give its output for <code>Square s(4.0, false);</code>.
+    Then answer: what would happen if you wrote <code>print();</code> instead of <code>Rectangle::print();</code>?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The method belongs to <code>Square</code>, so declare it in <code>Square</code>'s public
+      section. Inside it, <code>edge()</code> is inherited machinery we can call by name, and <code>Rectangle::print()</code>
+      names the base version explicitly.</p>
+<pre><code class="language-cpp">void Square::describe() const {
+    cout &lt;&lt; "Square with edge = " &lt;&lt; edge() &lt;&lt; endl;
+    Rectangle::print();
+}</code></pre>
+<pre class="out">Rectangle: non-default constructor
+Square: non-default constructor
+Square with edge = 4
+Rectangle::print (0,0), (4,0), (4,4), (0,4)
+Square: destructor
+Rectangle: destructor</pre>
+      <p><strong>What goes wrong with a bare <code>print()</code>.</strong> Name lookup starts in <code>Square</code>,
+      finds <code>Square::print</code>, and calls it. That version sees <code>centered == false</code> and calls
+      <code>Rectangle::print()</code>, so in <em>this</em> particular case you would still get sensible output
+      &mdash; but if <code>centered</code> were <code>true</code> you would get the centered form instead of the vertices
+      you asked for. Change <code>describe()</code> to call itself &mdash; <code>describe();</code> &mdash; and you get
+      unbounded recursion and a crash. The <code>ClassName::</code> prefix is how you say which one you mean,
+      and inside a method that overrides something, you almost always mean the base version.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>The Big Three for a derived class</h2>
+
+<p>You already know the Big Three from Classes 14 and 15: if a class needs one of destructor, copy
+constructor, <code>operator=</code>, it almost certainly needs all three. The question today is what changes
+when the class is derived.</p>
+
+<p>The destructor, we just saw, changes nothing at all &mdash; it looks exactly like any other
+destructor, and the base one is called for you. As the professor puts it, <em>"this section is
+really about the Big Two, not the Big Three."</em></p>
+
+<p>Neither <code>Rectangle</code> nor <code>Square</code> holds a pointer or allocates memory, so a shallow copy would
+work for them and the compiler-generated versions would be correct. We write them out anyway,
+because the <em>shape</em> is what you need &mdash; and because the moment a real base class does
+own memory, getting this shape wrong destroys the data silently. First, the base class's copy
+constructor and assignment operator:</p>
+
+<div class="codewrap"><div class="cap">bigthree_ok.cpp (base class)</div><pre><code class="language-cpp">Rectangle(const Rectangle &amp;orig) {
+    h = orig.h;
+    w = orig.w;
+    cout &lt;&lt; "Rectangle: copy constructor" &lt;&lt; endl;
+}
+
+Rectangle&amp; operator=(const Rectangle &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    h = rhs.h;
+    w = rhs.w;
+    cout &lt;&lt; "Rectangle: assignment operator" &lt;&lt; endl;
+    return *this;
+}</code></pre></div>
+
+<p>Nothing new: the self-assignment guard, the member-wise copy, <code>return *this;</code>. Now the derived
+versions.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the derived copy constructor</span></div>
+  <div class="bd">
+    <ol>
+      <li>The signature follows the same rule as any C++ class: <code>Square(const Square &amp;orig);</code></li>
+      <li>Call the <strong>base class's copy constructor</strong> in the member initializer list,
+        passing the whole <code>orig</code> object: <code>: Rectangle(orig)</code>.</li>
+      <li>The <code>Rectangle</code> copy constructor copies the <code>Rectangle</code> part.</li>
+      <li>Then copy the data that belongs to the <code>Square</code> part.</li>
+    </ol>
+<pre><code class="language-cpp">Square::Square(const Square &amp;orig) : Rectangle(orig) {
+    centered = orig.centered;
+    cout &lt;&lt; "Square: copy constructor" &lt;&lt; endl;
+}</code></pre>
+    <p>This is a shallow copy, which is all these classes need. If <code>Square</code> owned memory, step 4
+    would be a deep copy instead &mdash; the pattern is unchanged.</p>
+  </div>
+</div>
+
+<p>Look hard at <code>Rectangle(orig)</code>. <code>Rectangle</code>'s copy constructor takes a <code>const Rectangle &amp;</code>, and we
+are handing it something of type <code>Square</code>. Why does that work?</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; IS-A, again</span></div>
+  <div class="bd">
+    <p>Every <code>Square</code> IS-A <code>Rectangle</code>, so <strong>a reference to the base class can bind to an
+    object of a derived class</strong>. The reference binds to the implicit <code>Rectangle</code> sub-object
+    living inside the <code>Square</code>. <code>Rectangle</code>'s copy constructor therefore sees exactly the part of
+    <code>orig</code> it knows how to copy, and copies it. The same holds for pointers: a <code>Rectangle *</code> can
+    hold the address of a <code>Square</code>. We use that fact hard in Class 21.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the derived assignment operator</span></div>
+  <div class="bd">
+    <ol>
+      <li>Signature: <code>Square&amp; operator=(const Square &amp;rhs);</code></li>
+      <li>Test for self-assignment: <code>if (this == &amp;rhs) return *this;</code></li>
+      <li>Invoke the <strong>base class's assignment operator</strong> to assign the <code>Rectangle</code>
+        part.</li>
+      <li>Copy the data in the <code>Square</code> part.</li>
+      <li><code>return *this;</code></li>
+    </ol>
+<pre><code class="language-cpp">Square&amp; Square::operator=(const Square &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    Rectangle::operator=(rhs);
+    centered = rhs.centered;
+    cout &lt;&lt; "Square: assignment operator" &lt;&lt; endl;
+    return *this;
+}</code></pre>
+  </div>
+</div>
+
+<p>Line 3 looks nothing like an assignment. There is no <code>=</code> between two operands, and <code>rhs</code> sits in
+parentheses like a function argument. That is because it <em>is</em> a function call:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>The assignment operator is not only an operator, it is also a class method.</strong>
+    <code>Rectangle::operator=</code> is its real name, and <code>Rectangle::operator=(rhs)</code> calls it on the current
+    object &mdash; on <code>this</code>, whose <code>Rectangle</code> sub-object it therefore updates. When you write
+    <code>a = b</code> the compiler turns it into <code>a.operator=(b)</code>; here we just write that form out by hand,
+    qualified so it picks the base version rather than recursing into <code>Square::operator=</code>.</p>
+    <p>As with the copy constructor, <code>rhs</code> is a <code>Square</code> and the parameter is a <code>const Rectangle &amp;</code>,
+    and it binds to the <code>Rectangle</code> part. IS-A pays for both.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; both, working</span></div>
+  <div class="bd">
+    <p>Here is the correct <code>Square</code> exercised three ways: non-default construction, copy
+    construction, and assignment. <code>show()</code> prints the object's actual state so you can check that
+    the data really moved, not just that the right messages appeared.</p>
+<div class="codewrap"><div class="cap">bigthree_ok.cpp</div><pre><code class="language-cpp">class Square : public Rectangle {
+public:
+    Square() : Rectangle() {
+        centered = false;
+        cout &lt;&lt; "Square: default constructor" &lt;&lt; endl;
+    }
+    Square(double e, bool c) : Rectangle(e, e) {
+        centered = c;
+        cout &lt;&lt; "Square: non-default constructor" &lt;&lt; endl;
+    }
+    Square(const Square &amp;orig) : Rectangle(orig) {
+        centered = orig.centered;
+        cout &lt;&lt; "Square: copy constructor" &lt;&lt; endl;
+    }
+    Square&amp; operator=(const Square &amp;rhs) {
+        if (this == &amp;rhs) return *this;
+        Rectangle::operator=(rhs);
+        centered = rhs.centered;
+        cout &lt;&lt; "Square: assignment operator" &lt;&lt; endl;
+        return *this;
+    }
+    ~Square() { cout &lt;&lt; "Square: destructor" &lt;&lt; endl; }
+
+    double edge() const { return height(); }
+    void show(const char *label) const {
+        cout &lt;&lt; "  " &lt;&lt; label &lt;&lt; ": edge = " &lt;&lt; edge()
+             &lt;&lt; ", area = " &lt;&lt; area()
+             &lt;&lt; ", centered = " &lt;&lt; (centered ? "true" : "false") &lt;&lt; endl;
+    }
+protected:
+    bool centered;
+};
+
+int main() {
+    cout &lt;&lt; "--- Square a(3.0, true) ---" &lt;&lt; endl;
+    Square a(3.0, true);
+    a.show("a");
+
+    cout &lt;&lt; "--- Square b(a) ---" &lt;&lt; endl;
+    Square b(a);
+    b.show("b");
+
+    cout &lt;&lt; "--- Square c;  then  c = a; ---" &lt;&lt; endl;
+    Square c;
+    c = a;
+    c.show("c");
+
+    cout &lt;&lt; "--- leaving main ---" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">--- Square a(3.0, true) ---
+Rectangle: non-default constructor
+Square: non-default constructor
+  a: edge = 3, area = 9, centered = true
+--- Square b(a) ---
+Rectangle: copy constructor
+Square: copy constructor
+  b: edge = 3, area = 9, centered = true
+--- Square c;  then  c = a; ---
+Rectangle: default constructor
+Square: default constructor
+Rectangle: assignment operator
+Square: assignment operator
+  c: edge = 3, area = 9, centered = true
+--- leaving main ---
+Square: destructor
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor</pre>
+    <p>Every pair of lines tells you which half of the object was handled by whom:</p>
+    <table class="trace">
+      <tr><th>Statement</th><th>Lines produced</th><th>Reading</th></tr>
+      <tr><td><code>Square a(3.0, true);</code></td><td><code>Rectangle: non-default</code>, <code>Square: non-default</code></td><td>base initializer <code>Rectangle(3.0, 3.0)</code> first, then the derived body</td></tr>
+      <tr><td><code>Square b(a);</code></td><td><code>Rectangle: copy constructor</code>, <code>Square: copy constructor</code></td><td><code>: Rectangle(orig)</code> runs the base <em>copy</em> constructor &mdash; not the default one</td></tr>
+      <tr><td><code>Square c;</code></td><td><code>Rectangle: default</code>, <code>Square: default</code></td><td>an ordinary default construction</td></tr>
+      <tr><td><code>c = a;</code></td><td><code>Rectangle: assignment operator</code>, <code>Square: assignment operator</code></td><td><code>Rectangle::operator=(rhs)</code> runs first because it is the first statement after the guard; the derived message prints last</td></tr>
+      <tr><td>end of <code>main</code></td><td>three <code>Square</code>/<code>Rectangle</code> destructor pairs</td><td><code>c</code>, then <code>b</code>, then <code>a</code> &mdash; reverse construction order, each derived-then-base</td></tr>
+    </table>
+    <p>One ordering detail worth noticing: in the copy constructor the base message comes <em>first</em>
+    because base initializers always run before the body. In <code>operator=</code> the base message also comes
+    first, but only because we chose to call <code>Rectangle::operator=(rhs)</code> before printing. Move that
+    call after the <code>cout</code> and the two lines swap. Exam questions specify whether the message is the
+    "first instruction" or the "last instruction" for exactly this reason &mdash; read that phrase
+    carefully.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write the derived Big Two</h3>
+
+<p>Complete <code>Square</code>'s copy constructor and assignment operator so that both halves of the object
+are copied. Each must print its own message.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="25" data-starter="// class Rectangle has: h, w (protected), a copy constructor printing
+// &quot;Rectangle: copy constructor&quot;, and operator= printing
+// &quot;Rectangle: assignment operator&quot;.
+
+class Square : public Rectangle {
+public:
+    Square(const Square &amp;orig) {
+        // 1. copy the Rectangle part -- where does this go?
+        // 2. copy the Square part
+        cout &lt;&lt; &quot;Square: copy constructor&quot; &lt;&lt; endl;
+    }
+
+    Square&amp; operator=(const Square &amp;rhs) {
+        // 1. guard against self-assignment
+        // 2. assign the Rectangle part
+        // 3. assign the Square part
+        cout &lt;&lt; &quot;Square: assignment operator&quot; &lt;&lt; endl;
+
+    }
+
+protected:
+    bool centered;
+};">// class Rectangle has: h, w (protected), a copy constructor printing
+// "Rectangle: copy constructor", and operator= printing
+// "Rectangle: assignment operator".
+
+class Square : public Rectangle {
+public:
+    Square(const Square &amp;orig) {
+        // 1. copy the Rectangle part -- where does this go?
+        // 2. copy the Square part
+        cout &lt;&lt; "Square: copy constructor" &lt;&lt; endl;
+    }
+
+    Square&amp; operator=(const Square &amp;rhs) {
+        // 1. guard against self-assignment
+        // 2. assign the Rectangle part
+        // 3. assign the Square part
+        cout &lt;&lt; "Square: assignment operator" &lt;&lt; endl;
+
+    }
+
+protected:
+    bool centered;
+};</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.9</div>
+  <div class="bd">
+    <p>Write both functions, then explain in one sentence each why the base part is reached
+    differently in the two cases.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Square(const Square &amp;orig) : Rectangle(orig) {
+    centered = orig.centered;
+    cout &lt;&lt; "Square: copy constructor" &lt;&lt; endl;
+}
+
+Square&amp; operator=(const Square &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    Rectangle::operator=(rhs);
+    centered = rhs.centered;
+    cout &lt;&lt; "Square: assignment operator" &lt;&lt; endl;
+    return *this;
+}</code></pre>
+      <ul>
+        <li><strong>Copy constructor:</strong> the base sub-object does not exist yet, so it must be
+          <em>constructed</em> &mdash; and the only place to choose which base constructor builds it
+          is the member initializer list. Hence <code>: Rectangle(orig)</code>.</li>
+        <li><strong>Assignment operator:</strong> the base sub-object already exists and merely needs
+          new values, so it is a <em>call</em> to an existing method on an existing object &mdash;
+          <code>Rectangle::operator=(rhs);</code> &mdash; and it goes in the body like any other statement.</li>
+      </ul>
+      <p><strong>Things to notice.</strong> <code>return *this;</code> is not optional. Leaving it out compiles
+      with a warning and gives undefined behavior the moment somebody writes <code>x = y = z;</code>. On this
+      professor's exams the rubric pays points for the self-assignment guard and for
+      <code>return *this;</code> separately from the body, so write both even when you are short on time.</p>
+    </div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; forgetting the base: what it actually costs</span></div>
+  <div class="bd">
+    <p>This is the point of the whole class, so take it slowly. Below is the <em>same</em> program
+    with two deletions: the copy constructor loses <code>: Rectangle(orig)</code> and <code>operator=</code> loses
+    <code>Rectangle::operator=(rhs);</code>. Nothing else changes. It compiles with <code>-Wall</code> and no diagnostics
+    whatsoever.</p>
+    <p>Before you reveal: what are <code>b</code>'s and <code>c</code>'s edge lengths going to be?</p>
+<div class="codewrap"><div class="cap">bigthree_bad.cpp</div><pre><code class="language-cpp">    Square(const Square &amp;orig) {           // &lt;-- no ": Rectangle(orig)"
+        centered = orig.centered;
+        cout &lt;&lt; "Square: copy constructor" &lt;&lt; endl;
+    }
+    Square&amp; operator=(const Square &amp;rhs) {
+        if (this == &amp;rhs) return *this;
+        // &lt;-- no "Rectangle::operator=(rhs);"
+        centered = rhs.centered;
+        cout &lt;&lt; "Square: assignment operator" &lt;&lt; endl;
+        return *this;
+    }</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">--- Square a(3.0, true) ---
+Rectangle: non-default constructor
+Square: non-default constructor
+  a: edge = 3, area = 9, centered = true
+--- Square b(a) ---
+Rectangle: default constructor
+Square: copy constructor
+  b: edge = 1, area = 1, centered = true
+--- Square c;  then  c = a; ---
+Rectangle: default constructor
+Square: default constructor
+Square: assignment operator
+  c: edge = 1, area = 1, centered = true
+--- leaving main ---
+Square: destructor
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor</pre>
+    <p>Compare against the correct run, line for line:</p>
+    <table class="trace">
+      <tr><th>Statement</th><th>Correct version</th><th>Broken version</th><th>What happened</th></tr>
+      <tr><td><code>Square b(a);</code></td><td><code>Rectangle: copy constructor</code></td><td><code>Rectangle: default constructor</code></td><td>With no base initializer the compiler supplied <code>Rectangle()</code>. <code>b</code>'s base part is a <strong>fresh unit square</strong>, not a copy of <code>a</code>'s.</td></tr>
+      <tr><td></td><td><code>b: edge = 3, area = 9</code></td><td><code>b: edge = 1, area = 1</code></td><td><code>centered</code> copied fine &mdash; the <code>Square</code> half is right and the <code>Rectangle</code> half is default. Half a copy.</td></tr>
+      <tr><td><code>c = a;</code></td><td><code>Rectangle: assignment operator</code> then <code>Square: assignment operator</code></td><td><code>Square: assignment operator</code> only</td><td>The base part of <code>c</code> was never touched. It still holds whatever <code>Square c;</code> left there &mdash; <strong>stale</strong> data.</td></tr>
+      <tr><td></td><td><code>c: edge = 3, area = 9</code></td><td><code>c: edge = 1, area = 1</code></td><td><code>c</code> now claims to be centered like <code>a</code> but is a 1 by 1 square. The object is internally inconsistent.</td></tr>
+    </table>
+    <p>Two different failure modes from one omission:</p>
+    <ul>
+      <li>In the <strong>copy constructor</strong>, the base part gets <strong>default-constructed</strong>.
+        There is always a value there, just not the right one.</li>
+      <li>In <strong><code>operator=</code></strong>, the base part is left <strong>completely untouched</strong>
+        &mdash; whatever the target held before the assignment, it still holds. That is worse,
+        because the wrong value depends on the object's history and the bug is not reproducible from
+        the assignment alone.</li>
+    </ul>
+    <p>And notice what the destructor lines show: <code>Rectangle: destructor</code> runs three times either
+    way. The base sub-object is <em>always</em> there. Forgetting the base initializer never skips
+    the base &mdash; it only means you got the base you did not ask for.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; when the base owns memory this is fatal</span></div>
+  <div class="bd">
+    <p><code>Rectangle</code> holds two <code>double</code>s, so the broken version above merely gives wrong numbers. Now
+    imagine a base class holding <code>string *items;</code> allocated with <code>new[]</code>. A derived copy constructor
+    that forgets <code>: Base(orig)</code> leaves the copy pointing at the base's <em>default</em> array &mdash;
+    or, if the base's default constructor sets the pointer to <code>nullptr</code>, at nothing at all, and the
+    first read crashes. A derived <code>operator=</code> that forgets <code>Base::operator=(rhs)</code> leaves the target
+    pointing at its old array while its derived half describes the new one &mdash; a mismatch that
+    typically shows up as garbage output or a double <code>delete[]</code> much later.</p>
+    <p>The rule to leave with: <strong>a derived copy constructor must name the base in its
+    initializer list, and a derived <code>operator=</code> must call the base's <code>operator=</code>.</strong> There is
+    no situation in this course where skipping either one is correct.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.10</div>
+  <div class="bd">
+    <p>A student writes this derived assignment operator. It compiles.</p>
+<pre><code class="language-cpp">Square&amp; Square::operator=(const Square &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    operator=(rhs);
+    centered = rhs.centered;
+    cout &lt;&lt; "Square: assignment operator" &lt;&lt; endl;
+    return *this;
+}</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does the program do when you run <code>c = a;</code> with two distinct objects?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It never returns. <code>operator=(rhs)</code> with no qualification is name lookup starting in
+        <code>Square</code>, which finds <code>Square::operator=</code> &mdash; the function calling it. Each level checks
+        <code>this == &amp;rhs</code>, finds them different, and calls itself again. Infinite recursion, stack
+        exhaustion, and the program dies with a segmentation fault. Nothing is ever printed.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Fix it, and say what the one-token difference is doing.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Write <code>Rectangle::operator=(rhs);</code>. The <code>Rectangle::</code> prefix stops the ordinary lookup and
+        names the base class's version directly &mdash; the same mechanism as <code>Rectangle::print()</code> in
+        &sect;6. Without a qualified name, C++ has no way to know you meant "the one I overrode"
+        rather than "the one I am in".</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Where does <code>if (this == &amp;rhs) return *this;</code> protect you, given that <code>Square</code> copies only a <code>bool</code> and two <code>double</code>s?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Honestly, here it protects you from nothing &mdash; <code>centered = centered;</code> is harmless and
+        so is the base's member-wise copy. The guard matters when a class <em>owns</em> memory,
+        because the standard body of such an <code>operator=</code> deletes the old storage before allocating
+        the new: on <code>x = x</code> that deletes the very array it is about to read from. You write the guard
+        every time anyway, so that the habit is there when it counts &mdash; and because this
+        professor's rubrics award a point for it on every assignment-operator question.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Reading a construction trace</h2>
+
+<p>"Assuming your <code>X</code> class is correctly implemented and prints the corresponding messages, what
+will be the output of the following main program?" &mdash; some version of that sentence has
+appeared on seven of this professor's ten exam papers, and on every single final it comes with a
+derived class attached. It is worth a point per printed line and carries no partial credit, so the
+whole question is won or lost on being systematic.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; how to answer a trace question without guessing</span></div>
+  <div class="bd">
+    <ol>
+      <li>List the objects in the order they are declared. Note the type of each.</li>
+      <li>Walk <code>main</code> one statement at a time. For each statement decide <em>which special member
+        runs</em>: default constructor, non-default constructor, copy constructor, <code>operator=</code>,
+        <code>operator+</code>, or nothing at all.</li>
+      <li>For a derived object being <em>constructed</em>, write <strong>two</strong> lines, base
+        then derived &mdash; that order is fixed by the language. For <code>operator=</code> the order is not
+        fixed: read the class and see whether it prints before or after it calls the base version.</li>
+      <li>Watch for initialization versus assignment: <code>X c = a;</code> is a <strong>copy constructor</strong>,
+        not an assignment. <code>a = b;</code> on an object that already exists is <code>operator=</code>.</li>
+      <li>At the closing brace, destroy every local object in <strong>reverse declaration
+        order</strong>, writing derived-then-base for each.</li>
+      <li>Count your lines. The rubric usually tells you how many there should be.</li>
+    </ol>
+  </div>
+</div>
+
+<p>Step 2 has one subtlety that the professor's rubrics quietly depend on: what happens to the
+temporary returned by something like <code>operator+</code>.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; copy elision</span></div>
+  <div class="bd">
+    <p><strong>Copy elision</strong> is the compiler's permission &mdash; and since C++17, in some
+    cases its <em>obligation</em> &mdash; to skip a copy that a naive reading of the code would
+    predict. When a function returns an object by value and the caller uses it to initialize a new
+    object, C++17 requires the result to be built directly in the destination. No copy constructor
+    runs and no temporary is destroyed, because there was never a separate temporary at all.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same program, with and without elision</span></div>
+  <div class="bd">
+    <p>This is the <code>Box</code> class from the Fall 2023 Final, implemented exactly as the rubric asks:
+    every special member prints its name as its first instruction. Predict the output, then check
+    both compilations.</p>
+    <p class="muted small">One spelling note: the published answer key writes the member as
+    <code>orig.hight</code> in the copy constructor, <code>rhs.hight</code> in <code>operator=</code> and
+    <code>other.hight</code> in <code>operator+</code>. The member is <code>height</code>, and none of those three lines
+    would compile. It is spelled correctly throughout below.</p>
+<div class="codewrap"><div class="cap">box.cpp</div><pre><code class="language-cpp">class Box {
+public:
+    Box() : length(1), width(1), height(1) {
+        cout &lt;&lt; "Box: default constructor" &lt;&lt; endl;
+    }
+    Box(int a, int b, int c) : length(a), width(b), height(c) {
+        cout &lt;&lt; "Box: non-default constructor" &lt;&lt; endl;
+    }
+    Box(const Box &amp;orig) {
+        cout &lt;&lt; "Box: copy constructor" &lt;&lt; endl;
+        length = orig.length;
+        width  = orig.width;
+        height = orig.height;
+    }
+    Box&amp; operator=(const Box &amp;rhs) {
+        cout &lt;&lt; "Box: assignment operation" &lt;&lt; endl;
+        if (this == &amp;rhs) return *this;
+        length = rhs.length;
+        width  = rhs.width;
+        height = rhs.height;
+        return *this;
+    }
+    ~Box() {
+        cout &lt;&lt; "Box: destructor" &lt;&lt; endl;
+    }
+    Box operator+(const Box &amp;other) {
+        cout &lt;&lt; "Box: operator+" &lt;&lt; endl;
+        int a = length + other.length;
+        int b = width  + other.width;
+        int c = height + other.height;
+        Box result(a, b, c);
+        return result;
+    }
+    void print() const {
+        cout &lt;&lt; "Box: (" &lt;&lt; length &lt;&lt; "," &lt;&lt; width &lt;&lt; "," &lt;&lt; height &lt;&lt; ")" &lt;&lt; endl;
+    }
+protected:
+    int length, width, height;
+};
+
+int main() {
+    Box a, b(1, 2, 3);
+    Box c = a;
+    c.print();
+    Box d = a + b;
+    d.print();
+    a = b;
+    a.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+    <p>Compiled the way this course always compiles &mdash; <code>g++</code> &mdash; the output is:</p>
+<pre class="out">Box: default constructor
+Box: non-default constructor
+Box: copy constructor
+Box: (1,1,1)
+Box: operator+
+Box: non-default constructor
+Box: (2,3,4)
+Box: assignment operation
+Box: (1,2,3)
+Box: destructor
+Box: destructor
+Box: destructor
+Box: destructor</pre>
+    <table class="trace">
+      <tr><th>Statement</th><th>Lines</th><th>Why</th></tr>
+      <tr><td><code>Box a, b(1,2,3);</code></td><td><code>default constructor</code>, <code>non-default constructor</code></td><td>two objects, in declaration order</td></tr>
+      <tr><td><code>Box c = a;</code></td><td><code>copy constructor</code></td><td>initialization, not assignment &mdash; <code>c</code> does not exist yet</td></tr>
+      <tr><td><code>c.print();</code></td><td><code>Box: (1,1,1)</code></td><td><code>c</code> is a copy of the default <code>a</code></td></tr>
+      <tr><td><code>Box d = a + b;</code></td><td><code>operator+</code>, <code>non-default constructor</code></td><td>the message prints first, then <code>Box result(a,b,c)</code> is built &mdash; <em>directly inside <code>d</code></em>. No copy constructor line, no destructor line for a temporary: that is copy elision.</td></tr>
+      <tr><td><code>d.print();</code></td><td><code>Box: (2,3,4)</code></td><td><code>(1+1, 1+2, 1+3)</code></td></tr>
+      <tr><td><code>a = b;</code></td><td><code>assignment operation</code></td><td><code>a</code> already exists, so this is <code>operator=</code></td></tr>
+      <tr><td><code>a.print();</code></td><td><code>Box: (1,2,3)</code></td><td><code>a</code> now holds <code>b</code>'s values</td></tr>
+      <tr><td>end of <code>main</code></td><td>four <code>destructor</code> lines</td><td><code>d</code>, <code>c</code>, <code>b</code>, <code>a</code> &mdash; reverse declaration order. Only four objects ever existed.</td></tr>
+    </table>
+    <p>Now compile the identical file with elision switched off, which is what a pre-C++17 compiler
+    was allowed to do:</p>
+<pre class="shell">g++ -std=c++14 -fno-elide-constructors box.cpp -o box_noelide</pre>
+<pre class="out">Box: default constructor
+Box: non-default constructor
+Box: copy constructor
+Box: (1,1,1)
+Box: operator+
+Box: non-default constructor
+Box: copy constructor
+Box: destructor
+Box: copy constructor
+Box: destructor
+Box: (2,3,4)
+Box: assignment operation
+Box: (1,2,3)
+Box: destructor
+Box: destructor
+Box: destructor
+Box: destructor</pre>
+    <p>Four extra lines, all from <code>Box d = a + b;</code>: <code>result</code> is copied out of <code>operator+</code> into a
+    temporary (copy constructor), <code>result</code> dies (destructor), the temporary is copied into <code>d</code> (copy
+    constructor), the temporary dies (destructor). C++17 makes all four disappear.</p>
+    <p><strong>Answer the exam with the C++17 trace</strong> &mdash; the thirteen-line version. It is
+    what the course's compiler produces and it is what the professor's rubric says. The point of
+    seeing the other one is to know that "a function returns by value, therefore a copy constructor
+    runs" is a rule you should stop believing.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.11</div>
+  <div class="bd">
+    <p>Using the <code>Box</code> class above and a derived class</p>
+<pre><code class="language-cpp">class SquareBox : public Box {
+public:
+    SquareBox() : Box() {
+        cout &lt;&lt; "SquareBox: default constructor" &lt;&lt; endl;
+    }
+    SquareBox(int size) : Box(size, size, size) {
+        cout &lt;&lt; "SquareBox: non-default constructor" &lt;&lt; endl;
+    }
+    SquareBox(const SquareBox &amp;orig) : Box(orig) {
+        cout &lt;&lt; "SquareBox: copy constructor" &lt;&lt; endl;
+    }
+    ~SquareBox() {
+        cout &lt;&lt; "SquareBox: destructor" &lt;&lt; endl;
+    }
+};</code></pre>
+    <p>state the exact output of</p>
+<pre><code class="language-cpp">int main() {
+    SquareBox a, b(5);
+    a.print();
+    b.print();
+    SquareBox c = b;
+    c.print();
+    return 0;
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Box: default constructor
+SquareBox: default constructor
+Box: non-default constructor
+SquareBox: non-default constructor
+Box: (1,1,1)
+Box: (5,5,5)
+Box: copy constructor
+SquareBox: copy constructor
+Box: (5,5,5)
+SquareBox: destructor
+Box: destructor
+SquareBox: destructor
+Box: destructor
+SquareBox: destructor
+Box: destructor</pre>
+      <p><strong>Things to notice.</strong> <code>SquareBox</code> adds no data of its own, so its constructors
+      are pure delegation &mdash; and <code>SquareBox c = b;</code> still produces <em>two</em> lines, because
+      <code>: Box(orig)</code> picks the base copy constructor. <code>print()</code> is inherited unchanged, so it still
+      says <code>Box:</code> rather than <code>SquareBox:</code>; if the question wanted <code>SquareBox: (5,5,5)</code> you would
+      have to override <code>print()</code>. Six destructor lines for three objects, in reverse order of
+      construction, derived-then-base each time.</p>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 20.12</div>
+  <div class="bd">
+    <p>Still with <code>Box</code> and <code>SquareBox</code>: for each line, say which special member runs and how many
+    lines of output it produces.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>SquareBox s(4);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>SquareBox(int)</code>, which delegates to <code>Box(int,int,int)</code>. <strong>Two lines:</strong>
+        <code>Box: non-default constructor</code>, then <code>SquareBox: non-default constructor</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Box t = s;</code> &mdash; note the type of <code>t</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>Box</code>'s copy constructor, binding its <code>const Box &amp;</code> parameter to the <code>Box</code> sub-object
+        inside <code>s</code>. <strong>One line:</strong> <code>Box: copy constructor</code>. No <code>SquareBox</code> line, because
+        <code>t</code> is not a <code>SquareBox</code> and has no <code>SquareBox</code> part. That "copy only the base half"
+        behavior has a name &mdash; slicing &mdash; and it is the first thing you will meet in
+        Class 21.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>s.print();</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No special member at all &mdash; <code>print()</code> is inherited from <code>Box</code> and <code>SquareBox</code> does
+        not override it. <strong>One line:</strong> <code>Box: (4,4,4)</code>. Method calls do not print
+        constructor messages; only object creation, copying, assignment and destruction do. Students
+        routinely add spurious lines here.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> The closing brace of a block containing exactly <code>s</code> and <code>t</code>, declared in that order.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Reverse declaration order, so <code>t</code> dies first: <code>Box: destructor</code>. Then <code>s</code>:
+        <code>SquareBox: destructor</code> followed by <code>Box: destructor</code>.
+        <strong>Three lines.</strong></p>
+        <p>A useful self-check on any trace: every <code>Box: destructor</code> line must be matched by exactly
+        one line that created a <code>Box</code> or a <code>Box</code> sub-object &mdash; a default, non-default or copy
+        constructor of <code>Box</code>. If those two counts differ, you have missed something.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 20</span></div>
+  <div class="bd">
+    <p>Problem 1 is the implementation task the course notes set for this lecture &mdash; the
+    complete <code>Square</code> class. Problems 2 and 3 are the <code>Box</code>/<code>SquareBox</code> pair from the Fall 2023
+    Final, and Problems 4 and 5 are the <code>Circle</code>/<code>Cylinder</code> pair from the Summer 2024 Final, lightly
+    adapted so that everything they use has been covered by today. Problem 6 was written for these
+    notes.</p>
+    <p>Problems 3 and 5 are output-prediction questions, which is the format that carries no partial
+    credit on this professor's exams. Commit to a complete answer, in writing, before you open the
+    solution &mdash; and count your lines.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; The complete <code>Square</code> class <span class="muted small">(from the course notes)</span></h3>
+
+<p>Given the <code>Rectangle</code> base class of &sect;1, write <code>Square</code> in full: a default constructor, a
+non-default constructor taking an edge length and a <code>bool centered</code>, a destructor, a convenience
+method <code>edge()</code>, and a <code>print()</code> that puts the center of the square at the origin when <code>centered</code>
+is true and otherwise defers to the base class. Every constructor and the destructor must print its
+own message. Then write a <code>main</code> that builds one of each kind on the heap with <code>new</code>, prints it,
+and deletes it.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Take the four functions one at a time and ask, for each, "what part of
+  the object is this responsible for?"</p>
+  <ul>
+    <li>The <em>default constructor</em> owns only <code>centered</code>. The <code>Rectangle</code> part is <code>Rectangle</code>'s
+      job, so hand it over with <code>: Rectangle()</code>.</li>
+    <li>The <em>non-default constructor</em> receives one edge length. A square is a rectangle whose
+      height and width are equal, so pass <code>e</code> twice: <code>: Rectangle(e, e)</code>. Then set <code>centered</code>.</li>
+    <li>The <em>destructor</em> has nothing to release &mdash; no <code>new</code> was called &mdash; so it only
+      prints. It does not, and must not, call <code>~Rectangle()</code>; the compiler does that.</li>
+    <li><code>edge()</code> needs no new data: for a square, height and width are equal, so <code>return height();</code>.</li>
+    <li><code>print()</code> splits on <code>centered</code>. The <code>true</code> branch computes half an edge and emits the four
+      vertices with the sign pattern <code>--</code>, <code>+-</code>, <code>++</code>,
+      <code>-+</code>. The <code>false</code> branch calls <code>Rectangle::print()</code> &mdash; qualified, or it would
+      call itself.</li>
+  </ul>
+<div class="codewrap"><div class="cap">rectsquare.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() {
+        h = 1.0;
+        w = 1.0;
+        cout &lt;&lt; "Rectangle: default constructor" &lt;&lt; endl;
+    }
+
+    Rectangle(double ht, double wd) {
+        h = ht;
+        w = wd;
+        cout &lt;&lt; "Rectangle: non-default constructor" &lt;&lt; endl;
+    }
+
+    ~Rectangle() {
+        cout &lt;&lt; "Rectangle: destructor" &lt;&lt; endl;
+    }
+
+    double height() const { return h; }
+    double width()  const { return w; }
+    double area()   const { return fabs(h * w); }
+
+    void print() const {
+        cout &lt;&lt; "Rectangle::print ";
+        cout &lt;&lt; "(" &lt;&lt; 0 &lt;&lt; "," &lt;&lt; 0 &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; w &lt;&lt; "," &lt;&lt; 0 &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; w &lt;&lt; "," &lt;&lt; h &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; 0 &lt;&lt; "," &lt;&lt; h &lt;&lt; ")";
+        cout &lt;&lt; endl;
+    }
+
+protected:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    Square();
+    Square(double e, bool c);
+    ~Square();
+
+    double edge() const { return height(); }
+
+    void print() const;
+
+protected:
+    bool centered;
+};
+
+Square::Square() : Rectangle() {
+    centered = false;
+    cout &lt;&lt; "Square: default constructor" &lt;&lt; endl;
+}
+
+Square::Square(double e, bool c) : Rectangle(e, e) {
+    centered = c;
+    cout &lt;&lt; "Square: non-default constructor" &lt;&lt; endl;
+}
+
+Square::~Square() {
+    cout &lt;&lt; "Square: destructor" &lt;&lt; endl;
+}
+
+void Square::print() const {
+    if (centered == false) {
+        Rectangle::print();             // call the base class method
+    } else {
+        double d = edge() * 0.5;
+        cout &lt;&lt; "Square::print ";
+        cout &lt;&lt; "(" &lt;&lt; -d &lt;&lt; "," &lt;&lt; -d &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt;  d &lt;&lt; "," &lt;&lt; -d &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt;  d &lt;&lt; "," &lt;&lt;  d &lt;&lt; "), ";
+        cout &lt;&lt; "(" &lt;&lt; -d &lt;&lt; "," &lt;&lt;  d &lt;&lt; ")";
+        cout &lt;&lt; endl;
+    }
+}
+
+int main() {
+    double len = 3.0;
+    Square *ps = new Square(len, true);
+    ps-&gt;print();
+    delete ps;
+
+    ps = new Square(len, false);
+    ps-&gt;print();
+    cout &lt;&lt; ps-&gt;height() &lt;&lt; endl;
+    cout &lt;&lt; ps-&gt;width()  &lt;&lt; endl;
+    cout &lt;&lt; ps-&gt;edge()   &lt;&lt; endl;
+    cout &lt;&lt; ps-&gt;area()   &lt;&lt; endl;
+    delete ps;
+    return 0;
+}</code></pre></div>
+<pre class="out">Rectangle: non-default constructor
+Square: non-default constructor
+Square::print (-1.5,-1.5), (1.5,-1.5), (1.5,1.5), (-1.5,1.5)
+Square: destructor
+Rectangle: destructor
+Rectangle: non-default constructor
+Square: non-default constructor
+Rectangle::print (0,0), (3,0), (3,3), (0,3)
+3
+3
+3
+9
+Square: destructor
+Rectangle: destructor</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>Square</code> overrides <code>print()</code> and nothing else. <code>height()</code>, <code>width()</code> and <code>area()</code> are
+      inherited untouched, because the area of a square really is computed by the same formula as
+      the area of a rectangle. Overriding for the sake of it is a design smell.</li>
+    <li><code>edge()</code> exists in <code>Square</code> and not in <code>Rectangle</code>. A derived class is free to add members;
+      it is not limited to overriding what the base already had.</li>
+    <li>The last four printed numbers are <code>3 3 3 9</code>, not <code>3.0 3.0 3.0 9.0</code>. <code>cout</code> drops trailing
+      zeros.</li>
+    <li>Both <code>new</code>s are matched by <code>delete</code>s, and <code>valgrind --leak-check=full</code> reports
+      <em>"All heap blocks were freed &mdash; no leaks are possible"</em>. Deleting through a
+      <code>Square *</code> runs both destructors; deleting the same object through a <code>Rectangle *</code> would not,
+      which is what <code>virtual</code> destructors are for in Class 24.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; <code>SquareBox</code> inheriting from <code>Box</code> <span class="muted small">(from the Fall 2023 Final)</span></h3>
+
+<p>Implement a <code>SquareBox</code> class that inherits from the <code>Box</code> class of &sect;8, with the following
+requirements:</p>
+<ul>
+  <li><code>SquareBox</code> has no additional variable.</li>
+  <li>Implement a default constructor.</li>
+  <li>Implement a non-default constructor with one argument, <code>size</code>, used for the length, the width
+    and the height.</li>
+</ul>
+<p>A program that uses it:</p>
+<pre><code class="language-cpp">int main() {
+    SquareBox a, b(5);
+    a.print();          // print: Box: (1,1,1)
+    b.print();          // print: Box: (5,5,5)
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> There is no new data, so both constructors do nothing except choose a
+  base constructor. The default one wants <code>Box()</code>, which already gives 1, 1, 1. The one-argument one
+  wants <code>Box(size, size, size)</code>. Both bodies are empty &mdash; and that is not a mistake, it is the
+  point: everything a <code>SquareBox</code> is, a <code>Box</code> already knows how to be.</p>
+<pre><code class="language-cpp">class SquareBox : public Box {
+public:
+    SquareBox() : Box() { }
+    SquareBox(int size) : Box(size, size, size) { }
+};</code></pre>
+<pre class="out">Box: default constructor
+Box: non-default constructor
+Box: (1,1,1)
+Box: (5,5,5)
+Box: destructor
+Box: destructor</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The exam rubric awards 2 points for the title line <code>class SquareBox : public Box {</code> on its
+      own, and 4 points for each constructor. Write the class header and the closing <code>};</code> even if
+      you are out of time &mdash; they are worth real points.</li>
+    <li><code>length</code>, <code>width</code> and <code>height</code> are <code>protected</code> in <code>Box</code>, so <code>SquareBox</code> <em>could</em> assign
+      them directly in its body. Don't. Going through the base constructor is shorter, it is what the
+      rubric expects, and it keeps working when the base's representation changes.</li>
+    <li>Because <code>SquareBox</code> declares no destructor, copy constructor or <code>operator=</code>, the compiler
+      generates all three, and each of them calls the corresponding <code>Box</code> member automatically. The
+      output above shows only <code>Box:</code> lines for exactly that reason.</li>
+    <li><code>print()</code> is inherited, so it still prints <code>Box:</code>. The <code>main</code> comments in the exam agree with
+      that. If the requirement had been <code>SquareBox: (5,5,5)</code> you would need to override <code>print()</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Trace <code>Box</code> and <code>SquareBox</code> <span class="muted small">(from the Fall 2023 Final, adapted)</span></h3>
+
+<p>Assuming the <code>Box</code> class of &sect;8 is correctly implemented and prints the corresponding
+messages, and that <code>SquareBox</code> is implemented as follows, what will be the output of the <code>main</code>
+program below?</p>
+
+<pre><code class="language-cpp">class SquareBox : public Box {
+public:
+    SquareBox() : Box() {
+        cout &lt;&lt; "SquareBox: default constructor" &lt;&lt; endl;
+    }
+    SquareBox(int size) : Box(size, size, size) {
+        cout &lt;&lt; "SquareBox: non-default constructor" &lt;&lt; endl;
+    }
+    SquareBox(const SquareBox &amp;orig) : Box(orig) {
+        cout &lt;&lt; "SquareBox: copy constructor" &lt;&lt; endl;
+    }
+    SquareBox&amp; operator=(const SquareBox &amp;rhs) {
+        cout &lt;&lt; "SquareBox: assignment operation" &lt;&lt; endl;
+        if (this == &amp;rhs) return *this;
+        Box::operator=(rhs);
+        return *this;
+    }
+    ~SquareBox() {
+        cout &lt;&lt; "SquareBox: destructor" &lt;&lt; endl;
+    }
+};
+
+int main() {
+    Box a(1, 2, 3);
+    SquareBox b(5);
+    SquareBox c = b;
+    c.print();
+    b = c;
+    Box d = a;
+    d.print();
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Four objects: <code>a</code> (a <code>Box</code>), <code>b</code> and <code>c</code> (both <code>SquareBox</code>), <code>d</code> (a
+  <code>Box</code>). Walk the seven statements, then destroy in reverse declaration order. Two things to watch:
+  <code>SquareBox c = b;</code> is initialization, so it is the copy constructor, not <code>operator=</code>; and
+  <code>SquareBox::operator=</code> prints <em>before</em> it calls the base, so its message comes first
+  &mdash; the opposite of the copy constructor, where the base initializer necessarily runs first.
+  Sixteen lines.</p>
+<pre class="out">Box: non-default constructor
+Box: non-default constructor
+SquareBox: non-default constructor
+Box: copy constructor
+SquareBox: copy constructor
+Box: (5,5,5)
+SquareBox: assignment operation
+Box: assignment operation
+Box: copy constructor
+Box: (1,2,3)
+Box: destructor
+SquareBox: destructor
+Box: destructor
+SquareBox: destructor
+Box: destructor
+Box: destructor</pre>
+  <table class="trace">
+    <tr><th>#</th><th>Printed line</th><th>Statement, and what caused it</th></tr>
+    <tr><td>1</td><td><code>Box: non-default constructor</code></td><td><code>Box a(1,2,3);</code> &mdash; a plain base object, one line</td></tr>
+    <tr><td>2</td><td><code>Box: non-default constructor</code></td><td><code>SquareBox b(5);</code> &mdash; base initializer <code>Box(5,5,5)</code> runs first</td></tr>
+    <tr><td>3</td><td><code>SquareBox: non-default constructor</code></td><td>&hellip;then the derived body</td></tr>
+    <tr><td>4</td><td><code>Box: copy constructor</code></td><td><code>SquareBox c = b;</code> &mdash; <code>: Box(orig)</code> selects the base <em>copy</em> constructor</td></tr>
+    <tr><td>5</td><td><code>SquareBox: copy constructor</code></td><td>&hellip;then the derived body</td></tr>
+    <tr><td>6</td><td><code>Box: (5,5,5)</code></td><td><code>c.print();</code> &mdash; <code>print()</code> is inherited, so it says <code>Box:</code></td></tr>
+    <tr><td>7</td><td><code>SquareBox: assignment operation</code></td><td><code>b = c;</code> &mdash; this class prints <em>first</em>, then delegates</td></tr>
+    <tr><td>8</td><td><code>Box: assignment operation</code></td><td>&hellip;<code>Box::operator=(rhs)</code> assigns the base half</td></tr>
+    <tr><td>9</td><td><code>Box: copy constructor</code></td><td><code>Box d = a;</code> &mdash; initialization of a base object from a base object</td></tr>
+    <tr><td>10</td><td><code>Box: (1,2,3)</code></td><td><code>d.print();</code></td></tr>
+    <tr><td>11</td><td><code>Box: destructor</code></td><td>end of <code>main</code>: <code>d</code> was declared last, so it dies first</td></tr>
+    <tr><td>12&ndash;13</td><td><code>SquareBox: destructor</code>, <code>Box: destructor</code></td><td><code>c</code> &mdash; derived body, then the base sub-object</td></tr>
+    <tr><td>14&ndash;15</td><td><code>SquareBox: destructor</code>, <code>Box: destructor</code></td><td><code>b</code></td></tr>
+    <tr><td>16</td><td><code>Box: destructor</code></td><td><code>a</code></td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Exactly four lines create a <code>Box</code> or a <code>Box</code> sub-object &mdash; lines 1, 2, 4 and 9 &mdash;
+      and exactly four <code>Box: destructor</code> lines appear, at 11, 13, 15 and 16. Assignments create
+      nothing, so they add no destructor. Matching those two counts is the fastest check on your
+      answer.</li>
+    <li><code>SquareBox: assignment operation</code> before <code>Box: assignment operation</code>, but
+      <code>Box: copy constructor</code> before <code>SquareBox: copy constructor</code>. The copy-constructor order is
+      forced by the language; the assignment order is a choice the class made by printing before
+      delegating. Read the class, don't assume.</li>
+    <li><code>Box d = a;</code> uses <code>=</code> but is not an assignment. If it were, there would have to be a <code>d</code> for
+      it to assign to.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; <code>Cylinder</code> inheriting from <code>Circle</code> <span class="muted small">(from the Summer 2024 Final, adapted)</span></h3>
+
+<p>Given a <code>Circle</code> class with a <code>protected double radius</code>, a default constructor setting the radius
+to 1, a non-default constructor taking a radius, a copy constructor, an <code>operator=</code>, a destructor
+and a <code>print()</code> &mdash; each of the five special members printing a message like
+<code>Circle: copy constructor</code> as its <em>last</em> instruction &mdash; implement a
+<code>Cylinder</code> class that inherits from it, such that:</p>
+<ul>
+  <li><code>Cylinder</code> has one additional variable, <code>height</code>.</li>
+  <li>It has a default constructor, a non-default constructor taking a radius and a height, a copy
+    constructor, an <code>operator=</code> and a destructor, each printing its own message last.</li>
+  <li>It overrides <code>print()</code> to report both the radius and the height.</li>
+</ul>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Every one of the five derived special members has the same two-part
+  shape: <em>deal with the <code>Circle</code> part, then deal with <code>height</code></em>. Only the mechanism for
+  reaching the <code>Circle</code> part differs &mdash; a base initializer in the three constructors, a
+  qualified call in <code>operator=</code>, and nothing at all in the destructor, where the compiler handles
+  it. <code>print()</code> can read <code>radius</code> directly because it is <code>protected</code>.</p>
+<div class="codewrap"><div class="cap">cylinder.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    Circle() : radius(1) {
+        cout &lt;&lt; "Circle: default constructor" &lt;&lt; endl;
+    }
+    Circle(double r) : radius(r) {
+        cout &lt;&lt; "Circle: non-default constructor" &lt;&lt; endl;
+    }
+    Circle(const Circle &amp;orig) {
+        radius = orig.radius;
+        cout &lt;&lt; "Circle: copy constructor" &lt;&lt; endl;
+    }
+    Circle&amp; operator=(const Circle &amp;rhs) {
+        if (this != &amp;rhs) radius = rhs.radius;
+        cout &lt;&lt; "Circle: assignment operation" &lt;&lt; endl;
+        return *this;
+    }
+    ~Circle() {
+        cout &lt;&lt; "Circle: destructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; "Circle: radius = " &lt;&lt; radius &lt;&lt; endl;
+    }
+protected:
+    double radius;
+};
+
+class Cylinder : public Circle {
+public:
+    Cylinder() : Circle(), height(1) {
+        cout &lt;&lt; "Cylinder: default constructor" &lt;&lt; endl;
+    }
+    Cylinder(double r, double h) : Circle(r), height(h) {
+        cout &lt;&lt; "Cylinder: non-default constructor" &lt;&lt; endl;
+    }
+    Cylinder(const Cylinder &amp;orig) : Circle(orig) {
+        height = orig.height;
+        cout &lt;&lt; "Cylinder: copy constructor" &lt;&lt; endl;
+    }
+    Cylinder&amp; operator=(const Cylinder &amp;rhs) {
+        if (this == &amp;rhs) return *this;
+        Circle::operator=(rhs);
+        height = rhs.height;
+        cout &lt;&lt; "Cylinder: assignment operation" &lt;&lt; endl;
+        return *this;
+    }
+    ~Cylinder() {
+        cout &lt;&lt; "Cylinder: destructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; "Cylinder: radius = " &lt;&lt; radius &lt;&lt; ", height = " &lt;&lt; height &lt;&lt; endl;
+    }
+protected:
+    double height;
+};
+
+int main() {
+    Cylinder c1, c2(3, 5);
+    c1.print();
+    c2.print();
+    Cylinder c3 = c2;
+    c3.print();
+    c1 = c3;
+    c1.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">Circle: default constructor
+Cylinder: default constructor
+Circle: non-default constructor
+Cylinder: non-default constructor
+Cylinder: radius = 1, height = 1
+Cylinder: radius = 3, height = 5
+Circle: copy constructor
+Cylinder: copy constructor
+Cylinder: radius = 3, height = 5
+Circle: assignment operation
+Cylinder: assignment operation
+Cylinder: radius = 3, height = 5
+Cylinder: destructor
+Circle: destructor
+Cylinder: destructor
+Circle: destructor
+Cylinder: destructor
+Circle: destructor</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>Cylinder() : Circle(), height(1)</code> writes the base initializer first and the member second
+      &mdash; matching the order in which they will actually run. The compiler would run them in that
+      order regardless, but writing them to match keeps <code>-Wreorder</code> quiet and keeps the code honest.</li>
+    <li>The exam's bullet list asks only for constructors and a destructor, yet its <code>main</code> comments
+      demand <code>Cylinder: radius = 1, height = 1</code>, which requires an overridden <code>print()</code>. That
+      mismatch is in the original paper; the override is included above because the expected output
+      cannot be produced without it.</li>
+    <li><code>print()</code> reads <code>radius</code> by name. That is only possible because <code>Circle</code> declares it
+      <code>protected</code>. Had it been <code>private</code>, <code>Cylinder::print()</code> would have to call a public accessor
+      instead &mdash; and if <code>Circle</code> provided none, the derived class simply could not report the
+      radius at all.</li>
+    <li>The derived <code>print()</code> <em>hides</em> the base <code>print()</code> rather than overriding it in the
+      polymorphic sense, because neither is <code>virtual</code>. With these objects it makes no difference; the
+      moment a <code>Circle *</code> points at a <code>Cylinder</code> it makes all the difference, which is Class 24's
+      subject.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 5 &mdash; Trace <code>Circle</code> and <code>Cylinder</code> <span class="muted small">(from the Summer 2024 Final, adapted)</span></h3>
+
+<p>Assuming the <code>Circle</code> class and its derived class <code>Cylinder</code> from Problem 4 are correctly
+implemented and print the corresponding messages, what will be the output of this program? There are
+nineteen lines.</p>
+
+<pre><code class="language-cpp">int main() {
+    Circle a;
+    Cylinder b(5, 4);
+    {
+        Cylinder c(b);
+        c.print();
+    }
+    Cylinder d;
+    d = b;
+    d.print();
+    a.print();
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Objects in declaration order: <code>a</code> (<code>Circle</code>), <code>b</code> (<code>Cylinder</code>), then <code>c</code>
+  (<code>Cylinder</code>, inside an inner block, so it dies at the inner closing brace), then <code>d</code> (<code>Cylinder</code>).
+  Work statement by statement, remembering that this family prints its message <em>last</em>, so
+  within any single special member the base line still comes first for constructors &mdash; the base
+  runs before the derived body &mdash; and also first for <code>operator=</code>, because <code>Circle::operator=</code>
+  is called before the derived <code>cout</code>.</p>
+<pre class="out">Circle: default constructor
+Circle: non-default constructor
+Cylinder: non-default constructor
+Circle: copy constructor
+Cylinder: copy constructor
+Cylinder: radius = 5, height = 4
+Cylinder: destructor
+Circle: destructor
+Circle: default constructor
+Cylinder: default constructor
+Circle: assignment operation
+Cylinder: assignment operation
+Cylinder: radius = 5, height = 4
+Circle: radius = 1
+Cylinder: destructor
+Circle: destructor
+Cylinder: destructor
+Circle: destructor
+Circle: destructor</pre>
+  <table class="trace">
+    <tr><th>#</th><th>Printed line</th><th>Cause</th></tr>
+    <tr><td>1</td><td><code>Circle: default constructor</code></td><td><code>Circle a;</code> &mdash; one line, <code>a</code> has no derived part</td></tr>
+    <tr><td>2&ndash;3</td><td><code>Circle: non-default</code>, <code>Cylinder: non-default</code></td><td><code>Cylinder b(5, 4);</code> &mdash; <code>: Circle(r)</code> then the derived body</td></tr>
+    <tr><td>4&ndash;5</td><td><code>Circle: copy constructor</code>, <code>Cylinder: copy constructor</code></td><td><code>Cylinder c(b);</code> &mdash; <code>: Circle(orig)</code> picks the base copy constructor</td></tr>
+    <tr><td>6</td><td><code>Cylinder: radius = 5, height = 4</code></td><td><code>c.print();</code> &mdash; the derived override, and the copy is complete</td></tr>
+    <tr><td>7&ndash;8</td><td><code>Cylinder: destructor</code>, <code>Circle: destructor</code></td><td>the inner closing brace destroys <code>c</code>, derived body first</td></tr>
+    <tr><td>9&ndash;10</td><td><code>Circle: default</code>, <code>Cylinder: default</code></td><td><code>Cylinder d;</code></td></tr>
+    <tr><td>11&ndash;12</td><td><code>Circle: assignment operation</code>, <code>Cylinder: assignment operation</code></td><td><code>d = b;</code> &mdash; <code>Circle::operator=(rhs)</code> first, then <code>height</code>, then the derived message</td></tr>
+    <tr><td>13</td><td><code>Cylinder: radius = 5, height = 4</code></td><td><code>d.print();</code> &mdash; both halves were assigned, so both are right</td></tr>
+    <tr><td>14</td><td><code>Circle: radius = 1</code></td><td><code>a.print();</code> &mdash; <code>a</code> is still the default unit circle; nothing ever assigned to it</td></tr>
+    <tr><td>15&ndash;16</td><td><code>Cylinder: destructor</code>, <code>Circle: destructor</code></td><td>end of <code>main</code>: <code>d</code> was declared last of the survivors, so it dies first</td></tr>
+    <tr><td>17&ndash;18</td><td><code>Cylinder: destructor</code>, <code>Circle: destructor</code></td><td>then <code>b</code></td></tr>
+    <tr><td>19</td><td><code>Circle: destructor</code></td><td>then <code>a</code> &mdash; a lone <code>Circle</code>, so one line</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Three <code>Cylinder</code> objects were built, giving three <code>Cylinder</code>/<code>Circle</code> destructor pairs, and
+      <code>a</code> adds one more lone <code>Circle: destructor</code>. Four <code>Circle</code> sub-objects created, four destroyed
+      &mdash; the check balances. Do that count before you hand the paper in.</li>
+    <li><code>Cylinder c(b);</code> and <code>Cylinder c = b;</code> mean the same thing. Both call the copy constructor.</li>
+    <li>The inner block matters: <code>c</code> dies at its closing brace, in the <em>middle</em> of the output,
+      not at the end. Scope, not position in the source, decides when a destructor runs.</li>
+    <li><code>d = b;</code> produced no constructor lines at all. Assignment never creates an object.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Find the bug from the trace alone <span class="muted small">(added)</span></h3>
+
+<p>A student implements <code>Cylinder</code> from Problem 4 and reports that "the messages all look right but
+the numbers are wrong". Here is their actual output for the <code>main</code> of Problem 4:</p>
+
+<pre class="out">Circle: default constructor
+Cylinder: default constructor
+Circle: non-default constructor
+Cylinder: non-default constructor
+Cylinder: radius = 1, height = 1
+Cylinder: radius = 3, height = 5
+Circle: default constructor
+Cylinder: copy constructor
+Cylinder: radius = 1, height = 5
+Cylinder: assignment operation
+Cylinder: radius = 1, height = 5
+Cylinder: destructor
+Circle: destructor
+Cylinder: destructor
+Circle: destructor
+Cylinder: destructor
+Circle: destructor</pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> The copy constructor is broken. Which line of output proves it, and what exactly is wrong with the code?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>The seventh line: <code>Circle: default constructor</code>.</strong> A correct
+    <code>Cylinder(const Cylinder &amp;orig)</code> produces <code>Circle: copy constructor</code> there, because its base
+    initializer names the base copy constructor. Seeing the <em>default</em> constructor instead
+    means there was no base initializer at all, so the compiler supplied <code>Circle()</code>:</p>
+<pre><code class="language-cpp">Cylinder(const Cylinder &amp;orig) {        // BROKEN: no ": Circle(orig)"
+    height = orig.height;
+    cout &lt;&lt; "Cylinder: copy constructor" &lt;&lt; endl;
+}</code></pre>
+    <p>The next line confirms it: <code>Cylinder: radius = 1, height = 5</code>. <code>height</code> was copied correctly
+    and <code>radius</code> came out as 1 &mdash; the value <code>Circle()</code> installs. The <code>Cylinder</code> half of the copy
+    is right and the <code>Circle</code> half is a brand-new default object.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> <code>operator=</code> is broken too. Which line proves that, and how does its failure differ from (a)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>An absence, not a line:</strong> <code>Cylinder: assignment operation</code> appears with no
+    <code>Circle: assignment operation</code> above it. The missing call is <code>Circle::operator=(rhs);</code>:</p>
+<pre><code class="language-cpp">Cylinder&amp; operator=(const Cylinder &amp;rhs) {   // BROKEN: base part never assigned
+    if (this == &amp;rhs) return *this;
+    height = rhs.height;
+    cout &lt;&lt; "Cylinder: assignment operation" &lt;&lt; endl;
+    return *this;
+}</code></pre>
+    <p>The difference matters. In (a) the base part is <strong>default-constructed</strong> &mdash;
+    wrong, but predictable, and the same every time. Here the base part is <strong>not touched at
+    all</strong>, so it keeps whatever the destination happened to hold before the assignment. In
+    this run <code>c1</code> was default-constructed, so the stale radius is 1; had <code>c1</code> been built as
+    <code>Cylinder c1(9, 9)</code> the same bug would print <code>radius = 9</code>. A bug whose symptom depends on the
+    target's history is much harder to find than one that always says 1.</p>
+    <p>A missing line in a trace is evidence. When you are debugging a class that prints its own
+    messages, count the pairs: every derived special member except the destructor should be
+    accompanied by a base one.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Fix both, and give the corrected output for the same <code>main</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Cylinder(const Cylinder &amp;orig) : Circle(orig) {
+    height = orig.height;
+    cout &lt;&lt; "Cylinder: copy constructor" &lt;&lt; endl;
+}
+
+Cylinder&amp; operator=(const Cylinder &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    Circle::operator=(rhs);
+    height = rhs.height;
+    cout &lt;&lt; "Cylinder: assignment operation" &lt;&lt; endl;
+    return *this;
+}</code></pre>
+<pre class="out">Circle: default constructor
+Cylinder: default constructor
+Circle: non-default constructor
+Cylinder: non-default constructor
+Cylinder: radius = 1, height = 1
+Cylinder: radius = 3, height = 5
+Circle: copy constructor
+Cylinder: copy constructor
+Cylinder: radius = 3, height = 5
+Circle: assignment operation
+Cylinder: assignment operation
+Cylinder: radius = 3, height = 5
+Cylinder: destructor
+Circle: destructor
+Cylinder: destructor
+Circle: destructor
+Cylinder: destructor
+Circle: destructor</pre>
+    <p><strong>Things to notice.</strong> The corrected run is one line longer than the broken one
+    &mdash; eighteen lines against seventeen &mdash; because the missing `Circle: assignment
+    operation` is back, while the copy-constructor line merely changed identity, from
+    <code>Circle: default constructor</code> to <code>Circle: copy constructor</code>. On a trace question, a line that
+    changed identity and a line that went missing point at two different bugs, and today's two bugs
+    are exactly those two shapes.</p>
+    <p>Since neither class allocates memory, the consequence here is only wrong numbers. Put a
+    <code>new[]</code> in the base and the same two omissions produce a copy that shares or loses the base's
+    storage &mdash; the failure stops being cosmetic.</p>
+  </div></details>
+</div>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>A derived constructor initializes its base sub-object through a <strong>base
+        initializer</strong> in the member initializer list: <code>Square(double e, bool c) : Rectangle(e, e)</code>.
+        It is not special syntax &mdash; the base sub-object is just another thing that has to be
+        initialized, in the same list, the same way.</li>
+      <li>A derived constructor may call <strong>any</strong> constructor of its direct base, but only
+        its <em>direct</em> base.</li>
+      <li>Name no base and the compiler inserts the base's <strong>default constructor</strong>. If
+        the base has none, you get <code>error: no matching function for call to 'Base::Base()'</code>
+        with the caret on the derived constructor's opening brace.</li>
+      <li>Writing <code>Rectangle(e, e);</code> as a <em>statement</em> in the body builds and destroys a
+        temporary and changes nothing. Initialization happens before the body runs.</li>
+      <li><strong>Construction order:</strong> base sub-object (recursively, from the root of the
+        chain), then the derived class's members in <strong>declaration</strong> order, then the
+        constructor body. The order you write the initializer list in is ignored; <code>-Wreorder</code> warns
+        when they disagree.</li>
+      <li><strong>Destruction order is exactly the reverse:</strong> derived destructor body, derived
+        members in reverse declaration order, then the base destructor &mdash; called automatically.
+        You never write a call to a base destructor.</li>
+      <li><code>Rectangle::print()</code> calls a specific version by <strong>qualified name</strong>, bypassing
+        the override. Use it when a derived method wants to do a bit extra and then let the base do
+        the rest; omit the prefix and the method calls itself.</li>
+      <li>A derived class may <strong>add</strong> members the base never had &mdash; <code>edge()</code> &mdash;
+        and should override only what genuinely differs.</li>
+      <li>A derived <strong>copy constructor</strong> must forward to the base copy constructor:
+        <code>Square(const Square &amp;orig) : Rectangle(orig)</code>. It works because a base reference binds to
+        the base sub-object of a derived object &mdash; IS-A.</li>
+      <li>A derived <strong><code>operator=</code></strong> must call <code>Rectangle::operator=(rhs);</code>. The
+        assignment operator is a method as well as an operator, so that line is an ordinary function
+        call.</li>
+      <li>Forget the base in a copy constructor and the base part is silently
+        <strong>default-constructed</strong>; forget it in <code>operator=</code> and the base part is left
+        <strong>stale</strong>. Both compile clean with <code>-Wall</code>.</li>
+      <li>Under C++17, <strong>copy elision</strong> removes the copy that a naive trace predicts for
+        <code>X d = a + b;</code>. Answer trace questions with the <code>-std=c++17</code> behavior.</li>
+    </ul>
+    <p><strong>Coming up in Class 21:</strong> what happens when you assign a derived object to a base
+    object and half of it disappears &mdash; object slicing &mdash; plus base pointers and references
+    that really point at derived objects, non-public inheritance, and why multiple inheritance is a
+    mess.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 19 &middot; Inheritance I</div><div class="pending">posts Thu Nov 5</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 21 &middot; Inheritance III</div><div class="pending">posts Thu Nov 12</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

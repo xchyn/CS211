@@ -1,0 +1,3146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 24 — Polymorphism | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 24 &middot; Polymorphism</span><span class="sep">|</span><span class="where">Tue Nov 24</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 24 &middot; CSCI 211</div>
+  <h1>Polymorphism, Virtual Functions and Virtual Destructors</h1>
+  <p class="sub">One keyword changes which function a call runs &mdash; and that is the point of the whole inheritance edifice we have been building since Class 19.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Say what <em>polymorphism</em> means and explain why a base pointer or reference is the only place it can happen.</li>
+      <li>Contrast <strong>static (early) binding</strong> with <strong>dynamic (late) binding</strong>, and name which one C++ uses by default.</li>
+      <li>Add the keyword <code>virtual</code> to a base-class method and predict exactly which override a call will run.</li>
+      <li>Write a library function against a base reference or pointer that works for derived classes written years later.</li>
+      <li>State the rules for virtual functions: what may be virtual, what may not, that <code>virtual</code> is inherited, and that a mismatched signature <em>hides</em> rather than overrides.</li>
+      <li>Use <code>override</code> to turn a silent hiding bug into a compile-time error.</li>
+      <li>Explain what a virtual function table costs an object, and demonstrate it with <code>sizeof</code>.</li>
+      <li>Give a polymorphic base class a <strong>virtual destructor</strong>, and say exactly what leaks when you forget.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Polymorphism, and the loose ends from Class 21</a></li>
+    <li><a href="#s2">The design: one base class, three sums</a></li>
+    <li><a href="#s3">One library function, three wrong answers</a></li>
+    <li><a href="#s4"><code>virtual</code>: static binding versus dynamic binding</a></li>
+    <li><a href="#s5">The rules for virtual functions</a></li>
+    <li><a href="#s6">How it works: the vtable, and what it costs</a></li>
+    <li><a href="#s7">Never call a virtual function from a constructor</a></li>
+    <li><a href="#s8">Virtual destructors</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Polymorphism, and the loose ends from Class 21</h2>
+
+<p>Welcome back from Exam 2. Everything you have built since Class 19 &mdash; derived classes, base
+initializers, construction order, the derived Big Three, base pointers &mdash; has been machinery.
+Today is the payoff, and it arrives as a single keyword.</p>
+
+<p>Start with the word itself. The professor's own framing: <em>"The term 'polymorphism' derives
+from two root words <strong>poly</strong> and <strong>morph</strong>. 'poly' means 'many' and
+'morph' means to change shape or appearance. Hence 'polymorphism' means the ability of an object to
+have many different appearances."</em></p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; polymorphism</span></div>
+  <div class="bd">
+    <p><strong>Polymorphism</strong> is the ability of one pointer or reference to the base class to
+    behave correctly for objects of many different derived classes &mdash; choosing, at run time, the
+    version of a method that belongs to the object actually present rather than the version named by
+    the declared type.</p>
+    <p>In the professor's words: <em>"In the context of inheritance, we have seen that an object of a
+    derived class IS-A object of the base class. Polymorphism takes the concept a step further. It is
+    an important step and allows some very general/powerful/flexible software to be written."</em></p>
+    <p>Note where polymorphism lives: not in the object, but in the <strong>pointer or reference</strong>
+    through which you reach it. That is why an object passed <em>by value</em> can never behave
+    polymorphically &mdash; we come back to that in &sect;4.</p>
+  </div>
+</div>
+
+<p>Class 21 ended by showing you two things that did not work, and promising the fix would arrive
+today. Here they are again, in one short program, so that the whole class starts from the same
+place.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the two loose ends, side by side</span></div>
+  <div class="bd">
+    <p>A <code>Square</code> IS-A <code>Rectangle</code>, so a <code>Rectangle *</code> may point at a <code>Square</code>. Both classes have a
+    <code>print()</code>, and both destructors announce themselves. Three things happen in <code>main</code>: a direct call,
+    a call through a base pointer, and a <code>delete</code> through a base pointer. Predict all of the output,
+    including how many destructor lines appear and in what order.</p>
+<div class="codewrap"><div class="cap">cliffhanger.cpp</div><pre><code class="language-cpp">// cliffhanger.cpp -- the two loose ends left at the end of Class 21
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle(double ht, double wd) { h = ht; w = wd; }
+    ~Rectangle() { cout &lt;&lt; "Rectangle: destructor" &lt;&lt; endl; }
+    double area() const { return fabs(h * w); }
+    void print() const { cout &lt;&lt; "Rectangle::print " &lt;&lt; w &lt;&lt; " by " &lt;&lt; h &lt;&lt; endl; }
+protected:
+    double h, w;
+};
+
+class Square : public Rectangle {
+public:
+    Square(double e) : Rectangle(e, e) { }
+    ~Square() { cout &lt;&lt; "Square: destructor" &lt;&lt; endl; }
+    void print() const { cout &lt;&lt; "Square::print edge " &lt;&lt; w &lt;&lt; endl; }
+};
+
+int main() {
+    Square s(3.0);
+    s.print();                  // (1) the declared type is Square
+
+    Rectangle *p = &amp;s;
+    p-&gt;print();                 // (2) the object is still that same Square
+
+    Rectangle *q = new Square(4.0);
+    delete q;                   // (3) which destructors run?
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Square::print edge 3
+Rectangle::print 3 by 3
+Rectangle: destructor
+Square: destructor
+Rectangle: destructor</pre>
+<p>Two separate scandals in five lines of output.</p>
+<table class="trace">
+  <tr><th>Line of <code>main</code></th><th>What happened</th><th>Why</th></tr>
+  <tr><td>(1) <code>s.print()</code></td><td><code>Square::print</code> ran &mdash; correct</td><td><code>s</code> is declared <code>Square</code>, so the compiler binds to <code>Square::print</code>.</td></tr>
+  <tr><td>(2) <code>p-&gt;print()</code></td><td><strong><code>Rectangle::print</code> ran</strong> &mdash; on a <code>Square</code> object!</td><td><code>p</code> is declared <code>Rectangle *</code>. The compiler looks at the <em>declared type of the pointer</em>, not at what it points to.</td></tr>
+  <tr><td>(3) <code>delete q</code></td><td>Only <strong>one</strong> destructor line: <code>Rectangle: destructor</code></td><td>Same rule. <code>q</code> is a <code>Rectangle *</code>, so <code>delete</code> calls <code>~Rectangle</code> and the <code>Square</code> part is never destroyed.</td></tr>
+</table>
+<p>The last two lines of output belong to <code>s</code> going out of scope at the end of <code>main</code>: <code>~Square</code>
+then <code>~Rectangle</code>, the reverse of construction order from Class 20. Count them carefully &mdash;
+the object created with <code>new</code> produced <em>one</em> destructor line, the object on the stack produced
+<em>two</em>.</p>
+<p>Line (2) is a wrong answer. Line (3) is worse: if <code>Square</code> had allocated memory, that memory would
+now be leaked, and there would be no message and no crash to tell you. Both are fixed today, by the
+same keyword, in &sect;4 and &sect;8.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.1</div>
+  <div class="bd">
+    <p>Look at line (2) of the program above.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which rule from Class 19 predicts that <code>p-&gt;print()</code> runs <code>Rectangle::print</code>? Name the rule and use its proper term.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Static binding</strong> (also called early or compile-time binding). The compiler
+        decides which function body a call will run <em>while it is compiling the call</em>, using the
+        <strong>declared type</strong> of the expression to the left of the dot or arrow. <code>p</code> is
+        declared <code>Rectangle *</code>, so the compiler searches <code>Rectangle</code> and its ancestors for a <code>print</code>,
+        finds <code>Rectangle::print</code>, and hard-wires that call into the executable.</p>
+        <p>Nothing about the object <code>p</code> happens to point at enters into the decision. The compiler
+        cannot know what it will point at &mdash; that is a run-time fact.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A student says "the fix is to cast: write <code>((Square *)p)-&gt;print();</code>". Why is that not a solution to the real problem?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It "works" for exactly this line and destroys the whole point of the exercise. To write the
+        cast you must already know that <code>p</code> points at a <code>Square</code>. The situation we care about is a
+        function that receives a <code>Rectangle *</code> and has <em>no idea</em> what it points at &mdash;
+        possibly a class that did not exist when the function was compiled. You cannot cast to a type
+        you have never heard of.</p>
+        <p>What we need is for the <em>object</em> to answer the question, not the programmer. That is
+        what <code>virtual</code> arranges.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>The design: one base class, three sums</h2>
+
+<p>The professor motivates all of this with a small numerical problem, and it is a well-chosen one
+because the three jobs are obviously similar and obviously different. Given an array of <em>n</em>
+values <em>x</em><sub>0</sub> &hellip; <em>x</em><sub>n-1</sub>, compute three totals:</p>
+
+<table class="trace">
+  <tr><th>Name</th><th>What it computes</th><th>For <code>x</code> = {-1, 0, 1, 2}</th></tr>
+  <tr><td><em>S</em><sub>1</sub></td><td>the plain sum <code>x0 + x1 + &hellip;</code></td><td>-1 + 0 + 1 + 2 = <strong>2</strong></td></tr>
+  <tr><td><em>S</em><sub>2</sub></td><td>the sum of absolute values</td><td>1 + 0 + 1 + 2 = <strong>4</strong></td></tr>
+  <tr><td><em>S</em><sub>3</sub></td><td>the sum of squares</td><td>1 + 0 + 1 + 4 = <strong>6</strong></td></tr>
+</table>
+
+<p>His software design is three sentences long:</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the professor's design</span></div>
+  <div class="bd">
+    <ol>
+      <li>A base class <code>SumBase</code> holds the array <code>x</code>, with an accessor and a mutator.</li>
+      <li><code>SumBase</code> has a method <code>double sum()</code> which simply returns 0 &mdash; a placeholder meant to be
+        overridden.</li>
+      <li>Three derived classes <code>SumVec</code>, <code>SumAbs</code> and <code>SumSq</code> each override <code>sum()</code> with the formula
+        they are responsible for.</li>
+    </ol>
+    <p><code>x</code> is <code>protected</code>, precisely so the derived classes can read it directly. This is
+    the one situation Class 19 accepted <code>protected</code> data for: a base class designed from the
+    start to be inherited from.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the four classes, used directly</span></div>
+  <div class="bd">
+    <p>Here is the whole design, with a <code>main</code> that calls <code>sum()</code> on each derived object by name.
+    There is no <code>virtual</code> anywhere in this program. Predict the one line of output.</p>
+<div class="codewrap"><div class="cap">sums_direct.cpp</div><pre><code class="language-cpp">// sums_direct.cpp -- three kinds of sum, called directly on the derived objects
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class SumBase {
+public:
+    vector&lt;double&gt; get() const { return x; }
+    void set(const vector&lt;double&gt; &amp;v) { x = v; }
+
+    double sum() const { return 0; }   // the derived classes override this
+
+    void print() const {
+        for (size_t i = 0; i &lt; x.size(); ++i) {
+            cout &lt;&lt; x[i] &lt;&lt; " ";
+        }
+        cout &lt;&lt; endl;
+    }
+
+protected:
+    vector&lt;double&gt; x;
+};
+
+class SumVec : public SumBase {          // S1 = x0 + ... + xn-1
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i]; }
+        return s;
+    }
+};
+
+class SumAbs : public SumBase {          // S2 = |x0| + ... + |xn-1|
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += fabs(x[i]); }
+        return s;
+    }
+};
+
+class SumSq : public SumBase {           // S3 = x0*x0 + ... + xn-1*xn-1
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i] * x[i]; }
+        return s;
+    }
+};
+
+int main() {
+    vector&lt;double&gt; x = {-1, 0, 1, 2};
+    SumVec sv;
+    SumAbs ab;
+    SumSq  sq;
+    sv.set(x);
+    ab.set(x);
+    sq.set(x);
+    cout &lt;&lt; sv.sum() &lt;&lt; " " &lt;&lt; ab.sum() &lt;&lt; " " &lt;&lt; sq.sum() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">2 4 6</pre>
+<p>All three answers are correct, and &mdash; this is the part that trips people &mdash; they are
+correct <strong>without <code>virtual</code></strong>. <code>sv</code> is declared <code>SumVec</code>, so <code>sv.sum()</code> binds statically
+to <code>SumVec::sum</code>. Static binding is doing exactly the right thing here, because the declared type and
+the actual object are the same thing.</p>
+<p>File that away. It means the failure we are about to see is not a failure of overriding. Overriding
+works fine. The failure appears only when the call goes through a base reference or pointer.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; four repairs to the original listing</span></div>
+  <div class="bd">
+    <p>The listing above is the professor's design with four small corrections, each worth knowing
+    because each is a bug you will write yourself:</p>
+    <ul>
+      <li><strong><code>abs</code> on a <code>double</code>.</strong> The original writes <code>s += abs(x[i]);</code> in
+        <code>SumAbs</code> while including only <code>&lt;iostream&gt;</code> and <code>&lt;vector&gt;</code>. If
+        the only visible overload is C's <code>int abs(int)</code>, then <code>abs(-1.5)</code>
+        truncates to <code>1</code> and the sum of absolute values is silently wrong. The demo prints
+        the right answer only because the test data are whole numbers. Use
+        <code>&lt;cmath&gt;</code> and <code>fabs</code> for floating point.</li>
+      <li><strong><code>int i</code> against <code>x.size()</code>.</strong> <code>vector::size()</code> returns an unsigned
+        type, so <code>i &lt; x.size()</code> compares signed with unsigned and <code>-Wall</code> warns on every
+        loop. Use <code>size_t</code>.</li>
+      <li><strong><code>void set(vector&lt;double&gt; &amp;v)</code>.</strong> A non-<code>const</code> reference parameter
+        means you cannot pass a temporary, and it advertises that <code>set</code> might modify the caller's
+        vector. Take it by <code>const</code> reference.</li>
+      <li><strong><code>sum()</code> was not <code>const</code>.</strong> <code>print()</code> is <code>const</code> in the original but <code>sum()</code> is
+        not, even though it changes nothing. As written you cannot call <code>sum()</code> on a
+        <code>const SumBase &amp;</code>. Mark it <code>const</code> &mdash; and once you do, every override must
+        be <code>const</code> too, which is the subject of a trap in &sect;5.</li>
+    </ul>
+    <p>The brace initializer <code>vector&lt;double&gt; x = {-1, 0, 1, 2};</code> also needs C++11 or
+    later. Everything on this page is compiled with <code>-std=c++17</code>.</p>
+  </div>
+</div>
+
+<p>Before we go on, the professor stops to defend the design, because two objections are obvious and
+both are worth answering.</p>
+
+<table class="trace">
+  <tr><th>Objection</th><th>The answer</th></tr>
+  <tr><td>"Why three classes? Write <em>one</em> class <code>MiscSum</code> with <code>sum1()</code>, <code>sum2()</code>, <code>sum3()</code>."</td>
+      <td><em>"This is a valid criticism, for such a simple example. However, what if we want to add a fourth sum?"</em> You would add a method to <code>MiscSum</code> and <strong>recompile all the code</strong>. In a large project a lot of code has to be recompiled and retested.</td></tr>
+  <tr><td>"Then write three <em>independent</em> classes, with no base class at all."</td>
+      <td>A new sum needs no recompilation of the others &mdash; but now the shared parts are copied three times. Add a <code>print()</code> and you <em>"have to copy and paste <code>print()</code> in each class."</em> <em>"It is therefore not a good idea to write independent classes."</em></td></tr>
+</table>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Inheritance buys three things at once: new classes can be added to the tree without touching
+    the existing ones; a change made in the base class is instantly available to the whole tree; and
+    any individual class can override what it inherits. <em>"Hence inheritance helps to avoid
+    duplication of code and duplication of functionality."</em></p>
+    <p>And then the professor's own next sentence, which is the hinge of the whole lecture:
+    <em>"Nevertheless, we can write a better software design."</em></p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.2</div>
+  <div class="bd">
+    <p>About <code>sums_direct.cpp</code> above.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>SumBase::sum()</code> returns 0 and is never a useful answer. Why write it at all instead of leaving it out of the base class?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because the base class is the contract. Any code that wants to work for <em>all</em> the sum
+        classes &mdash; the library function in &sect;3 &mdash; can only mention names that exist in
+        <code>SumBase</code>. If <code>sum()</code> were not declared there, <code>sb_ref.sum()</code> would not compile at all: name
+        lookup starts from the declared type and walks <em>upward</em>, never down into derived
+        classes.</p>
+        <p>The body <code>return 0;</code> is a placeholder that makes the class compile. In Class 25
+        you will meet a better way to say "this method exists but the base class has nothing sensible
+        to put in it" &mdash; the <em>pure virtual</em> function, written <code>= 0</code>, which
+        forces derived classes to supply a body.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Suppose someone adds a fourth sum by writing a class <code>SumQuad : public SumBase</code> in their own file. Which files have to be recompiled: only theirs, or all four class files as well?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Only theirs.</strong> <code>SumBase</code>, <code>SumVec</code>, <code>SumAbs</code> and <code>SumSq</code> do not mention
+        <code>SumQuad</code> and are entirely unaffected by its existence &mdash; a derived class depends on its
+        base, never the other way round.</p>
+        <p>That is exactly the property the one-big-<code>MiscSum</code> design throws away: adding <code>sum4()</code> to
+        <code>MiscSum</code> changes the class definition, so every translation unit that includes its header must
+        be recompiled and re-tested. On a project of any size, that is the difference between a
+        five-minute change and a two-day change.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>One library function, three wrong answers</h2>
+
+<p>Now the better design. Add <code>print()</code> to <code>SumBase</code> so that every derived class inherits it, and
+write a single function that takes a <strong>reference to the base class</strong> and does something
+useful with whatever it is handed:</p>
+
+<pre><code class="language-cpp">void library_func(SumBase &amp;sb_ref) {
+    sb_ref.print();
+    cout &lt;&lt; "sum = " &lt;&lt; sb_ref.sum() &lt;&lt; endl;
+    cout &lt;&lt; endl;
+}</code></pre>
+
+<p>The professor is explicit about the ambition here: <em>"As the name suggests, it is the beginning
+of a software library."</em> One function, written once, that works for <code>SumVec</code>, for <code>SumAbs</code>, for
+<code>SumSq</code>, and for classes nobody has written yet. He is equally explicit about what is coming:
+<em>"It will not work exactly correctly at first, but we shall examine why and improve on it."</em></p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the library function, first attempt</span></div>
+  <div class="bd">
+    <p>The four classes are exactly as in &sect;2 &mdash; nothing is <code>virtual</code>. <code>main</code> builds one object
+    of each derived class and hands each one to <code>library_func</code>. Predict all nine lines of output before
+    revealing. In particular: what are the three sums?</p>
+<div class="codewrap"><div class="cap">sums_novirtual.cpp</div><pre><code class="language-cpp">// sums_novirtual.cpp -- one library function, three derived objects, no virtual
+//   (class declarations exactly as in sums_direct.cpp)
+
+void library_func(SumBase &amp;sb_ref) {
+    sb_ref.print();
+    cout &lt;&lt; "sum = " &lt;&lt; sb_ref.sum() &lt;&lt; endl;
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    vector&lt;double&gt; x = {-1, 0, 1, 2};
+    SumVec sv;
+    SumAbs ab;
+    SumSq  sq;
+    sv.set(x);
+    ab.set(x);
+    sq.set(x);
+    library_func(sv);
+    library_func(ab);
+    library_func(sq);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">-1 0 1 2 
+sum = 0
+
+-1 0 1 2 
+sum = 0
+
+-1 0 1 2 
+sum = 0</pre>
+<p>The vector prints correctly every single time &mdash; <code>print()</code> is inherited from <code>SumBase</code> and does
+its job. The sum is <strong>zero</strong> every single time, which is <code>SumBase::sum()</code>, the
+placeholder. Three different derived objects, three identical wrong answers.</p>
+<p>The professor's diagnosis, verbatim:</p>
+<ul>
+  <li><em>"The weakness is that the reference <code>sb_ref</code> binds only to the <strong>base class part</strong>
+    of the input object."</em></li>
+  <li><em>"Therefore the reference <code>sb_ref</code> invokes only the base class version of the method
+    <code>sum()</code>."</em></li>
+  <li><em>"The reference <code>sb_ref</code> <strong>does not know</strong> that the derived classes override the
+    method <code>sum()</code>."</em></li>
+</ul>
+<p>Put in the vocabulary of Class 19: the call <code>sb_ref.sum()</code> was <strong>statically
+bound</strong> to <code>SumBase::sum</code> when <code>library_func</code> was compiled, and a compiled call does
+not change its mind. The object at the other end of the reference is a <code>SumSq</code>; nobody asked it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>This is the same failure as line (2) of &sect;1, wearing a suit. It did not matter that the
+    derived classes override <code>sum()</code> correctly; it did not matter that <code>print()</code> worked. What mattered
+    is that the <em>compiler</em> chose the function, from the <em>declared</em> type
+    <code>SumBase &amp;</code>, and the choice was frozen into the executable.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.3</div>
+  <div class="bd">
+    <p>Still with no <code>virtual</code> anywhere:</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> If you changed the parameter to <code>void library_func(SumSq &amp;sb_ref)</code>, would the sums come out right?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>For <code>SumSq</code> objects, yes &mdash; <code>sb_ref.sum()</code> would now statically bind to
+        <code>SumSq::sum</code> and print 6. But the function would no longer accept a <code>SumVec</code> or a <code>SumAbs</code> at
+        all: those are not <code>SumSq</code> objects, and the compiler would reject the calls with
+        <em>"invalid initialization of reference"</em>.</p>
+        <p>So you can have <em>one</em> correct sum, or <em>three</em> wrong ones. That is precisely
+        the dilemma polymorphism resolves.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Overloading is another idea: write three <code>library_func</code> functions, one per derived class. What is wrong with that as a <em>library</em> design?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It works today and is unusable tomorrow. A library is compiled and shipped before its users
+        write their classes. The professor's whole scenario is: <em>"we do not know what the derived
+        classes will be"</em>. You cannot overload a function for a type that does not exist yet, so
+        every new derived class would require the library author to add an overload, recompile and
+        re-ship &mdash; the <code>MiscSum</code> problem all over again, one level up.</p>
+        <p>It also duplicates the body of <code>library_func</code> three times, which is the second objection
+        from &sect;2.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span><code>virtual</code>: static binding versus dynamic binding</h2>
+
+<p>Here is the fix. The professor introduces it with admirable understatement: <em>"Let us make a
+peculiar looking but significant change to the method <code>sum()</code>. We tag <code>sum()</code> as a <strong>virtual</strong>
+method."</em></p>
+
+<pre><code class="language-cpp">    virtual double sum() const { return 0; }</code></pre>
+
+<p>One word, in one place: the base class. Nothing else in the program changes &mdash; not the derived
+classes, not <code>library_func</code>, not <code>main</code>.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same program, one word different</span></div>
+  <div class="bd">
+    <p>This is <code>sums_novirtual.cpp</code> character for character, except that <code>SumBase::sum</code> now says
+    <code>virtual</code>. Predict the nine lines again.</p>
+<div class="codewrap"><div class="cap">sums_virtual.cpp</div><pre><code class="language-cpp">// sums_virtual.cpp -- the same program with ONE word changed: virtual
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class SumBase {
+public:
+    vector&lt;double&gt; get() const { return x; }
+    void set(const vector&lt;double&gt; &amp;v) { x = v; }
+
+    virtual double sum() const { return 0; }   // the derived classes override this
+
+    void print() const {
+        for (size_t i = 0; i &lt; x.size(); ++i) {
+            cout &lt;&lt; x[i] &lt;&lt; " ";
+        }
+        cout &lt;&lt; endl;
+    }
+
+protected:
+    vector&lt;double&gt; x;
+};
+
+class SumVec : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i]; }
+        return s;
+    }
+};
+
+class SumAbs : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += fabs(x[i]); }
+        return s;
+    }
+};
+
+class SumSq : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i] * x[i]; }
+        return s;
+    }
+};
+
+void library_func(SumBase &amp;sb_ref) {
+    sb_ref.print();
+    cout &lt;&lt; "sum = " &lt;&lt; sb_ref.sum() &lt;&lt; endl;
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    vector&lt;double&gt; x = {-1, 0, 1, 2};
+    SumVec sv;
+    SumAbs ab;
+    SumSq  sq;
+    sv.set(x);
+    ab.set(x);
+    sq.set(x);
+    library_func(sv);
+    library_func(ab);
+    library_func(sq);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">-1 0 1 2 
+sum = 2
+
+-1 0 1 2 
+sum = 4
+
+-1 0 1 2 
+sum = 6</pre>
+<p>2, 4 and 6 &mdash; the same three answers <code>sums_direct.cpp</code> produced by calling the derived objects
+directly, now produced by a function that has never heard of <code>SumVec</code>, <code>SumAbs</code> or <code>SumSq</code>.</p>
+<p>Look hard at what did <em>not</em> change. The call site is identical: <code>sb_ref.sum()</code>. The
+declared type of <code>sb_ref</code> is identical: <code>SumBase &amp;</code>. The derived classes are identical
+&mdash; they do not repeat the word <code>virtual</code>. The only edit in the entire program is seven characters
+in the base class, and the behavior of a call in a different function changed completely.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; static binding and dynamic binding</span></div>
+  <div class="bd">
+    <p><strong>Binding</strong> is the act of deciding which function body a call will run.</p>
+    <p><strong>Static binding</strong> (early binding, compile-time binding) is the decision made by
+    the compiler from the <strong>declared type</strong> of the expression to the left of the dot or
+    arrow. The executable contains a call to one specific function and cannot change its mind. This is
+    what C++ does by default, and it is what every call before today used.</p>
+    <p><strong>Dynamic binding</strong> (late binding, run-time binding) defers the decision until the
+    program is running, and makes it from the type of the <strong>object that is actually there</strong>.
+    C++ gives you dynamic binding only where you ask for it, with the keyword <code>virtual</code>.</p>
+    <p>The professor's own gloss on the keyword: <em>"The keyword <code>virtual</code> tells the compiler that a
+    'reference to the base class' is actually bound to an object which may belong to a derived class.
+    If a method is tagged as virtual, the compiler searches through the inheritance tree until it finds
+    the correct override."</em> And on the word itself: <em>"The word 'virtual' signifies that something
+    is not real. That is exactly correct."</em> Just because <code>sb_ref</code> is declared a reference to the
+    base class does not mean the base version runs: <em>"During program execution, the function call
+    <code>sb_ref.sum()</code> may invoke many different versions of <code>sum()</code>."</em></p>
+  </div>
+</div>
+
+<table class="trace">
+  <tr><th></th><th>Static (early) binding</th><th>Dynamic (late) binding</th></tr>
+  <tr><td>Decided by</td><td>the compiler</td><td>the running program</td></tr>
+  <tr><td>Decided when</td><td>compile time</td><td>run time, at each call</td></tr>
+  <tr><td>Decided from</td><td>the <strong>declared type</strong> of the pointer, reference or variable</td><td>the <strong>actual type of the object</strong> present</td></tr>
+  <tr><td>How you get it</td><td>the default &mdash; do nothing</td><td>declare the method <code>virtual</code> <em>and</em> call through a pointer or reference</td></tr>
+  <tr><td>Cost</td><td>none; often inlined</td><td>one hidden pointer per object, one indirection per call</td></tr>
+  <tr><td>In this course</td><td>Classes 9&ndash;21, and everything non-<code>virtual</code> from now on</td><td><code>sum()</code>, <code>print()</code>, <code>area()</code> and destructors in polymorphic hierarchies</td></tr>
+</table>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the same words, two different mechanisms</span></div>
+  <div class="bd">
+    <p>The course notes describe both mechanisms with almost the same sentence &mdash; "the compiler
+    searches up the inheritance tree until it finds the method". That description is <em>true of both</em>
+    and therefore distinguishes <em>neither</em>. Keep the two apart with this test:</p>
+    <ul>
+      <li><strong>Non-<code>virtual</code> call:</strong> the search starts at the <em>declared</em> type and
+        happens <em>once, at compile time</em>. Whatever it finds is burned into the executable.</li>
+      <li><strong><code>virtual</code> call:</strong> the search effectively starts at the <em>actual object's</em>
+        class and happens <em>every time the call executes</em>. Two consecutive executions of the same
+        line can run two different function bodies.</li>
+    </ul>
+    <p>If you can only remember one sentence: <strong>without <code>virtual</code> the pointer decides; with
+    <code>virtual</code> the object decides.</strong></p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.4</div>
+  <div class="bd">
+    <p>Take <code>sums_virtual.cpp</code> as printed. For each change below, say what the three sums become.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> You delete the word <code>virtual</code> from <code>SumBase::sum</code> but leave everything else alone.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Back to <code>sum = 0</code> three times. That is <code>sums_novirtual.cpp</code> exactly. The derived
+        overrides are still there and still correct; nothing ever calls them, because the call in
+        <code>library_func</code> binds statically to <code>SumBase::sum</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> You keep <code>virtual</code> in the base and <em>also</em> write <code>virtual</code> in front of <code>SumVec::sum</code>, <code>SumAbs::sum</code> and <code>SumSq::sum</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No change whatsoever: <code>2</code>, <code>4</code>, <code>6</code>. Repeating <code>virtual</code> in
+        a derived class is legal and completely redundant &mdash; <em>"If a method in a class is tagged
+        as virtual, then the same method is automatically virtual in all the derived classes"</em>. It
+        is a style choice, and modern practice prefers <code>override</code> (&sect;5) over repeating <code>virtual</code>,
+        because <code>override</code> is checked and <code>virtual</code> is not.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> You remove <code>virtual</code> from the base but write it in front of all three derived <code>sum()</code> methods instead.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>sum = 0</code> three times again &mdash; the broken behavior. <code>virtual</code> flows
+        <em>downward</em> from a base class to its descendants, never upward. Marking <code>SumVec::sum</code>
+        virtual makes it dynamically dispatched for anything derived <em>from <code>SumVec</code></em>; it says
+        nothing about a call made through a <code>SumBase &amp;</code>, because <code>SumBase::sum</code> is still an
+        ordinary non-virtual method.</p>
+        <p>This is the single most common way students "add virtual" and see nothing happen. The word
+        belongs in the <strong>base</strong> class.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<p>There is one more condition, and it is easy to miss because it is about the parameter, not about
+the class.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; by reference, by pointer, by value</span></div>
+  <div class="bd">
+    <p><code>sum()</code> is <code>virtual</code> here. The same <code>SumSq</code> object is passed to three functions that differ only
+    in how the parameter is declared. Two of them print 6. Which one does not, and why?</p>
+<div class="codewrap"><div class="cap">slice_virtual.cpp</div><pre><code class="language-cpp">// slice_virtual.cpp -- virtual cannot help a parameter passed by value
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class SumBase {
+public:
+    void set(const vector&lt;double&gt; &amp;v) { x = v; }
+    virtual double sum() const { return 0; }
+protected:
+    vector&lt;double&gt; x;
+};
+
+class SumSq : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i] * x[i]; }
+        return s;
+    }
+};
+
+void by_reference(const SumBase &amp;sb) { cout &lt;&lt; "by reference: " &lt;&lt; sb.sum() &lt;&lt; endl; }
+void by_value(SumBase sb)            { cout &lt;&lt; "by value:     " &lt;&lt; sb.sum() &lt;&lt; endl; }
+void by_pointer(const SumBase *p)    { cout &lt;&lt; "by pointer:   " &lt;&lt; p-&gt;sum() &lt;&lt; endl; }
+
+int main() {
+    vector&lt;double&gt; x = {-1, 0, 1, 2};
+    SumSq sq;
+    sq.set(x);
+    by_reference(sq);
+    by_pointer(&amp;sq);
+    by_value(sq);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">by reference: 6
+by pointer:   6
+by value:     0</pre>
+<p><code>by_value</code> takes a <code>SumBase</code> <em>object</em>, so the argument is copied into it by
+<code>SumBase</code>'s copy constructor &mdash; which copies only the <code>SumBase</code> part. This is <strong>object
+slicing</strong>, from Class 21. The parameter <code>sb</code> is not a sliced <code>SumSq</code>; it is a genuine, complete
+<code>SumBase</code>, and <code>SumBase::sum()</code> really is the right answer for it. Dynamic binding worked perfectly;
+the object it dispatched on was simply no longer a <code>SumSq</code>.</p>
+<p>This is why the definition in &sect;1 says polymorphism lives in the pointer or reference.
+No pointer, no reference, no polymorphism.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.5</div>
+  <div class="bd">
+    <p>A student writes a container of shapes as <code>vector&lt;SumBase&gt; v;</code> and pushes
+    <code>SumVec</code>, <code>SumAbs</code> and <code>SumSq</code> objects into it, then loops calling <code>v[i].sum()</code>. Every answer is 0.
+    Explain, and give the standard fix.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Explanation.</strong> A <code>vector&lt;SumBase&gt;</code> stores <code>SumBase</code>
+      <em>objects</em>. <code>push_back</code> copies the argument into an element of that type, so each derived
+      object is sliced down to its base part on the way in. The vector never contained a <code>SumVec</code> at
+      all. Calling <code>sum()</code> on a real <code>SumBase</code> correctly returns 0.</p>
+      <p><strong>The fix</strong> is to store pointers, so that the objects themselves live elsewhere
+      and are never copied:</p>
+<pre><code class="language-cpp">    SumVec sv;  SumAbs ab;  SumSq sq;
+    // ... set them ...
+    vector&lt;SumBase *&gt; v = { &amp;sv, &amp;ab, &amp;sq };
+    for (size_t i = 0; i &lt; v.size(); ++i) {
+        cout &lt;&lt; v[i]-&gt;sum() &lt;&lt; " ";
+    }</code></pre>
+      <p><strong>Things to notice.</strong> "A polymorphic container is a container of pointers" is one
+      of those rules you can apply mechanically, and it is worth memorizing in that form. If the objects
+      are created with <code>new</code> instead of living on the stack, you must <code>delete</code> each one &mdash; and that
+      <code>delete</code> goes through a <code>SumBase *</code>, which is exactly the situation &sect;8 is about.</p>
+    </div></details>
+  </div>
+</div>
+
+<p>Now the payoff the whole design was for. The professor asks: <em>"What would happen if we wrote a
+new derived class to implement the sum S<sub>4</sub>?"</em> &mdash; the sum of fourth powers. His answer:
+the library function will work correctly, <em>"without modification"</em>, because <code>sum()</code> was declared
+virtual in the base class and is therefore automatically virtual in every derived class.</p>
+
+<h3>In-class exercise &mdash; extend a library you cannot recompile</h3>
+
+<p>Write the class <code>SumQuad</code> for <em>S</em><sub>4</sub> = <em>x</em><sub>0</sub><sup>4</sup> + &hellip; +
+<em>x</em><sub>n-1</sub><sup>4</sup>, and a <code>main</code> that runs all the sum objects through the existing
+<code>library_func</code> in a loop over an array of base pointers. You may not change <code>SumBase</code> or
+<code>library_func</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class SumBase {
+public:
+    void set(const vector&lt;double&gt; &amp;v) { x = v; }
+    virtual double sum() const { return 0; }
+    void print() const {
+        for (size_t i = 0; i &lt; x.size(); ++i) { cout &lt;&lt; x[i] &lt;&lt; &quot; &quot;; }
+        cout &lt;&lt; endl;
+    }
+protected:
+    vector&lt;double&gt; x;
+};
+
+class SumVec : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i]; }
+        return s;
+    }
+};
+
+// the library -- already compiled, do not edit
+void library_func(SumBase &amp;sb_ref) {
+    sb_ref.print();
+    cout &lt;&lt; &quot;sum = &quot; &lt;&lt; sb_ref.sum() &lt;&lt; endl;
+}
+
+// TODO 1: write class SumQuad, deriving from SumBase, overriding sum()
+
+
+int main() {
+    vector&lt;double&gt; x = {-1, 0, 1, 2};
+    SumVec sv;
+    sv.set(x);
+    // TODO 2: create a SumQuad, set it, and run both objects
+    //         through library_func using an array of SumBase pointers
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class SumBase {
+public:
+    void set(const vector&lt;double&gt; &amp;v) { x = v; }
+    virtual double sum() const { return 0; }
+    void print() const {
+        for (size_t i = 0; i &lt; x.size(); ++i) { cout &lt;&lt; x[i] &lt;&lt; " "; }
+        cout &lt;&lt; endl;
+    }
+protected:
+    vector&lt;double&gt; x;
+};
+
+class SumVec : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i]; }
+        return s;
+    }
+};
+
+// the library -- already compiled, do not edit
+void library_func(SumBase &amp;sb_ref) {
+    sb_ref.print();
+    cout &lt;&lt; "sum = " &lt;&lt; sb_ref.sum() &lt;&lt; endl;
+}
+
+// TODO 1: write class SumQuad, deriving from SumBase, overriding sum()
+
+
+int main() {
+    vector&lt;double&gt; x = {-1, 0, 1, 2};
+    SumVec sv;
+    sv.set(x);
+    // TODO 2: create a SumQuad, set it, and run both objects
+    //         through library_func using an array of SumBase pointers
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.6</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output for <code>x</code> = {-1, 0, 1, 2}.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> <code>SumQuad</code> needs nothing except an override of <code>sum()</code>; it inherits <code>x</code>
+      (which is <code>protected</code>), <code>set()</code> and <code>print()</code>. The loop stores the addresses of the objects in an
+      array of <code>SumBase *</code> and dereferences each one to call <code>library_func</code>, which takes a reference.
+      Nothing in the library is touched, and <code>SumQuad</code> does not need to repeat the word <code>virtual</code>.</p>
+<div class="codewrap"><div class="cap">sums_extend.cpp</div><pre><code class="language-cpp">// sums_extend.cpp -- a fourth sum, added without touching the library function
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class SumBase {
+public:
+    vector&lt;double&gt; get() const { return x; }
+    void set(const vector&lt;double&gt; &amp;v) { x = v; }
+
+    virtual double sum() const { return 0; }
+
+    void print() const {
+        for (size_t i = 0; i &lt; x.size(); ++i) {
+            cout &lt;&lt; x[i] &lt;&lt; " ";
+        }
+        cout &lt;&lt; endl;
+    }
+
+protected:
+    vector&lt;double&gt; x;
+};
+
+class SumVec : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i]; }
+        return s;
+    }
+};
+
+class SumSq : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i] * x[i]; }
+        return s;
+    }
+};
+
+// ---- the library, written and compiled before SumQuad existed --------------
+void library_func(SumBase &amp;sb_ref) {
+    sb_ref.print();
+    cout &lt;&lt; "sum = " &lt;&lt; sb_ref.sum() &lt;&lt; endl;
+}
+
+void library_ptr(SumBase *p) {
+    cout &lt;&lt; "through a pointer: sum = " &lt;&lt; p-&gt;sum() &lt;&lt; endl;
+}
+
+// ---- the user's new class, written afterwards ------------------------------
+class SumQuad : public SumBase {         // S4 = x0^4 + ... + xn-1^4
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i] * x[i] * x[i] * x[i]; }
+        return s;
+    }
+};
+
+int main() {
+    vector&lt;double&gt; x = {-1, 0, 1, 2};
+    SumVec  sv;
+    SumSq   sq;
+    SumQuad qd;
+    sv.set(x);
+    sq.set(x);
+    qd.set(x);
+
+    SumBase *list[3] = { &amp;sv, &amp;sq, &amp;qd };
+    for (int i = 0; i &lt; 3; ++i) {
+        library_func(*list[i]);
+    }
+    library_ptr(&amp;qd);
+    return 0;
+}</code></pre></div>
+<pre class="out">-1 0 1 2 
+sum = 2
+-1 0 1 2 
+sum = 6
+-1 0 1 2 
+sum = 18
+through a pointer: sum = 18</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><em>S</em><sub>4</sub> = 1 + 0 + 1 + 16 = <strong>18</strong>. Fourth powers of negative
+          numbers are positive, so the -1 contributes +1.</li>
+        <li><code>library_ptr</code> shows that pointers dispatch dynamically exactly like references. The
+          professor makes the same point: the concept <em>"applies also to pointers"</em>.</li>
+        <li><code>SumBase *list[3]</code> is an array whose elements have <em>declared</em> type
+          <code>SumBase *</code> and whose objects are three different classes. That mismatch is the whole trick,
+          and every polymorphism question on this professor's finals is built on it.</li>
+        <li>The library workflow, in his words: users are told what the public part of <code>SumBase</code> is;
+          <em>"The library manual states that <code>sum()</code> is a virtual function"</em>; users write derived
+          classes overriding it; they call the library function and get correct output for a class the
+          library was never compiled against.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>The rules for virtual functions</h2>
+
+<p><code>virtual</code> has a small number of rules, and every one of them shows up as an exam trap. Take them
+one at a time.</p>
+
+<h3>Rule 1 &mdash; <code>virtual</code> is inherited, and dispatch finds the nearest override</h3>
+
+<p>You tag the method once, in the base class. From there down it is virtual in every descendant,
+whether or not they repeat the word. When a call is dispatched, the version that runs is the one
+belonging to the object's own class &mdash; or, if that class did not override it, the nearest
+ancestor that did.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; four objects, one call site</span></div>
+  <div class="bd">
+    <p><code>A::f</code> is virtual. <code>B</code> does not override it. <code>C</code> overrides it without writing <code>virtual</code>. <code>D</code>
+    derives from <code>C</code> and overrides nothing. All four objects are visited through an array of <code>A *</code>,
+    and the call <code>list[i]-&gt;f()</code> is the <em>same line of code</em> every time. Predict the four
+    lines.</p>
+<div class="codewrap"><div class="cap">chain3.cpp</div><pre><code class="language-cpp">// chain3.cpp -- virtual is inherited, and dispatch finds the nearest override
+#include &lt;iostream&gt;
+using namespace std;
+
+class A {
+public:
+    virtual void f() const { cout &lt;&lt; "A::f" &lt;&lt; endl; }
+    virtual ~A() { }
+};
+
+class B : public A {          // does not override f
+public:
+    void g() const { cout &lt;&lt; "B::g" &lt;&lt; endl; }
+};
+
+class C : public B {          // overrides f, without repeating "virtual"
+public:
+    void f() const { cout &lt;&lt; "C::f" &lt;&lt; endl; }
+};
+
+class D : public C {          // does not override f
+};
+
+int main() {
+    A a;
+    B b;
+    C c;
+    D d;
+    A *list[4] = { &amp;a, &amp;b, &amp;c, &amp;d };
+    for (int i = 0; i &lt; 4; ++i) {
+        list[i]-&gt;f();
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">A::f
+A::f
+C::f
+C::f</pre>
+<table class="trace">
+  <tr><th>Object</th><th>Its class</th><th>Nearest <code>f</code> walking up from that class</th><th>Runs</th></tr>
+  <tr><td><code>a</code></td><td><code>A</code></td><td><code>A::f</code></td><td><code>A::f</code></td></tr>
+  <tr><td><code>b</code></td><td><code>B</code></td><td><code>B</code> has none &rarr; <code>A::f</code></td><td><code>A::f</code></td></tr>
+  <tr><td><code>c</code></td><td><code>C</code></td><td><code>C::f</code></td><td><code>C::f</code></td></tr>
+  <tr><td><code>d</code></td><td><code>D</code></td><td><code>D</code> has none &rarr; <code>C::f</code></td><td><code>C::f</code></td></tr>
+</table>
+<p>Note <code>C::f</code> is dynamically dispatched even though <code>C</code> never writes <code>virtual</code>: it inherited
+virtual-ness from <code>A</code> through <code>B</code>. And note the search direction &mdash; <em>upward from the object's
+own class</em>. That is the mirror image of the static rule from Class 19, which searched upward from
+the <em>declared</em> type.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Rule 2 &mdash; the signature must match exactly, or you get hiding, not overriding</h3>
+
+<p>To override a virtual function, the derived declaration must have the same name, the same parameter
+list, and the same <code>const</code>-ness. Get any of that wrong and you have not overridden anything &mdash; you
+have declared a <em>different</em> function that merely happens to share a name, and which
+<strong>hides</strong> the base version for calls made on the derived type. The program still compiles.
+That is what makes this bug expensive.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one missing <code>const</code></span></div>
+  <div class="bd">
+    <p><code>Account::balance()</code> is <code>virtual</code> and <code>const</code>. <code>Savings::balance()</code> is meant to override it, and
+    the author forgot one word. Four calls follow; predict each of them.</p>
+<div class="codewrap"><div class="cap">hiding_const.cpp</div><pre><code class="language-cpp">// hiding_const.cpp -- one missing const, and the override silently is not one
+#include &lt;iostream&gt;
+using namespace std;
+
+class Account {
+public:
+    virtual double balance() const { return 0.0; }
+    void report() const {
+        cout &lt;&lt; "report(): balance = " &lt;&lt; balance() &lt;&lt; endl;
+    }
+};
+
+class Savings : public Account {
+public:
+    double balance() { return 1500.0; }     // BUG: no const -- a different signature
+};
+
+int main() {
+    Savings s;
+    cout &lt;&lt; "s.balance()      = " &lt;&lt; s.balance() &lt;&lt; endl;
+
+    Account &amp;r = s;
+    cout &lt;&lt; "r.balance()      = " &lt;&lt; r.balance() &lt;&lt; endl;
+
+    Account *p = &amp;s;
+    cout &lt;&lt; "p-&gt;balance()     = " &lt;&lt; p-&gt;balance() &lt;&lt; endl;
+
+    s.report();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">s.balance()      = 1500
+r.balance()      = 0
+p-&gt;balance()     = 0
+report(): balance = 0</pre>
+<p>The first line is right and the other three are wrong, which is the worst possible outcome: your
+quick test on the derived object passes, and the library gets zeros forever.</p>
+<p><code>double balance()</code> and <code>virtual double balance() const</code> are two different
+functions. The derived class has not overridden anything; it has added a new method whose name hides
+the inherited one whenever the call is made through a <code>Savings</code>. Through an <code>Account &amp;</code> or
+<code>Account *</code>, the only <code>balance</code> in sight is <code>Account::balance</code>, and it is dispatched dynamically to
+&hellip; itself, because <code>Savings</code> never overrode it. Even <code>report()</code>, a member of <code>Account</code>, calls
+<code>Account::balance</code>.</p>
+<p>g++ 13.3 does at least complain, and this warning is worth reading carefully when it appears:</p>
+<pre class="err">hiding_const.cpp:7:20: warning: 'virtual double Account::balance() const' was hidden [-Woverloaded-virtual=]
+    7 |     virtual double balance() const { return 0.0; }
+      |                    ^~~~~~~
+hiding_const.cpp:15:12: note:   by 'double Savings::balance()'
+   15 |     double balance() { return 1500.0; }     // BUG: no const -- a different signature
+      |            ^~~~~~~</pre>
+<p>It is a <em>warning</em>. The program compiled and ran. A student who compiles without <code>-Wall</code>, or
+who scrolls past warnings, ships this.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>override</code> (C++11; added &mdash; not in the original notes)</span></div>
+  <div class="bd">
+    <p>Writing <code>override</code> after the parameter list of a derived-class method tells the compiler:
+    <em>"I believe this overrides a virtual function from a base class; if it does not, refuse to
+    compile."</em></p>
+<pre><code class="language-cpp">class Savings : public Account {
+public:
+    double balance() const override { return 1500.0; }
+};</code></pre>
+    <p><code>override</code> is not a keyword you may sprinkle anywhere &mdash; it is a <em>contextual</em>
+    keyword valid only in that position, and it generates no code. Its entire job is to convert the
+    silent bug above into a compile-time error. Use it on every override you write.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same bug, with <code>override</code></span></div>
+  <div class="bd">
+    <p>Identical program, except that <code>Savings::balance()</code> &mdash; still missing its <code>const</code> &mdash; is
+    now marked <code>override</code>. What does g++ do?</p>
+<div class="codewrap"><div class="cap">hiding_override.cpp</div><pre><code class="language-cpp">class Savings : public Account {
+public:
+    double balance() override { return 1500.0; }   // now the compiler checks
+};</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">hiding_override.cpp:15:12: error: 'double Savings::balance()' marked 'override', but does not override
+   15 |     double balance() override { return 1500.0; }   // now the compiler checks
+      |            ^~~~~~~</pre>
+<p><strong>error</strong>, not warning. No executable is produced, and the message names the exact
+problem in one line. The cost of that safety was six characters.</p>
+<p>The professor's notes never mention <code>override</code> &mdash; it postdates the style of the original
+material &mdash; but nothing else in C++ protects you here, and every override on the rest of this page
+uses it or would benefit from it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; make the compiler find the bug</h3>
+
+<p>Fix the <code>Account</code>/<code>Savings</code> program so that all four lines report 1500, using <code>override</code> so that a
+future signature slip cannot come back. While you are there, give <code>Account</code> a virtual destructor
+&mdash; by the end of &sect;8 you will know why.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Account {
+public:
+    virtual double balance() const { return 0.0; }
+    void report() const {
+        cout &lt;&lt; &quot;report(): balance = &quot; &lt;&lt; balance() &lt;&lt; endl;
+    }
+    // TODO: a virtual destructor belongs here
+};
+
+class Savings : public Account {
+public:
+    double balance() { return 1500.0; }     // TODO: make this a real override
+};
+
+int main() {
+    Savings s;
+    cout &lt;&lt; &quot;s.balance()      = &quot; &lt;&lt; s.balance() &lt;&lt; endl;
+
+    Account &amp;r = s;
+    cout &lt;&lt; &quot;r.balance()      = &quot; &lt;&lt; r.balance() &lt;&lt; endl;
+
+    Account *p = &amp;s;
+    cout &lt;&lt; &quot;p-&gt;balance()     = &quot; &lt;&lt; p-&gt;balance() &lt;&lt; endl;
+
+    s.report();
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Account {
+public:
+    virtual double balance() const { return 0.0; }
+    void report() const {
+        cout &lt;&lt; "report(): balance = " &lt;&lt; balance() &lt;&lt; endl;
+    }
+    // TODO: a virtual destructor belongs here
+};
+
+class Savings : public Account {
+public:
+    double balance() { return 1500.0; }     // TODO: make this a real override
+};
+
+int main() {
+    Savings s;
+    cout &lt;&lt; "s.balance()      = " &lt;&lt; s.balance() &lt;&lt; endl;
+
+    Account &amp;r = s;
+    cout &lt;&lt; "r.balance()      = " &lt;&lt; r.balance() &lt;&lt; endl;
+
+    Account *p = &amp;s;
+    cout &lt;&lt; "p-&gt;balance()     = " &lt;&lt; p-&gt;balance() &lt;&lt; endl;
+
+    s.report();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.7</div>
+  <div class="bd">
+    <p>Give the corrected program and its exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The base declaration is the contract, and it says
+      <code>double balance() const</code>. So the derived declaration must say the same thing, plus
+      <code>override</code> to have the compiler check it. Nothing else in the program changes.</p>
+<div class="codewrap"><div class="cap">hiding_fixed.cpp</div><pre><code class="language-cpp">// hiding_fixed.cpp -- the signature matched, and override says so out loud
+#include &lt;iostream&gt;
+using namespace std;
+
+class Account {
+public:
+    virtual double balance() const { return 0.0; }
+    void report() const {
+        cout &lt;&lt; "report(): balance = " &lt;&lt; balance() &lt;&lt; endl;
+    }
+    virtual ~Account() { }
+};
+
+class Savings : public Account {
+public:
+    double balance() const override { return 1500.0; }
+};
+
+int main() {
+    Savings s;
+    cout &lt;&lt; "s.balance()      = " &lt;&lt; s.balance() &lt;&lt; endl;
+
+    Account &amp;r = s;
+    cout &lt;&lt; "r.balance()      = " &lt;&lt; r.balance() &lt;&lt; endl;
+
+    Account *p = &amp;s;
+    cout &lt;&lt; "p-&gt;balance()     = " &lt;&lt; p-&gt;balance() &lt;&lt; endl;
+
+    s.report();
+    return 0;
+}</code></pre></div>
+<pre class="out">s.balance()      = 1500
+r.balance()      = 1500
+p-&gt;balance()     = 1500
+report(): balance = 1500</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>report()</code> is an ordinary non-virtual method of the <em>base</em> class, and it now prints
+          1500. A non-virtual method calling a virtual one is completely normal and is the shape of every
+          polymorphism question on this professor's finals: a <code>print()</code> in the base that calls the
+          virtual methods the derived classes supply.</li>
+        <li>The <code>const</code> is not decoration. <code>report()</code> is <code>const</code>, so inside it the object is <code>const</code>;
+          a non-<code>const</code> <code>balance()</code> could not be called there even if you wanted it.</li>
+        <li>The virtual destructor changes nothing visible in this program &mdash; nothing here is
+          created with <code>new</code> &mdash; but it costs nothing and it is what makes the class safe to use
+          through a base pointer later. &sect;8 is the argument.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h3>Rule 3 &mdash; you can still ask for the base version by name</h3>
+
+<p>Class 20 introduced the qualified call <code>Rectangle::print()</code>. It keeps working, and against a
+virtual function it does something specific: it <strong>switches dynamic binding off</strong> for that
+one call.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; qualifying a virtual call</span></div>
+  <div class="bd">
+    <p><code>greet()</code> is virtual and <code>Derived</code> overrides it. Four calls, two of them qualified. Predict all
+    four lines.</p>
+<div class="codewrap"><div class="cap">qualified_call.cpp</div><pre><code class="language-cpp">// qualified_call.cpp -- turning dynamic binding off on purpose
+#include &lt;iostream&gt;
+using namespace std;
+
+class Base {
+public:
+    virtual void greet() const { cout &lt;&lt; "Base::greet" &lt;&lt; endl; }
+    virtual ~Base() { }
+};
+
+class Derived : public Base {
+public:
+    void greet() const { cout &lt;&lt; "Derived::greet" &lt;&lt; endl; }
+};
+
+int main() {
+    Derived d;
+    Base *p = &amp;d;
+
+    p-&gt;greet();          // dynamic binding: the object decides
+    p-&gt;Base::greet();    // qualified: the compiler decides
+    d.greet();
+    d.Base::greet();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Derived::greet
+Base::greet
+Derived::greet
+Base::greet</pre>
+<p>A qualified name is a statically bound call, always. That is useful in exactly the Class 20
+situation &mdash; a derived override that wants to do a little extra and then let the base do the rest:</p>
+<pre><code class="language-cpp">void Derived::greet() const {
+    Base::greet();                    // the inherited behavior, on purpose
+    cout &lt;&lt; "  ...and I am a Derived" &lt;&lt; endl;
+}</code></pre>
+<p>Leave the <code>Base::</code> off that inner call and <code>greet()</code> calls itself: infinite recursion, then a
+crash. That is a genuinely common accident once a method is virtual.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Rule 4 &mdash; what may and may not be virtual</h3>
+
+<p>The professor gives a list; here it is as a table, with the two places his wording needs a small
+correction.</p>
+
+<table class="trace">
+  <tr><th>Can it be <code>virtual</code>?</th><th>Detail</th></tr>
+  <tr><td><strong>Data members</strong> &mdash; no</td><td>Only functions are dispatched.</td></tr>
+  <tr><td><strong><code>static</code> methods</strong> &mdash; no</td><td><em>"A static method belongs to the class, not to an object. Hence there is no concept of 'object of a derived class' for a static method."</em> No object, nothing to dispatch on.</td></tr>
+  <tr><td><strong>Constructors</strong> &mdash; no</td><td>A constructor's job is to create an object of a known type; there is no object yet to dispatch on. See &sect;7.</td></tr>
+  <tr><td><strong>Destructors</strong> &mdash; <em>yes, and usually must be</em></td><td>The professor's notes say <em>"This is a very important fact that we shall discuss later"</em> and then never return to it. &sect;8 of this page is that discussion.</td></tr>
+  <tr><td><strong>Overloaded operators</strong> &mdash; yes</td><td>Including <code>operator=</code>, <em>"which can lead to difficulties&hellip; it is safer not to mess with the assignment operator."</em> Sound advice: a virtual <code>operator=</code> interacts badly with slicing.</td></tr>
+  <tr><td><strong><code>const</code> methods</strong> &mdash; yes</td><td>And the <code>const</code> is part of the signature, as Rule 2 showed.</td></tr>
+  <tr><td><strong>Any access level</strong> &mdash; yes</td><td>A virtual function may be public, protected or private, and the access level <em>need not match</em> down the tree: a function that is protected in the base may be made public in a derived class. Access is checked statically, at the call site, against the declared type.</td></tr>
+  <tr><td><strong>Virtual calling non-virtual, and vice versa</strong> &mdash; yes, both</td><td>A non-virtual <code>print()</code> calling virtual helpers is the standard polymorphic idiom.</td></tr>
+  <tr><td><strong>A <code>static</code> method calling a virtual one</strong> &mdash; not without an object</td><td>The notes say <em>"static methods can only call other static methods"</em>. Strictly, a static method may call any method <em>on an object it is given or creates</em>; what it cannot do is call a non-static method with no object at all, because there is no <code>this</code>.</td></tr>
+  <tr><td><strong><code>this</code> inside a virtual method</strong> &mdash; always available</td><td>A virtual method is by definition non-static, so <code>this</code> exists and <em>"always points to the correct object in the inheritance tree."</em></td></tr>
+</table>
+
+<p>Three of those are compile errors, and g++ names them precisely:</p>
+
+<pre class="err">virtual_illegal.cpp:6:5: error: constructors cannot be declared 'virtual' [-fpermissive]
+    6 |     virtual Bad() { }                  // constructors cannot be virtual
+      |     ^~~~~~~
+virtual_illegal.cpp:7:5: error: member 'helper' cannot be declared both 'virtual' and 'static'
+    7 |     virtual static void helper() { }   // static methods cannot be virtual
+      |     ^~~~~~~ ~~~~~~
+virtual_illegal.cpp:8:5: error: 'n' declared as a 'virtual' field
+    8 |     virtual int n;                     // data members cannot be virtual
+      |     ^~~~~~~</pre>
+
+<h3>Rule 5 &mdash; <code>virtual</code> is selective, and that is deliberate</h3>
+
+<p>If everything can be virtual, why not mark everything virtual and stop worrying? The professor's
+answer is not about performance. <em>"It is a matter of quality control."</em></p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a non-virtual method that a derived class "overrides"</span></div>
+  <div class="bd">
+    <p>Here <code>sum()</code> is virtual but <code>print()</code> is not, and <code>SumVec</code> supplies its own <code>print()</code> anyway.
+    The same object is asked to print twice &mdash; once directly, once from inside <code>library_func</code>.
+    Predict the three lines.</p>
+<div class="codewrap"><div class="cap">selective_virtual.cpp</div><pre><code class="language-cpp">// selective_virtual.cpp -- virtual is selective: print() is not virtual, sum() is
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class SumBase {
+public:
+    void set(const vector&lt;double&gt; &amp;v) { x = v; }
+
+    virtual double sum() const { return 0; }
+
+    void print() const {                  // NOT virtual
+        cout &lt;&lt; "SumBase::print ";
+        for (size_t i = 0; i &lt; x.size(); ++i) { cout &lt;&lt; x[i] &lt;&lt; " "; }
+        cout &lt;&lt; endl;
+    }
+
+protected:
+    vector&lt;double&gt; x;
+};
+
+class SumVec : public SumBase {
+public:
+    double sum() const {
+        double s = 0;
+        for (size_t i = 0; i &lt; x.size(); ++i) { s += x[i]; }
+        return s;
+    }
+    void print() const {                  // hides, does not override
+        cout &lt;&lt; "SumVec::print (fancy formatting)" &lt;&lt; endl;
+    }
+};
+
+void library_func(SumBase &amp;sb_ref) {
+    sb_ref.print();
+    cout &lt;&lt; "sum = " &lt;&lt; sb_ref.sum() &lt;&lt; endl;
+}
+
+int main() {
+    vector&lt;double&gt; x = {-1, 0, 1, 2};
+    SumVec sv;
+    sv.set(x);
+    sv.print();              // static type is SumVec
+    library_func(sv);        // static type is SumBase
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">SumVec::print (fancy formatting)
+SumBase::print -1 0 1 2
+sum = 2</pre>
+<p>One object, two calls to <code>print()</code>, two different function bodies &mdash; and this time the
+difference is not a bug. The library author decided that <code>sum()</code> is the user's business and <code>print()</code>
+is the library's, and the language enforced that decision. In the professor's words: <em>"If a method
+is non-virtual, the compiler does not search the inheritance tree for an override. Hence the keyword
+<code>virtual</code> is selective."</em></p>
+<p>His justification for keeping some methods non-virtual is worth quoting in full, because it is not
+the answer students expect: <em>"If we write a library where every method in our base classes is
+virtual, the users can essentially employ our library to do almost anything. The users can override all
+of our base class methods and our library becomes meaningless. Sometimes, there are functions where it
+is important that the computations must be done in a particular way. This may not necessarily be for
+programming reasons. It may be for legal reasons."</em></p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.8</div>
+  <div class="bd">
+    <p>Decide each of the following, briefly.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> In <code>selective_virtual.cpp</code>, <code>SumVec::print</code> is not an override. Would adding <code>override</code> to it compile?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No &mdash; and that is the point of <code>override</code>. <code>SumBase::print</code> is not virtual, so there is
+        nothing to override, and the compiler would say <em>"marked 'override', but does not
+        override"</em>, exactly as in the <code>Savings</code> example. <code>override</code> catches both kinds of mistake:
+        a signature that does not match, and a base method that was never virtual in the first
+        place.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A base class declares <code>virtual void audit() const;</code> in its <code>protected</code> section. A derived class overrides it in its <code>public</code> section. Legal?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Legal. The access level of an override does not have to match the base &mdash; the professor
+        says so explicitly: <em>"a virtual function which is protected in the base class can be made
+        public in a derived class."</em></p>
+        <p>The reason it works is that access is checked <strong>statically</strong>, at the call site,
+        against the declared type of the expression. Through a <code>Base *</code> the call is rejected (protected);
+        through a <code>Derived *</code> it is allowed (public); if it is allowed, the dispatch that follows is
+        dynamic as usual. Access control and binding are two independent mechanisms, and it is worth
+        knowing they can disagree.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Why can a constructor not be virtual, in one sentence?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because dynamic binding needs an existing object to ask "what class are you?", and a
+        constructor's whole job is to bring that object into existence &mdash; there is nothing to ask
+        yet. (The compiler's phrasing: <em>"constructors cannot be declared 'virtual'"</em>.) &sect;7
+        shows what goes wrong when you call a virtual function from inside one.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>How it works: the vtable, and what it costs</h2>
+
+<p>The professor poses the mechanism question sharply. Ordinary name lookup goes <em>up</em> the tree
+from the declared type, and that is easy. But <em>"for a virtual function, the compiler must go in the
+opposite direction&hellip; How does the compiler go <strong>UP</strong> the inheritance tree, to
+determine the appropriate override?"</em> &mdash; and remember, when the library is compiled,
+<em>"the derived classes do not exist yet."</em></p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; virtual function table (vtable) and vptr</span></div>
+  <div class="bd">
+    <p>If a class has any virtual functions, the compiler builds a hidden table for that class &mdash;
+    the <strong>virtual function table</strong>, or <strong>vtable</strong> &mdash; holding the address
+    of the correct function body for each virtual method of that class.</p>
+    <p>Every object of such a class carries one hidden pointer, the <strong>vptr</strong>, aimed at its
+    own class's vtable. The constructor sets it. A virtual call then compiles to roughly: <em>follow
+    the object's vptr to a table, read slot <em>k</em>, call that address.</em></p>
+    <p>The professor draws the line we will draw too: <em>"We shall not analyze the contents or
+    operation of the virtual function table."</em> The exact layout is the compiler's business and is
+    not standardized. What you need is the shape of the cost: <strong>one extra pointer per object, one
+    extra indirection per call.</strong></p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; correcting the course notes on <em>when</em> vtables are built</span></div>
+  <div class="bd">
+    <p>The original notes state that entries are made in the virtual function table <em>"at run time,
+    not at compile time, since we compile our library without knowing anything about the derived
+    classes."</em> The conclusion is right &mdash; the library really does work with classes it was
+    never compiled against &mdash; but the mechanism described is not what happens.</p>
+    <p>What actually happens:</p>
+    <ul>
+      <li><strong>Each class</strong> with virtual functions gets <strong>its own</strong> vtable,
+        generated by the compiler <em>at compile time</em>, when that class is compiled. A derived class
+        does not add an entry to the base's table; it has a table of its own, whose slots hold its
+        overrides where it has them and the inherited addresses where it does not.</li>
+      <li>The derived class's vtable is created when <em>the derived class</em> is compiled &mdash;
+        years after the library, in a different translation unit, by a different programmer. Nothing is
+        added to anything the library owns.</li>
+      <li><strong>At run time</strong> the only thing that happens is the lookup: the constructor stored
+        a vptr in the object, and each virtual call follows it and calls whatever address it finds.</li>
+    </ul>
+    <p>That is why the library works: it does not need to know the derived classes, it only needs to
+    know <em>which slot</em> to read. The slot number is fixed by the base class, which the library
+    <em>was</em> compiled against.</p>
+  </div>
+</div>
+
+<p>The consequence you can actually observe is the professor's: <em>"the memory allocation to create
+an object is not equal to the sum of the sizes of all the class data members&hellip; That is why the
+size of an object should always be determined by calling the <code>sizeof</code> operator."</em></p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>sizeof</code> before and after one <code>virtual</code></span></div>
+  <div class="bd">
+    <p><code>Plain</code> and <code>Poly</code> hold the same two <code>double</code>s and declare the same two methods. The single
+    difference is the word <code>virtual</code> on one of them. Predict the six numbers &mdash; and predict what
+    deriving from each of them costs.</p>
+<div class="codewrap"><div class="cap">sizeof_virtual.cpp</div><pre><code class="language-cpp">// sizeof_virtual.cpp -- what one virtual function costs an object
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Plain {                 // no virtual functions at all
+public:
+    void f() const { }
+    double area() const { return h * w; }
+protected:
+    double h, w;
+};
+
+class Poly {                  // identical data, one function made virtual
+public:
+    void f() const { }
+    virtual double area() const { return h * w; }
+protected:
+    double h, w;
+};
+
+class PlainDerived : public Plain { };
+class PolyDerived  : public Poly  { };
+
+int main() {
+    cout &lt;&lt; "sizeof(double)       = " &lt;&lt; sizeof(double)       &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(Plain)        = " &lt;&lt; sizeof(Plain)        &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(Poly)         = " &lt;&lt; sizeof(Poly)         &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(PlainDerived) = " &lt;&lt; sizeof(PlainDerived) &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(PolyDerived)  = " &lt;&lt; sizeof(PolyDerived)  &lt;&lt; endl;
+
+    Plain a;
+    Poly  b;
+    cout &lt;&lt; "sizeof(a)            = " &lt;&lt; sizeof(a)            &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(b)            = " &lt;&lt; sizeof(b)            &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">sizeof(double)       = 8
+sizeof(Plain)        = 16
+sizeof(Poly)         = 24
+sizeof(PlainDerived) = 16
+sizeof(PolyDerived)  = 24
+sizeof(a)            = 16
+sizeof(b)            = 24</pre>
+<p><code>Plain</code> is 16 bytes: two <code>double</code>s, nothing else. <code>Poly</code> is <strong>24</strong> &mdash; the same two
+<code>double</code>s plus eight bytes that nobody declared. That is the vptr, and on this 64-bit machine a pointer
+is 8 bytes. You have just measured the cost of dynamic binding.</p>
+<p>Three details worth stating:</p>
+<ul>
+  <li>The cost is <strong>per object</strong>, not per virtual function. Add nine more virtual methods
+    to <code>Poly</code> and it is still 24 bytes: the object holds one vptr, and the table it points at grows
+    instead. The table exists once per class, not once per object.</li>
+  <li><code>PolyDerived</code> is also 24. It inherits the vptr rather than getting a second one.</li>
+  <li>These numbers are for g++ 13.3 on 64-bit Linux. The 8 is <code>sizeof</code> a pointer on this
+    machine, and no part of it is guaranteed by the standard &mdash; which is exactly the professor's
+    argument for asking <code>sizeof</code> instead of counting members by hand.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.9</div>
+  <div class="bd">
+    <p>A class holds four <code>int</code> members and no virtual functions; <code>sizeof</code> reports 16.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A colleague makes one method <code>virtual</code> and now reports 24 rather than 20. Where did the extra four bytes come from?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>They assumed the hidden pointer is 4 bytes. It is not: on a 64-bit machine a pointer is
+        <strong>8</strong> bytes, so four <code>int</code>s (16) plus one vptr (8) is 24 exactly.</p>
+        <p>Padding is real too, and you can see it one member down. A class with <em>three</em> <code>int</code>s
+        and a virtual function is 12 + 8 = 20 bytes of content, but the vptr forces 8-byte alignment on
+        the whole object, so <code>sizeof</code> reports <strong>24</strong> as well &mdash; measured on g++ 13.3
+        here. Which is the professor's point exactly: <em>"the size of an object should always be
+        determined by calling the <code>sizeof</code> operator"</em>, never by adding up members.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> The same colleague says "a virtual call is slow because the program searches the inheritance tree at run time." What actually happens at run time?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No searching happens at run time. The compiler assigned each virtual method a fixed slot
+        number in the vtable when it compiled the <em>base</em> class, and every derived class's table
+        uses the same slot numbers. A virtual call is therefore: load the vptr from the object, load the
+        address in slot <em>k</em>, call it &mdash; two loads and an indirect call, with no loop and no
+        lookup by name.</p>
+        <p>The real costs are subtler: the compiler usually cannot inline a virtual call, because it
+        does not know at compile time which body will run. For a tiny function called in a tight loop
+        that can matter; for anything else it is noise.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Never call a virtual function from a constructor</h2>
+
+<p>The professor flags this one as <em>"a serious mistake that some programmers make"</em>, and it is
+the kind of bug that survives code review because the code looks completely reasonable. Recall
+construction order from Class 20: when a derived object is created, the <strong>base</strong>
+constructor runs <strong>first</strong>, and the derived part does not exist yet.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a virtual call from a constructor and a destructor</span></div>
+  <div class="bd">
+    <p><code>announce()</code> is virtual and <code>Derived</code> overrides it. <code>Base</code>'s constructor calls it, <code>Derived</code>'s
+    constructor calls it, <code>Base</code>'s destructor calls it, and <code>main</code> calls it twice on a fully built
+    object. Predict every line, in order.</p>
+<div class="codewrap"><div class="cap">ctor_virtual.cpp</div><pre><code class="language-cpp">// ctor_virtual.cpp -- what a virtual call inside a constructor really does
+#include &lt;iostream&gt;
+using namespace std;
+
+class Base {
+public:
+    Base() {
+        cout &lt;&lt; "Base constructor: calling announce()" &lt;&lt; endl;
+        announce();
+    }
+    virtual ~Base() {
+        cout &lt;&lt; "Base destructor: calling announce()" &lt;&lt; endl;
+        announce();
+    }
+    virtual void announce() const {
+        cout &lt;&lt; "    Base::announce" &lt;&lt; endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    Derived() {
+        n = 42;                       // the derived part exists only from here on
+        cout &lt;&lt; "Derived constructor: calling announce()" &lt;&lt; endl;
+        announce();
+    }
+    ~Derived() {
+        cout &lt;&lt; "Derived destructor" &lt;&lt; endl;
+    }
+    void announce() const {
+        cout &lt;&lt; "    Derived::announce, n = " &lt;&lt; n &lt;&lt; endl;
+    }
+private:
+    int n;
+};
+
+int main() {
+    Derived d;
+    cout &lt;&lt; "--- object is now complete ---" &lt;&lt; endl;
+    d.announce();
+    Base &amp;r = d;
+    r.announce();
+    cout &lt;&lt; "--- leaving main ---" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Base constructor: calling announce()
+    Base::announce
+Derived constructor: calling announce()
+    Derived::announce, n = 42
+--- object is now complete ---
+    Derived::announce, n = 42
+    Derived::announce, n = 42
+--- leaving main ---
+Derived destructor
+Base destructor: calling announce()
+    Base::announce</pre>
+<p>Read the second line and the last line. Both are <code>Base::announce</code> &mdash; from an object
+that is a <code>Derived</code> and that overrides <code>announce()</code>. In the middle of the program the identical call
+runs <code>Derived::announce</code>.</p>
+<table class="trace">
+  <tr><th>When the call happens</th><th>What the object <em>is</em> at that moment</th><th>Which version runs</th></tr>
+  <tr><td>inside <code>Base::Base()</code></td><td>a <code>Base</code> &mdash; the <code>Derived</code> part is not constructed</td><td><code>Base::announce</code></td></tr>
+  <tr><td>inside <code>Derived::Derived()</code></td><td>a fully built <code>Derived</code></td><td><code>Derived::announce</code></td></tr>
+  <tr><td>from <code>main</code>, directly or through <code>Base &amp;</code></td><td>a <code>Derived</code></td><td><code>Derived::announce</code></td></tr>
+  <tr><td>inside <code>~Base()</code></td><td>a <code>Base</code> again &mdash; <code>~Derived</code> has already run</td><td><code>Base::announce</code></td></tr>
+</table>
+<p>During base-class construction the object's dynamic type <em>is</em> the base class. That is not a
+compiler quirk, it is a safety feature: <code>Derived::announce</code> prints <code>n</code>, and <code>n</code> has not been assigned
+yet when <code>Base()</code> runs. If the language dispatched to the override, you would be reading uninitialized
+memory. C++ chooses the base version instead, which is well-defined &mdash; and almost never what the
+programmer meant.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; what the course notes get slightly wrong here</span></div>
+  <div class="bd">
+    <p>The original notes say the run-time system <em>"invokes the <strong>wrong</strong> virtual
+    function, with possibly unpredictable and/or dangerous consequences."</em> The advice &mdash; do not
+    do this &mdash; is right. The description overstates the danger and understates the trap.</p>
+    <ul>
+      <li>For an ordinary virtual function with a body, the behavior is <strong>completely
+        well-defined</strong>: during base construction and base destruction, the <em>base</em> version
+        runs. Nothing is unpredictable. That is what the output above shows.</li>
+      <li>The danger is that this is silent. The program does not crash, the compiler does not warn,
+        and the initialization you carefully wrote as an override simply never happens.</li>
+      <li>The case that <em>is</em> undefined behavior is calling a <strong>pure virtual</strong>
+        function (Class 25) from a constructor, because there is no base version to fall back to. Then
+        you typically get a run-time abort with the message <em>"pure virtual method called"</em>.</li>
+    </ul>
+    <p>The rule to carry away is unchanged and absolute: <strong>do not call virtual functions from
+    constructors or destructors.</strong> If you need per-class initialization, do it in each class's
+    own constructor body, or add a separate <code>init()</code> that the caller invokes after construction.
+    <em>"Do not mess with the virtual function table when an object is being created or destroyed."</em></p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.10</div>
+  <div class="bd">
+    <p>A <code>Logger</code> base class calls a virtual <code>header()</code> from its constructor so that every derived class
+    can print its own banner. <code>FileLogger</code> overrides <code>header()</code>. In testing, every file starts with the
+    generic base banner instead.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Explain the observed behavior in one sentence.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>While <code>Logger</code>'s constructor body runs, the object's dynamic type is still <code>Logger</code> &mdash;
+        the <code>FileLogger</code> part has not been constructed &mdash; so the virtual call is dispatched to
+        <code>Logger::header</code>, not to the override.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Give two ways to fix it.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <ul>
+          <li><strong>Move the call into the derived constructor.</strong> Each class calls
+            <code>header()</code> &mdash; or just does the work directly &mdash; in its own constructor body, which
+            runs after its own members are initialized. Simple and needs no new machinery.</li>
+          <li><strong>Two-phase initialization.</strong> The constructor does not call <code>header()</code> at
+            all; the caller writes <code>FileLogger f; f.start();</code> and <code>start()</code> makes the virtual
+            call on a fully built object. This is the standard fix when the base class genuinely needs
+            to drive the sequence.</li>
+        </ul>
+        <p>What does <em>not</em> work: making <code>header()</code> "more virtual", adding <code>override</code>, or casting
+        inside the base constructor. The derived part does not exist yet, and no keyword can conjure
+        it.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Virtual destructors</h2>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>If a class has any virtual function, its destructor must be virtual too.</strong> Not as
+    a style preference &mdash; as a correctness requirement, because the moment you have virtual
+    functions you have base pointers, and the moment you have base pointers somebody will <code>delete</code>
+    one.</p>
+  </div>
+</div>
+
+<p>Return to line (3) of &sect;1: <code>delete q</code> on a <code>Rectangle *</code> that pointed at a <code>Square</code> ran only
+<code>~Rectangle</code>. There, nothing was lost but a message. Now do it with a derived class that owns memory.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; deleting through a base pointer, destructor not virtual</span></div>
+  <div class="bd">
+    <p><code>Shape</code> has a virtual <code>print()</code> but an ordinary destructor. <code>Polygon</code> allocates an array of 1000
+    <code>double</code>s and frees it in its destructor. One object is created with <code>new</code> and deleted through a
+    <code>Shape *</code>. Predict the output &mdash; specifically, how many destructor lines appear.</p>
+<div class="codewrap"><div class="cap">dtor_nonvirtual.cpp</div><pre><code class="language-cpp">// dtor_nonvirtual.cpp -- deleting a derived object through a base pointer
+#include &lt;iostream&gt;
+using namespace std;
+
+class Shape {
+public:
+    Shape() { cout &lt;&lt; "Shape: constructor" &lt;&lt; endl; }
+    ~Shape() { cout &lt;&lt; "Shape: destructor" &lt;&lt; endl; }      // NOT virtual
+    virtual void print() const { cout &lt;&lt; "Shape::print" &lt;&lt; endl; }
+};
+
+class Polygon : public Shape {
+public:
+    Polygon(int n) {
+        count = n;
+        vertices = new double[count];
+        for (int i = 0; i &lt; count; ++i) { vertices[i] = i; }
+        cout &lt;&lt; "Polygon: constructor, allocated " &lt;&lt; count &lt;&lt; " doubles" &lt;&lt; endl;
+    }
+    ~Polygon() {
+        delete [] vertices;
+        cout &lt;&lt; "Polygon: destructor, array released" &lt;&lt; endl;
+    }
+    void print() const { cout &lt;&lt; "Polygon::print, count = " &lt;&lt; count &lt;&lt; endl; }
+private:
+    double *vertices;
+    int count;
+};
+
+int main() {
+    Shape *p = new Polygon(1000);
+    p-&gt;print();
+    delete p;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Shape: constructor
+Polygon: constructor, allocated 1000 doubles
+Polygon::print, count = 1000
+Shape: destructor</pre>
+<p><code>Polygon::print</code> ran, because <code>print()</code> is virtual &mdash; so dynamic binding is clearly
+working. And then <code>~Polygon</code> <strong>never ran at all</strong>. There is no
+"Polygon: destructor" line. The <code>delete [] vertices;</code> inside it never executed, and 1000 <code>double</code>s are
+gone.</p>
+<p>Why: <code>delete p</code> compiles to "call the destructor, then release the memory", and the call to the
+destructor is bound like any other call &mdash; statically, from the declared type <code>Shape *</code>, because
+<code>~Shape</code> is not virtual.</p>
+<p>g++ 13.3 does warn about this one, and the warning names the diagnosis exactly:</p>
+<pre class="err">dtor_nonvirtual.cpp: In function 'int main()':
+dtor_nonvirtual.cpp:33:5: warning: deleting object of polymorphic class type 'Shape' which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+   33 |     delete p;
+      |     ^~~~~~~~</pre>
+
+</div></details>
+  </div>
+</div>
+
+<p>"1000 doubles are gone" is a claim, so let us prove it with a tool rather than an argument.
+<code>valgrind</code> runs the program and reports every block of memory that was allocated and never
+released. What follows is genuine <code>valgrind</code> output from running the program above, with
+only the long library file paths removed:</p>
+
+<pre class="shell">valgrind --leak-check=full ./dtor_nonvirtual</pre>
+
+<pre class="out">==11059== Mismatched new/delete size value: 8
+==11059==    at 0x484A5B9: operator delete(void*, unsigned long)
+==11059==    by 0x10928E: main
+==11059==  Address 0x4e26080 is 0 bytes inside a block of size 24 alloc'd
+==11059==
+==11059== HEAP SUMMARY:
+==11059==     in use at exit: 8,000 bytes in 1 blocks
+==11059==   total heap usage: 4 allocs, 3 frees, 85,848 bytes allocated
+==11059==
+==11059== 8,000 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==11059==    at 0x48485C3: operator new[](unsigned long)
+==11059==    by 0x1093F7: Polygon::Polygon(int)
+==11059==    by 0x109259: main
+==11059==
+==11059== LEAK SUMMARY:
+==11059==    definitely lost: 8,000 bytes in 1 blocks
+==11059==    indirectly lost: 0 bytes in 0 blocks
+==11059==      possibly lost: 0 bytes in 0 blocks
+==11059==    still reachable: 0 bytes in 0 blocks
+==11059== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)</pre>
+
+<p>Two separate findings, both worth reading:</p>
+
+<ul>
+  <li><strong>"8,000 bytes in 1 blocks are definitely lost"</strong>, allocated in
+    <code>Polygon::Polygon(int)</code>. That is the 1000-element array: 1000 &times; 8 bytes. <em>Definitely
+    lost</em> is valgrind's strongest verdict &mdash; nothing in the program still holds a pointer to
+    it, so it can never be freed. The destructor that would have freed it was never called.</li>
+  <li><strong>"Mismatched new/delete size value: 8"</strong> on a block "of size 24". The object really
+    is 24 bytes (<code>Polygon</code>: vptr, pointer, <code>int</code>, padded), but because the compiler believed it was
+    deleting a <code>Shape</code>, it told the allocator to release 8. That is not a leak, it is the
+    <em>undefined behavior</em> the compiler warned about. On this run it did no visible harm; there is
+    no promise that it never will.</li>
+</ul>
+
+<p>The fix is one word.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same program with <code>virtual ~Shape()</code></span></div>
+  <div class="bd">
+    <p>Everything is identical except the destructor declaration:</p>
+<div class="codewrap"><div class="cap">dtor_virtual.cpp</div><pre><code class="language-cpp">class Shape {
+public:
+    Shape() { cout &lt;&lt; "Shape: constructor" &lt;&lt; endl; }
+    virtual ~Shape() { cout &lt;&lt; "Shape: destructor" &lt;&lt; endl; }
+    virtual void print() const { cout &lt;&lt; "Shape::print" &lt;&lt; endl; }
+};</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Shape: constructor
+Polygon: constructor, allocated 1000 doubles
+Polygon::print, count = 1000
+Polygon: destructor, array released
+Shape: destructor</pre>
+<p>Now <code>delete p</code> dispatches dynamically: it finds <code>~Polygon</code>, runs it, and &mdash; because destructors
+always chain to the base &mdash; <code>~Shape</code> runs immediately afterwards, in the reverse-of-construction
+order you learned in Class 20. You do not write that chaining; you only have to make the
+<em>first</em> destructor call find the right one.</p>
+<p>And the same valgrind command on the fixed program:</p>
+<pre class="out">==12166== HEAP SUMMARY:
+==12166==     in use at exit: 0 bytes in 0 blocks
+==12166==   total heap usage: 4 allocs, 4 frees, 85,848 bytes allocated
+==12166==
+==12166== All heap blocks were freed -- no leaks are possible
+==12166==
+==12166== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</pre>
+<p>Four allocations, four frees, no leaks, no errors. Both of those blocks are genuine
+<code>valgrind --leak-check=full</code> output from running the two programs.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; when to write <code>virtual ~Base()</code></span></div>
+  <div class="bd">
+    <ol>
+      <li>Does the class have <strong>any</strong> virtual function? If yes, give it a virtual
+        destructor. Full stop. A class with virtual functions is meant to be used through base
+        pointers, and that is the situation that breaks.</li>
+      <li>Is the class ever deleted through a base pointer? If yes, virtual destructor &mdash; even if
+        it has no other virtual functions.</li>
+      <li>If neither, do not add one. A virtual destructor makes an otherwise non-polymorphic class
+        pay the vptr cost (&sect;6) for nothing, and it stops the class from being trivially copyable.</li>
+      <li>The body may be empty: <code>virtual ~Shape() { }</code> is the common case. What matters is
+        the dispatch, not the body.</li>
+      <li>Every destructor in the tree below it is then automatically virtual &mdash; <code>virtual</code> is
+        inherited (Rule 1), and destructors are no exception even though their names differ.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a gap in the original course notes</span></div>
+  <div class="bd">
+    <p>The professor's Lecture 20 lists "the destructor can be tagged as virtual" and adds:
+    <em>"This is a very important fact that we shall discuss later."</em> The discussion never happens
+    &mdash; not in that lecture, not in the two after it &mdash; and Lecture 21 then asserts, as if it
+    had been taught, that <em>"if a class has virtual methods, we also know the destructor should be
+    tagged as virtual"</em>.</p>
+    <p>This section is that missing discussion, written for these notes. If you are reading the
+    original slides alongside this page, that is why &sect;8 has no counterpart there.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; a roster of people, deleted safely</h3>
+
+<p><code>Person</code> stores a name; <code>Student</code> derives from it and owns a dynamically allocated array of grades.
+Complete both classes so that an array of <code>Person *</code> holding a mix of both can be printed and then
+deleted with no leaks. Every special member announces itself.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Person {
+public:
+    Person(const string &amp;n) {
+        name = n;
+        cout &lt;&lt; &quot;Person: constructor for &quot; &lt;&lt; name &lt;&lt; endl;
+    }
+    // TODO 1: a destructor that announces itself -- what qualifier does it need?
+
+    // TODO 2: a print() that the derived class can override
+protected:
+    string name;
+};
+
+class Student : public Person {
+public:
+    Student(const string &amp;n, int howMany) : Person(n) {
+        // TODO 3: store howMany, allocate that many ints, fill them
+    }
+    // TODO 4: a destructor that releases the array and announces itself
+
+    // TODO 5: override print()
+private:
+    int *grades;
+    int count;
+};
+
+int main() {
+    Person *roster[2];
+    roster[0] = new Person(&quot;Ada&quot;);
+    roster[1] = new Student(&quot;Grace&quot;, 3);
+
+    for (int i = 0; i &lt; 2; ++i) { roster[i]-&gt;print(); }
+    for (int i = 0; i &lt; 2; ++i) { delete roster[i]; }
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Person {
+public:
+    Person(const string &amp;n) {
+        name = n;
+        cout &lt;&lt; "Person: constructor for " &lt;&lt; name &lt;&lt; endl;
+    }
+    // TODO 1: a destructor that announces itself -- what qualifier does it need?
+
+    // TODO 2: a print() that the derived class can override
+protected:
+    string name;
+};
+
+class Student : public Person {
+public:
+    Student(const string &amp;n, int howMany) : Person(n) {
+        // TODO 3: store howMany, allocate that many ints, fill them
+    }
+    // TODO 4: a destructor that releases the array and announces itself
+
+    // TODO 5: override print()
+private:
+    int *grades;
+    int count;
+};
+
+int main() {
+    Person *roster[2];
+    roster[0] = new Person("Ada");
+    roster[1] = new Student("Grace", 3);
+
+    for (int i = 0; i &lt; 2; ++i) { roster[i]-&gt;print(); }
+    for (int i = 0; i &lt; 2; ++i) { delete roster[i]; }
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.11</div>
+  <div class="bd">
+    <p>Complete the exercise and give the exact output. Then say precisely what changes if you drop the
+    word <code>virtual</code> from <code>~Person</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> <code>Person</code> needs a virtual destructor because it has a virtual <code>print()</code>
+      and is used through <code>Person *</code>. <code>Student</code> allocates in its constructor and releases in its
+      destructor &mdash; the ordinary Class 14 pattern &mdash; and its destructor does <em>not</em> need
+      the word <code>virtual</code> because it inherits virtual-ness. The announcement messages let you read the
+      order of events.</p>
+<div class="codewrap"><div class="cap">student_dtor.cpp</div><pre><code class="language-cpp">// student_dtor.cpp -- a base class with a virtual destructor, used through a base pointer
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Person {
+public:
+    Person(const string &amp;n) {
+        name = n;
+        cout &lt;&lt; "Person: constructor for " &lt;&lt; name &lt;&lt; endl;
+    }
+    virtual ~Person() {
+        cout &lt;&lt; "Person: destructor for " &lt;&lt; name &lt;&lt; endl;
+    }
+    virtual void print() const {
+        cout &lt;&lt; "Person " &lt;&lt; name &lt;&lt; endl;
+    }
+protected:
+    string name;
+};
+
+class Student : public Person {
+public:
+    Student(const string &amp;n, int howMany) : Person(n) {
+        count = howMany;
+        grades = new int[count];
+        for (int i = 0; i &lt; count; ++i) { grades[i] = 90 + i; }
+        cout &lt;&lt; "Student: constructor, " &lt;&lt; count &lt;&lt; " grades allocated" &lt;&lt; endl;
+    }
+    ~Student() {
+        delete [] grades;
+        cout &lt;&lt; "Student: destructor, grades released" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; "Student " &lt;&lt; name &lt;&lt; ", first grade " &lt;&lt; grades[0] &lt;&lt; endl;
+    }
+private:
+    int *grades;
+    int count;
+};
+
+int main() {
+    Person *roster[2];
+    roster[0] = new Person("Ada");
+    roster[1] = new Student("Grace", 3);
+
+    for (int i = 0; i &lt; 2; ++i) {
+        roster[i]-&gt;print();
+    }
+    for (int i = 0; i &lt; 2; ++i) {
+        delete roster[i];
+    }
+    return 0;
+}</code></pre></div>
+<pre class="out">Person: constructor for Ada
+Person: constructor for Grace
+Student: constructor, 3 grades allocated
+Person Ada
+Student Grace, first grade 90
+Person: destructor for Ada
+Student: destructor, grades released
+Person: destructor for Grace</pre>
+      <p>Under <code>valgrind --leak-check=full</code>: <em>"total heap usage: 5 allocs, 5 frees&hellip;
+      All heap blocks were freed -- no leaks are possible&hellip; ERROR SUMMARY: 0 errors from 0
+      contexts."</em> That is real tool output.</p>
+      <p><strong>Drop the <code>virtual</code> from <code>~Person</code> and</strong> the line
+      <code>Student: destructor, grades released</code> disappears and the array leaks: valgrind then
+      reports <em>"definitely lost: 12 bytes in 1 blocks"</em>, which is the three <code>int</code>s.
+      Everything else, including the correct
+      <code>Student Grace, first grade 90</code>, is unchanged &mdash; which is what makes the bug so
+      easy to miss.</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>"Person: constructor for Grace" prints <em>before</em> "Student: constructor" &mdash; base
+          first, exactly as in Class 20. Destruction is the mirror image.</li>
+        <li><code>~Student</code> does not say <code>virtual</code>, and does not need to. Adding it would be harmless.</li>
+        <li>A class that owns memory also needs a copy constructor and an assignment operator (the Big
+          Three, Class 15). <code>Student</code> here is only ever created with <code>new</code> and never copied, so this
+          program is safe; a <code>Student</code> that got copied by the compiler-generated copy constructor would
+          double-<code>delete</code> its array.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 24.12</div>
+  <div class="bd">
+    <p>Rapid fire &mdash; one sentence each.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A base class has one virtual method and no data at all. Is a virtual destructor still needed?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes. The base class having nothing to release is irrelevant &mdash; what matters is whether
+        the <em>derived</em> class's destructor gets called, and derived classes you have never seen may
+        own anything at all. That is the whole premise of a polymorphic library: you do not know what
+        the derived classes will be.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Square s(3);</code> and <code>Rectangle r(s);</code>, no <code>new</code> anywhere, non-virtual destructors. Does anything leak?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. Objects with automatic storage duration are destroyed by their own declared type at the
+        end of their scope, so <code>s</code> runs <code>~Square</code> then <code>~Rectangle</code>, and <code>r</code> &mdash; a genuine
+        <code>Rectangle</code> built by slicing &mdash; runs <code>~Rectangle</code>. The virtual-destructor problem is
+        specifically a <code>delete</code>-through-a-base-pointer problem.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Why does making the destructor virtual not require you to also write <code>virtual</code> on <code>~Derived</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because <code>virtual</code> is inherited (Rule 1 of &sect;5). Destructors are the one family of
+        functions where the derived version has a different <em>name</em> from the base version, yet
+        the language still treats <code>~Derived</code> as overriding <code>~Base</code> for dispatch purposes. Once
+        <code>~Base</code> is virtual, every destructor below it is virtual, and <code>delete</code> on any base pointer in
+        the tree finds the right one.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 24</span></div>
+  <div class="bd">
+    <p>Problem 1 is the extension the course notes pose for this lecture (the fourth sum). Problems 2, 3
+    and 4 are adapted from the polymorphism questions on this professor's finals &mdash; a version of
+    that question has appeared as the <strong>last problem of every final exam</strong> in the corpus,
+    so treat these as the real thing. Problems 5 and 6 were written for these notes.</p>
+    <p>The exam versions of Problems 2 and 3 make one of the base-class methods <em>pure virtual</em>
+    (<code>= 0</code>), which makes some of the derived classes abstract and turns one line of the answer
+    into <code>ERROR</code>. Abstract base classes are Class 25; the versions here give every base method a body,
+    so every class can be instantiated and the only question is <em>which override wins</em>. That is
+    the part you must be able to do first.</p>
+    <p>Output-prediction parts carry <strong>no partial credit</strong> on this professor's exams.
+    Commit to an exact answer, including how <code>cout</code> formats a <code>double</code>, before you open anything.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; The fourth sum <span class="muted small">(from the course notes)</span></h3>
+
+<p>The notes ask: <em>"What would happen if we wrote a new derived class to implement the sum
+S<sub>4</sub> = x<sub>0</sub><sup>4</sup> + &hellip; + x<sub>n-1</sub><sup>4</sup>?"</em> Answer it
+concretely. Write <code>SumQuad</code>, add a <code>print()</code>-and-<code>sum()</code> library function you are not allowed to
+modify, and explain in two sentences why the library needs no recompilation. Give the output for
+<code>x</code> = {-1, 0, 1, 2}.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> This is the exercise from &sect;4; the code and output are in Quick Check
+  24.6. The part worth writing out here is the explanation, because that is what an exam would ask for
+  in prose or, more likely, test by giving you a fifth class and asking for the output.</p>
+  <p><strong>Why the library needs no change.</strong> <code>library_func</code> names only <code>SumBase</code>, and the only
+  method whose behavior varies &mdash; <code>sum()</code> &mdash; is virtual there. The compiler assigned that
+  method a fixed vtable slot when it compiled <code>SumBase</code>, and it compiled the call in <code>library_func</code> as
+  "read that slot from whatever object arrives". <code>SumQuad</code> gets its own vtable when <em>it</em> is
+  compiled, with its own <code>sum</code> in that same slot. Nothing the library was compiled against changed, so
+  nothing the library contains has to be rebuilt.</p>
+<pre class="out">-1 0 1 2 
+sum = 2
+-1 0 1 2 
+sum = 6
+-1 0 1 2 
+sum = 18
+through a pointer: sum = 18</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The professor's summary of the workflow: users are told the public part of <code>SumBase</code>; the manual
+      states that <code>sum()</code> is virtual; users write derived classes and call the library; it works.</li>
+    <li>Had you also wanted a custom <code>print()</code>, you would be out of luck &mdash; <code>print()</code> is not
+      virtual, deliberately (&sect;5, Rule 5). Which methods a library makes virtual <em>is</em> its
+      public design.</li>
+    <li>An exam version of this question would hand you the four classes and ask only for the printed
+      numbers. Practise getting 18 right: -1 to the fourth power is +1.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Polymorphism trace over a two-level tree <span class="muted small">(from the Fall 2023 Final, adapted)</span></h3>
+
+<p>Consider the following program. What output does it print for each of the five calls? If a line
+would cause a compile-time or run-time error, write ERROR.</p>
+
+<div class="codewrap"><div class="cap">prac_trace_T.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class T {
+public:
+    virtual ~T() { }
+    virtual string name() const { return "T"; }
+    virtual int x() const { return 0; }
+    void print() const { cout &lt;&lt; name() &lt;&lt; ": " &lt;&lt; x() &lt;&lt; endl; }
+};
+
+class A : public T {
+public:
+    string name() const { return "A"; }
+};
+
+class B : public T {
+public:
+    int x() const { return 1; }
+};
+
+class C : public A {
+public:
+    int x() const { return 2; }
+};
+
+class D : public B {
+public:
+    string name() const { return "D"; }
+};
+
+class E : public D {
+public:
+    string name() const { return "E"; }
+};
+
+void poly_lib(T *p) { p-&gt;print(); }
+
+int main() {
+    A a;
+    B b;
+    C c;
+    D d;
+    E e;
+    poly_lib(&amp;a);        // output for this line: ______________
+    poly_lib(&amp;b);        // output for this line: ______________
+    poly_lib(&amp;c);        // output for this line: ______________
+    poly_lib(&amp;d);        // output for this line: ______________
+    poly_lib(&amp;e);        // output for this line: ______________
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> <code>print()</code> is <em>not</em> virtual, but that does not matter: it is a member
+  of <code>T</code> and nobody overrides it, so <code>T::print</code> always runs. What matters is that inside it, <code>name()</code>
+  and <code>x()</code> are virtual calls on <code>this</code>, dispatched from the object's actual class. So for each object,
+  answer two independent questions: walking up from its own class, where is the first <code>name()</code>, and
+  where is the first <code>x()</code>?</p>
+  <table class="trace">
+    <tr><th>Object</th><th>Chain upward</th><th><code>name()</code> found in</th><th><code>x()</code> found in</th><th>Prints</th></tr>
+    <tr><td><code>a</code></td><td>A &rarr; T</td><td><code>A</code> &rarr; "A"</td><td><code>T</code> &rarr; 0</td><td><code>A: 0</code></td></tr>
+    <tr><td><code>b</code></td><td>B &rarr; T</td><td><code>T</code> &rarr; "T"</td><td><code>B</code> &rarr; 1</td><td><code>T: 1</code></td></tr>
+    <tr><td><code>c</code></td><td>C &rarr; A &rarr; T</td><td><code>A</code> &rarr; "A"</td><td><code>C</code> &rarr; 2</td><td><code>A: 2</code></td></tr>
+    <tr><td><code>d</code></td><td>D &rarr; B &rarr; T</td><td><code>D</code> &rarr; "D"</td><td><code>B</code> &rarr; 1</td><td><code>D: 1</code></td></tr>
+    <tr><td><code>e</code></td><td>E &rarr; D &rarr; B &rarr; T</td><td><code>E</code> &rarr; "E"</td><td><code>B</code> &rarr; 1</td><td><code>E: 1</code></td></tr>
+  </table>
+<pre class="out">A: 0
+T: 1
+A: 2
+D: 1
+E: 1</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The two virtual functions are dispatched <strong>independently</strong>. <code>c</code> prints a name from
+      <code>A</code> and a number from <code>C</code> &mdash; there is no single "version of the class" that wins; each slot
+      is resolved on its own.</li>
+    <li><code>e</code> inherits <code>x()</code> from two levels up, through a class (<code>D</code>) that overrode only <code>name()</code>. This
+      is the case students get wrong most often.</li>
+    <li>None of the derived classes writes <code>virtual</code> and none writes <code>override</code>, yet every override is
+      dynamically dispatched, because <code>T</code> declared them virtual (Rule 1).</li>
+    <li><strong>On the real exam</strong> <code>T::x()</code> is written <code>virtual int x() = 0;</code> &mdash;
+      pure virtual. Then <code>A</code>, which never overrides <code>x()</code>, is an <em>abstract</em> class, the
+      declaration <code>A a;</code> does not compile, and the first answer is <code>ERROR</code> while the other four are
+      unchanged. That is Class 25's material; the rubric's published answers for the original are
+      <code>ERROR / T: 1 / A: 2 / D: 1 / E: 1</code>.</li>
+    <li>The exam's printed <code>main</code> calls <code>Poly_lib(&amp;a);</code> with a capital P and ends with
+      <code>Return 0 ;</code>. Neither compiles. Read exam code for intent, and write the answer the
+      question wants.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; The same question with shape names <span class="muted small">(from the Summer 2025 Final, adapted)</span></h3>
+
+<p>Same instructions. What does each of the five calls print?</p>
+
+<div class="codewrap"><div class="cap">prac_trace_shape.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Shape {
+public:
+    virtual ~Shape() { }
+    virtual string type() const { return "Shape"; }
+    virtual double area() const { return 0.0; }
+    void display() const { cout &lt;&lt; type() &lt;&lt; ": " &lt;&lt; area() &lt;&lt; endl; }
+};
+
+class Rectangle : public Shape {
+public:
+    double area() const { return 4.0; }
+};
+
+class Circle : public Shape {
+public:
+    string type() const { return "Circle"; }
+    double area() const { return 3.14; }
+};
+
+class Square : public Rectangle {
+public:
+    string type() const { return "Square"; }
+};
+
+class Triangle : public Circle {
+public:
+    string type() const { return "Triangle"; }
+};
+
+class Polygon : public Rectangle {
+public:
+    string type() const { return "Polygon"; }
+    double area() const { return 5.5; }
+};
+
+void shape_test(Shape *p) { p-&gt;display(); }
+
+int main() {
+    Rectangle r;
+    Circle c;
+    Square s;
+    Triangle t;
+    Polygon p;
+    shape_test(&amp;r);      // output for this line: ______________
+    shape_test(&amp;c);      // output for this line: ______________
+    shape_test(&amp;s);      // output for this line: ______________
+    shape_test(&amp;t);      // output for this line: ______________
+    shape_test(&amp;p);      // output for this line: ______________
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Identical machinery to Problem 2, with one extra trap: the values are
+  <code>double</code>s, and <code>cout</code> drops trailing zeros. <code>4.0</code> prints as <code>4</code>, not <code>4.0</code>. On a
+  no-partial-credit question that single character is the difference between 3 points and 0.</p>
+  <table class="trace">
+    <tr><th>Object</th><th><code>type()</code> from</th><th><code>area()</code> from</th><th>Prints</th></tr>
+    <tr><td><code>r</code> (Rectangle)</td><td><code>Shape</code> &rarr; "Shape"</td><td><code>Rectangle</code> &rarr; 4.0</td><td><code>Shape: 4</code></td></tr>
+    <tr><td><code>c</code> (Circle)</td><td><code>Circle</code></td><td><code>Circle</code> &rarr; 3.14</td><td><code>Circle: 3.14</code></td></tr>
+    <tr><td><code>s</code> (Square)</td><td><code>Square</code></td><td><code>Rectangle</code> &rarr; 4.0</td><td><code>Square: 4</code></td></tr>
+    <tr><td><code>t</code> (Triangle)</td><td><code>Triangle</code></td><td><code>Circle</code> &rarr; 3.14</td><td><code>Triangle: 3.14</code></td></tr>
+    <tr><td><code>p</code> (Polygon)</td><td><code>Polygon</code></td><td><code>Polygon</code> &rarr; 5.5</td><td><code>Polygon: 5.5</code></td></tr>
+  </table>
+<pre class="out">Shape: 4
+Circle: 3.14
+Square: 4
+Triangle: 3.14
+Polygon: 5.5</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>Square</code> is the instructive one: it overrides <code>type()</code> only, so its area comes from <code>Rectangle</code>
+      &mdash; two levels of the tree contributing to one line of output.</li>
+    <li><code>display()</code> is a non-virtual method in the base that calls two virtual ones. That shape &mdash;
+      "the base class writes the algorithm, the derived classes supply the steps" &mdash; is the single
+      most common polymorphic design in real code, and it is what every one of these exam questions is
+      testing.</li>
+    <li><strong>On the real exam</strong>, <code>type()</code> and <code>area()</code> are both pure virtual in <code>Shape</code>, so
+      <code>Rectangle</code> (which never overrides <code>type()</code>) is abstract, <code>Rectangle r;</code> fails, and the first
+      answer is <code>ERROR</code>; the other four are exactly as above. The published rubric answers are
+      <code>ERROR / Circle: 3.14 / Square: 4 / Triangle: 3.14 / Polygon: 5.5</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; <code>Cylinder</code> inheriting <code>Circle</code>, used polymorphically <span class="muted small">(from the Summer 2024 Final, adapted)</span></h3>
+
+<p>Given this <code>Circle</code> class:</p>
+
+<pre><code class="language-cpp">class Circle {
+public:
+    Circle() {
+        radius = 1.0;
+        cout &lt;&lt; "Circle: default constructor" &lt;&lt; endl;
+    }
+    Circle(double r) {
+        radius = r;
+        cout &lt;&lt; "Circle: non-default constructor" &lt;&lt; endl;
+    }
+    virtual ~Circle() {
+        cout &lt;&lt; "Circle: destructor" &lt;&lt; endl;
+    }
+    virtual void print() const {
+        cout &lt;&lt; "Circle: radius = " &lt;&lt; radius &lt;&lt; endl;
+    }
+protected:
+    double radius;
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Implement a <code>Cylinder</code> class that inherits from <code>Circle</code>, adds a <code>height</code> and a dynamically allocated <code>string *label</code>, has a default constructor and a three-argument constructor (radius, height, label), a destructor, and an overriding <code>print()</code>. Every special member announces itself as its last instruction.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> The exam rubric pays points for the title line alone, so get
+    <code>class Cylinder : public Circle {</code> and the base initializer <code>: Circle(r)</code>
+    right first. <code>label</code> is owned memory, so the destructor must <code>delete</code> it. <code>print()</code> matches the base
+    signature exactly &mdash; <code>void print() const</code> &mdash; or it will hide instead of
+    override.</p>
+<div class="codewrap"><div class="cap">prac_cylinder.cpp</div><pre><code class="language-cpp">class Cylinder : public Circle {
+public:
+    Cylinder() : Circle() {
+        height = 1.0;
+        label = new string("unnamed");
+        cout &lt;&lt; "Cylinder: default constructor" &lt;&lt; endl;
+    }
+    Cylinder(double r, double h, const string &amp;s) : Circle(r) {
+        height = h;
+        label = new string(s);
+        cout &lt;&lt; "Cylinder: non-default constructor" &lt;&lt; endl;
+    }
+    ~Cylinder() {
+        delete label;
+        cout &lt;&lt; "Cylinder: destructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; "Cylinder " &lt;&lt; *label &lt;&lt; ": radius = " &lt;&lt; radius
+             &lt;&lt; ", height = " &lt;&lt; height &lt;&lt; endl;
+    }
+private:
+    double height;
+    string *label;
+};</code></pre></div>
+    <p><code>radius</code> is reachable because it is <code>protected</code> in <code>Circle</code>. <code>height</code> and <code>label</code> are <code>private</code>
+    here because no further derived class needs them.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Give the exact output of this <code>main</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int main() {
+    Circle *p = new Cylinder(3, 5, "tank");
+    p-&gt;print();
+    delete p;
+
+    Circle c(2);
+    c.print();
+    return 0;
+}</code></pre>
+<pre class="out">Circle: non-default constructor
+Cylinder: non-default constructor
+Cylinder tank: radius = 3, height = 5
+Cylinder: destructor
+Circle: destructor
+Circle: non-default constructor
+Circle: radius = 2
+Circle: destructor</pre>
+    <table class="trace">
+      <tr><th>Statement</th><th>Lines produced</th><th>Why</th></tr>
+      <tr><td><code>new Cylinder(3, 5, "tank")</code></td><td>Circle then Cylinder constructor</td><td>Base first, always (Class 20).</td></tr>
+      <tr><td><code>p-&gt;print()</code></td><td>the Cylinder line</td><td><code>print()</code> is virtual, so the object decides.</td></tr>
+      <tr><td><code>delete p</code></td><td>Cylinder then Circle destructor</td><td><code>~Circle</code> is virtual, so <code>delete</code> finds <code>~Cylinder</code>, which then chains to the base.</td></tr>
+      <tr><td><code>Circle c(2); c.print();</code></td><td>constructor, radius line, destructor at the end of <code>main</code></td><td>An ordinary <code>Circle</code>; <code>c</code> is destroyed when <code>main</code> returns.</td></tr>
+    </table>
+    <p>Verified leak-free: <code>valgrind --leak-check=full</code> reports <em>"4 allocs, 4 frees&hellip;
+    All heap blocks were freed -- no leaks are possible&hellip; ERROR SUMMARY: 0 errors"</em>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Now remove the word <code>virtual</code> from <code>~Circle</code> and rerun. What changes?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>The line <code>Cylinder: destructor</code> vanishes:</p>
+<pre class="out">Circle: non-default constructor
+Cylinder: non-default constructor
+Cylinder tank: radius = 3, height = 5
+Circle: destructor
+Circle: non-default constructor
+Circle: radius = 2
+Circle: destructor</pre>
+    <p><code>print()</code> is still virtual, so the object still prints as a <code>Cylinder</code> &mdash; the polymorphism
+    that is easy to see keeps working, which is exactly why this bug hides. But <code>delete p</code> now binds
+    statically to <code>~Circle</code>, <code>delete label</code> never runs, and valgrind reports
+    <em>"definitely lost: 32 bytes in 1 blocks"</em> &mdash; the <code>string</code> object that <code>label</code> pointed
+    at. g++ warns as well:
+    <em>"deleting object of polymorphic class type 'Circle' which has non-virtual destructor might cause
+    undefined behavior [-Wdelete-non-virtual-dtor]"</em>. Both are real tool output.</p>
+    <p><strong>Things to notice.</strong> On the finals, this class of question is graded roughly one
+    point per line of output, so a missing destructor line costs the same as a missing constructor line.
+    Count destructor lines deliberately: one per object <em>per class in its chain</em>, in reverse
+    order &mdash; unless a non-virtual destructor has silently cut the chain short.</p>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; Why does the library print zero? <span class="muted small">(added)</span></h3>
+
+<p>A colleague reports that their new class works when they test it directly but returns 0 through the
+library. Here is their code. Find the bug, say exactly what the program prints, and give the one-line
+fix that makes the compiler catch this class of mistake in future.</p>
+
+<pre><code class="language-cpp">class Meter {
+public:
+    virtual double reading() const { return 0.0; }
+    void report() const { cout &lt;&lt; "reading = " &lt;&lt; reading() &lt;&lt; endl; }
+    virtual ~Meter() { }
+};
+
+class GasMeter : public Meter {
+public:
+    double reading() { return 42.5; }
+};
+
+int main() {
+    GasMeter g;
+    cout &lt;&lt; g.reading() &lt;&lt; endl;
+    Meter *p = &amp;g;
+    cout &lt;&lt; p-&gt;reading() &lt;&lt; endl;
+    p-&gt;report();
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Compare the two declarations character by character. Base:
+  <code>double reading() const</code>. Derived: <code>double reading()</code>. The <code>const</code> is missing, so
+  these are two different signatures and <code>GasMeter::reading</code> is <em>not</em> an override &mdash; it is a
+  new method that hides the inherited one for calls made on a <code>GasMeter</code>.</p>
+<pre class="out">42.5
+0
+reading = 0</pre>
+  <p>The first line goes through the declared type <code>GasMeter</code>, finds the hiding method, and prints 42.5.
+  The second and third go through <code>Meter</code>, where the only <code>reading</code> is <code>Meter::reading</code> &mdash; virtual,
+  dispatched dynamically, and never overridden by anybody, so it dispatches to itself.</p>
+  <p><strong>The fix</strong> is to restore the <code>const</code> and to say <code>override</code> so the compiler checks:</p>
+<pre><code class="language-cpp">class GasMeter : public Meter {
+public:
+    double reading() const override { return 42.5; }
+};</code></pre>
+  <p>with which all three lines print 42.5. Had <code>override</code> been there from the start, the original code
+  would not have compiled at all:</p>
+<pre class="err">meter.cpp:14:12: error: 'double GasMeter::reading()' marked 'override', but does not override
+   14 |     double reading() override { return 42.5; }
+      |            ^~~~~~~</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>g++ with <code>-Wall</code> does emit <em>"was hidden [-Woverloaded-virtual=]"</em> here. Warnings are not
+      optional reading.</li>
+    <li>The three signature elements that must match to override: <strong>name, parameter list,
+      <code>const</code></strong>. Return type must match too (with a narrow exception for covariant pointer/reference
+      returns that this course does not use).</li>
+    <li>The reason the direct call "works" is the reason this bug reaches production: the author's own
+      test used the derived type, which is the one case that behaves.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; A full trace: construction, dispatch, qualification, destruction <span class="muted small">(added)</span></h3>
+
+<p>Give the exact output, line by line. There are ten lines.</p>
+
+<div class="codewrap"><div class="cap">prac_vehicle.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Vehicle {
+public:
+    Vehicle() {
+        cout &lt;&lt; "Vehicle: constructor" &lt;&lt; endl;
+        describe();
+    }
+    virtual ~Vehicle() {
+        cout &lt;&lt; "Vehicle: destructor" &lt;&lt; endl;
+    }
+    virtual void describe() const { cout &lt;&lt; "Vehicle: I am a vehicle" &lt;&lt; endl; }
+    void report() const { describe(); }
+};
+
+class Car : public Vehicle {
+public:
+    Car() {
+        cout &lt;&lt; "Car: constructor" &lt;&lt; endl;
+    }
+    ~Car() {
+        cout &lt;&lt; "Car: destructor" &lt;&lt; endl;
+    }
+    void describe() const { cout &lt;&lt; "Car: I am a car" &lt;&lt; endl; }
+};
+
+int main() {
+    Vehicle *p = new Car;
+    p-&gt;report();
+    p-&gt;Vehicle::describe();
+    delete p;
+
+    Vehicle v;
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Four separate rules collide in eight statements, so take them one at a time:
+  base constructor first; a virtual call inside a base constructor runs the <em>base</em> version; a
+  non-virtual method calling a virtual one dispatches dynamically; a qualified call does not; a virtual
+  destructor runs the whole chain.</p>
+  <table class="trace">
+    <tr><th>Statement</th><th>Output</th><th>Rule</th></tr>
+    <tr><td rowspan="3"><code>new Car</code></td><td><code>Vehicle: constructor</code></td><td>Base constructor runs first (Class 20).</td></tr>
+    <tr><td><code>Vehicle: I am a vehicle</code></td><td>Virtual call from a base constructor runs the <strong>base</strong> version &mdash; the <code>Car</code> part does not exist yet (&sect;7).</td></tr>
+    <tr><td><code>Car: constructor</code></td><td>Then the derived constructor body.</td></tr>
+    <tr><td><code>p-&gt;report()</code></td><td><code>Car: I am a car</code></td><td><code>report()</code> is non-virtual and lives in <code>Vehicle</code>; the <code>describe()</code> inside it is virtual and the object is a <code>Car</code>.</td></tr>
+    <tr><td><code>p-&gt;Vehicle::describe()</code></td><td><code>Vehicle: I am a vehicle</code></td><td>A qualified call is statically bound &mdash; dynamic binding switched off (&sect;5, Rule 3).</td></tr>
+    <tr><td rowspan="2"><code>delete p</code></td><td><code>Car: destructor</code></td><td><code>~Vehicle</code> is virtual, so <code>delete</code> finds <code>~Car</code> first.</td></tr>
+    <tr><td><code>Vehicle: destructor</code></td><td>Destructors always chain to the base.</td></tr>
+    <tr><td rowspan="3"><code>Vehicle v;</code></td><td><code>Vehicle: constructor</code></td><td>An ordinary <code>Vehicle</code>.</td></tr>
+    <tr><td><code>Vehicle: I am a vehicle</code></td><td>Its constructor calls <code>describe()</code>; the object really is a <code>Vehicle</code>, so this one is not even surprising.</td></tr>
+    <tr><td><code>Vehicle: destructor</code></td><td><code>v</code> is destroyed at the end of <code>main</code>.</td></tr>
+  </table>
+<pre class="out">Vehicle: constructor
+Vehicle: I am a vehicle
+Car: constructor
+Car: I am a car
+Vehicle: I am a vehicle
+Car: destructor
+Vehicle: destructor
+Vehicle: constructor
+Vehicle: I am a vehicle
+Vehicle: destructor</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The string <code>Vehicle: I am a vehicle</code> appears three times, produced by three different
+      mechanisms: a constructor-time call that could not dispatch, an explicit qualification that chose
+      not to, and an ordinary call on an object that really is a <code>Vehicle</code>. Being able to say which is
+      which is the whole of &sect;5 and &sect;7.</li>
+    <li>If <code>~Vehicle</code> were not virtual, <code>Car: destructor</code> would disappear and the trace would
+      be nine lines. Roughly one point per line on this professor's finals.</li>
+    <li><code>Car</code> writes neither <code>virtual</code> nor <code>override</code> on <code>describe()</code>. It is still an override, because
+      the signature matches exactly, including <code>const</code>. Change <code>void describe() const</code> to
+      <code>void describe()</code> in <code>Car</code> and lines 4 and 5 both become
+      <code>Vehicle: I am a vehicle</code>.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li><strong>Polymorphism</strong> is one base pointer or reference behaving correctly for many
+        derived types. It lives in the pointer or reference &mdash; pass by value and you slice the
+        object and lose it.</li>
+      <li><strong>Static (early) binding</strong> is the default: the compiler picks the function from
+        the <em>declared</em> type, once, at compile time. <strong>Dynamic (late) binding</strong> picks
+        it from the <em>actual object</em>, at run time, and you get it only by writing <code>virtual</code>.
+        Without <code>virtual</code> the pointer decides; with <code>virtual</code> the object decides.</li>
+      <li>Tag the method <code>virtual</code> in the <strong>base</strong> class. It is then virtual in every
+        derived class automatically, and dispatch runs the version in the object's own class or the
+        nearest ancestor that supplied one.</li>
+      <li>A library function written against a base reference works for derived classes that did not
+        exist when it was compiled. That is the entire point of the machinery.</li>
+      <li>An override must match the base <strong>name, parameter list and <code>const</code></strong> exactly.
+        Miss one and you get <em>hiding</em>, which compiles and silently misbehaves. Write
+        <code>override</code> (C++11) and the compiler turns it into an error.</li>
+      <li><code>Base::method()</code> is a statically bound call that deliberately bypasses the override &mdash;
+        the way a derived version reuses the base behavior.</li>
+      <li>Data members, <code>static</code> methods and constructors cannot be virtual. Destructors can, operators
+        can, <code>const</code> methods can, and any access level can.</li>
+      <li>A class with virtual functions gets a <strong>vtable</strong>, built at compile time; each
+        object carries a hidden <strong>vptr</strong> to it. Cost: one pointer per object (measured
+        here: 16 bytes becomes 24) and one indirection per call.</li>
+      <li><strong>Never call a virtual function from a constructor or destructor.</strong> During base
+        construction the object's dynamic type is the base class, so the base version runs &mdash;
+        well-defined, silent, and almost never what you meant.</li>
+      <li><strong>A class with any virtual function needs a <code>virtual</code> destructor.</strong> Without one,
+        <code>delete</code> through a base pointer runs only the base destructor: the derived destructor never
+        runs and everything it owned leaks. Verified here with <code>valgrind</code>: 8,000 bytes definitely lost
+        before, no leaks possible after.</li>
+    </ul>
+    <p><strong>Coming up in Class 25:</strong> what happens when the base class has nothing sensible to
+    put in a method body at all &mdash; pure virtual functions, abstract base classes that cannot be
+    instantiated, using an abstract class as an interface, and then the first half of templates.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 22 &middot; Exam 2 Review</div><div class="pending">posts Tue Nov 17</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 25 &middot; Abstract &amp; Templates</div><div class="pending">posts Tue Dec 1</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

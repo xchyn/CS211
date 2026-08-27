@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 13 — Constructors | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 13 &middot; Constructors</span><span class="sep">|</span><span class="where">Thu Oct 15</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 13 &middot; CSCI 211</div>
+  <h1>Constructors</h1>
+  <p class="sub">Classes 9 and 10 built a type. Today we give it a birth certificate &mdash; the rule the compiler follows every single time an object of your class comes into existence.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain why an object built from a class with no constructor contains garbage, and name the two features that make a member function a constructor.</li>
+      <li>Write a <strong>default constructor</strong> and say why a class can have at most one of them.</li>
+      <li>Write several <strong>non-default constructors</strong> for one class and predict which one the compiler picks for a given declaration.</li>
+      <li>Explain what a one-argument constructor does to the type system, and use <code>explicit</code> to shut that behavior off.</li>
+      <li>State &mdash; and defend on an exam &mdash; the rule that writing <em>any</em> constructor suppresses the compiler-generated default constructor.</li>
+      <li>Decide whether a given class can legally appear in an array declaration or in a <code>new[]</code> expression.</li>
+      <li>Make a constructor <code>private</code> and describe what that buys you.</li>
+      <li>Write a <strong>member initializer list</strong>, explain the order in which members are actually initialized, and name the two kinds of member that <em>cannot</em> be set any other way.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Where Class 10 left off: an object full of garbage</a></li>
+    <li><a href="#s2">The default constructor</a></li>
+    <li><a href="#s3">Non-default constructors and which one the compiler picks</a></li>
+    <li><a href="#s4">Write one constructor and you lose the free one</a></li>
+    <li><a href="#s5">Arrays of objects, <code>new</code> and <code>delete</code></a></li>
+    <li><a href="#s6">Private constructors</a></li>
+    <li><a href="#s7">Member initializer lists</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Where Class 10 left off: an object full of garbage</h2>
+
+<p>In Classes 9 and 10 you built the class <code>Point1</code>: two private <code>double</code>
+members, a <code>set</code> method to fill them in, two accessors, and a <code>print</code>. It was
+a real type. You could declare objects of it, call methods on it, and pass it to functions. And
+both of those classes ended with the same nagging footnote: <em>the data members hold nothing
+meaningful until you call <code>set</code>.</em></p>
+
+<p>Today that footnote gets fixed. But first, look straight at the problem, because a lot of
+students never quite believe it until they see it print.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a brand-new object, straight out of the box</span></div>
+  <div class="bd">
+    <p>This is exactly the <code>Point1</code> class from Class 10, with a <code>main</code> that
+    creates one object and immediately asks it what it holds. No <code>set</code> call anywhere.
+    Decide what you think it prints before you open the toggle.</p>
+<div class="codewrap"><div class="cap">point1_uninit.cpp</div><pre><code class="language-cpp">// point1_uninit.cpp -- Class 10's Point1, with no constructor at all
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+int main() {
+    Point1 dpt;
+    dpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; dpt.getx() &lt;&lt; " " &lt;&lt; dpt.gety() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+    <p>The compiler complains before you even get to run it &mdash; and this is a
+    <em>warning</em>, not an error, so the program is built anyway:</p>
+<pre class="err">point1_uninit.cpp: In function 'int main()':
+point1_uninit.cpp:22:14: warning: 'dpt' may be used uninitialized [-Wmaybe-uninitialized]
+   22 |     dpt.print();
+      |     ~~~~~~~~~^~
+point1_uninit.cpp:21:12: note: 'dpt' declared here
+   21 |     Point1 dpt;
+      |            ^~~</pre>
+<pre class="out">print x,y 7.87263e-85 2.11653e+214
+get: 7.87263e-85 2.11653e+214</pre>
+    <p>Those two numbers are whatever bit patterns happened to be sitting in that region of
+    memory. They are <strong>machine-dependent</strong> &mdash; the values printed above are
+    representative of one run on one machine, and yours will very likely differ. That is the whole
+    problem: an answer you cannot predict is an answer you cannot test.</p>
+    <p>The professor's summary of this slide is worth quoting: <em>"The compiler constructed the
+    object <code>dpt</code>, but the values of <code>x</code> and <code>y</code> are uninitialized.
+    The compiler does not automatically initialize the values of the data members. Hence this is a
+    weak point in the design of the class <code>Point1</code>."</em></p>
+    <p>Note carefully what did <em>not</em> go wrong. The object exists. It has the right size. You
+    can call its methods. The compiler built it. It simply built it without putting anything
+    sensible inside.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>So the compiler <em>does</em> construct objects for you, even when you never asked it to. It has
+to &mdash; <code>Point1 dpt;</code> has to mean something. What it uses is a function you never
+wrote.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; constructor</span></div>
+  <div class="bd">
+    <p>A <strong>constructor</strong> is a special member function that the compiler calls
+    automatically, exactly once, at the moment an object of the class is created. Its job is to put
+    the object into a valid initial state.</p>
+    <p>You never call a constructor by name the way you call <code>set</code> or <code>print</code>.
+    You <em>trigger</em> it, by declaring an object, by writing <code>new</code>, or by building an
+    array. The compiler supplies the call.</p>
+    <p>If you write no constructor at all, the compiler generates one for you &mdash; the
+    <strong>implicitly generated default constructor</strong>. That is the one that ran above, and
+    the reason the output was garbage is that it does almost nothing.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.1</div>
+  <div class="bd">
+    <p>If the compiler generates a default constructor for <code>Point1</code> automatically, why
+    are <code>x</code> and <code>y</code> garbage? Consider this class, which has one built-in
+    member and one class-type member and, again, no constructor written by hand:</p>
+<pre><code class="language-cpp">class Mixed {
+public:
+    void print() const {
+        cout &lt;&lt; "count = " &lt;&lt; count
+             &lt;&lt; ", name = [" &lt;&lt; name &lt;&lt; "]"
+             &lt;&lt; ", length of name = " &lt;&lt; name.length() &lt;&lt; endl;
+    }
+private:
+    int count;          // built-in type
+    string name;        // class type
+};</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Predict which of the two members comes out with a sensible value and which does not.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>name</code> is fine; <code>count</code> is garbage. Here is a real run &mdash; the
+        program first scribbles some junk onto the stack so that the leftovers are visible:</p>
+<pre class="out">(scribble wrote 123456789 on the stack)
+count = 1651076199, name = [], length of name = 0</pre>
+        <p>The exact integer is machine-dependent and this one is representative only. The empty
+        string is not: it is guaranteed.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> State the rule the implicitly generated default constructor follows.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The compiler-generated default constructor <strong>default-initializes every data
+        member</strong>, and what that means depends on the member's type:</p>
+        <ul>
+          <li>A member of <strong>class type</strong> gets <em>its own</em> default constructor
+            called. <code>string</code> has one, and it produces the empty string, so
+            <code>name</code> is reliably <code>""</code>.</li>
+          <li>A member of <strong>built-in type</strong> (<code>int</code>, <code>double</code>,
+            <code>char</code>, any pointer) gets <strong>nothing at all</strong>. Its memory is left
+            exactly as it was found.</li>
+        </ul>
+        <p>That is why <code>Point1</code>, whose members are two <code>double</code>s, came out as
+        noise, and why a class made entirely of <code>string</code>s and <code>vector</code>s
+        appears to behave itself even with no constructor. The second case is more dangerous than
+        the first, because it lulls you into thinking the compiler initializes things.</p>
+        <p>The fix is the same in both cases: write your own constructor and take control.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>The default constructor</h2>
+
+<p>To specify explicit rules for constructing an object, you write a constructor. C++ has several
+different kinds; we start with the simplest, the one that takes no arguments.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; default constructor</span></div>
+  <div class="bd">
+    <p>A <strong>constructor</strong> is recognized by the compiler by two features, and both must
+    be present:</p>
+    <ol>
+      <li>Its <strong>name is the same as the name of the class</strong>.</li>
+      <li>It has <strong>no return type</strong> &mdash; not <code>void</code>, not
+        <code>int</code>, nothing. The return type is not merely optional; writing one turns the
+        function into an ordinary method that happens to share the class's name.</li>
+    </ol>
+    <p>A <strong>default constructor</strong> is a constructor that additionally takes <strong>no
+    input arguments</strong>. It is the constructor the compiler uses for a declaration like
+    <code>Point3 dpt;</code>.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; Point3: Point1 plus a default constructor</span></div>
+  <div class="bd">
+    <p>The class below is the professor's <code>Point3</code>. It is <code>Point1</code>,
+    character for character, with four lines added at the top. Compare the output with the one in
+    &sect;1.</p>
+<div class="codewrap"><div class="cap">point3.cpp</div><pre><code class="language-cpp">// point3.cpp -- Point1 plus a default constructor
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point3 {
+public:
+    Point3() {              // default constructor
+        x = 1.1;
+        y = 2.4;
+    }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+int main() {
+    Point3 dpt;
+    dpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; dpt.getx() &lt;&lt; " " &lt;&lt; dpt.gety() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.1 2.4
+get: 1.1 2.4</pre>
+    <p>Same on every machine, every run, forever. That is the difference a constructor makes.</p>
+    <p>Three things to see in those four lines:</p>
+    <ul>
+      <li><code>Point3()</code> &mdash; the name matches the class exactly, including
+        capitalization, and there is no <code>void</code> in front of it. Those two facts are what
+        tell the compiler this is a constructor.</li>
+      <li>The empty parentheses make it the <em>default</em> constructor.</li>
+      <li>Inside the body you assign to the data members by their plain names, exactly as you would
+        inside <code>set</code>. A constructor is a member function, so it has full access to the
+        private section.</li>
+    </ul>
+    <p>The professor adds an aside worth repeating: <em>"This is just a simple demo example. In
+    real life applications it would be more usual to initialize <code>x</code> and <code>y</code>
+    to zero."</em> The values 1.1 and 2.4 are chosen only so you can tell at a glance that the
+    constructor ran.</p>
+    <p>Nothing in <code>main</code> changed. There is no call to <code>Point3()</code> anywhere in
+    the program you wrote. The compiler inserted it when it saw <code>Point3 dpt;</code>.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; there is only one</span></div>
+  <div class="bd">
+    <p>Because the default constructor has no input arguments, it is <strong>unique</strong>. Two
+    functions can only be overloaded if their parameter lists differ, and "no parameters" is a
+    single possibility. So a class has <strong>at most one default constructor</strong>, and may
+    have <strong>as many non-default constructors as you like</strong>, provided their argument
+    lists differ.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the empty parentheses that build nothing</span></div>
+  <div class="bd">
+    <p>To create an object using the default constructor you write the declaration with
+    <strong>no parentheses at all</strong>:</p>
+<pre><code class="language-cpp">Point3 dpt;       // correct: one object, built by the default constructor
+Point3 dpt();     // WRONG: this declares a FUNCTION</code></pre>
+    <p>The second line is a function declaration &mdash; a function called <code>dpt</code> that
+    takes nothing and returns a <code>Point3</code>. No object is created. The next line you write
+    then fails with a message that looks unrelated to the real mistake:</p>
+<pre class="err">vexing.cpp:13:15: warning: empty parentheses were disambiguated as a function declaration [-Wvexing-parse]
+   13 |     Point3 dpt();      // NOT an object
+      |               ^~
+vexing.cpp:13:15: note: remove parentheses to default-initialize a variable
+vexing.cpp:14:9: error: request for member 'print' in 'dpt', which is of non-class type 'Point3()'
+   14 |     dpt.print();
+      |         ^~~~~</pre>
+    <p>Read <em>"which is of non-class type"</em> as "you thought this was an object; it is not."
+    Modern g++ names the trap for you in the warning; older compilers do not, which is why this
+    puzzle has its own nickname in the C++ community &mdash; the <em>most vexing parse</em>.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.2</div>
+  <div class="bd">
+    <p>For each of these, say whether it is a legal constructor for <code>class Point3</code>, and
+    if not, what it actually is.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>void Point3() { x = 0; y = 0; }</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Not a constructor.</strong> It has a return type, so the compiler treats it as an
+        ordinary member function that happens to be named <code>Point3</code> &mdash; which is
+        itself illegal, because a member function may not have the same name as its class. g++
+        rejects it with <em>"return type specification for constructor invalid"</em>.</p>
+        <p>This is the single most common way students break a constructor. If your constructor
+        "never runs", check for a stray <code>void</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Point3() { x = 0; y = 0; }</code> written in the <code>private:</code> section.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>A perfectly legal constructor</strong> &mdash; it just cannot be used from
+        outside the class, so <code>Point3 dpt;</code> in <code>main</code> will not compile. That
+        is a real and occasionally useful design; we build one in &sect;6.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>point3() { x = 0; y = 0; }</code> (lowercase p).</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Not a constructor.</strong> C++ is case-sensitive, so the name does not match the
+        class. What you have written is an ordinary member function whose return type is missing,
+        and g++ rejects it:</p>
+<pre class="err">qc_c.cpp:5:5: error: ISO C++ forbids declaration of 'point3' with no type [-fpermissive]
+    5 |     point3() { x = 0; y = 0; }
+      |     ^~~~~~
+qc_c.cpp: In member function 'int Point3::point3()':
+qc_c.cpp:5:30: warning: no return statement in function returning non-void [-Wreturn-type]</pre>
+        <p>Read the second message carefully: the compiler is calling it a <em>member function</em>
+        returning <code>int</code>, not a constructor. Whenever g++ starts talking about a return
+        value for something you believe is a constructor, the name is wrong.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> Two constructors in the same class: <code>Point3() { x = 0; y = 0; }</code> and <code>Point3() { x = 1; y = 1; }</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Illegal.</strong> Both are default constructors, both take no arguments, so
+        nothing distinguishes them. g++ says <em>"'Point3::Point3()' cannot be overloaded with
+        'Point3::Point3()'"</em>. This is the Key Idea above, seen from the compiler's side: there
+        is only ever one default constructor.</p>
+        <p>The wrap-up for all four parts: the compiler decides "this is a constructor" using
+        <em>only</em> the name and the absence of a return type. Get either one wrong and you have
+        silently written something else.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; give <code>Point</code> a default constructor</h3>
+
+<p>Take the <code>Point</code> class you have been using since Class 9 and add a default
+constructor that sets both coordinates to zero and announces itself with a line of output, so you
+can see exactly when it runs. Then check that <code>set</code> still works afterwards.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="26" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    // TODO: add a default constructor here.
+    // Remember: same name as the class, no return type, no arguments.
+
+
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; &quot;print x,y &quot; &lt;&lt; x &lt;&lt; &quot; &quot; &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point p;
+    p.print();
+    p.set(3.5, -1.25);
+    p.print();
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    // TODO: add a default constructor here.
+    // Remember: same name as the class, no return type, no arguments.
+
+
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point p;
+    p.print();
+    p.set(3.5, -1.25);
+    p.print();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.3</div>
+  <div class="bd">
+    <p>Write the constructor described above and give the exact output of the finished program.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The constructor's name is <code>Point</code>, it has no return type
+      and no parameters, and it goes in the <code>public</code> section so that <code>main</code>
+      may create objects. The body assigns zero to both members and prints one line. The
+      announcement line is not decoration &mdash; printing from inside a constructor is how you
+      <em>see</em> construction happen, and it is exactly the technique this professor's exams use
+      in their trace questions.</p>
+<div class="codewrap"><div class="cap">ex_point_ctor.cpp</div><pre><code class="language-cpp">// ex_point_ctor.cpp -- give Point1 a default constructor
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    Point() {
+        x = 0.0;
+        y = 0.0;
+        cout &lt;&lt; "Point: default constructor" &lt;&lt; endl;
+    }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point p;
+    p.print();
+    p.set(3.5, -1.25);
+    p.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">Point: default constructor
+print x,y 0 0
+print x,y 3.5 -1.25</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The announcement is the <em>first</em> line of output, before anything
+          <code>main</code> prints. Construction happens at the declaration, not at first use.</li>
+        <li><code>0.0</code> prints as <code>0</code>. Trailing zeros are dropped by default; write
+          your exam answers that way.</li>
+        <li><code>set</code> still exists and still works. A constructor does not replace your
+          mutators &mdash; it guarantees a sensible starting state so that calling them is a choice
+          rather than an obligation.</li>
+        <li>Only one announcement line appears, because only one object is created. If you had
+          written <code>Point p, q;</code> you would see two.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Non-default constructors and which one the compiler picks</h2>
+
+<p>A default constructor gives every object of the class the same starting values, which is rarely
+what you want. Usually the caller knows what the object should hold. So you write a constructor
+that takes arguments.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; non-default constructor</span></div>
+  <div class="bd">
+    <p>A <strong>non-default constructor</strong> is a constructor with one or more input
+    arguments. It is sometimes called a <em>parameterized constructor</em>. Its arguments come from
+    the declaration that triggers it: <code>Point4 pt43(a, b);</code> passes <code>a</code> and
+    <code>b</code> to the two-argument constructor.</p>
+    <p>A class may have many of them, as long as their parameter lists differ &mdash; this is
+    ordinary function overloading, applied to constructors.</p>
+  </div>
+</div>
+
+<p>Here is the professor's <code>Point4</code>: one default constructor and two non-default ones,
+in a single class.</p>
+
+<div class="codewrap"><div class="cap">point4.cpp</div><pre><code class="language-cpp">class Point4 {
+public:
+    Point4()                    { x = 0; y = 0; }
+    Point4(double a)            { x = a; y = a; }
+    Point4(double a, double b)  { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};</code></pre></div>
+
+<p>The dispatch rule is simply the number and types of the arguments you supply:</p>
+
+<table class="trace">
+  <tr><th>Declaration</th><th>Arguments</th><th>Constructor invoked</th></tr>
+  <tr><td><code>Point4 pt40;</code></td><td>none</td><td>the default constructor</td></tr>
+  <tr><td><code>Point4 pt41(a);</code></td><td>one <code>double</code></td><td><code>Point4(double)</code></td></tr>
+  <tr><td><code>Point4 pt43(a, b);</code></td><td>two <code>double</code>s</td><td><code>Point4(double, double)</code></td></tr>
+</table>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; four objects, three constructors</span></div>
+  <div class="bd">
+    <p>This is the professor's driver program. Watch <code>pt42</code> in particular: <code>i</code>
+    is an <code>int</code>, and there is no constructor taking an <code>int</code>. Decide what
+    happens before revealing.</p>
+<div class="codewrap"><div class="cap">point4.cpp</div><pre><code class="language-cpp">int main() {
+    double a = -3.6;
+    double b = 5.4;
+    int i = 4;
+    string str("abcd");
+
+    Point4 pt40;            // no arguments   -&gt; default constructor
+    Point4 pt41(a);         // one double     -&gt; 1-argument constructor
+    Point4 pt42(i);         // one int        -&gt; 1-argument constructor, after int -&gt; double
+    Point4 pt43(a, b);      // two doubles    -&gt; 2-argument constructor
+    // Point4 pt44(str);    // ERROR: no acceptable match for a string
+
+    pt40.print();
+    pt41.print();
+    pt42.print();
+    pt43.print();
+    cout &lt;&lt; "str is still " &lt;&lt; str &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 0 0
+print x,y -3.6 -3.6
+print x,y 4 4
+print x,y -3.6 5.4
+str is still abcd</pre>
+    <table class="trace">
+      <tr><th>Object</th><th>What the compiler does</th></tr>
+      <tr><td><code>pt40</code></td><td>Zero arguments. Exact match on <code>Point4()</code>.</td></tr>
+      <tr><td><code>pt41</code></td><td>One <code>double</code>. Exact match on <code>Point4(double)</code>. Both members get <code>-3.6</code>.</td></tr>
+      <tr><td><code>pt42</code></td><td>One <code>int</code>. <strong>No exact match exists.</strong> The compiler does not give up; it looks for an <em>acceptable</em> match, finds that <code>int</code> converts to <code>double</code> by a standard conversion, and calls <code>Point4(double)</code> with <code>4.0</code>.</td></tr>
+      <tr><td><code>pt43</code></td><td>Two <code>double</code>s. Exact match on <code>Point4(double, double)</code>.</td></tr>
+    </table>
+    <p>The professor's general principle, in his words: <em>"the compiler does not give up just
+    because an exact match is not found. The compiler searches for an acceptable match and uses it,
+    if available. However, if there is no acceptable match, then the compiler generates an
+    error."</em></p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now the case that fails. <code>str</code> is a <code>string</code>, there is no constructor
+taking a <code>string</code>, and there is no conversion from <code>string</code> to
+<code>double</code>. Uncomment <code>Point4 pt44(str);</code> and the build stops:</p>
+
+<pre class="err">point4_str.cpp: In function 'int main()':
+point4_str.cpp:34:20: error: no matching function for call to 'Point4::Point4(std::string&amp;)'
+   34 |     Point4 pt44(str);
+      |                    ^
+point4_str.cpp:10:5: note: candidate: 'Point4::Point4(double, double)'
+point4_str.cpp:10:5: note:   candidate expects 2 arguments, 1 provided
+point4_str.cpp:9:5: note: candidate: 'Point4::Point4(double)'
+point4_str.cpp:9:19: note:   no known conversion for argument 1 from 'std::string' to 'double'
+point4_str.cpp:8:5: note: candidate: 'Point4::Point4()'
+point4_str.cpp:8:5: note:   candidate expects 0 arguments, 1 provided</pre>
+
+<p>That error message is worth reading slowly, because you will meet its shape all semester. The
+first line states what you asked for. Every <code>note: candidate:</code> line after it lists one
+constructor the compiler considered, followed by the reason it was rejected &mdash; wrong number of
+arguments, or no known conversion. <em>The compiler is showing you its work.</em></p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; corrections to the original slide</span></div>
+  <div class="bd">
+    <p>The version of this program printed in the course notes has three small problems, and the
+    listing above fixes all three:</p>
+    <ul>
+      <li>The prose beside the slide says <em>"the object <code>pt44</code> (commented out)"</em>,
+        but in the printed listing <code>Point4 pt44(str);</code> is <strong>not</strong> commented
+        out. As printed the program does not compile at all, so none of the other four objects can
+        be demonstrated. Above, the line is commented out and the failure is shown separately.</li>
+      <li>The listing uses <code>string str("abcd");</code> but includes only
+        <code>&lt;iostream&gt;</code>. It usually builds anyway because <code>&lt;iostream&gt;</code>
+        drags in part of <code>&lt;string&gt;</code>, but that is not guaranteed by the standard.
+        <strong>If you use <code>string</code>, include <code>&lt;string&gt;</code>.</strong></li>
+      <li><code>str</code> is otherwise unused, so <code>-Wall</code> warns about it. The version
+        above prints it, which both silences the warning and makes the point that the string is
+        untouched.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.4</div>
+  <div class="bd">
+    <p>Using the <code>Point4</code> class above, which constructor runs for each declaration, and
+    what do <code>x</code> and <code>y</code> end up holding? Assume <code>char c = 'A';</code> and
+    <code>bool flag = true;</code>.</p>
+<pre><code class="language-cpp">Point4 w(2.5, 2.5);
+Point4 v(7);
+Point4 u(c);
+Point4 t(flag);</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <table class="trace">
+        <tr><th>Declaration</th><th>Constructor</th><th>x</th><th>y</th></tr>
+        <tr><td><code>w(2.5, 2.5)</code></td><td><code>Point4(double, double)</code>, exact match</td><td>2.5</td><td>2.5</td></tr>
+        <tr><td><code>v(7)</code></td><td><code>Point4(double)</code>, after <code>int</code> to <code>double</code></td><td>7</td><td>7</td></tr>
+        <tr><td><code>u(c)</code></td><td><code>Point4(double)</code>, after <code>char</code> to <code>double</code></td><td>65</td><td>65</td></tr>
+        <tr><td><code>t(flag)</code></td><td><code>Point4(double)</code>, after <code>bool</code> to <code>double</code></td><td>1</td><td>1</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> Every one of the bottom three compiles without so much
+      as a warning, because <code>char</code>, <code>bool</code> and <code>int</code> all convert to
+      <code>double</code> by a standard conversion. <code>'A'</code> becomes 65 &mdash; its
+      character code &mdash; and <code>true</code> becomes 1. C++ is being helpful in a way you may
+      not have wanted. That is the subject of the next box.</p>
+    </div></details>
+  </div>
+</div>
+
+<p>The professor's notes describe <code>pt42</code> as "the compiler searching for an acceptable
+match" and stop there. It is worth naming what is actually happening, because it has a second
+consequence that surprises people.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; converting constructor and <code>explicit</code></span></div>
+  <div class="bd">
+    <p>A constructor that can be called with <strong>exactly one argument</strong> also defines an
+    <strong>implicit conversion</strong> from that argument's type to the class type. It is called
+    a <strong>converting constructor</strong>. Anywhere the compiler needs a <code>Point4</code> and
+    is handed a <code>double</code>, it may silently build one.</p>
+    <p>Putting the keyword <code>explicit</code> in front of the constructor switches that off. The
+    constructor can still be called directly, but it will no longer be used behind your back.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a function that takes a Point4, handed a number</span></div>
+  <div class="bd">
+    <p><code>show</code> takes a <code>Point4</code>. Two of these three calls pass it something
+    that is not a <code>Point4</code> at all. Predict what happens.</p>
+<div class="codewrap"><div class="cap">explicit_demo.cpp</div><pre><code class="language-cpp">void show(Point4 p) {          // takes a Point4 BY VALUE
+    p.print();
+}
+
+int main() {
+    Point4 pt(1.0, 2.0);
+    show(pt);                  // obvious: pt is already a Point4
+    show(7.5);                 // surprising: 7.5 becomes Point4(7.5)
+    show(3);                   // even more surprising: int -&gt; double -&gt; Point4
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1 2
+print x,y 7.5 7.5
+print x,y 3 3</pre>
+    <p>All three compile and run. The second and third calls each construct a temporary
+    <code>Point4</code> on the spot, using <code>Point4(double)</code>, and pass it to
+    <code>show</code>. Nothing in the call site tells you a constructor ran.</p>
+    <p>Sometimes that is a pleasant convenience &mdash; it is why you can write
+    <code>string s = "hello";</code> even though <code>"hello"</code> is not a <code>string</code>.
+    Sometimes it hides a genuine bug: if <code>show</code> were <code>deposit(Money)</code> and you
+    passed a raw <code>double</code>, you would want to be told.</p>
+
+</div></details>
+
+    <p>Now add one keyword to that constructor and recompile:</p>
+<pre><code class="language-cpp">class Point4 {
+public:
+    Point4()                            { x = 0; y = 0; }
+    explicit Point4(double a)           { x = a; y = a; }
+    Point4(double a, double b)          { x = a; y = b; }
+    // ... rest unchanged
+};</code></pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">explicit_demo2.cpp: In function 'int main()':
+explicit_demo2.cpp:24:10: error: could not convert '7.5e+0' from 'double' to 'Point4'
+   24 |     show(7.5);
+      |          ^~~
+explicit_demo2.cpp:25:10: error: could not convert '3' from 'int' to 'Point4'
+   25 |     show(3);
+      |          ^</pre>
+    <p><code>show(pt)</code> still compiles; the other two are now errors. And
+    <code>Point4 pt41(a);</code> still works perfectly &mdash; <code>explicit</code> only blocks the
+    <em>implicit, behind-your-back</em> uses, never the direct ones.</p>
+    <p>A good habit: <strong>mark every one-argument constructor <code>explicit</code> unless you
+    genuinely want the conversion.</strong> The professor's notes do not use <code>explicit</code>,
+    and neither do his exams, so you will not be asked to write it &mdash; but you should be able to
+    explain why <code>Point4 pt42(i);</code> compiles, and this is the reason.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; three constructors for one class</h3>
+
+<p>Give <code>Rectangle</code> three constructors: no arguments makes a 1-by-1 unit square, one
+argument <code>s</code> makes an <code>s</code>-by-<code>s</code> square, and two arguments make a
+general rectangle. Then work out what <code>Rectangle d(4);</code> does, with <code>4</code> an
+<code>int</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    // TODO: three constructors -- 0, 1 and 2 arguments
+
+
+    double area() const { return width * height; }
+    void print() const {
+        cout &lt;&lt; &quot;Rectangle &quot; &lt;&lt; width &lt;&lt; &quot; x &quot; &lt;&lt; height
+             &lt;&lt; &quot;, area = &quot; &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double width, height;
+};
+
+int main() {
+    Rectangle a;
+    Rectangle b(3.0);
+    Rectangle c(2.0, 5.0);
+    Rectangle d(4);
+    a.print();
+    b.print();
+    c.print();
+    d.print();
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    // TODO: three constructors -- 0, 1 and 2 arguments
+
+
+    double area() const { return width * height; }
+    void print() const {
+        cout &lt;&lt; "Rectangle " &lt;&lt; width &lt;&lt; " x " &lt;&lt; height
+             &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double width, height;
+};
+
+int main() {
+    Rectangle a;
+    Rectangle b(3.0);
+    Rectangle c(2.0, 5.0);
+    Rectangle d(4);
+    a.print();
+    b.print();
+    c.print();
+    d.print();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.5</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact four lines of output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Three constructors, distinguished only by how many parameters they
+      take. The one-argument version is the interesting one: a square is a rectangle whose width and
+      height are equal, so it assigns <code>s</code> to both. <code>Rectangle d(4);</code> has no
+      exact match &mdash; <code>4</code> is an <code>int</code> &mdash; so <code>int</code> converts
+      to <code>double</code> and the one-argument constructor runs, exactly as
+      <code>Point4 pt42(i)</code> did.</p>
+<div class="codewrap"><div class="cap">ex_rectangle.cpp</div><pre><code class="language-cpp">// ex_rectangle.cpp -- three constructors for one class
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle()                     { width = 1.0; height = 1.0; }   // unit square
+    Rectangle(double s)             { width = s;   height = s;   }   // square of side s
+    Rectangle(double w, double h)   { width = w;   height = h;   }   // general
+    double area() const { return width * height; }
+    void print() const {
+        cout &lt;&lt; "Rectangle " &lt;&lt; width &lt;&lt; " x " &lt;&lt; height
+             &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double width, height;
+};
+
+int main() {
+    Rectangle a;
+    Rectangle b(3.0);
+    Rectangle c(2.0, 5.0);
+    Rectangle d(4);          // int -&gt; double, then the 1-argument constructor
+    a.print();
+    b.print();
+    c.print();
+    d.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">Rectangle 1 x 1, area = 1
+Rectangle 3 x 3, area = 9
+Rectangle 2 x 5, area = 10
+Rectangle 4 x 4, area = 16</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>All three constructors have the same name and no return type. What separates them is the
+          parameter list, and nothing else. Two constructors both taking one <code>double</code>
+          would not compile, no matter how differently you named the parameters.</li>
+        <li><code>area()</code> is <code>const</code> and the constructors are not. A constructor
+          <em>must</em> modify the object &mdash; that is its entire job &mdash; so a constructor is
+          never marked <code>const</code>.</li>
+        <li>Adding these three constructors means <code>Rectangle</code> still has a default
+          constructor, so <code>Rectangle grid[10];</code> is still legal. Take the first one away
+          and it stops being legal &mdash; which is &sect;4 and &sect;5.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Write one constructor and you lose the free one</h2>
+
+<p>This section is one sentence long and it is worth more exam points than anything else on this
+page.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the rule to memorize</span></div>
+  <div class="bd">
+    <p><strong>If you write any constructor for a class &mdash; even a non-default one &mdash; the
+    compiler will not generate a default constructor for you.</strong></p>
+    <p>Put the other way round, in the professor's words: <em>"The compiler automatically generates
+    a default constructor only if we do not write any constructors for the class."</em></p>
+  </div>
+</div>
+
+<p>It is perfectly reasonable to design a class this way. You are not obliged to supply a default
+constructor; all of your constructors may be non-default. The consequence is simply that
+<strong>every object of the class must be created with arguments</strong>. As the notes put it,
+this is a common programming practice and there is nothing wrong with it &mdash; a
+<code>BankAccount</code> with no owner and no balance is arguably a bug waiting to happen, and
+refusing to build one is a defensible design.</p>
+
+<p>What catches people out is that the loss of the default constructor is <em>silent</em> until
+something needs it. Here is <code>Point5</code>, which has exactly one constructor:</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; Point5 has no default constructor</span></div>
+  <div class="bd">
+    <p>The class compiles fine on its own. The question is what happens in <code>main</code>. Note
+    that <code>Point5 pt51(1.1, 2.2);</code> is unquestionably legal &mdash; so if there is an
+    error, exactly which line is it on?</p>
+<div class="codewrap"><div class="cap">point5_err.cpp</div><pre><code class="language-cpp">// point5_err.cpp -- a class with ONLY a non-default constructor
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point5 {
+public:
+    Point5(double a, double b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point5 pt50;              // ERROR: Point5 has no default constructor
+    Point5 pt51(1.1, 2.2);
+    pt50.print();
+    pt51.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">point5_err.cpp: In function 'int main()':
+point5_err.cpp:14:12: error: no matching function for call to 'Point5::Point5()'
+   14 |     Point5 pt50;              // ERROR: Point5 has no default constructor
+      |            ^~~~
+point5_err.cpp:7:5: note: candidate: 'Point5::Point5(double, double)'
+    7 |     Point5(double a, double b) { x = a; y = b; }
+      |     ^~~~~~
+point5_err.cpp:7:5: note:   candidate expects 2 arguments, 0 provided</pre>
+    <p>No executable is produced, so <code>pt51</code> never gets a chance to work. The message is
+    the one to learn by sight: <strong><em>"no matching function for call to
+    'Point5::Point5()'"</em></strong>. The empty parentheses at the end are the tell &mdash; the
+    compiler wanted a constructor taking nothing and there wasn't one. Whenever you see it, ask
+    yourself: <em>where is this class being built without arguments?</em></p>
+    <p>Two fixes, and the choice between them is a design decision, not a mechanical one:</p>
+    <ol>
+      <li><strong>Give <code>pt50</code> its arguments</strong> &mdash;
+        <code>Point5 pt50(0.0, 0.0);</code>. Keeps the class strict. Output becomes
+        <code>0, 0</code> then <code>1.1, 2.2</code>.</li>
+      <li><strong>Add a default constructor</strong> &mdash;
+        <code>Point5() { x = 0; y = 0; }</code>. Now both declarations work, and arrays of
+        <code>Point5</code> become legal too.</li>
+    </ol>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; an unmarked deliberate error in the notes</span></div>
+  <div class="bd">
+    <p>In the original slide this listing is presented as an ordinary example program, with nothing
+    to indicate that <code>Point5 pt50;</code> is meant to fail. A student who copies the slide gets
+    a program that will not build and no hint that this is the point. The comment
+    <code>// ERROR: Point5 has no default constructor</code> in the listing above is added here.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.6</div>
+  <div class="bd">
+    <p>Four classes. For each one, say whether <code>C obj;</code> compiles, and why.</p>
+<pre><code class="language-cpp">class A { public: int n; };
+class B { public: B() { n = 0; }            int n; };
+class C { public: C(int k) { n = k; }       int n; };
+class D { public: D() { n = 0; }
+                  D(int k) { n = k; }       int n; };</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>A a;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Compiles.</strong> No constructors are written at all, so the compiler generates
+        the default constructor. <code>a.n</code> is indeterminate garbage, but the declaration is
+        legal.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>B b;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Compiles.</strong> A default constructor is written explicitly, so it is used.
+        <code>b.n</code> is 0. This is the version you want.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>C c;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Does not compile.</strong> <code>C</code> has a constructor &mdash; a non-default
+        one &mdash; so no default constructor is generated, and none is written.
+        <em>"no matching function for call to 'C::C()'"</em>. Writing <code>C c(5);</code> works
+        fine.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>D d;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Compiles.</strong> <code>D</code> writes both, so both are available.</p>
+        <p>The pattern across all four: the <em>only</em> class that gets a free default constructor
+        is <code>A</code>, the one that wrote none. The moment a class declares any constructor, the
+        free one disappears &mdash; and if you still want default construction, you have to write it
+        yourself. This is the difference between (b) and (c), and it is the single most repeated
+        trap in this course.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Arrays of objects, <code>new</code> and <code>delete</code></h2>
+
+<p>You have been declaring arrays since CSCI 111 and allocating them with <code>new</code> since
+Class 8. Can you do the same with a class you wrote yourself? The professor poses the question and
+answers it carefully: <em>"The obvious answer should be yes, but the correct answer is not
+always."</em></p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the array rule</span></div>
+  <div class="bd">
+    <p><strong>You can declare an array of objects only if the class has a default
+    constructor</strong>, and you may not pass constructor arguments in the array declaration.</p>
+    <p>The reason is simple once you see it: <code>Point4 arr[10];</code> creates ten objects at
+    once, and the syntax gives the compiler no way to say which arguments go to which element. So
+    it uses the only constructor that needs no arguments.</p>
+  </div>
+</div>
+
+<p>The professor demonstrates with two lines side by side. The first compiles; the second does
+not.</p>
+
+<pre><code class="language-cpp">Point4 array_pt40[10];            // fine: 10 objects, all default-constructed
+Point4 array_pt43[10](a, b);      // ERROR: arguments are not permitted here</code></pre>
+
+<pre class="err">array_err.cpp: In function 'int main()':
+array_err.cpp:18:31: error: expression list treated as compound expression in initializer [-fpermissive]
+   18 |     Point4 array_pt43[10](a, b);      // ERROR
+      |                               ^
+array_err.cpp:18:31: error: array must be initialized with a brace-enclosed initializer
+   18 |     Point4 array_pt43[10](a, b);      // ERROR
+      |                               ^</pre>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; you cannot give an array one set of constructor arguments</span></div>
+  <div class="bd">
+    <p>Writing <code>Point4 array_pt43[10](a, b);</code> &mdash; or, in the shape it usually takes
+    when students invent it, something like <code>Person group[3]("student", 18);</code> &mdash;
+    looks like it should build ten (or three) identical objects. <strong>It is not legal
+    C++.</strong> In the original notes this line appears in an ordinary-looking example program
+    with nothing marking it as a deliberate failure; it is flagged here.</p>
+    <p>What the compiler is telling you in that second error line is the way out: an array
+    <em>can</em> be initialized, but only with a <strong>brace-enclosed list</strong> naming each
+    element. So there are three legal alternatives, shown in the Worked Example below.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; four legal ways to fill an array of objects</span></div>
+  <div class="bd">
+    <p>Each block builds three <code>Point4</code> objects. Work out what each one prints &mdash;
+    especially the first.</p>
+<div class="codewrap"><div class="cap">array_ok.cpp</div><pre><code class="language-cpp">int main() {
+    double a = -3.6;
+    double b = 5.4;
+
+    // (1) plain array: every element built by the DEFAULT constructor
+    Point4 array_pt40[3];
+    cout &lt;&lt; "-- array_pt40 --" &lt;&lt; endl;
+    for (int i = 0; i &lt; 3; ++i) array_pt40[i].print();
+
+    // (2) brace-enclosed initializer: name a constructor call per element
+    Point4 array_pt43[3] = { Point4(a, b), Point4(a, b), Point4(a, b) };
+    cout &lt;&lt; "-- array_pt43 --" &lt;&lt; endl;
+    for (int i = 0; i &lt; 3; ++i) array_pt43[i].print();
+
+    // (3) default-construct, then set each element afterwards
+    Point4 array_pt44[3];
+    for (int i = 0; i &lt; 3; ++i) array_pt44[i].set(a, b);
+    cout &lt;&lt; "-- array_pt44 --" &lt;&lt; endl;
+    for (int i = 0; i &lt; 3; ++i) array_pt44[i].print();
+
+    // (4) a vector, if you want one value repeated
+    vector&lt;Point4&gt; v(3, Point4(a, b));
+    cout &lt;&lt; "-- vector v --" &lt;&lt; endl;
+    for (int i = 0; i &lt; 3; ++i) v[i].print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">-- array_pt40 --
+print x,y 0 0
+print x,y 0 0
+print x,y 0 0
+-- array_pt43 --
+print x,y -3.6 5.4
+print x,y -3.6 5.4
+print x,y -3.6 5.4
+-- array_pt44 --
+print x,y -3.6 5.4
+print x,y -3.6 5.4
+print x,y -3.6 5.4
+-- vector v --
+print x,y -3.6 5.4
+print x,y -3.6 5.4
+print x,y -3.6 5.4</pre>
+    <p>Block (1) prints zeros, not garbage, because <code>Point4</code>'s <em>own</em> default
+    constructor sets both members to 0 &mdash; ten copies of the same constructor call. Had the
+    class been <code>Point1</code>, with no constructor written, you would see three lines of
+    noise.</p>
+    <table class="trace">
+      <tr><th>Approach</th><th>Requires a default constructor?</th><th>When to use it</th></tr>
+      <tr><td>(1) plain array</td><td><strong>Yes</strong></td><td>You are happy with the default values, or will fill the array later.</td></tr>
+      <tr><td>(2) brace-enclosed list</td><td>No</td><td>The size is small and known at compile time, and elements differ.</td></tr>
+      <tr><td>(3) default then <code>set</code></td><td><strong>Yes</strong></td><td>The size is large or comes from a loop; values arrive later.</td></tr>
+      <tr><td>(4) <code>vector</code></td><td>No</td><td>Almost always the best answer once the size is not a compile-time constant.</td></tr>
+    </table>
+    <p>Option (4) reaches back to Classes 5 and 6. <code>vector&lt;Point4&gt; v(3, Point4(a, b));</code>
+    says "three elements, each a copy of this one" and needs no default constructor at all. Writing
+    <code>vector&lt;Point4&gt; v(3);</code> <em>would</em> need one, for the same reason a plain
+    array does.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>The same rules carry over to dynamic memory, which is the reason this material sits right after
+the pointer classes. The compiler generates <code>new</code> and <code>delete</code> for a
+user-defined class automatically, and the constructor rules follow the same split:</p>
+
+<table class="trace">
+  <tr><th>Expression</th><th>Constructor used</th><th>Released with</th></tr>
+  <tr><td><code>new Point4</code></td><td>default constructor</td><td><code>delete</code></td></tr>
+  <tr><td><code>new Point4(a, b)</code></td><td>the matching non-default constructor</td><td><code>delete</code></td></tr>
+  <tr><td><code>new Point4[n]</code></td><td><strong>default constructor only</strong>, <code>n</code> times</td><td><code>delete []</code></td></tr>
+</table>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; new, new[], delete, delete[]</span></div>
+  <div class="bd">
+    <p>The professor's dynamic-memory program, with <code>n</code> reduced to 3 so the output fits.
+    Three allocations, three matching releases. Predict all five lines.</p>
+<div class="codewrap"><div class="cap">dynamic.cpp</div><pre><code class="language-cpp">int main() {
+    int n = 3;
+    double a = -3.6;
+    double b = 5.4;
+
+    Point4 *ptr40 = new Point4;          // default constructor
+    Point4 *ptr43 = new Point4(a, b);    // non-default constructor
+    Point4 *arr40 = new Point4[n];       // default constructor, n times
+
+    ptr40-&gt;print();
+    ptr43-&gt;print();
+    for (int i = 0; i &lt; n; ++i) {
+        arr40[i].print();
+    }
+
+    delete ptr40;
+    delete ptr43;
+    delete [] arr40;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 0 0
+print x,y -3.6 5.4
+print x,y 0 0
+print x,y 0 0
+print x,y 0 0</pre>
+    <p>Points to take from this:</p>
+    <ul>
+      <li><code>new Point4</code> with no parentheses runs the default constructor.
+        <code>new Point4(a, b)</code> runs the two-argument one. Unlike the array case, a single
+        <code>new</code> <em>can</em> take constructor arguments &mdash; there is only one object,
+        so there is no ambiguity about who gets them.</li>
+      <li><code>new Point4[n]</code> has no way to pass arguments either, so it too demands a
+        default constructor. Try it on <code>Point5</code> and you get the familiar
+        <em>"no matching function for call to 'Point5::Point5()'"</em>.</li>
+      <li>The rule you learned in Class 8 has not changed: <code>delete</code> pairs with
+        <code>new</code>, <code>delete []</code> pairs with <code>new[]</code>. Mixing them is
+        undefined behavior.</li>
+      <li>Running this under <code>valgrind</code> reports <em>"All heap blocks were freed &mdash;
+        no leaks are possible"</em>. Get in the habit of checking.</li>
+    </ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.7</div>
+  <div class="bd">
+    <p>Recall <code>Point5</code>, which has only <code>Point5(double, double)</code>. Which of
+    these five lines compile?</p>
+<pre><code class="language-cpp">Point5 a(1.0, 2.0);
+Point5 arr[4];
+Point5 *p = new Point5(1.0, 2.0);
+Point5 *q = new Point5;
+Point5 *r = new Point5[4];</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <table class="trace">
+        <tr><th>Line</th><th>Verdict</th><th>Why</th></tr>
+        <tr><td><code>Point5 a(1.0, 2.0);</code></td><td>Compiles</td><td>Exact match on the only constructor.</td></tr>
+        <tr><td><code>Point5 arr[4];</code></td><td><strong>Error</strong></td><td>An array needs a default constructor for each element; there isn't one.</td></tr>
+        <tr><td><code>new Point5(1.0, 2.0)</code></td><td>Compiles</td><td>A single <code>new</code> may pass constructor arguments.</td></tr>
+        <tr><td><code>new Point5</code></td><td><strong>Error</strong></td><td>No arguments given, so the default constructor is required.</td></tr>
+        <tr><td><code>new Point5[4]</code></td><td><strong>Error</strong></td><td>Array form: default constructor required, and no way to supply arguments.</td></tr>
+      </table>
+      <p>The real g++ message for the last one:</p>
+<pre class="err">dynarray_err.cpp:14:31: error: no matching function for call to 'Point5::Point5()'
+   14 |     Point5 *bad = new Point5[5];          // ERROR
+      |                               ^
+dynarray_err.cpp:6:5: note: candidate: 'Point5::Point5(double, double)'
+dynarray_err.cpp:6:5: note:   candidate expects 2 arguments, 0 provided</pre>
+      <p><strong>Things to notice.</strong> Three of the five fail, and all three fail for the
+      <em>same</em> reason with the <em>same</em> message. The professor's design remark is worth
+      keeping: <em>"if a class does not have a default constructor, we cannot declare arrays of
+      objects for that class. This is not necessarily a bad thing. It is a design decision."</em>
+      If you want arrays, supply a default constructor; if a "default" object would be meaningless,
+      leave it out on purpose and use a <code>vector</code> instead.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Private constructors</h2>
+
+<p>The professor asks a short question here: <em>"Can a constructor be private?"</em> and answers
+it immediately: <em>"Of course a constructor can be private. Anything can be private."</em> The
+follow-up question is the interesting one &mdash; <em>what does a private constructor mean?</em></p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; private constructor</span></div>
+  <div class="bd">
+    <p>Just as <code>private</code> restricts access to the <em>data members</em> of a class, a
+    <code>private</code> constructor restricts <strong>the ability of outside code to instantiate
+    objects of the class at all</strong>.</p>
+    <p>The class itself &mdash; its own member functions &mdash; can still use it. Everyone else
+    cannot. So you control not only what the outside world may do <em>to</em> your objects, but
+    whether it may <em>make</em> them.</p>
+  </div>
+</div>
+
+<p>The original slide is four bullets of prose with no code. The demonstration below is written for
+these notes, because the idea is much easier to believe once you have seen it fail and then
+seen the way through.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a class that will not let you build it directly</span></div>
+  <div class="bd">
+    <p>Suppose a <code>Point6</code> must never hold a negative coordinate. Making
+    <code>x</code> and <code>y</code> private stops anyone <em>changing</em> them to a negative
+    value &mdash; but it does nothing to stop someone <em>creating</em> one that way. So we move the
+    constructor into the private section and expose one public function that validates first.</p>
+<div class="codewrap"><div class="cap">private_ctor.cpp</div><pre><code class="language-cpp">// private_ctor.cpp -- the constructor is private, so only the class may build objects
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point6 {
+public:
+    // The only door in: a public function that belongs to the class itself.
+    static Point6 create(double a, double b) {
+        if (a &lt; 0 || b &lt; 0) {
+            cout &lt;&lt; "create: negative coordinate rejected, using the origin" &lt;&lt; endl;
+            return Point6(0, 0);
+        }
+        return Point6(a, b);
+    }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+
+private:
+    Point6(double a, double b) : x(a), y(b) {
+        cout &lt;&lt; "Point6: private constructor ran for (" &lt;&lt; a &lt;&lt; "," &lt;&lt; b &lt;&lt; ")" &lt;&lt; endl;
+    }
+    double x, y;
+};
+
+int main() {
+    Point6 p = Point6::create(3.0, 4.0);
+    p.print();
+
+    Point6 q = Point6::create(-1.0, 4.0);
+    q.print();
+
+    // Point6 r(5.0, 6.0);   // ERROR: the constructor is private
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Point6: private constructor ran for (3,4)
+print x,y 3 4
+create: negative coordinate rejected, using the origin
+Point6: private constructor ran for (0,0)
+print x,y 0 0</pre>
+    <p>And here is what uncommenting the last declaration produces:</p>
+<pre class="err">private_ctor_err.cpp: In function 'int main()':
+private_ctor_err.cpp:31:22: error: 'Point6::Point6(double, double)' is private within this context
+   31 |     Point6 r(5.0, 6.0);
+      |                      ^
+private_ctor_err.cpp:18:5: note: declared private here
+   18 |     Point6(double a, double b) : x(a), y(b) {
+      |     ^~~~~~</pre>
+    <p><em>"is private within this context"</em> is the same message you met in Class 10 when you
+    touched a private data member from <code>main</code>. Access control does not care that this
+    particular member happens to be a constructor.</p>
+    <p>Two details in that listing you have not formally met yet:</p>
+    <ul>
+      <li><code>static</code> in front of <code>create</code> means the function belongs to the
+        <em>class</em> rather than to any one object, which is why you call it as
+        <code>Point6::create(...)</code> with no object in front of the dot &mdash; there is no
+        object yet. Static members are Class 16; for today, read it as "a function inside the class
+        that you call through the class name."</li>
+      <li><code>: x(a), y(b)</code> is a <strong>member initializer list</strong>, which is
+        &sect;7. Read it for now as "set <code>x</code> to <code>a</code> and <code>y</code> to
+        <code>b</code>."</li>
+    </ul>
+    <p>Notice also that <code>create</code> returns a <code>Point6</code> by value, yet the
+    constructor announcement appears only <em>once</em> per call. No copy is made on the way out.
+    That is C++17's mandatory copy elision, and it becomes very important when we start counting
+    constructor calls in the Practice Problems.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Where does this lead? Two places you will meet later in the course:</p>
+
+<ul>
+  <li>Making the default constructor private while leaving a non-default one public says
+    "you may build one of these, but only if you tell me what goes in it" &mdash; the same effect as
+    &sect;4, expressed deliberately rather than as a side effect.</li>
+  <li>In <strong>Class 25</strong>, when we build abstract base classes, the professor prefers
+    <code>protected</code> constructors for exactly this reason: a base class should be
+    constructible by its derived classes but not directly by anyone else. <code>protected</code> is
+    the "private, except to derived classes" access level, and it arrives in Class 19.</li>
+</ul>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.8</div>
+  <div class="bd">
+    <p>A class is written with <em>all</em> of its constructors private and no other member function
+    that creates objects.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many objects of that class can the rest of the program create?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>None.</strong> Every path to creating an object goes through a constructor, and
+        every constructor is unreachable from outside. The class becomes a container for
+        <code>static</code> members and nothing else &mdash; occasionally that is exactly what
+        someone wants, and more often it is a bug.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> In the <code>Point6</code> listing above, why can <code>create</code> call the private constructor when <code>main</code> cannot?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because <code>create</code> is a <em>member</em> of <code>Point6</code>. Access
+        specifiers work per class, not per object: every member function of the class can reach
+        every member of the class, private ones included. <code>main</code> is not a member of
+        anything, so it only gets the public section.</p>
+        <p>This is the same rule that lets <code>print()</code> read the private <code>x</code> and
+        <code>y</code> &mdash; you have been relying on it since Class 10 without needing to name
+        it.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Member initializer lists</h2>
+
+<p>Every constructor written so far does its work in two steps. First memory is allocated for the
+data members; then, inside the function body, values are assigned into that memory. C++ offers a
+way to do it in one step: set the value <em>at the same time</em> the member is created.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; member initializer list</span></div>
+  <div class="bd">
+    <p>A <strong>member initializer list</strong> is written between the constructor's parameter
+    list and its body, introduced by a colon:</p>
+<pre><code class="language-cpp">Point4a(double a, double b) : x(a), y(b)
+{
+    // function body -- often empty
+}</code></pre>
+    <p>The colon <code>:</code> signifies the start of the list. Each entry names a data member and
+    gives, in parentheses, the value it is to be initialized with. After the list ends, the braces
+    enclose the function body, which may be empty.</p>
+    <p>The professor's notes call this <em>memberwise initialization</em>. The standard term is
+    <strong>member initializer list</strong> (he uses that phrase too); "memberwise" on its own
+    usually means something else in C++, namely memberwise <em>copying</em>, which is Class 14.</p>
+  </div>
+</div>
+
+<p>Here is <code>Point4</code> rewritten as <code>Point4a</code>. Nothing else about the class
+changes, and to any code outside the class the two behave identically.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same three constructors, written the other way</span></div>
+  <div class="bd">
+    <p>Compare these three constructors with the ones in &sect;3, line for line.</p>
+<div class="codewrap"><div class="cap">point4a.cpp</div><pre><code class="language-cpp">// point4a.cpp -- Point4 rewritten with member initializer lists
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point4a {
+public:
+    Point4a()                   : x(0), y(0) {}
+    Point4a(double a)           : x(a), y(a) {}
+    Point4a(double a, double b) : x(a), y(b) {}
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+int main() {
+    Point4a pt40;
+    Point4a pt41(-3.6);
+    Point4a pt43(-3.6, 5.4);
+    pt40.print();
+    pt41.print();
+    pt43.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 0 0
+print x,y -3.6 -3.6
+print x,y -3.6 5.4</pre>
+    <p>Identical results, shorter code. Each constructor is now a single line with an empty body,
+    because there is nothing left to do once the list has run.</p>
+    <p>The distinction the syntax is drawing is real, not cosmetic:</p>
+    <table class="trace">
+      <tr><th></th><th>Initializer list <code>: x(a)</code></th><th>Body assignment <code>x = a;</code></th></tr>
+      <tr><td>When it happens</td><td>as the member is created</td><td>after every member already exists</td></tr>
+      <tr><td>How many operations</td><td>one: initialize</td><td>two: default-initialize, then assign</td></tr>
+      <tr><td>Works for a <code>const</code> member</td><td><strong>yes</strong></td><td>no</td></tr>
+      <tr><td>Works for a reference member</td><td><strong>yes</strong></td><td>no</td></tr>
+    </table>
+    <p>For two <code>double</code>s the difference costs nothing measurable. For a member that is
+    itself a large object &mdash; a <code>string</code>, a <code>vector</code>, another class of
+    yours &mdash; the body-assignment version genuinely builds the member twice: once empty, then
+    over the top of it. And for the bottom two rows it is not a matter of efficiency at all; it is
+    the difference between compiling and not compiling.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; when the list is mandatory</span></div>
+  <div class="bd">
+    <p>You <strong>must</strong> use a member initializer list for:</p>
+    <ol>
+      <li>a data member declared <code>const</code>;</li>
+      <li>a data member that is a <strong>reference</strong>;</li>
+      <li>a member of a class type that has no default constructor; and</li>
+      <li>from Class 20 onward, passing arguments to a <strong>base class</strong> constructor.</li>
+    </ol>
+    <p>Item 4 is why the professor introduces this topic here at all: <em>"Memberwise initialization
+    is significant in some circumstances. We shall require it when we discuss the subject of
+    inheritance for C++ classes."</em></p>
+  </div>
+</div>
+
+<p>Reason 1 should feel familiar. Back in Class 1 you saw that <code>const double E = PI;</code> is
+legal but <code>const double E; E = PI;</code> is two errors, because a <code>const</code> must be
+initialized where it is created and can never be assigned afterwards. A constructor body runs
+<em>after</em> the members have been created, so any assignment there is too late:</p>
+
+<pre class="err">constmember_err.cpp: In constructor 'Circle::Circle(double)':
+constmember_err.cpp:6:5: error: uninitialized const member in 'const double' [-fpermissive]
+    6 |     Circle(double r) {
+      |     ^~~~~~
+constmember_err.cpp:13:18: note: 'const double Circle::PI' should be initialized
+   13 |     const double PI;
+      |                  ^~
+constmember_err.cpp:8:12: error: assignment of read-only member 'Circle::PI'
+    8 |         PI = 3.14159;       // and PI is const
+      |         ~~~^~~~~~~~~</pre>
+
+<p>Two errors from one mistake, and they point at the two halves of it: the member was never
+initialized, and it cannot be assigned. Move both members into the list and it compiles:</p>
+
+<div class="codewrap"><div class="cap">constmember_ok.cpp</div><pre><code class="language-cpp">class Circle {
+public:
+    Circle(double r, string &amp;log)
+        : radius(r), PI(3.14159), owner(log) {}    // the only place these can be set
+    double area() const { return PI * radius * radius; }
+    void rename(const string &amp;s) { owner = s; }    // writes through the reference
+private:
+    double radius;
+    const double PI;
+    string &amp;owner;
+};</code></pre></div>
+
+<pre class="out">area  = 12.5664
+label = unnamed
+label = front wheel</pre>
+
+<p>The reference member <code>owner</code> makes the same point from a different direction. A
+reference must be bound to something the moment it exists and can never be re-bound afterwards
+&mdash; so the list is the only opportunity. Note the last two lines of output: writing through
+<code>owner</code> changed <code>label</code> back in <code>main</code>, because a reference member
+really is another name for the caller's variable.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.9</div>
+  <div class="bd">
+    <p>A class holds a student's ID number, which must never change once the object exists:</p>
+<pre><code class="language-cpp">class Student {
+private:
+    string name;
+    const int idNumber;
+    int credits;
+};</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Why can this class not have a compiler-generated default constructor?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because the compiler's default constructor would leave <code>idNumber</code>
+        uninitialized, and a <code>const</code> member may not be left uninitialized &mdash; there
+        would be no later opportunity to give it a value. The compiler therefore defines the
+        implicit default constructor as deleted, and <code>Student s;</code> fails with
+        <em>"use of deleted function"</em>. The same is true of a reference member.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write a constructor that takes a name and an ID and starts the student at zero credits.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Student(const string &amp;n, int id)
+        : name(n), idNumber(id), credits(0) {}</code></pre>
+        <p><code>idNumber</code> <em>has</em> to be in the list. <code>name</code> and
+        <code>credits</code> could legally be assigned in the body instead, but putting all three in
+        the list is both shorter and one operation cheaper for <code>name</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Can <code>addCredits(int n)</code> change <code>idNumber</code>? Can it change <code>credits</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It can change <code>credits</code>; it cannot change <code>idNumber</code>. Attempting
+        the latter gives <em>"assignment of read-only member 'Student::idNumber'"</em> &mdash; the
+        same phrasing you met in Class 1 for a <code>const</code> variable.</p>
+        <p><strong>Wrap-up.</strong> Marking a member <code>const</code> is a design statement: this
+        value is fixed for the lifetime of the object. It costs you the compiler-generated default
+        constructor and forces every constructor to name it in the list. That is a fair price for
+        having the compiler enforce the rule everywhere, forever.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>Initialization happens in declaration order &mdash; always</h3>
+
+<p>Here is the subtlety the professor flags and then, reasonably enough for a first course, sets
+aside. It is worth thirty seconds because it produces a real bug.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the list does not control the order</span></div>
+  <div class="bd">
+    <p>Data members are initialized <strong>in the order they are declared in the class</strong>,
+    not in the order they appear in the initializer list. In <code>Point4a</code>, <code>x</code> is
+    declared first, so <code>x</code> is initialized first &mdash; even if you write
+    <code>: y(b), x(a)</code>.</p>
+  </div>
+</div>
+
+<p>The professor's note says of writing it out of order: <em>"It does not matter: x is still
+initialized first and y second."</em> That is correct as a statement about the language, but it is
+not quite the whole story, because g++ warns:</p>
+
+<pre class="err">reorder.cpp: In constructor 'Point4a::Point4a(double, double)':
+reorder.cpp:9:15: warning: 'Point4a::y' will be initialized after [-Wreorder]
+    9 |     double x, y;                                  // but x is declared first
+      |               ^
+reorder.cpp:9:12: warning:   'double Point4a::x' [-Wreorder]
+reorder.cpp:6:5: warning:   when initialized here [-Wreorder]
+    6 |     Point4a(double a, double b) : y(b), x(a) {}   // written y first
+      |     ^~~~~~~</pre>
+
+<p>The program runs correctly and prints <code>print x,y 1.5 2.5</code>. But
+<strong>always write the list in declaration order</strong> &mdash; not to satisfy the compiler, but
+because the day the order actually matters, writing it out of order is how you fool yourself.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; when the order really does bite</span></div>
+  <div class="bd">
+    <p>This <code>Rect</code> tries to compute one member from another. The list looks completely
+    reasonable. Look at the <em>declaration</em> order in the private section before you predict the
+    output.</p>
+<div class="codewrap"><div class="cap">order_matters.cpp</div><pre><code class="language-cpp">class Rect {
+public:
+    // Written "height first", but height is DECLARED second.
+    Rect(double h) : height(h), area(height * 2.0) {}
+    void print() const { cout &lt;&lt; "height=" &lt;&lt; height &lt;&lt; " area=" &lt;&lt; area &lt;&lt; endl; }
+private:
+    double area;        // declared first  -&gt; initialized first
+    double height;      // declared second -&gt; initialized second
+};
+
+int main() {
+    Rect r(5.0);
+    r.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">height=5 area=1.38129e-309</pre>
+    <p>(That garbage value is machine-dependent; the one shown is representative of a single run.)</p>
+    <p>Trace it in the order the compiler actually uses &mdash; declaration order:</p>
+    <table class="trace">
+      <tr><th>Step</th><th>Member</th><th>Value used</th><th>Result</th></tr>
+      <tr><td>1</td><td><code>area</code> (declared first)</td><td><code>height * 2.0</code>, but <code>height</code> does not exist yet</td><td>garbage</td></tr>
+      <tr><td>2</td><td><code>height</code> (declared second)</td><td><code>h</code></td><td>5</td></tr>
+    </table>
+    <p>g++ catches this one, and the warning is worth reading in full:</p>
+<pre class="err">order_matters.cpp:8:38: warning: member 'Rect::height' is used uninitialized [-Wuninitialized]
+    8 |     Rect(double h) : height(h), area(height * 2.0) {}
+      |                                      ^~~~~~
+order_matters.cpp:12:12: warning: 'Rect::height' will be initialized after [-Wreorder]
+   12 |     double height;      // declared second -&gt; initialized second
+      |            ^~~~~~</pre>
+    <p>Two fixes, both correct:</p>
+    <ul>
+      <li>Declare <code>height</code> before <code>area</code> in the class, and write the list in
+        that same order.</li>
+      <li>Better still, do not initialize one member from another. Use the parameter:
+        <code>Rect(double h) : area(h * 2.0), height(h) {}</code> &mdash; now nothing depends on
+        initialization order at all.</li>
+    </ul>
+    <p>This is also the single strongest argument for compiling with <code>-Wall</code> every time.
+    Without it, this program prints nonsense and says nothing.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>One last piece of syntax from the notes: <strong>the list does not have to mention every
+member.</strong> Members left out are simply default-initialized and can then be assigned in the
+body as before. This constructor is perfectly legal:</p>
+
+<pre><code class="language-cpp">Point4a(double a, double b) : x(a)
+{
+    y = b;
+}</code></pre>
+
+<p>It mixes both styles, which is a little untidy but does exactly what it says. You will need
+partial lists in practice &mdash; a member whose value takes several statements to compute has to be
+assigned in the body.</p>
+
+<h3>In-class exercise &mdash; a class with a member that can never change</h3>
+
+<p>Write the <code>Student</code> class from Quick Check 13.9 for real: a <code>string name</code>,
+a <code>const int idNumber</code>, and an <code>int credits</code> that starts at zero. Give it one
+constructor, an <code>addCredits</code> method and a <code>print</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="29" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Student {
+public:
+    // TODO: one constructor taking a name and an ID.
+    // idNumber is const -- which means it can ONLY be set in the initializer list.
+
+
+    void addCredits(int n) { credits += n; }
+    void print() const {
+        cout &lt;&lt; name &lt;&lt; &quot; (&quot; &lt;&lt; idNumber &lt;&lt; &quot;) has &quot; &lt;&lt; credits &lt;&lt; &quot; credits&quot; &lt;&lt; endl;
+    }
+private:
+    string name;
+    const int idNumber;
+    int credits;
+};
+
+int main() {
+    Student s(&quot;Ada Lovelace&quot;, 81572);
+    s.print();
+    s.addCredits(12);
+    s.print();
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Student {
+public:
+    // TODO: one constructor taking a name and an ID.
+    // idNumber is const -- which means it can ONLY be set in the initializer list.
+
+
+    void addCredits(int n) { credits += n; }
+    void print() const {
+        cout &lt;&lt; name &lt;&lt; " (" &lt;&lt; idNumber &lt;&lt; ") has " &lt;&lt; credits &lt;&lt; " credits" &lt;&lt; endl;
+    }
+private:
+    string name;
+    const int idNumber;
+    int credits;
+};
+
+int main() {
+    Student s("Ada Lovelace", 81572);
+    s.print();
+    s.addCredits(12);
+    s.print();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 13.10</div>
+  <div class="bd">
+    <p>Complete the exercise and give the exact output. Then say what happens if you try to add a
+    second constructor <code>Student() {}</code> to the class.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Three members, one of them <code>const</code>, so all the
+      initialization goes in the list &mdash; and in declaration order:
+      <code>name</code>, <code>idNumber</code>, <code>credits</code>. <code>credits</code> is not a
+      parameter; it is initialized to the literal <code>0</code>, which is a perfectly ordinary
+      entry in the list.</p>
+<div class="codewrap"><div class="cap">ex_student.cpp</div><pre><code class="language-cpp">// ex_student.cpp -- a const data member forces a member initializer list
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Student {
+public:
+    Student(const string &amp;n, int id)
+        : name(n), idNumber(id), credits(0) {}
+    void addCredits(int n) { credits += n; }
+    void print() const {
+        cout &lt;&lt; name &lt;&lt; " (" &lt;&lt; idNumber &lt;&lt; ") has " &lt;&lt; credits &lt;&lt; " credits" &lt;&lt; endl;
+    }
+private:
+    string name;
+    const int idNumber;      // set once, at construction, forever
+    int credits;
+};
+
+int main() {
+    Student s("Ada Lovelace", 81572);
+    s.print();
+    s.addCredits(12);
+    s.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">Ada Lovelace (81572) has 0 credits
+Ada Lovelace (81572) has 12 credits</pre>
+      <p><strong>And the second constructor?</strong> <code>Student() {}</code> does not compile:</p>
+<pre class="err">error: uninitialized const member in 'const int'
+note: 'const int Student::idNumber' should be initialized</pre>
+      <p>An empty body is not enough, because <code>idNumber</code> would never be given a value.
+      You would have to invent one &mdash; <code>Student() : idNumber(0), credits(0) {}</code> &mdash;
+      and at that point you should ask whether a student with ID 0 is a thing you want to be able
+      to create at all. Often the honest answer is no, and the right move is to leave the default
+      constructor out and accept that <code>Student roster[30];</code> will not compile.</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The parameter is <code>const string &amp;n</code>, not <code>string n</code>. Passing a
+          <code>string</code> by value copies it; by <code>const</code> reference does not. That is
+          Class 2's habit, and it matters more once objects are involved.</li>
+        <li>The list is written in declaration order, so <code>-Wall</code> is silent.</li>
+        <li><code>addCredits</code> is not <code>const</code> &mdash; it changes the object.
+          <code>print</code> is.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 13</span></div>
+  <div class="bd">
+    <p>Problems 1, 2 and 3 are built directly from the example programs in the course notes for
+    this lecture. Problems 4 and 5 are adapted from the Fall 2023 Final, where they appeared as a
+    matched pair: write the class, then trace a <code>main</code> that uses it. That pairing is the
+    most repeated question shape in this course &mdash; some version of it appears on nine of the
+    ten graded papers &mdash; so do those two slowly. Problem 6 is added, in the style of the
+    "write C++ statements to carry out the following tasks" question that opens every midterm.</p>
+    <p>Output-prediction questions on this professor's exams carry <strong>no partial
+    credit</strong>, so commit to an exact answer before you open a solution. Write-code questions
+    do pay points for the signature line alone &mdash; if you can only remember that a constructor
+    is named after its class and has no return type, write that much.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Which constructor runs? <span class="muted small">(from the course notes)</span></h3>
+
+<p>Given the <code>Point4</code> class of &sect;3 &mdash; one default constructor, a
+one-<code>double</code> constructor and a two-<code>double</code> constructor &mdash; state which
+constructor is invoked for each declaration below and what the resulting object holds. For any line
+that does not compile, say why.</p>
+
+<pre><code class="language-cpp">double a = -3.6;
+double b = 5.4;
+int i = 4;
+string str("abcd");
+
+Point4 pt40;
+Point4 pt41(a);
+Point4 pt42(i);
+Point4 pt43(a, b);
+Point4 pt44(str);</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> For each declaration, count the arguments and note their types, then
+  look for a constructor whose parameter list matches. If nothing matches exactly, ask whether a
+  standard conversion gets you there. If not even that, it is an error.</p>
+  <table class="trace">
+    <tr><th>Declaration</th><th>Constructor</th><th>Result</th></tr>
+    <tr><td><code>pt40</code></td><td><code>Point4()</code> &mdash; exact</td><td>x = 0, y = 0</td></tr>
+    <tr><td><code>pt41(a)</code></td><td><code>Point4(double)</code> &mdash; exact</td><td>x = -3.6, y = -3.6</td></tr>
+    <tr><td><code>pt42(i)</code></td><td><code>Point4(double)</code> &mdash; after <code>int</code> to <code>double</code></td><td>x = 4, y = 4</td></tr>
+    <tr><td><code>pt43(a, b)</code></td><td><code>Point4(double, double)</code> &mdash; exact</td><td>x = -3.6, y = 5.4</td></tr>
+    <tr><td><code>pt44(str)</code></td><td><strong>none</strong></td><td>compiler error</td></tr>
+  </table>
+  <p>With <code>pt44</code> commented out, the program builds and prints:</p>
+<pre class="out">print x,y 0 0
+print x,y -3.6 -3.6
+print x,y 4 4
+print x,y -3.6 5.4</pre>
+  <p>With <code>pt44</code> left in, nothing builds at all:</p>
+<pre class="err">point4_str.cpp:34:20: error: no matching function for call to 'Point4::Point4(std::string&amp;)'
+   34 |     Point4 pt44(str);
+      |                    ^
+point4_str.cpp:9:19: note:   no known conversion for argument 1 from 'std::string' to 'double'</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The two "special cases" are opposite sides of one rule. For <code>pt42</code> the compiler
+      finds an acceptable match through a standard conversion and uses it. For <code>pt44</code>
+      there is no conversion from <code>string</code> to <code>double</code>, so it reports
+      <em>no matching function</em>.</li>
+    <li>A compiler error is not a runtime event. If <code>pt44</code> is present, <em>no</em> output
+      appears &mdash; not even the lines for the objects that were fine.</li>
+    <li>The professor's slide describes <code>pt44</code> as "commented out" while printing it
+      uncommented. If an exam hands you a listing like this, comment the offending line out, note
+      the error in the margin, and continue &mdash; which is precisely what the instruction on his
+      trace questions tells you to do.</li>
+    <li><code>pt42</code> works only because <code>Point4(double)</code> is not <code>explicit</code>.
+      Adding that keyword would turn <code>pt42(i)</code> into an error too &mdash; the conversion
+      would still exist but would no longer be applied automatically.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Arrays and dynamic allocation <span class="muted small">(from the course notes)</span></h3>
+
+<p>Still with <code>Point4</code>, and with <code>Point5</code> (which has only
+<code>Point5(double, double)</code>):</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Which of these compile? <code>Point4 arr[10];</code> &middot; <code>Point4 arr2[10](a, b);</code> &middot; <code>Point5 arr3[10];</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>Only the first. <code>Point4</code> has a default constructor, so ten objects are built with
+    it. The second is illegal for <em>every</em> class &mdash; you may not pass constructor
+    arguments in an array declaration. The third fails because <code>Point5</code> has no default
+    constructor.</p>
+<pre class="err">array_err.cpp:18:31: error: array must be initialized with a brace-enclosed initializer
+   18 |     Point4 array_pt43[10](a, b);      // ERROR
+      |                               ^</pre>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Rewrite the illegal <code>Point4 arr2[10](a, b);</code> two different legal ways.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>Either name each element in a brace-enclosed list, or default-construct and then fill:</p>
+<pre><code class="language-cpp">// (i) brace-enclosed initializer -- one constructor call written per element
+Point4 arr2[3] = { Point4(a, b), Point4(a, b), Point4(a, b) };
+
+// (ii) default-construct, then set in a loop
+Point4 arr3[10];
+for (int i = 0; i &lt; 10; ++i) arr3[i].set(a, b);</code></pre>
+    <p>Both print <code>print x,y -3.6 5.4</code> for every element. Version (i) needs no default
+    constructor but is only practical for a handful of elements; version (ii) scales to any size but
+    requires one. For ten identical elements a <code>vector</code> is nicer than either:
+    <code>vector&lt;Point4&gt; v(10, Point4(a, b));</code></p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Write the dynamic-allocation program: one <code>Point4</code> built with the default constructor, one with the two-argument constructor, an array of three, all printed and all released. Give the output.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Three allocations, three releases, and the release form has to match
+    the allocation form: <code>delete</code> for the two singles, <code>delete []</code> for the
+    array. Print through <code>-&gt;</code> for the pointers to single objects and through
+    subscripting for the array.</p>
+<div class="codewrap"><div class="cap">dynamic.cpp</div><pre><code class="language-cpp">// dynamic.cpp -- new and delete for a user-defined class
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point4 {
+public:
+    Point4()                   { x = 0; y = 0; }
+    Point4(double a)           { x = a; y = a; }
+    Point4(double a, double b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    int n = 3;
+    double a = -3.6;
+    double b = 5.4;
+
+    Point4 *ptr40 = new Point4;          // default constructor
+    Point4 *ptr43 = new Point4(a, b);    // non-default constructor
+    Point4 *arr40 = new Point4[n];       // default constructor, n times
+
+    ptr40-&gt;print();
+    ptr43-&gt;print();
+    for (int i = 0; i &lt; n; ++i) {
+        arr40[i].print();
+    }
+
+    delete ptr40;
+    delete ptr43;
+    delete [] arr40;
+    return 0;
+}</code></pre></div>
+<pre class="out">print x,y 0 0
+print x,y -3.6 5.4
+print x,y 0 0
+print x,y 0 0
+print x,y 0 0</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li><code>new Point4</code> and <code>new Point4(a, b)</code> both allocate one object; only
+        the second passes arguments. <code>new Point4[n]</code> cannot pass any, so it insists on a
+        default constructor.</li>
+      <li>Under <code>valgrind --leak-check=full</code> this program reports
+        <em>"All heap blocks were freed &mdash; no leaks are possible"</em>. Drop the
+        <code>delete [] arr40;</code> and you leak three objects at once.</li>
+      <li>Notice what is <em>not</em> here: any code that frees memory automatically when the
+        objects die. Every <code>delete</code> is written by hand, and forgetting one is silent.
+        Class 14's destructor exists to take that job away from you.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 3 &mdash; Rewrite with member initializer lists <span class="muted small">(from the course notes)</span></h3>
+
+<p>Rewrite the three constructors of <code>Point4</code> to use member initializer lists instead of
+assignments in the body, then answer: if the two-argument constructor is written
+<code>Point4a(double a, double b) : y(b), x(a) {}</code>, in what order are the members actually
+initialized, and does the program still produce the right answer?</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Each body assignment <code>x = a;</code> becomes a list entry
+  <code>x(a)</code>, moved in front of the braces and after a colon. Once every member is in the
+  list, the body has nothing left to do and is written <code>{}</code>.</p>
+<div class="codewrap"><div class="cap">point4a.cpp</div><pre><code class="language-cpp">class Point4a {
+public:
+    Point4a()                   : x(0), y(0) {}
+    Point4a(double a)           : x(a), y(a) {}
+    Point4a(double a, double b) : x(a), y(b) {}
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};</code></pre></div>
+<pre class="out">print x,y 0 0
+print x,y -3.6 -3.6
+print x,y -3.6 5.4</pre>
+  <p><strong>The reordered version.</strong> Members are initialized in <em>declaration</em> order,
+  and <code>x</code> is declared before <code>y</code>. So writing <code>: y(b), x(a)</code>
+  changes nothing about what happens: <code>x</code> is still initialized first, <code>y</code>
+  second, and the program still prints <code>print x,y 1.5 2.5</code> for
+  <code>Point4a p(1.5, 2.5);</code>.</p>
+  <p>It does, however, produce a warning:</p>
+<pre class="err">reorder.cpp:9:15: warning: 'Point4a::y' will be initialized after [-Wreorder]
+    9 |     double x, y;                                  // but x is declared first
+      |               ^
+reorder.cpp:6:5: warning:   when initialized here [-Wreorder]
+    6 |     Point4a(double a, double b) : y(b), x(a) {}   // written y first
+      |     ^~~~~~~</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The course notes say of the reordered list, correctly, <em>"It does not matter."</em> For
+      two independent <code>double</code>s it truly does not. The warning exists because the moment
+      one member's initializer <em>mentions</em> another member, it matters enormously &mdash; see
+      the <code>Rect</code> example in &sect;7, which prints garbage for exactly this reason.</li>
+    <li>House rule for this course: write the list in declaration order, every time. It costs
+      nothing and removes a whole category of bug.</li>
+    <li><code>set</code> keeps its body assignments. It is not a constructor; the members already
+      exist by the time it runs, so assignment is the only option there anyway.</li>
+    <li>A partial list is legal: <code>Point4a(double a, double b) : x(a) { y = b; }</code> compiles
+      and behaves identically. Use it when a member's value needs several statements to work out.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; Give an implementation for the constructors <span class="muted small">(from the Fall 2023 Final)</span></h3>
+
+<p>Given the following program with a <code>Box</code> class:</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Box {
+public:
+    Box() : length(1), width(1), height(1) {
+        cout &lt;&lt; "Box: default constructor" &lt;&lt; endl;
+    }
+    void print() {
+        cout &lt;&lt; "Box: ";
+        cout &lt;&lt; "(" &lt;&lt; length &lt;&lt; "," &lt;&lt; width &lt;&lt; "," &lt;&lt; height &lt;&lt; ")" &lt;&lt; endl;
+    }
+
+    // non-default constructor omitted here
+
+protected:
+    int length, width, height;
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Give an implementation for the non-default constructor that takes three parameters to initialize the box's dimensions and prints "Box: non-default constructor" as its first instruction. <span class="muted small">[3 points]</span></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Copy the shape of the default constructor that was handed to you. Same
+    name as the class, no return type, three <code>int</code> parameters, a member initializer list
+    setting each dimension, and the announcement as the first statement of the body.</p>
+<pre><code class="language-cpp">    Box(int l, int w, int h) : length(l), width(w), height(h) {
+        cout &lt;&lt; "Box: non-default constructor" &lt;&lt; endl;
+    }</code></pre>
+    <p>The rubric for this question awards <strong>2 of the 3 points for the title line alone</strong>
+    &mdash; that is, for <code>Box(int l, int w, int h)</code> with no return type and the right
+    parameters. Write that much even if you run out of time on the body.</p>
+    <p>An equally correct version assigns in the body:</p>
+<pre><code class="language-cpp">    Box(int l, int w, int h) {
+        cout &lt;&lt; "Box: non-default constructor" &lt;&lt; endl;
+        length = l;
+        width  = w;
+        height = h;
+    }</code></pre>
+    <p>Both score full marks. Watch the wording of the question, though: it says the message is the
+    <strong>first instruction</strong>. In the initializer-list version the members are technically
+    initialized before the body runs, but the <em>printed</em> line is still the first thing the
+    body does, and that is what the grader is checking. Some terms the same professor asks for the
+    message as the <em>last</em> instruction instead &mdash; read that sentence carefully, because
+    it changes the expected output order.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> With both constructors in place, what does <code>Box a; Box b(2, 3, 4); a.print(); b.print();</code> produce?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">box_impl.cpp</div><pre><code class="language-cpp">// box_impl.cpp -- Box with a default and a non-default constructor
+#include &lt;iostream&gt;
+using namespace std;
+
+class Box {
+public:
+    Box() : length(1), width(1), height(1) {
+        cout &lt;&lt; "Box: default constructor" &lt;&lt; endl;
+    }
+    Box(int l, int w, int h) : length(l), width(w), height(h) {
+        cout &lt;&lt; "Box: non-default constructor" &lt;&lt; endl;
+    }
+    void print() {
+        cout &lt;&lt; "Box: ";
+        cout &lt;&lt; "(" &lt;&lt; length &lt;&lt; "," &lt;&lt; width &lt;&lt; "," &lt;&lt; height &lt;&lt; ")" &lt;&lt; endl;
+    }
+    int volume() const { return length * width * height; }
+protected:
+    int length, width, height;
+};
+
+int main() {
+    Box a;
+    Box b(2, 3, 4);
+    a.print();
+    b.print();
+    cout &lt;&lt; "volume of b = " &lt;&lt; b.volume() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Box: default constructor
+Box: non-default constructor
+Box: (1,1,1)
+Box: (2,3,4)
+volume of b = 24</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>Both constructor announcements appear <em>before</em> either <code>print</code>, because
+        both objects are constructed at their declarations, at the top of <code>main</code>.</li>
+      <li><code>protected</code> rather than <code>private</code> is the professor's habit in these
+        exam classes, and it is deliberate &mdash; Problem 5 of that same exam asks you to derive
+        <code>SquareBox</code> from <code>Box</code>, and a derived class can reach
+        <code>protected</code> members but not <code>private</code> ones. That is Class 19.</li>
+      <li><code>print()</code> as given is <em>not</em> <code>const</code>. It should be &mdash; it
+        changes nothing &mdash; but copy the signature you are given rather than improving it, or
+        you risk a mismatch with the rest of the printed question.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; Constructor-call trace <span class="muted small">(from the Fall 2023 Final)</span></h3>
+
+<p>This is the exam's most repeated shape: every constructor prints its own name, and you must give
+the exact output, in order, of a <code>main</code> that builds several objects. Assume the
+<code>Box</code> class is implemented as below &mdash; the two constructors from Problem 4, plus a
+<strong>copy constructor</strong>, which is Class 14's material and is included here only so that
+the trace is complete. It runs whenever a new <code>Box</code> is built as a copy of an existing
+one.</p>
+
+<div class="codewrap"><div class="cap">box_trace.cpp</div><pre><code class="language-cpp">// box_trace.cpp -- every constructor announces itself
+#include &lt;iostream&gt;
+using namespace std;
+
+class Box {
+public:
+    Box() : length(1), width(1), height(1) {
+        cout &lt;&lt; "Box: default constructor" &lt;&lt; endl;
+    }
+    Box(int l, int w, int h) : length(l), width(w), height(h) {
+        cout &lt;&lt; "Box: non-default constructor" &lt;&lt; endl;
+    }
+    Box(const Box &amp;rhs) : length(rhs.length), width(rhs.width), height(rhs.height) {
+        cout &lt;&lt; "Box: copy constructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; "Box: (" &lt;&lt; length &lt;&lt; "," &lt;&lt; width &lt;&lt; "," &lt;&lt; height &lt;&lt; ")" &lt;&lt; endl;
+    }
+private:
+    int length, width, height;
+};
+
+int main() {
+    Box a, b(1, 2, 3);
+    Box c = a;
+    c.print();
+    Box d = Box(4, 5, 6);
+    d.print();
+    Box e[2];
+    e[0].print();
+    Box *p = new Box(7, 8, 9);
+    p-&gt;print();
+    delete p;
+    return 0;
+}</code></pre></div>
+
+<p>Write down every line the program prints, in order, before opening the solution. There are
+eleven of them.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Walk <code>main</code> one statement at a time. For each one ask two
+  questions: <em>is an object being created here?</em> and if so, <em>which constructor matches the
+  arguments?</em> A statement can create more than one object &mdash; <code>Box a, b(1,2,3);</code>
+  is two declarations, and <code>Box e[2];</code> is two objects. A statement can also create none:
+  <code>c.print()</code> just prints.</p>
+<pre class="out">Box: default constructor
+Box: non-default constructor
+Box: copy constructor
+Box: (1,1,1)
+Box: non-default constructor
+Box: (4,5,6)
+Box: default constructor
+Box: default constructor
+Box: (1,1,1)
+Box: non-default constructor
+Box: (7,8,9)</pre>
+  <p>Line by line:</p>
+  <table class="trace">
+    <tr><th>Statement</th><th>Objects created</th><th>Output</th></tr>
+    <tr><td><code>Box a, b(1, 2, 3);</code></td><td><code>a</code> (no args), then <code>b</code> (three ints)</td><td><code>Box: default constructor</code><br><code>Box: non-default constructor</code></td></tr>
+    <tr><td><code>Box c = a;</code></td><td><code>c</code>, built <em>from an existing Box</em></td><td><code>Box: copy constructor</code></td></tr>
+    <tr><td><code>c.print();</code></td><td>none</td><td><code>Box: (1,1,1)</code> &mdash; <code>c</code> copied <code>a</code>, and <code>a</code> is the default 1,1,1</td></tr>
+    <tr><td><code>Box d = Box(4, 5, 6);</code></td><td><code>d</code> &mdash; <strong>one</strong> object, not two</td><td><code>Box: non-default constructor</code></td></tr>
+    <tr><td><code>d.print();</code></td><td>none</td><td><code>Box: (4,5,6)</code></td></tr>
+    <tr><td><code>Box e[2];</code></td><td>two elements, each default-constructed</td><td><code>Box: default constructor</code> twice</td></tr>
+    <tr><td><code>e[0].print();</code></td><td>none</td><td><code>Box: (1,1,1)</code></td></tr>
+    <tr><td><code>Box *p = new Box(7, 8, 9);</code></td><td>one, on the heap</td><td><code>Box: non-default constructor</code></td></tr>
+    <tr><td><code>p-&gt;print();</code></td><td>none</td><td><code>Box: (7,8,9)</code></td></tr>
+    <tr><td><code>delete p;</code></td><td>&mdash;</td><td>nothing yet &mdash; there is no destructor in this class. Class 14 adds one, and then this line prints too.</td></tr>
+  </table>
+  <p><strong>The subtle line is <code>Box d = Box(4, 5, 6);</code>.</strong> Read naively it looks
+  like two steps: build a temporary <code>Box</code> from 4, 5, 6, then copy-construct
+  <code>d</code> from it &mdash; which would print <em>two</em> lines, a non-default constructor and
+  a copy constructor. It prints one. Since C++17 the language <strong>requires</strong> the compiler
+  to construct <code>d</code> directly from the arguments, with no temporary and no copy at all.
+  This is called <strong>copy elision</strong>, and in this particular form it is mandatory, not an
+  optimization you can turn off. Proof:</p>
+<pre class="shell">g++ -std=c++17 -fno-elide-constructors box_trace.cpp -o box_trace
+./box_trace</pre>
+  <p>&hellip; still prints eleven lines. Ask for the older language rules and the copy comes back:</p>
+<pre class="shell">g++ -std=c++14 -fno-elide-constructors box_trace.cpp -o box_trace
+./box_trace</pre>
+<pre class="out">Box: default constructor
+Box: non-default constructor
+Box: copy constructor
+Box: (1,1,1)
+Box: non-default constructor
+Box: copy constructor
+Box: (4,5,6)
+Box: default constructor
+Box: default constructor
+Box: (1,1,1)
+Box: non-default constructor
+Box: (7,8,9)</pre>
+  <p>Twelve lines, with an extra <code>Box: copy constructor</code> after the fifth. So the count of
+  constructor calls in these traces is <em>not</em> always what a naive step-by-step reading
+  predicts, and which answer is right depends on the language standard. In this course, answer for
+  <code>-std=c++17</code>: <strong>a temporary used to initialize a new object of the same type
+  costs no extra constructor call.</strong></p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>Box c = a;</code> uses <code>=</code> but is <em>not</em> an assignment &mdash;
+      <code>c</code> is being created, so this is initialization, and it calls the copy constructor.
+      <code>c = a;</code> on a <code>c</code> that already exists is a different operation entirely
+      (the assignment operator, Class 15). Telling those two apart is worth several points every
+      time this question appears.</li>
+    <li>An array declaration produces one constructor call per element, and they run in index
+      order.</li>
+    <li><code>new</code> runs the constructor exactly like an ordinary declaration does. The
+      allocation and the construction are one step.</li>
+    <li>On the real exam this class also has a destructor, an assignment operator and an
+      <code>operator+</code>, so the trace runs considerably longer and includes destruction in
+      reverse order of construction &mdash; the midterm versions of this question warn students to
+      expect about sixteen lines. We have the constructor half of it today; Class 14 supplies the
+      rest.</li>
+    <li>The grading is one point per line of output, and there is no partial credit for a line that
+      is nearly right. Write the lines out in order rather than describing them.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Write C++ statements <span class="muted small">(added)</span></h3>
+
+<p>Do not write a complete program; give a single line, or a few lines, of C++ for each task.
+Assume the <code>Point4</code> class of &sect;3 is available and that <code>a</code> and
+<code>b</code> are <code>double</code>s.</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare an object <code>p</code> of type <code>Point4</code> initialized to (2.5, 7.5).</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Point4 p(2.5, 7.5);</code></pre>
+    <p>Two arguments, so the two-argument constructor. No <code>=</code>, no <code>new</code>, and
+    no empty parentheses anywhere.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Declare an array <code>arr</code> of five <code>Point4</code> objects.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Point4 arr[5];</code></pre>
+    <p>All five are built with the default constructor. This line is only legal because
+    <code>Point4</code> has one; you cannot supply arguments here.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Dynamically allocate one <code>Point4</code> initialized to (1.0, 1.0) and store its address in a pointer <code>q</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Point4 *q = new Point4(1.0, 1.0);</code></pre>
+    <p>A single <code>new</code> may pass constructor arguments &mdash; unlike the array form.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Dynamically allocate an array of five <code>Point4</code> objects, address in <code>r</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Point4 *r = new Point4[5];</code></pre>
+    <p>Default constructor, five times. There is no syntax for passing arguments to
+    <code>new T[n]</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Release both dynamic allocations.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">delete q;
+delete [] r;</code></pre>
+    <p>Here is the whole set, compiled and run together so you can see it works:</p>
+<div class="codewrap"><div class="cap">statements.cpp</div><pre><code class="language-cpp">// statements.cpp -- the five statements, wrapped in a program that proves they work
+int main() {
+    Point4 p(2.5, 7.5);                 // (a)
+    Point4 arr[5];                      // (b)
+    Point4 *q = new Point4(1.0, 1.0);   // (c)
+    Point4 *r = new Point4[5];          // (d)
+
+    p.print();
+    arr[0].print();
+    q-&gt;print();
+    r[4].print();
+
+    delete q;                           // (e)
+    delete [] r;                        // (e)
+    return 0;
+}</code></pre></div>
+<pre class="out">print x,y 2.5 7.5
+print x,y 0 0
+print x,y 1 1
+print x,y 0 0</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>The brackets in <code>delete [] r;</code> are not optional decoration. Using plain
+        <code>delete</code> on an array allocated with <code>new[]</code> is undefined behavior; on
+        this professor's exams it also costs the point outright.</li>
+      <li>Every one of these five lines is a constructor question in disguise. If the class were
+        <code>Point5</code>, with no default constructor, (b) and (d) would both fail to compile and
+        (a), (c) and (e) would be unaffected.</li>
+      <li>Questions in this format carry no partial credit per sub-task, so write the punctuation
+        carefully &mdash; the semicolon, the brackets, the asterisk in the declaration.</li>
+    </ul>
+  </div></details>
+</div>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>A <strong>constructor</strong> is called automatically when an object is created. The
+        compiler recognizes it by two features: <strong>the name matches the class</strong> and
+        there is <strong>no return type</strong>.</li>
+      <li>A <strong>default constructor</strong> takes no arguments and is therefore unique &mdash;
+        a class has at most one. <strong>Non-default constructors</strong> take arguments and a
+        class may have as many as it likes, provided the argument lists differ.</li>
+      <li>If you write <em>no</em> constructor, the compiler generates a default one that
+        default-initializes each member: class-type members get their own default constructor,
+        built-in members get nothing and hold garbage.</li>
+      <li>The compiler picks a constructor by matching the arguments. It will apply standard
+        conversions to find an acceptable match (<code>int</code> to <code>double</code>), and
+        reports <em>no matching function</em> when none exists. A one-argument constructor also
+        defines an implicit conversion; <code>explicit</code> switches that off.</li>
+      <li><strong>Write any constructor and the free default constructor disappears.</strong> The
+        compiler generates one only if you write none at all. Symptom:
+        <em>"no matching function for call to 'C::C()'"</em>.</li>
+      <li>Arrays of objects, and <code>new T[n]</code>, require a default constructor and cannot be
+        given constructor arguments. A single <code>new T(args)</code> can. Pair
+        <code>delete</code> with <code>new</code> and <code>delete []</code> with
+        <code>new[]</code>.</li>
+      <li>A <code>private</code> constructor restricts who may create objects at all, not just who
+        may touch the data.</li>
+      <li>A <strong>member initializer list</strong> &mdash; <code>: x(a), y(b)</code> before the
+        body &mdash; initializes members as they are created rather than assigning afterwards. It is
+        <em>required</em> for <code>const</code> members, reference members, members whose class has
+        no default constructor, and (from Class 20) base classes.</li>
+      <li>Members are initialized in <strong>declaration order</strong>, never in list order. Write
+        the list in declaration order so the two agree.</li>
+    </ul>
+    <p><strong>Coming up in Class 14:</strong> the other end of an object's life &mdash; the
+    destructor that runs when it dies, what goes wrong when an object owning a <code>new</code>'d
+    array is copied, and the copy constructor that performs a proper deep copy.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 11 &middot; Exam 1 Review</div><div class="pending">posts Tue Oct 6</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 14 &middot; Destructor &amp; Copy</div><div class="pending">posts Tue Oct 20</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,2834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 17 — Operators I | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 17 &middot; Operators I</span><span class="sep">|</span><span class="where">Thu Oct 29</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 17 &middot; CSCI 211</div>
+  <h1>Operator Overloading I &mdash; Member and Free Functions</h1>
+  <p class="sub">Why <code>p1 + p2</code> is a function call, how to write that function, and the one decision &mdash; class method or free function &mdash; that everything else in operator overloading turns on.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain why <code>P1plus(P1plus(p1, p2), p3)</code> is a bad design and what writing <code>p1 + p2 + p3</code> instead actually buys you.</li>
+      <li>Read <code>operator+</code> as what it is &mdash; an ordinary function with an unusual name &mdash; and name its <em>operands</em> and its return type.</li>
+      <li>Write a binary operator for a class of your own as a <strong>free (non-member) function</strong>.</li>
+      <li>Write the same operator as a <strong>class method</strong>, and say why the parameter count drops by exactly one.</li>
+      <li>Explain why <code>p * 2.0</code> can be a method but <code>2.0 * p</code> cannot, and write the free function that repairs the asymmetry.</li>
+      <li>Write <strong>unary</strong> operators in both forms, and say how the compiler tells unary <code>-</code> from binary <code>-</code>.</li>
+      <li>State which operators cannot be overloaded, and why you can neither invent a new operator nor change precedence.</li>
+      <li>Decide whether an overloaded operator should return <strong>by value</strong> or <strong>by reference</strong>, and predict the failure when you get that wrong.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Functions that do arithmetic but don't look like it</a></li>
+    <li><a href="#s2"><code>operator+</code> is a function name</a></li>
+    <li><a href="#s3">Operators as free functions</a></li>
+    <li><a href="#s4">Precedence and grouping come for free</a></li>
+    <li><a href="#s5">Unary operators</a></li>
+    <li><a href="#s6">Operators as class methods</a></li>
+    <li><a href="#s7"><code>2.0 * p</code>: the asymmetry that forces a free function</a></li>
+    <li><a href="#s8">The limits, and what to return</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Functions that do arithmetic but don't look like it</h2>
+
+<p>You already know how to write a function that adds two objects. Take the <code>Point1</code> class you have
+been carrying since Class 9 &mdash; two private <code>double</code> members, a <code>set</code>, two accessors and a
+<code>print</code> &mdash; and write a function that produces the point whose coordinates are the sums of two
+other points' coordinates. Nothing here is new:</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; adding points with named functions</span></div>
+  <div class="bd">
+    <p>Two ordinary free functions, <code>P1plus</code> and <code>P1minus</code>, plus a <code>main</code> that uses them. The last
+    two statements in <code>main</code> are the interesting part: they each add <em>three</em> points, grouped
+    two different ways. Work out all four lines of output before you open the toggle.</p>
+<div class="codewrap"><div class="cap">p1funcs.cpp</div><pre><code class="language-cpp">// p1funcs.cpp -- adding Point1 objects with ordinary named functions
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() { x = 0.0; y = 0.0; }
+    Point1(double a, double b) { x = a; y = b; }
+
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+Point1 P1plus(const Point1 &amp;u, const Point1 &amp;v) {
+    double xsum = u.getx() + v.getx();
+    double ysum = u.gety() + v.gety();
+    Point1 p;
+    p.set(xsum, ysum);
+    return p;
+}
+
+Point1 P1minus(const Point1 &amp;u, const Point1 &amp;v) {
+    double xdiff = u.getx() - v.getx();
+    double ydiff = u.gety() - v.gety();
+    Point1 p;
+    p.set(xdiff, ydiff);
+    return p;
+}
+
+int main() {
+    Point1 p1, p2, p3;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+    p3.set(0.4, 0.5);
+
+    Point1 pa = P1plus(p1, p2);
+    Point1 pb = P1minus(p1, p2);
+    pa.print();
+    pb.print();
+
+    Point1 p123a = P1plus(P1plus(p1, p2), p3);
+    Point1 p123b = P1plus(p1, P1plus(p2, p3));
+    p123a.print();
+    p123b.print();
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 6.6 4.4
+print x,y 2.2 2.2
+print x,y 7 4.9
+print x,y 7 4.9</pre>
+    <p>The arithmetic is exactly what you would expect: 4.4 + 2.2 is 6.6, 3.3 + 1.1 is 4.4, and both
+    three-point sums come out to (7, 4.9) &mdash; addition doesn't care how you group it, so the two
+    nested calls agree.</p>
+    <p>The code, on the other hand, is a mess. Read the two nested calls out loud:</p>
+<pre><code class="language-cpp">Point1 p123a = P1plus(P1plus(p1, p2), p3);
+Point1 p123b = P1plus(p1, P1plus(p2, p3));</code></pre>
+    <p>The professor's own comment on this slide is blunt: <em>"The expressions to add three objects
+    p1 + p2 + p3 are particularly ugly."</em> And then: <em>"Although it works, it is a bad software
+    design."</em></p>
+    <p>Why is it bad, specifically? Because the notation has stopped matching the idea. The <em>idea</em>
+    is arithmetic. The <em>notation</em> is nested function calls, in which the operands drift further
+    and further from the operation as the expression grows. Four points would give you
+    <code>P1plus(P1plus(P1plus(p1, p2), p3), p4)</code> &mdash; five tokens of punctuation before you reach the
+    first thing being added. Every reader of that line has to unpick the parentheses to recover a
+    meaning they would have grasped instantly from <code>p1 + p2 + p3 + p4</code>.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Notice too that we have already been forced into a second design decision that nobody asked for.
+Suppose we also want to scale a point by a number, the way you would multiply a vector by a scalar.
+Now there are <em>two</em> operations, not one:</p>
+
+<pre><code class="language-cpp">Point1 pc = c1 * p1;      // number on the left, point on the right
+Point1 pd = p2 * c2;      // point on the left, number on the right</code></pre>
+
+<p>To a mathematician those are the same thing. To the compiler they are not, and the professor is
+explicit about it: <em>"To the compiler, these are distinct operations because the operands are
+different. The compiler does not automatically know they are equal."</em> Hold on to that sentence.
+It is the whole of &sect;7.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the course notes' <code>Point1</code> has no constructor</span></div>
+  <div class="bd">
+    <p>The <code>Point1</code> class as printed in the original lecture notes has <strong>no constructor at
+    all</strong>. Every program in that lecture opens with</p>
+<pre><code class="language-cpp">Point1 p1, p2, p3;
+p1.set(4.4, 3.3);</code></pre>
+    <p>and between those two lines <code>p1.x</code> and <code>p1.y</code> hold whatever bit pattern was already in that
+    memory. That is precisely the defect Class 13 spent fifty minutes on. The notes are internally
+    inconsistent here: the lecture that teaches constructors comes <em>before</em> this one, and then
+    this one quietly goes back to the constructor-less class.</p>
+    <p>These notes add a default constructor (setting both coordinates to 0.0) and a two-argument
+    constructor, and every program on this page uses them. Nothing about operator overloading changes
+    as a result &mdash; but <code>Point1 p1;</code> now means something definite.</p>
+    <p>The lesson is not "the professor made a mistake." It is that teaching material drifts as it is
+    reused, and production code must not. When you copy a class out of a slide deck into a real
+    program, check its constructors first. If a class can be declared into existence holding garbage,
+    somebody will eventually declare one and read it.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.1</div>
+  <div class="bd">
+    <p>Stay with <code>P1plus</code> and <code>P1minus</code> for a moment.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Using only those two functions, write the statement that computes <code>(p1 + p2) - (p3 + p1)</code> and stores it in a <code>Point1</code> called <code>pz</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Point1 pz = P1minus(P1plus(p1, p2), P1plus(p3, p1));</code></pre>
+        <p>Count what you had to do to write that: decide the outermost operation first, then work
+        inward, then match up three pairs of parentheses. The mathematical expression it encodes is
+        eleven characters long.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>P1plus</code> takes its parameters as <code>const Point1 &amp;</code>. What would go wrong if it took them as plain <code>Point1</code> instead &mdash; and what would go wrong if it took them as plain <code>Point1 &amp;</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Plain <code>Point1</code> (by value):</strong> nothing breaks, but every call copies both
+        objects. For a two-<code>double</code> class that is cheap; for a class holding a dynamically allocated
+        array it means two full deep copies per addition, and (as Class 14 showed) it means the copy
+        constructor runs twice on every call. Passing by <code>const</code> reference avoids all of it.</p>
+        <p><strong>Plain <code>Point1 &amp;</code> (non-<code>const</code> reference):</strong> this one actually breaks. A
+        non-<code>const</code> reference cannot bind to a temporary, and <code>P1plus(p1, p2)</code> <em>is</em> a temporary
+        the moment you try to feed it into another <code>P1plus</code>. So the nested call in the program above
+        would stop compiling. We will see the exact error message in &sect;3 &mdash; it is worth
+        recognizing, because the same trap catches people writing operators.</p>
+        <p>The rule that comes out of this, and it holds for the rest of the semester: <strong>an
+        operand you only read should be a <code>const</code> reference.</strong></p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span><code>operator+</code> is a function name</h2>
+
+<p>Here is the idea that fixes everything above, and it is smaller than it looks. C++ lets you choose
+a function's name from a short list of <em>symbols</em> instead of from the usual alphabet of
+identifiers. If you name your function <code>operator+</code>, then the compiler will call it whenever it sees a
+<code>+</code> between two things of the types your function accepts.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; operator overloading</span></div>
+  <div class="bd">
+    <p><strong>Operator overloading</strong> is defining what a built-in operator symbol means when
+    at least one of its operands is an object of a class you wrote. You do it by writing a function
+    whose name is the keyword <code>operator</code> followed immediately by the operator's symbol &mdash;
+    <code>operator+</code>, <code>operator-</code>, <code>operator*</code>, <code>operator==</code>, <code>operator=</code>.</p>
+    <p>The professor's phrasing: <em>"As well as writing functions, C++ permits us to write
+    operators."</em> That is true, but it slightly undersells how mechanical the trick is. You are not
+    writing a new kind of thing. You are writing <strong>an ordinary function with a strange
+    name</strong>, and the compiler agrees to let you call it with infix notation.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; operand, unary, binary</span></div>
+  <div class="bd">
+    <p>The input arguments of an operator are called its <strong>operands</strong>. They are ordinary
+    function parameters; the only difference from a normal call is where they are written. As the
+    professor puts it: <em>"The operator + acts on the operands on its left and its right."</em></p>
+    <p>An operator with two operands is <strong>binary</strong>: <code>a + b</code>, <code>a * b</code>, <code>a == b</code>.
+    An operator with one operand is <strong>unary</strong>: <code>-a</code>, <code>!a</code>, <code>++a</code>. Some symbols are
+    both &mdash; <code>-</code> is binary in <code>a - b</code> and unary in <code>-a</code>.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; writing an overloaded operator, in three decisions</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>The name.</strong> Instead of a function name, write the keyword <code>operator</code> and then
+        the operator symbol, with no space between them in the name itself: <code>operator+</code>. (A space
+        before the parenthesis is fine: <code>operator+ (...)</code> and <code>operator+(...)</code> are the same
+        declaration.)</li>
+      <li><strong>The operands.</strong> Decide how many there are and what type each one is. This is
+        just a parameter list. For a binary operator written outside a class, the <em>first</em>
+        parameter is the left operand and the <em>second</em> is the right operand, in that order.</li>
+      <li><strong>The return type.</strong> Decide what the expression <code>a + b</code> should evaluate to, and
+        write that type in front. This is the decision students skip, and it is the one worth
+        thinking about.</li>
+    </ol>
+  </div>
+</div>
+
+<p>The professor asks a good question at this point about step 3: <em>"Is the return type
+obvious?"</em> Most people's instinct is yes &mdash; surely adding two things gives you a thing of the
+same type. But look at what C++ already does with the <code>+</code> you have used since your first week. It is,
+in the professor's words, <em>"one of the most heavily overloaded operators. We make use of the
+overloading all the time without even thinking."</em></p>
+
+<table class="trace">
+  <tr><th>Left operand</th><th>Right operand</th><th>Return type</th></tr>
+  <tr><td><code>int</code></td><td><code>int</code></td><td><code>int</code></td></tr>
+  <tr><td><code>int</code></td><td><code>double</code></td><td><code>double</code></td></tr>
+  <tr><td><code>double</code></td><td><code>int</code></td><td><code>double</code></td></tr>
+  <tr><td><code>double</code></td><td><code>double</code></td><td><code>double</code></td></tr>
+</table>
+
+<p>Four overloads for two types, and the language has to supply the same table for <code>char</code>, <code>long</code>,
+<code>unsigned</code>, <code>float</code> and the rest. Two of those four rows return a type that is <em>neither</em> operand's
+type in the naive sense &mdash; <code>int + double</code> gives a <code>double</code>. And there are combinations with no
+answer at all: the professor asks what <code>+</code> returns for a <code>double</code> and a <code>string</code>, and the answer is
+that the operation simply does not exist. So the conclusion is his: <em>"the correct answer is that
+the return type is <strong>not obvious</strong>."</em> You choose it, deliberately, every time.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>An overloaded operator is a function. Its name happens to be spelled with a symbol, and the
+    compiler happens to let you call it in infix position. Everything you already know about functions
+    &mdash; parameters, <code>const</code> references, return types, overload resolution &mdash; applies
+    unchanged. When an operator confuses you, rewrite the expression as an explicit function call in
+    your head and the confusion usually evaporates.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.2</div>
+  <div class="bd">
+    <p>For each expression below, say (i) how many operands the operator has, (ii) what type each
+    operand is, and (iii) what return type is the sensible choice. Assume <code>Point1</code> is the class from
+    &sect;1 and <code>c</code> is a <code>double</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>p1 + p2</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Two operands, both <code>Point1</code>. The sensible return type is <code>Point1</code> &mdash; the sum of two
+        points is a point. This is the easy case, and it is the case that makes people believe the
+        return type is always obvious.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>c * p1</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Two operands: a <code>double</code> on the left and a <code>Point1</code> on the right. The return type is
+        <code>Point1</code>. Note that the two operand types differ, and that their <em>order</em> is part of the
+        function's identity &mdash; <code>operator*(double, const Point1&amp;)</code> and
+        <code>operator*(const Point1&amp;, double)</code> are two different functions, exactly as <code>f(double, int)</code>
+        and <code>f(int, double)</code> would be.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>p1 == p2</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Two operands, both <code>Point1</code>, and the return type is <strong><code>bool</code></strong> &mdash; not
+        <code>Point1</code>. Here the "obvious" instinct fails outright. A comparison answers a question; it does
+        not produce a point.</p>
+        <p>This is why the professor's summary slide lists the return types separately by family:
+        comparisons return <code>bool</code>; <code>+</code>, <code>-</code> and <code>*</code> typically return an object; <code>operator=</code> returns a
+        reference. You are free to choose, but the choice has to make the expression mean something.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>-p1</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>One</strong> operand, of type <code>Point1</code>, returning <code>Point1</code>. This is unary minus,
+        and it is a different function from the binary <code>operator-</code> even though the symbol is the same.
+        The professor's aside is worth repeating: <em>"We do not normally think of the expression
+        &minus;p as an operator, but it is."</em></p>
+        <p>The wrap-up for all four parts: the operator symbol alone tells you almost nothing. What
+        identifies the function is the symbol <em>plus the number and types of the operands, in
+        order</em>. That triple is the signature, and overload resolution matches on it exactly the
+        way it does for functions with ordinary names.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Operators as free functions</h2>
+
+<p>The quickest route to a working operator is to take the free function you already have, and change
+its name. That is literally all that separates the next listing from &sect;1: <code>P1plus</code> becomes
+<code>operator+</code>, <code>P1minus</code> becomes <code>operator-</code>. Nothing else about the bodies changes.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; free function</span></div>
+  <div class="bd">
+    <p>A <strong>free function</strong> (also called a non-member function) is a function declared
+    outside any class, at namespace scope. It has no <code>this</code> pointer and no automatic access to any
+    class's private members &mdash; it reaches an object's data only through that object's public
+    interface, exactly as <code>main</code> does.</p>
+    <p>An operator written as a free function is a perfectly ordinary free function. When you write
+    <code>p1 + p2</code>, the compiler rewrites it internally as the call <code>operator+(p1, p2)</code>.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same program, now with operators</span></div>
+  <div class="bd">
+    <p>Five overloads: <code>+</code> and <code>-</code> on two points, <code>*</code> in both scalar orders, and a unary <code>-</code> we come
+    back to in &sect;5. Compare <code>main</code> with the one in &sect;1 &mdash; the arithmetic is the same, the
+    notation is not. Predict all nine lines.</p>
+<div class="codewrap"><div class="cap">p1ops.cpp</div><pre><code class="language-cpp">// p1ops.cpp -- the same four operations, written as overloaded operators
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() { x = 0.0; y = 0.0; }
+    Point1(double a, double b) { x = a; y = b; }
+
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+Point1 operator+ (const Point1 &amp;u, const Point1 &amp;v) {
+    double xsum = u.getx() + v.getx();
+    double ysum = u.gety() + v.gety();
+    Point1 p;
+    p.set(xsum, ysum);
+    return p;
+}
+
+Point1 operator- (const Point1 &amp;u, const Point1 &amp;v) {
+    double xdiff = u.getx() - v.getx();
+    double ydiff = u.gety() - v.gety();
+    Point1 p;
+    p.set(xdiff, ydiff);
+    return p;
+}
+
+Point1 operator* (double c, const Point1 &amp;u) {
+    double x = u.getx() * c;
+    double y = u.gety() * c;
+    Point1 p;
+    p.set(x, y);
+    return p;
+}
+
+Point1 operator* (const Point1 &amp;u, double c) {
+    return (c * u);              // delegate to the overload declared above
+}
+
+Point1 operator- (const Point1 &amp;u) {          // unary minus
+    double xneg = -u.getx();
+    double yneg = -u.gety();
+    Point1 p;
+    p.set(xneg, yneg);
+    return p;
+}
+
+int main() {
+    double c1 = 2.0;
+    double c2 = 3.0;
+    Point1 p1, p2, p3;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+    p3.set(0.4, 0.5);
+
+    Point1 pa = p1 + p2;
+    Point1 pb = p1 - p2;
+    Point1 pc = c1 * p1;
+    Point1 pd = p2 * c2;
+    Point1 pe = p1 + p2 + p3;
+    Point1 pf = c1 * p1 * c2;
+    Point1 pg = p1 + p2*c2;
+    Point1 ph = c1*(p1 + p2*c2);
+    Point1 pj = -p1;
+
+    pa.print();
+    pb.print();
+    pc.print();
+    pd.print();
+    pe.print();
+    pf.print();
+    pg.print();
+    ph.print();
+    pj.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 6.6 4.4
+print x,y 2.2 2.2
+print x,y 8.8 6.6
+print x,y 6.6 3.3
+print x,y 7 4.9
+print x,y 26.4 19.8
+print x,y 11 6.6
+print x,y 22 13.2
+print x,y -4.4 -3.3</pre>
+    <table class="trace">
+      <tr><th>Statement</th><th>Which overload the compiler picks</th><th>Result</th></tr>
+      <tr><td><code>Point1 pa = p1 + p2;</code></td><td><code>operator+(const Point1&amp;, const Point1&amp;)</code></td><td>(6.6, 4.4)</td></tr>
+      <tr><td><code>Point1 pb = p1 - p2;</code></td><td>binary <code>operator-(const Point1&amp;, const Point1&amp;)</code></td><td>(2.2, 2.2)</td></tr>
+      <tr><td><code>Point1 pc = c1 * p1;</code></td><td><code>operator*(double, const Point1&amp;)</code></td><td>(8.8, 6.6)</td></tr>
+      <tr><td><code>Point1 pd = p2 * c2;</code></td><td><code>operator*(const Point1&amp;, double)</code>, which delegates</td><td>(6.6, 3.3)</td></tr>
+      <tr><td><code>Point1 pj = -p1;</code></td><td>unary <code>operator-(const Point1&amp;)</code></td><td>(&minus;4.4, &minus;3.3)</td></tr>
+    </table>
+    <p>Two things to take from the listing itself. First, the bodies are unchanged from <code>P1plus</code> and
+    <code>P1minus</code> &mdash; renaming a function does not alter what it does. Second, look at
+    <code>operator*(const Point1&amp;, double)</code>:</p>
+<pre><code class="language-cpp">Point1 operator* (const Point1 &amp;u, double c) {
+    return (c * u);
+}</code></pre>
+    <p>Its whole body is one line that flips the operands and hands the work to the <em>other</em>
+    <code>operator*</code>. Writing the arithmetic once and delegating is exactly right &mdash; if you ever change
+    how scaling works, there is only one place to change it. But it does introduce an ordering
+    dependency, which the next box is about.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a delegating operator declared too early</span></div>
+  <div class="bd">
+    <p><code>operator*(const Point1&amp;, double)</code> calls <code>c * u</code>, which means it needs
+    <code>operator*(double, const Point1&amp;)</code> to already be <strong>declared</strong>. In the listing
+    above it is &mdash; it sits immediately before. Swap the two functions and the program stops
+    compiling, even though not one character inside either body changed:</p>
+<pre class="err">order_bad.cpp: In function 'Point1 operator*(const Point1&amp;, double)':
+order_bad.cpp:16:15: error: no match for 'operator*' (operand types are 'double' and 'const Point1')
+   16 |     return (c * u);            // needs operator*(double, const Point1&amp;) -- not yet declared
+      |             ~ ^ ~
+      |             |   |
+      |             |   const Point1
+      |             double
+order_bad.cpp:15:8: note: candidate: 'Point1 operator*(const Point1&amp;, double)'</pre>
+    <p>This is the ordinary C++ rule that a name must be declared before it is used, not a special
+    operator rule &mdash; but it bites harder here because the call site says <code>c * u</code> and does not
+    look like a call to anything. Note the compiler's <code>note:</code> line: the only candidate it could find
+    was the function we are <em>inside</em>, which is a good clue that something above is missing.</p>
+    <p>If you would rather not depend on listing order, declare both overloads up front (a prototype
+    line each, before either body) and then define them in whatever order you like. That is the same
+    fix you used for mutually recursive functions in Class 2.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.3</div>
+  <div class="bd">
+    <p>A student drops the two <code>const</code> keywords from the operands of <code>operator+</code>, so it reads
+    <code>Point1 operator+ (Point1 &amp;u, Point1 &amp;v)</code>. The line <code>Point1 pa = p1 + p2;</code> still compiles.
+    The line <code>Point1 pe = p1 + p2 + p3;</code> does not.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Why does the three-term version fail when the two-term version succeeds?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>p1 + p2 + p3</code> groups as <code>(p1 + p2) + p3</code>. The inner addition produces a brand-new
+        <code>Point1</code> that has no name and no home &mdash; a <strong>temporary</strong>. That temporary
+        then has to become the left operand of the outer <code>+</code>.</p>
+        <p>A non-<code>const</code> reference parameter is a promise that the function might <em>write</em> to
+        the caller's object, so C++ refuses to bind one to a temporary: writing to something that is
+        about to be destroyed is almost certainly a bug, so the language makes it an error. A <code>const</code>
+        reference makes no such promise and binds to temporaries happily.</p>
+        <p>Here is the real message, and it is worth reading all the way to the last line:</p>
+<pre class="err">nonconst.cpp: In function 'int main()':
+nonconst.cpp:29:25: error: no match for 'operator+' (operand types are 'Point1' and 'Point1')
+   29 |     Point1 pe = p1 + p2 + p3;     // p1 + p2 is a temporary
+      |                 ~~~~~~~ ^ ~~
+nonconst.cpp:16:8: note: candidate: 'Point1 operator+(Point1&amp;, Point1&amp;)' (near match)
+nonconst.cpp:16:8: note:   conversion of argument 1 would be ill-formed:
+nonconst.cpp:29:20: error: cannot bind non-const lvalue reference of type 'Point1&amp;' to an rvalue of type 'Point1'</pre>
+        <p><em>"no match for <code>operator+</code> (operand types are <code>Point1</code> and <code>Point1</code>)"</em> is a
+        wonderfully unhelpful first line &mdash; the types plainly do match. The useful line is the
+        <code>(near match)</code> note, and then <em>"cannot bind non-const lvalue reference ... to an
+        rvalue."</em> When you see that phrase, look for a missing <code>const</code> on a reference parameter.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> The same student's <code>operator+</code> compiles fine on its own. Is there a stronger reason than "temporaries" to mark the operands <code>const</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes: it is a statement of intent that the compiler enforces. <code>a + b</code> should not change <code>a</code>
+        or <code>b</code>. Marking the operands <code>const</code> means that if you ever slip and write <code>u.set(...)</code> inside
+        the body, you get a compile error instead of an addition with a side effect &mdash; and an
+        addition with a side effect is very close to unfindable, because nobody reading <code>p1 + p2</code>
+        suspects it.</p>
+        <p>The same argument produces the <code>const</code> on the <em>method</em> form of these operators in
+        &sect;6. The professor states the principle there: <em>"Unlike the assignment <code>operator=</code>, the
+        operators <code>+</code> and <code>-</code> do not change 'this' object. They create a new object internally and
+        return it as the return value."</em></p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write a binary operator as a free function</h3>
+
+<p>Given the <code>Point1</code> class below, write <code>operator-</code> for two points as a free function, so that
+<code>p1 - p2</code> gives the point of coordinate differences. Then use it twice, in both orders, so you can
+see that subtraction is not symmetric.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="29" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() { x = 0.0; y = 0.0; }
+    Point1(double a, double b) { x = a; y = b; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const { cout &lt;&lt; &quot;print x,y &quot; &lt;&lt; x &lt;&lt; &quot; &quot; &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+// Write operator- here. Two operands, both const Point1 references.
+
+
+int main() {
+    Point1 p1, p2;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+
+    // Print p1 - p2, then p2 - p1.
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() { x = 0.0; y = 0.0; }
+    Point1(double a, double b) { x = a; y = b; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+// Write operator- here. Two operands, both const Point1 references.
+
+
+int main() {
+    Point1 p1, p2;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+
+    // Print p1 - p2, then p2 - p1.
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.4</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact two lines of output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Three decisions, in the order of the procedure in &sect;2. The name is
+      <code>operator-</code>. The operands are two <code>const Point1&amp;</code>, left then right. The return type is
+      <code>Point1</code>, because subtracting two points should give you a point you can go on using. The body
+      is the one you would have written for a function called <code>P1minus</code>.</p>
+<div class="codewrap"><div class="cap">ex_minus.cpp</div><pre><code class="language-cpp">// ex_minus.cpp -- in-class exercise: operator- for Point1 as a free function
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() { x = 0.0; y = 0.0; }
+    Point1(double a, double b) { x = a; y = b; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+Point1 operator- (const Point1 &amp;u, const Point1 &amp;v) {
+    double xdiff = u.getx() - v.getx();
+    double ydiff = u.gety() - v.gety();
+    Point1 p;
+    p.set(xdiff, ydiff);
+    return p;
+}
+
+int main() {
+    Point1 p1, p2;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+
+    Point1 pb = p1 - p2;
+    pb.print();
+
+    Point1 pc = p2 - p1;
+    pc.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">print x,y 2.2 2.2
+print x,y -2.2 -2.2</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The order of the parameters <em>is</em> the meaning. <code>u</code> is the left operand, <code>v</code> is the
+          right one, and <code>u.getx() - v.getx()</code> is subtraction in that order. Swap the two names in the
+          body and <code>p1 - p2</code> will quietly compute <code>p2 - p1</code>. Nothing warns you; both lines still
+          print numbers.</li>
+        <li>Because the operator is a free function, it can only see <code>x</code> and <code>y</code> through the public
+          accessors <code>getx()</code> and <code>gety()</code>. That is slightly clumsy, and the professor says so
+          directly: <em>"it would be nice if the code for <code>operator+</code> did not have to use the accessor
+          functions."</em> There are two ways out. One is to make the operator a class method
+          (&sect;6). The other is <code>friend</code>, which Class 18 takes up.</li>
+        <li>You could shorten the body to <code>return Point1(u.getx() - v.getx(), u.gety() - v.gety());</code>
+          now that the class has a two-argument constructor. That is better modern style. The
+          three-step "make a <code>Point1</code>, <code>set</code> it, return it" shape is kept here because it is the shape
+          the professor's notes use, and it is the shape the exam rubrics reward.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Precedence and grouping come for free</h2>
+
+<p>Look again at four statements from the program in &sect;3:</p>
+
+<pre><code class="language-cpp">Point1 pe = p1 + p2 + p3;
+Point1 pf = c1 * p1 * c2;
+Point1 pg = p1 + p2*c2;
+Point1 ph = c1*(p1 + p2*c2);</code></pre>
+
+<p>We wrote five short functions. At no point did we tell the compiler that <code>*</code> binds tighter than
+<code>+</code>, or that <code>+</code> groups left to right, or what parentheses do. And yet <code>pg</code> came out as (11, 6.6),
+which is <code>p1 + (p2 * 3.0)</code> and not <code>(p1 + p2) * 3.0</code>. The professor flags this as the elegant part:
+<em>"The compiler implements the rules of operator precedence <strong>automatically</strong>. This is
+a truly elegant feature of operator overloading."</em></p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Precedence and associativity belong to the <strong>symbol</strong>, not to your function. The
+    compiler parses the expression first, using the same fixed table it uses for <code>int</code> arithmetic, and
+    only then decides which function each operator node calls. You inherit the whole grammar of
+    arithmetic for free &mdash; and you cannot change any of it, which is &sect;8's topic.</p>
+  </div>
+</div>
+
+<p>So <code>p1 + p2*c2</code> is parsed as <code>p1 + (p2*c2)</code> before the compiler has looked at a single one of your
+overloads. Then it works outward from the leaves:</p>
+
+<table class="trace">
+  <tr><th>Step</th><th>Sub-expression</th><th>Function called</th><th>Value</th></tr>
+  <tr><td>1</td><td><code>p2 * c2</code></td><td><code>operator*(const Point1&amp;, double)</code></td><td>(6.6, 3.3)</td></tr>
+  <tr><td>1a</td><td>&nbsp;&nbsp;&mdash; which delegates to</td><td><code>operator*(double, const Point1&amp;)</code></td><td>(6.6, 3.3)</td></tr>
+  <tr><td>2</td><td><code>p1 + (6.6, 3.3)</code></td><td><code>operator+(const Point1&amp;, const Point1&amp;)</code></td><td>(11, 6.6)</td></tr>
+</table>
+
+<p>The professor's question about this slide is <em>"Is this really true? Why?"</em> &mdash; and the
+answer is the one above. It is true because precedence is settled at parse time, by the symbol, before
+overload resolution ever runs.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.5</div>
+  <div class="bd">
+    <p>Using the five overloads from &sect;3, with <code>p1</code> = (4.4, 3.3), <code>p2</code> = (2.2, 1.1), <code>c1</code> = 2.0
+    and <code>c2</code> = 3.0.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Rewrite <code>c1 * p1 * c2</code> with explicit parentheses showing how the compiler groups it, and name each overload that runs.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>*</code> is left-associative, so it groups as <code>(c1 * p1) * c2</code>.</p>
+        <ul>
+          <li><code>c1 * p1</code> calls <code>operator*(double, const Point1&amp;)</code> and gives (8.8, 6.6).</li>
+          <li>That temporary then becomes the left operand of the second <code>*</code>, whose operands are now
+            <code>Point1</code> and <code>double</code>, so <code>operator*(const Point1&amp;, double)</code> runs &mdash; and it
+            immediately delegates back to <code>operator*(double, const Point1&amp;)</code>.</li>
+        </ul>
+        <p>Result: (26.4, 19.8), which matches the sixth line of output in &sect;3. Notice that
+        <em>both</em> multiplication overloads were needed for a single expression, purely because of
+        which side the numbers were written on.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Work out <code>c1*(p1 + p2*c2)</code> by hand and check it against the eighth line of output.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Step</th><th>Sub-expression</th><th>Value</th></tr>
+          <tr><td>1</td><td><code>p2 * c2</code> = (2.2, 1.1) scaled by 3.0</td><td>(6.6, 3.3)</td></tr>
+          <tr><td>2</td><td><code>p1 + (6.6, 3.3)</code></td><td>(11, 6.6)</td></tr>
+          <tr><td>3</td><td><code>c1 * (11, 6.6)</code> scaled by 2.0</td><td>(22, 13.2)</td></tr>
+        </table>
+        <p>The output line is <code>print x,y 22 13.2</code>. The parentheses did what parentheses always do; you
+        did not have to teach the compiler about them.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Suppose you wanted <code>+</code> to bind more tightly than <code>*</code> for <code>Point1</code> objects, so that <code>p1 + p2*c2</code> meant <code>(p1 + p2)*c2</code>. How would you do it?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>You cannot. Precedence is fixed by the language and is not part of what an overload can
+        change. If you want <code>(p1 + p2)*c2</code>, you write the parentheses at the call site &mdash; and
+        that is a feature, not a limitation.</p>
+        <p><strong>Things to notice.</strong> Imagine the alternative for a moment. If a class could
+        redefine precedence, then the meaning of <code>a + b * c</code> would depend on the types of <code>a</code>, <code>b</code> and
+        <code>c</code>, which are often not visible on the line you are reading. Nobody could parse C++ by eye
+        again. The fixed table is what keeps <code>+</code> and <code>*</code> readable no matter whose class they are
+        acting on, and it is the strongest argument for the rule in &sect;8 that an overloaded operator
+        should do something recognizably like what the symbol already means.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Unary operators</h2>
+
+<p>Everything so far has been binary. But <code>-p1</code> is an operator too, and it has exactly one operand.
+The professor makes the point twice, because students routinely miss it: <em>"A unary operator has
+only one argument"</em>, and <em>"Actually the operator <code>-</code> is both a unary and a binary
+operator."</em></p>
+
+<p>As a free function, unary minus is a one-parameter <code>operator-</code>:</p>
+
+<pre><code class="language-cpp">Point1 operator- (const Point1 &amp;u) {          // one operand: unary
+    double xneg = -u.getx();
+    double yneg = -u.gety();
+    Point1 p;
+    p.set(xneg, yneg);
+    return p;
+}</code></pre>
+
+<p>That function and the two-parameter <code>operator-</code> from &sect;3 coexist in the same program with the
+same name. They are ordinary overloads of each other, distinguished by parameter count, and the
+compiler picks between them the same way it picks between <code>f(int)</code> and <code>f(int, int)</code>.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>Operand count is part of the signature.</strong> The compiler does not decide "is this
+    minus sign unary or binary?" by looking at your functions &mdash; it decides from the
+    <em>grammar</em>. In <code>p1 - p2</code> there is an expression on both sides of the <code>-</code>, so it is binary. In
+    <code>-p1</code> there is nothing usable on the left, so it is unary. Only then does it look for a matching
+    <code>operator-</code>.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.6</div>
+  <div class="bd">
+    <p>The program in &sect;3 defines both a one-parameter and a two-parameter <code>operator-</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which one runs in <code>Point1 pk = p1 - -p2;</code>? Give the value of <code>pk</code>, with <code>p1</code> = (4.4, 3.3) and <code>p2</code> = (2.2, 1.1).</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both run. The inner <code>-p2</code> is unary and produces (&minus;2.2, &minus;1.1). Then
+        <code>p1 - (that)</code> is binary, giving (4.4 &minus; (&minus;2.2), 3.3 &minus; (&minus;1.1)) =
+        <strong>(6.6, 4.4)</strong>.</p>
+        <p>Note the space in <code>p1 - -p2</code>. Writing <code>p1 --p2</code> would be read as <code>p1 -- p2</code> &mdash; the
+        decrement operator &mdash; and would not compile, because we never overloaded <code>--</code>. When two
+        operator symbols meet, put a space between them.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> If you deleted the one-parameter <code>operator-</code> but kept the two-parameter one, would <code>Point1 pj = -p1;</code> compile?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. The grammar has already decided that this <code>-</code> is unary, so the compiler looks for an
+        <code>operator-</code> taking one <code>Point1</code> operand, finds only a two-operand one, and reports "no match
+        for <code>operator-</code> (operand type is <code>Point1</code>)". It will not "helpfully" rewrite <code>-p1</code> as
+        <code>0 - p1</code>; that would require converting <code>0</code> to a <code>Point1</code>, which nothing has told it how to
+        do.</p>
+        <p><strong>Things to notice.</strong> Overloading one form of a symbol never gives you the
+        other for free. If your class wants both <code>a - b</code> and <code>-a</code>, you write two functions. The same
+        is true of <code>+</code>: overloading binary <code>+</code> does not give you unary plus.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Operators as class methods</h2>
+
+<p>Every operator so far has been a free function sitting outside the class. The alternative is to make
+it a <strong>class method</strong>, and this is where the shape of the code changes rather than just
+its name.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; an operator as a class method</span></div>
+  <div class="bd">
+    <p>An overloaded operator declared <em>inside</em> a class is a member function like any other. It
+    is called on an object, so the <strong>left operand is the object the method is called on</strong>
+    &mdash; the object <code>this</code> points to (Class 15).</p>
+    <p>The consequence is the rule the professor states in bold on his slide: <em>"The signature of the
+    binary operators have only one argument. The left operand is 'this object' (of the method)."</em>
+    A binary operator written as a method takes <strong>one</strong> parameter, not two. A unary
+    operator written as a method takes <strong>no</strong> parameters at all.</p>
+  </div>
+</div>
+
+<table class="trace">
+  <tr><th>Expression</th><th>As a free function</th><th>As a class method</th></tr>
+  <tr><td><code>a + b</code></td><td><code>operator+(a, b)</code> &mdash; 2 parameters</td><td><code>a.operator+(b)</code> &mdash; 1 parameter</td></tr>
+  <tr><td><code>-a</code></td><td><code>operator-(a)</code> &mdash; 1 parameter</td><td><code>a.operator-()</code> &mdash; 0 parameters</td></tr>
+  <tr><td><code>a * 2.0</code></td><td><code>operator*(a, 2.0)</code> &mdash; 2 parameters</td><td><code>a.operator*(2.0)</code> &mdash; 1 parameter</td></tr>
+</table>
+
+<p>That middle column is not pseudo-code. You really can write <code>p1.operator+(p2)</code> and it compiles and
+means exactly the same as <code>p1 + p2</code>. Nobody writes it that way, but typing it once is the fastest cure
+for confusion about where the operands went.</p>
+
+<p>Two other things change when the operator moves inside the class. Both are improvements:</p>
+
+<ul>
+  <li><strong>You get direct access to the private data.</strong> Inside a method, <code>x</code> and <code>y</code> mean
+    this object's coordinates, and <code>v.x</code> and <code>v.y</code> mean the parameter's &mdash; a class method may
+    reach into the private members of <em>any</em> object of its own class, not just its own. No
+    accessors needed. This is the clumsiness the professor complained about, gone.</li>
+  <li><strong>You mark the method <code>const</code>.</strong> <code>a + b</code> must not change <code>a</code>, and <code>a</code> is now the
+    object the method runs on, so the method promises not to modify it. Leave the <code>const</code> off and the
+    operator stops working on <code>const</code> objects &mdash; see Quick Check 17.7.</li>
+</ul>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>Point1op</code>: the same operators, as methods</span></div>
+  <div class="bd">
+    <p><code>Point1op</code> is the professor's <code>Point1</code> with the operators moved inside. The <code>main</code> is
+    character-for-character the same as the one in &sect;3, apart from the type name. Before you open
+    the toggle, predict how the nine lines of output compare with &sect;3's.</p>
+<div class="codewrap"><div class="cap">p1opmethod.cpp</div><pre><code class="language-cpp">// p1opmethod.cpp -- the same operators, written as class methods
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1op {
+public:
+    Point1op() { x = 0.0; y = 0.0; }
+    Point1op(double a, double b) { x = a; y = b; }
+
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+
+    Point1op operator+ (const Point1op &amp;v) const {
+        Point1op p;
+        p.set(x + v.x, y + v.y);
+        return p;
+    }
+
+    Point1op operator- (const Point1op &amp;v) const {
+        Point1op p;
+        p.set(x - v.x, y - v.y);
+        return p;
+    }
+
+    Point1op operator- () const {          // unary minus: no parameter at all
+        Point1op p;
+        p.set(-x, -y);
+        return p;
+    }
+
+    Point1op operator* (double d) const {  // object * double
+        Point1op p;
+        p.set(x*d, y*d);
+        return p;
+    }
+
+private:
+    double x, y;
+};
+
+// double * object cannot be a method -- the left operand is not a Point1op
+Point1op operator* (double c, const Point1op &amp;p) { return (p * c); }
+
+int main() {
+    double c1 = 2.0;
+    double c2 = 3.0;
+    Point1op p1, p2, p3;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+    p3.set(0.4, 0.5);
+
+    Point1op pa = p1 + p2;
+    Point1op pb = p1 - p2;
+    Point1op pc = c1 * p1;
+    Point1op pd = p2 * c2;
+    Point1op pe = p1 + p2 + p3;
+    Point1op pf = c1 * p1 * c2;
+    Point1op pg = p1 + p2*c2;
+    Point1op ph = c1*(p1 + p2*c2);
+    Point1op pj = -p1;
+
+    pa.print();
+    pb.print();
+    pc.print();
+    pd.print();
+    pe.print();
+    pf.print();
+    pg.print();
+    ph.print();
+    pj.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 6.6 4.4
+print x,y 2.2 2.2
+print x,y 8.8 6.6
+print x,y 6.6 3.3
+print x,y 7 4.9
+print x,y 26.4 19.8
+print x,y 11 6.6
+print x,y 22 13.2
+print x,y -4.4 -3.3</pre>
+    <p>Byte for byte identical to &sect;3. That is the point, and the professor says so: the
+    <code>Point1op</code> program <em>"looks basically the same as the previous program. It does not really
+    matter if the operators are written as class methods or not."</em></p>
+    <p>Read the four method signatures and count the parameters against the table above:</p>
+    <table class="trace">
+      <tr><th>Declaration</th><th>Kind</th><th>Left operand</th><th>Right operand</th></tr>
+      <tr><td><code>Point1op operator+ (const Point1op &amp;v) const;</code></td><td>binary</td><td><code>*this</code></td><td><code>v</code></td></tr>
+      <tr><td><code>Point1op operator- (const Point1op &amp;v) const;</code></td><td>binary</td><td><code>*this</code></td><td><code>v</code></td></tr>
+      <tr><td><code>Point1op operator- () const;</code></td><td>unary</td><td><code>*this</code></td><td>&mdash;</td></tr>
+      <tr><td><code>Point1op operator* (double d) const;</code></td><td>binary</td><td><code>*this</code></td><td><code>d</code></td></tr>
+    </table>
+    <p>And look at what disappeared from the bodies. <code>operator+</code> now reads
+    <code>p.set(x + v.x, y + v.y);</code> &mdash; no <code>getx()</code>, no <code>gety()</code>. <code>x</code> is this object's <code>x</code>; <code>v.x</code> is the
+    other object's private <code>x</code>, which the method may read because it is a member of the same
+    class.</p>
+    <p>One line is still outside the class:</p>
+<pre><code class="language-cpp">Point1op operator* (double c, const Point1op &amp;p) { return (p * c); }</code></pre>
+    <p>It has to be. That is &sect;7.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.7</div>
+  <div class="bd">
+    <p>A student writes <code>operator+</code> as a method but forgets the trailing <code>const</code>:</p>
+<pre><code class="language-cpp">Point1op operator+ (const Point1op &amp;v) {     // note: no const here
+    Point1op p;
+    p.set(x + v.x, y + v.y);
+    return p;
+}</code></pre>
+    <p>Everything in <code>main</code> still works. Then a colleague adds this helper and the build breaks:</p>
+<pre><code class="language-cpp">void showSum(const Point1op &amp;a, const Point1op &amp;b) {
+    Point1op s = a + b;
+    s.print();
+}</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Explain the failure. Which operand is the problem, and why does it only show up now?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The left operand. <code>a + b</code> inside <code>showSum</code> means <code>a.operator+(b)</code>, and <code>a</code> is a
+        <code>const Point1op&amp;</code>. Calling a non-<code>const</code> method on a <code>const</code> object is exactly the
+        <code>const</code>-correctness rule from Class 1: the method has not promised to leave the object alone,
+        so the compiler refuses.</p>
+        <p>It did not show up earlier because <code>main</code>'s <code>p1</code>, <code>p2</code>, <code>p3</code> are ordinary non-<code>const</code>
+        objects. The bug was there the whole time; it needed a <code>const</code> reference to expose it &mdash;
+        and <code>const</code> references are everywhere the moment you start passing objects to functions.</p>
+<pre class="err">constmethod.cpp: In function 'void showSum(const Point1op&amp;, const Point1op&amp;)':
+constmethod.cpp:21:20: error: no match for 'operator+' (operand types are 'const Point1op' and 'const Point1op')
+   21 |     Point1op s = a + b;          // a is a const reference
+      |                  ~ ^ ~
+constmethod.cpp:11:14: note: candidate: 'Point1op Point1op::operator+(const Point1op&amp;)' (near match)
+constmethod.cpp:11:14: note:   passing 'const Point1op*' as 'this' argument discards qualifiers</pre>
+        <p><em>"passing <code>const Point1op*</code> as <code>this</code> argument discards qualifiers"</em> is g++'s
+        standard way of saying "you called a non-<code>const</code> method on a <code>const</code> object." Learn that
+        sentence; you will meet it many times.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> The free-function version in &sect;3 has no trailing <code>const</code>. Is it missing the same protection?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No &mdash; a free function has no object to protect, so there is nothing for a trailing
+        <code>const</code> to attach to (writing one is a syntax error). The equivalent protection for a free
+        function is the <code>const</code> on each parameter, which &sect;3's version already has.</p>
+        <p><strong>Things to notice.</strong> Line up the two forms and the correspondence is exact:</p>
+        <table class="trace">
+          <tr><th>Free function</th><th>Method</th></tr>
+          <tr><td><code>const</code> on the first parameter</td><td>trailing <code>const</code> after the parameter list</td></tr>
+          <tr><td><code>const</code> on the second parameter</td><td><code>const</code> on the one parameter</td></tr>
+        </table>
+        <p>Both forms protect both operands. They just spell the first one differently, because in the
+        method form the first operand does not appear in the parameter list at all.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; move an operator inside the class</h3>
+
+<p>Below is <code>Point1</code> with <code>operator+</code> written as a free function. Move it inside the class as a
+method: delete the free function, add a method declaration in the <code>public</code> section, drop one
+parameter, use the private data directly, and mark it <code>const</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Point1op {
+public:
+    Point1op() { x = 0.0; y = 0.0; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const { cout &lt;&lt; &quot;print x,y &quot; &lt;&lt; x &lt;&lt; &quot; &quot; &lt;&lt; y &lt;&lt; endl; }
+
+    // Move operator+ in here. How many parameters does it need now?
+
+private:
+    double x, y;
+};
+
+// Delete this once the method version works.
+Point1op operator+ (const Point1op &amp;u, const Point1op &amp;v) {
+    Point1op p;
+    p.set(u.getx() + v.getx(), u.gety() + v.gety());
+    return p;
+}
+
+int main() {
+    Point1op p1, p2;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+    Point1op pa = p1 + p2;
+    pa.print();
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1op {
+public:
+    Point1op() { x = 0.0; y = 0.0; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+
+    // Move operator+ in here. How many parameters does it need now?
+
+private:
+    double x, y;
+};
+
+// Delete this once the method version works.
+Point1op operator+ (const Point1op &amp;u, const Point1op &amp;v) {
+    Point1op p;
+    p.set(u.getx() + v.getx(), u.gety() + v.gety());
+    return p;
+}
+
+int main() {
+    Point1op p1, p2;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+    Point1op pa = p1 + p2;
+    pa.print();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.8</div>
+  <div class="bd">
+    <p>Write out the method version of <code>operator+</code> from the exercise above, and answer: how many
+    parameters does it have, and what is the left operand called inside the body?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The left operand becomes the object the method is called on, so it
+      leaves the parameter list entirely. What is left is one parameter for the right operand. Inside
+      the body, the left operand's members are just <code>x</code> and <code>y</code> with no qualification; if you need the
+      whole object you write <code>*this</code>.</p>
+<pre><code class="language-cpp">    Point1op operator+ (const Point1op &amp;v) const {
+        Point1op p;
+        p.set(x + v.x, y + v.y);
+        return p;
+    }</code></pre>
+      <p><strong>One parameter.</strong> The left operand has no name in the parameter list &mdash; it
+      is the current object, reachable as <code>*this</code>, and its members are reachable as bare <code>x</code> and <code>y</code>.
+      The output is unchanged:</p>
+<pre class="out">print x,y 6.6 4.4</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>v.x</code> compiles even though <code>x</code> is private. Access control in C++ is <em>per class</em>, not
+          per object: a member of <code>Point1op</code> may touch the private data of any <code>Point1op</code>. That is what
+          makes the method form so much tidier than the free-function form.</li>
+        <li>If you leave the free function in place <em>and</em> add the method, you now have two
+          equally good candidates for <code>p1 + p2</code>, which ISO C++ calls ambiguous. g++ does not stop;
+          by default it issues this and builds the program anyway:
+<pre class="err">ambig.cpp: In function 'int main()':
+ambig.cpp:13:32: warning: ISO C++ says that these are ambiguous, even though the worst conversion for the first is better than the worst conversion for the second:
+   13 | int main() { P a, b; P c = a + b; return 0; }
+      |                                ^
+ambig.cpp:12:3: note: candidate 1: 'P operator+(const P&amp;, const P&amp;)'
+ambig.cpp:8:7: note: candidate 2: 'P P::operator+(const P&amp;) const'</pre>
+          Compile the same file with <code>-pedantic-errors</code> and it becomes
+          <em>"error: ambiguous overload for <code>operator+</code>"</em>. A warning you can ignore is more
+          dangerous than an error you cannot, so treat this one as fatal: pick <strong>one</strong>
+          form per operator and delete the other.</li>
+        <li>You never write <code>this-&gt;x</code> unless you need to disambiguate from a parameter of the same
+          name. Bare <code>x</code> already means <code>this-&gt;x</code> (Class 15).</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span><code>2.0 * p</code>: the asymmetry that forces a free function</h2>
+
+<p>Now the case that decides the whole method-versus-free question. We want both of these to work:</p>
+
+<pre><code class="language-cpp">Point1op pd = p2 * c2;      // object on the left
+Point1op pc = c1 * p1;      // number on the left</code></pre>
+
+<p>The first one is a method: the left operand is a <code>Point1op</code>, so it can be
+<code>p2.operator*(c2)</code>. The second one cannot be, and the reason is mechanical rather than deep. A method
+is called <em>on</em> its left operand. The left operand here is a <code>double</code>. You cannot add a method
+to <code>double</code> &mdash; it is a built-in type, you did not write it, and C++ gives you no way to reopen
+it.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>The professor states the constraint exactly: <em>"The left operand is 'this object' hence only
+    the operator (object * double) can be declared as a class method."</em></p>
+    <p>Whenever the <strong>left operand of an operator is not an object of your class</strong>, that
+    operator <em>must</em> be a free function. There is no other option. This single fact is why
+    <code>operator&lt;&lt;</code> for output must be a free function, which is where Class 18 begins.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what the compiler says when you only write the method</span></div>
+  <div class="bd">
+    <p>Here is <code>Point1op</code> with <code>operator*</code> as a method and <em>no</em> free-function counterpart.
+    <code>p1 * 2.0</code> is on one line and <code>2.0 * p1</code> is on the next. Decide what happens to each before you
+    open the toggle.</p>
+<div class="codewrap"><div class="cap">noleftmul.cpp</div><pre><code class="language-cpp">// noleftmul.cpp -- operator* as a method only: what happens to 2.0 * p?
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1op {
+public:
+    Point1op() { x = 0.0; y = 0.0; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+
+    Point1op operator* (double d) const {
+        Point1op p;
+        p.set(x*d, y*d);
+        return p;
+    }
+private:
+    double x, y;
+};
+
+int main() {
+    Point1op p1;
+    p1.set(4.4, 3.3);
+
+    Point1op pd = p1 * 2.0;      // fine: left operand is a Point1op
+    pd.print();
+
+    Point1op pc = 2.0 * p1;      // left operand is a double -- no method to call
+    pc.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">noleftmul.cpp: In function 'int main()':
+noleftmul.cpp:27:23: error: no match for 'operator*' (operand types are 'double' and 'Point1op')
+   27 |     Point1op pc = 2.0 * p1;      // left operand is a double -- no method to call
+      |                   ~~~ ^ ~~
+      |                   |     |
+      |                   |     Point1op
+      |                   double</pre>
+    <p>The program never runs; this is a compile-time error, so neither <code>print</code> executes. Read the
+    error carefully: <em>"operand types are <code>double</code> and <code>Point1op</code>"</em>. The compiler has correctly
+    identified what you asked for. It looked for a function that takes those two types in that order,
+    and there is none &mdash; the method takes them the other way round.</p>
+    <p>The fix is four lines, outside the class:</p>
+<pre><code class="language-cpp">Point1op operator* (double c, const Point1op &amp;p) {
+    return (p * c);        // delegate to the method
+}</code></pre>
+    <p>The body flips the operands and calls the method, so the arithmetic is written exactly once. The
+    professor's version of this line is the same idea in one line: <code>return (p*c);</code>. Note that it must
+    appear <em>after</em> the class definition, since it uses the method &mdash; the same ordering
+    dependency as &sect;3's warning box.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>So, member or free? Here is the decision, compressed:</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; choosing between a method and a free function</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Is the left operand an object of your class?</strong> If not &mdash; <code>2.0 * p</code>,
+        <code>cout &lt;&lt; p</code> &mdash; it <em>must</em> be a free function. Decision made.</li>
+      <li><strong>Is it an operator the language requires to be a method?</strong> <code>=</code>, <code>[]</code>, <code>()</code>,
+        <code>-&gt;</code> must be members. Decision made.</li>
+      <li><strong>Otherwise you may choose.</strong> Prefer a <strong>method</strong> when the
+        operation is intrinsic to the object and wants the private data: <code>+</code>, <code>-</code>, <code>*</code> on two objects
+        of the class, <code>+=</code>, comparisons. You get direct member access for free.</li>
+      <li>Prefer a <strong>free function</strong> when you want both operand orders to behave
+        symmetrically, or when the operator is more about the pair than about either object. If the
+        free function needs the private data, Class 18's <code>friend</code> mechanism gives it access.</li>
+      <li><strong>Never write both</strong> for the same pair of operand types. A free
+        <code>operator+(A, A)</code> and a method <code>A::operator+(A)</code> are equally good matches for <code>a + a</code>, and
+        ISO C++ calls that ambiguous. (g++ by default only <em>warns</em> and picks one &mdash; see
+        Quick Check 17.8 &mdash; which is worse than an error, because the code appears to work.)</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; expecting <code>a * b</code> and <code>b * a</code> to be the same function</span></div>
+  <div class="bd">
+    <p>They never are. The professor said it in the very first slide of this material: <em>"To the
+    compiler, these are distinct operations because the operands are different. The compiler does not
+    automatically know they are equal."</em></p>
+    <p>Multiplication being commutative is a fact about <em>numbers</em>, not about C++. If you define
+    only <code>Point1 * double</code> and then hand a student <code>2.0 * p</code>, they get a compile error and no
+    suggestion of what is wrong. Whenever you overload a symmetric-looking binary operator with
+    <em>mixed</em> operand types, write both orders, and implement one in terms of the other so the
+    arithmetic exists in exactly one place.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.9</div>
+  <div class="bd">
+    <p>For each operation, say whether it can be written as a method of <code>Money</code>, as a free function,
+    or both. Assume <code>Money</code> is a class you wrote and <code>n</code> is an <code>int</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>m1 + m2</code>, where both are <code>Money</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Both</strong> are possible, and you must choose exactly one. The left operand is a
+        <code>Money</code>, so a method works; a free <code>operator+(const Money&amp;, const Money&amp;)</code> works too.
+        Writing both is an ambiguity, not a convenience &mdash; and g++ will only warn about it.</p>
+        <p>Most C++ code makes this one a method, because it wants the private data.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>m * n</code> (a <code>Money</code> scaled by an <code>int</code>)</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Both.</strong> The left operand is a <code>Money</code>, so <code>Money::operator*(int) const</code> is
+        legal, and so is a free <code>operator*(const Money&amp;, int)</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>n * m</code> (an <code>int</code> scaled by&hellip; rather, scaling a <code>Money</code> from the left)</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Free function only.</strong> The left operand is an <code>int</code>, and you cannot add
+        members to <code>int</code>. Write</p>
+<pre><code class="language-cpp">Money operator* (int n, const Money &amp;m) { return m * n; }</code></pre>
+        <p>and let it delegate to whichever form you chose for part (b).</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>m1 = m2</code> (assignment)</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Method only</strong> &mdash; the language requires it. <code>operator=</code> is one of the
+        handful of operators that must be a non-static member function; a free-function version does
+        not compile. You wrote one in Class 15, returning <code>Money&amp;</code> and beginning with the
+        self-assignment guard <code>if (this == &amp;rhs) return *this;</code>.</p>
+        <p><strong>Things to notice.</strong> The pattern across all four parts: the left operand
+        decides. If it is your class, you have a choice (unless the language takes it away); if it is
+        not, you have no choice at all. And once you have chosen, the other form is not an alternative
+        you may also add &mdash; it is an ambiguity.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; make scaling work from both sides</h3>
+
+<p>The <code>Rational</code> class below can be multiplied by an <code>int</code> on the right, using a method. Add whatever
+is needed so that <code>5 * r</code> works too, without duplicating the arithmetic.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+public:
+    Rational() { numerator = 0; denominator = 1; }
+    Rational(int a, int b) { numerator = a; denominator = b; }
+    void set(int a, int b) { numerator = a; denominator = b; }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void print() const { cout &lt;&lt; numerator &lt;&lt; &quot;/&quot; &lt;&lt; denominator &lt;&lt; endl; }
+
+    Rational operator* (int k) const {          // Rational * int
+        return Rational(numerator * k, denominator);
+    }
+private:
+    int numerator, denominator;
+};
+
+// Add the free function that makes 5 * r work. Delegate; do not re-derive.
+
+
+int main() {
+    Rational r;
+    r.set(2, 3);
+
+    Rational a = r * 5;
+    // Rational b = 5 * r;     // make this line compile
+    a.print();
+    // b.print();
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+public:
+    Rational() { numerator = 0; denominator = 1; }
+    Rational(int a, int b) { numerator = a; denominator = b; }
+    void set(int a, int b) { numerator = a; denominator = b; }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void print() const { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+
+    Rational operator* (int k) const {          // Rational * int
+        return Rational(numerator * k, denominator);
+    }
+private:
+    int numerator, denominator;
+};
+
+// Add the free function that makes 5 * r work. Delegate; do not re-derive.
+
+
+int main() {
+    Rational r;
+    r.set(2, 3);
+
+    Rational a = r * 5;
+    // Rational b = 5 * r;     // make this line compile
+    a.print();
+    // b.print();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.10</div>
+  <div class="bd">
+    <p>Complete the exercise and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> <code>5 * r</code> has an <code>int</code> on the left, so it cannot be a method &mdash;
+      it must be a free function taking <code>(int, const Rational&amp;)</code> in that order. Its body should
+      call the method that already exists, so the rule "multiply the numerator, leave the denominator"
+      is written in exactly one place. Put it after the class, since it uses the method.</p>
+<div class="codewrap"><div class="cap">ex_ratscale.cpp</div><pre><code class="language-cpp">// ex_ratscale.cpp -- in-class exercise: scale a Rational from either side
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+public:
+    Rational() { numerator = 0; denominator = 1; }
+    Rational(int a, int b) { numerator = a; denominator = b; }
+
+    void set(int a, int b) { numerator = a; denominator = b; }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void print() const { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+
+    Rational operator* (int k) const {          // Rational * int -- a method
+        return Rational(numerator * k, denominator);
+    }
+private:
+    int numerator, denominator;
+};
+
+// int * Rational -- must be a free function; delegate to the method
+Rational operator* (int k, const Rational &amp;r) {
+    return r * k;
+}
+
+int main() {
+    Rational r;
+    r.set(2, 3);
+
+    Rational a = r * 5;
+    Rational b = 5 * r;
+    a.print();
+    b.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">10/3
+10/3</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The free function's body is <code>return r * k;</code>, which calls the <em>method</em>. One line, no
+          arithmetic, no access to private data needed &mdash; so this free function does not need to
+          be a <code>friend</code>.</li>
+        <li>The parameter order in the declaration is the operand order in the expression. Writing
+          <code>operator*(const Rational &amp;r, int k)</code> would define <code>r * 5</code> all over again (and clash
+          with the method), not <code>5 * r</code>.</li>
+        <li>The result <code>10/3</code> is not reduced. The exam's <code>Rational</code> questions say explicitly that you
+          do not need to simplify; do not spend exam time writing a <code>gcd</code>.</li>
+        <li>If you later add <code>Rational * Rational</code>, that one <em>can</em> be a method &mdash; and the
+          three overloads of <code>*</code> coexist happily, because their operand types differ.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>The limits, and what to return</h2>
+
+<p>Operator overloading is generous but not unlimited. Four rules, and none of them is negotiable.</p>
+
+<h3>You cannot invent new operators</h3>
+
+<p>You may only overload symbols that C++ already has. There is no <code>operator**</code> for exponentiation,
+because <code>**</code> is not a C++ token at all &mdash; the compiler reads it as <code>*</code> followed by <code>*</code> and gets
+lost:</p>
+
+<pre class="err">newop.cpp:10:17: error: expected initializer before '*' token
+   10 | Point1 operator** (const Point1 &amp;u, const Point1 &amp;v) {   // no such operator
+      |                 ^</pre>
+
+<h3>A few operators cannot be overloaded at all</h3>
+
+<p>The one the professor names is the dot: <em>you cannot overload the member-selection operator
+<code>.</code></em>. Try it and the compiler does not even reach a semantic complaint:</p>
+
+<pre class="err">dotop.cpp:7:20: error: expected type-specifier before '.' token
+    7 |     Point1 operator. (const Point1 &amp;v) const;    // the dot operator
+      |                    ^</pre>
+
+<p>The complete list of what you may not touch is short:</p>
+
+<table class="trace">
+  <tr><th>Operator</th><th>Name</th><th>Why not</th></tr>
+  <tr><td><code>.</code></td><td>member selection</td><td>Overloading it would make "which member?" a run-time question. Member names are resolved at compile time.</td></tr>
+  <tr><td><code>.*</code></td><td>pointer-to-member selection</td><td>Same reason.</td></tr>
+  <tr><td><code>::</code></td><td>scope resolution</td><td>Its operands are names, not values &mdash; there is nothing to pass to a function.</td></tr>
+  <tr><td><code>?:</code></td><td>the conditional operator</td><td>It must not evaluate both branches; a function call would.</td></tr>
+  <tr><td><code>sizeof</code></td><td>size query</td><td>Answered by the compiler from the type alone.</td></tr>
+</table>
+
+<p>Everything else is fair game: <code>+ - * / %</code>, the comparisons <code>== != &lt; &lt;= &gt; &gt;=</code>, <code>&amp;&amp;</code> and
+<code>||</code>, <code>++</code> and <code>--</code>, the shifts <code>&lt;&lt;</code> and <code>&gt;&gt;</code>, <code>[]</code>, <code>()</code>, <code>-&gt;</code>, <code>=</code>, <code>+=</code>, and the
+rest. The professor points out that you have been relying on one of these all semester:
+<em>"The widely used expression <code>cout &lt;&lt; (something) &lt;&lt; endl;</code> is an example of the
+overloading of the <code>&lt;&lt;</code> operator."</em> That is Class 18's subject.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; three slips in the original list, and one real trap</span></div>
+  <div class="bd">
+    <p>The overloadable-operator slide in the course notes has picked up some damage in reuse, so the
+    corrected version is what appears above. Specifically:</p>
+    <ul>
+      <li>It lists <em>"the division operator <code>=</code>"</em>. The division operator is <code>/</code>. <code>=</code> is
+        assignment, and it is overloadable too &mdash; but as a separate entry.</li>
+      <li>It writes the comparison operators with typeset mathematical symbols for
+        "less than or equal" and "greater than or equal". Those are not C++ tokens; the operators are
+        <code>&lt;=</code> and <code>&gt;=</code>.</li>
+      <li>The sentence introducing the syntax survives a formatting accident as
+        <em>"we write the keyword \operator" and the symbol"</em> &mdash; a stray backslash where an
+        opening quotation mark belongs. Read it as <em>the keyword <code>"operator"</code></em>.</li>
+    </ul>
+    <p>And the real trap, which the slide does not mention. <code>&amp;&amp;</code> and <code>||</code> <em>can</em> be
+    overloaded, but an overloaded <code>&amp;&amp;</code> or <code>||</code> is an ordinary function call, and a function
+    call evaluates <strong>all</strong> its arguments. You lose short-circuit evaluation, which is the
+    entire reason those operators exist. A line like <code>if (p != nullptr &amp;&amp; p-&gt;ok())</code> stops
+    being safe. In practice: do not overload <code>&amp;&amp;</code> or <code>||</code>.</p>
+  </div>
+</div>
+
+<h3>At least one operand must be a class type</h3>
+
+<p>You cannot redefine arithmetic on the built-in types. Try to make <code>+</code> on two <code>int</code>s mean
+multiplication and g++ states the rule outright:</p>
+
+<pre class="err">primop.cpp:5:5: error: 'int operator+(int, int)' must have an argument of class or enumerated type
+    5 | int operator+ (int a, int b) {      // both operands are built-in
+      |     ^~~~~~~~</pre>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>The professor's summary says <em>"We cannot overload operators to act on primitive data
+    types."</em> That is right, but the compiler's own wording is sharper and easier to apply:
+    <strong>an overloaded operator must have at least one parameter of class or enumeration
+    type</strong>.</p>
+    <p>So <code>(double, int)</code> is out, but <code>(Point1, int)</code>, <code>(double, Point1)</code> and <code>(Point1, Point1)</code> are
+    all fine &mdash; each has at least one operand you defined. The professor's own examples make the
+    same point: <em>"Can overload if one operand is a user-defined class object,"</em> giving
+    <code>(object, int)</code> and <code>(double, object)</code>.</p>
+  </div>
+</div>
+
+<h3>Precedence, associativity and operand count are fixed</h3>
+
+<p>&sect;4 showed you get precedence for free. The other side of that bargain is that you cannot
+change it. You also cannot change how many operands a symbol takes: <code>+</code> will always be written between
+its two operands (or before one, for unary plus), never with three. And you cannot change the meaning
+of an operator on the built-in types, so <code>3 + 4</code> is 7 in every program ever written.</p>
+
+<h3>What should an operator return?</h3>
+
+<p>The last decision, and the one the professor left as an explicit challenge: <em>"Can the return
+type be void? Yes. (Try it.) But I have no idea what an operator with a void return type would
+do."</em> Problem 2 in the practice section takes him up on it. Here is the practical guidance:</p>
+
+<table class="trace">
+  <tr><th>Operator family</th><th>Return</th><th>Why</th></tr>
+  <tr><td><code>+ - *</code> on objects</td><td>a new object, <strong>by value</strong></td><td>The result is a brand-new value that did not exist before. There is nothing to return a reference to.</td></tr>
+  <tr><td><code>== != &lt; &lt;= &gt; &gt;=</code></td><td><code>bool</code></td><td>The expression answers a question.</td></tr>
+  <tr><td><code>=</code>, <code>+=</code>, <code>-=</code></td><td>a <strong>reference</strong> to the modified object (<code>*this</code>)</td><td>The object already exists and outlives the expression, so a reference is safe &mdash; and it is what makes <code>a = b = c</code> work. Class 15.</td></tr>
+  <tr><td><code>&lt;&lt;</code> and <code>&gt;&gt;</code></td><td>a reference to the stream</td><td>Same chaining argument. Class 18.</td></tr>
+</table>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; returning a reference from <code>operator+</code></span></div>
+  <div class="bd">
+    <p>Class 15 drilled <code>return *this;</code> from <code>operator=</code> with a <code>Point1&amp;</code> return type, and it is
+    very tempting to copy that habit onto <code>operator+</code>. Do not. <code>operator+</code> builds a brand-new local
+    object; returning a reference to it hands the caller the address of something that was destroyed
+    on the way out of the function.</p>
+<pre><code class="language-cpp">Point1&amp; operator+ (const Point1 &amp;u, const Point1 &amp;v) {   // WRONG: &amp; on the return type
+    Point1 p;
+    p.set(u.getx() + v.getx(), u.gety() + v.gety());
+    return p;                                            // p dies when we return
+}</code></pre>
+    <p>g++ catches this particular case, and the message names the problem exactly:</p>
+<pre class="err">retref.cpp: In function 'Point1&amp; operator+(const Point1&amp;, const Point1&amp;)':
+retref.cpp:19:12: warning: reference to local variable 'p' returned [-Wreturn-local-addr]
+   19 |     return p;                                            // p dies when we return
+      |            ^
+retref.cpp:17:12: note: declared here</pre>
+    <p>It is a <em>warning</em>, so the program still builds. Running it is undefined behavior; on the
+    machine these notes were built on it segmentation-faulted immediately, but a different machine, or
+    the same one on a different day, might print plausible-looking numbers instead. That is the worst
+    possible outcome, because it makes the bug look like it isn't there.</p>
+    <p>The test to apply: <strong>does the thing I am returning outlive the function?</strong> For
+    <code>operator=</code> the answer is yes &mdash; <code>*this</code> is the caller's object. For <code>operator+</code> it is no, so
+    return by value.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.11</div>
+  <div class="bd">
+    <p>Which of these declarations are legal C++? For the illegal ones, say what rule they break.
+    <code>Vec</code> is a class you wrote.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>Vec operator% (const Vec &amp;a, const Vec &amp;b);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Legal.</strong> <code>%</code> is a real C++ operator and both operands are class type. Whether
+        it is a <em>good</em> idea is another matter &mdash; nobody reading <code>a % b</code> will guess what you
+        meant unless the meaning is close to "remainder".</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Vec operator&lt;&gt; (const Vec &amp;a, const Vec &amp;b);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Illegal.</strong> <code>&lt;&gt;</code> is not a C++ operator, and you cannot invent one. Only
+        symbols already in the language can be overloaded.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>bool operator&lt; (int a, int b);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Illegal.</strong> Both operands are built-in types. The compiler says
+        <em>"must have an argument of class or enumerated type."</em> You may not redefine what <code>&lt;</code>
+        means for two <code>int</code>s &mdash; and be glad, because if you could, every library you link against
+        might have done so already.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>Vec operator+ (const Vec &amp;a, const Vec &amp;b, const Vec &amp;c);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Illegal.</strong> <code>+</code> is unary or binary; there is no three-operand form to write a
+        function for, so there is no expression that could ever call this. g++ rejects it with
+        <em>"<code>operator+</code> must have either zero or one argument"</em> for a member, or
+        <em>"must have either one or two arguments"</em> for a free function.</p>
+        <p><strong>Things to notice.</strong> Group the four rules the parts test: (a) the symbol must
+        exist and (b) you may not create one; (c) at least one operand must be a class or enum type;
+        (d) the operand count is fixed by the symbol. Add "you cannot change precedence" from &sect;4
+        and you have the complete set of restrictions.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 17.12</div>
+  <div class="bd">
+    <p>For each of these, say whether it should return by value or by reference, and why.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>Point1 operator+ (const Point1 &amp;u, const Point1 &amp;v)</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>By value.</strong> The sum is a new object created inside the function. Nothing
+        outside owns it, so a reference to it would dangle the instant the function returns.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Point1&amp; Point1::operator= (const Point1 &amp;rhs)</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>By reference.</strong> Assignment modifies an object that already exists and that
+        will still exist after the statement finishes &mdash; the caller's left-hand side. Returning
+        <code>*this</code> by reference is safe and it is what lets <code>a = b = c</code> chain. This is the Class 15
+        pattern; note that returning <code>Point1</code> by value there would also compile, but would copy the
+        object for no reason on every assignment.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A student proposes <code>Point1&amp; operator+ (...)</code> that returns a reference to <code>u</code>, the left operand, after adding <code>v</code>'s coordinates into it. What is wrong?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Two things, and the second is worse than the first.</p>
+        <p>The mechanical problem: <code>u</code> is a <code>const Point1&amp;</code>, so you cannot modify it, and you
+        cannot return it as a non-<code>const</code> reference. That is a compile error.</p>
+        <p>The design problem: even if you dropped the <code>const</code> to make it compile, <code>a + b</code> would now
+        <strong>change <code>a</code></strong>. Every use of the operator would silently mutate its left operand,
+        so <code>Point1 pe = p1 + p2 + p3;</code> would leave <code>p1</code> holding the total, and the next line of the
+        program that used <code>p1</code> would be wrong. That behavior belongs to <code>+=</code>, not to <code>+</code>.</p>
+        <p><strong>Things to notice.</strong> The pattern behind all three parts is a single question:
+        <em>does the operator create a new value, or modify an existing object?</em> Create a new value
+        (<code>+ - * /</code>, comparisons) &rarr; return by value, take <code>const</code> operands, mark the method
+        <code>const</code>. Modify an existing object (<code>= += -= ++</code>) &rarr; return a reference to it, and do not
+        mark the method <code>const</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 17</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 come from the professor's own lecture notes for this material &mdash; Problem 2
+    is his explicit "(Try it.)" challenge. Problems 3, 4 and 5 are taken from his exam bank and are
+    reproduced in the shape he actually sets them. Problem 6 is added, and drills the member-versus-free
+    decision on an exam-style class.</p>
+    <p>Problem 4 is the single most important one on this page. Nine of the professor's ten graded
+    papers contain a question of exactly that form &mdash; a class is printed with its default
+    constructor and <code>print</code> already written, and you supply the non-default constructor, destructor,
+    copy constructor, <code>operator=</code> <em>and</em> <code>operator+</code> or <code>operator*</code>. It is worth 20 to 25 points
+    every time. Every rubric awards points for the signature line alone, so write the title line even
+    if you run out of time on the body.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Predict the whole operator program <span class="muted small">(from the course notes)</span></h3>
+
+<p>Using the five overloads from &sect;3 &mdash; binary <code>+</code>, binary <code>-</code>, <code>operator*(double, Point1)</code>,
+<code>operator*(Point1, double)</code> and unary <code>-</code> &mdash; state the exact nine lines of output of this <code>main</code>,
+and for each line name the overload (or overloads) that ran. <code>p1</code> = (4.4, 3.3), <code>p2</code> = (2.2, 1.1),
+<code>p3</code> = (0.4, 0.5), <code>c1</code> = 2.0, <code>c2</code> = 3.0.</p>
+
+<pre><code class="language-cpp">    Point1 pa = p1 + p2;
+    Point1 pb = p1 - p2;
+    Point1 pc = c1 * p1;
+    Point1 pd = p2 * c2;
+    Point1 pe = p1 + p2 + p3;
+    Point1 pf = c1 * p1 * c2;
+    Point1 pg = p1 + p2*c2;
+    Point1 ph = c1*(p1 + p2*c2);
+    Point1 pj = -p1;</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Do it in two passes. First parse each expression using ordinary arithmetic
+  precedence, without thinking about C++ at all: <code>*</code> before <code>+</code>, left to right, parentheses first.
+  Then, for each operator node, look at the types on its left and right and pick the matching overload.
+  Only after both passes do the arithmetic.</p>
+<pre class="out">print x,y 6.6 4.4
+print x,y 2.2 2.2
+print x,y 8.8 6.6
+print x,y 6.6 3.3
+print x,y 7 4.9
+print x,y 26.4 19.8
+print x,y 11 6.6
+print x,y 22 13.2
+print x,y -4.4 -3.3</pre>
+  <table class="trace">
+    <tr><th>Object</th><th>Grouping</th><th>Overloads that run, in order</th><th>Value</th></tr>
+    <tr><td><code>pa</code></td><td><code>p1 + p2</code></td><td><code>+(Point1, Point1)</code></td><td>(6.6, 4.4)</td></tr>
+    <tr><td><code>pb</code></td><td><code>p1 - p2</code></td><td>binary <code>-(Point1, Point1)</code></td><td>(2.2, 2.2)</td></tr>
+    <tr><td><code>pc</code></td><td><code>c1 * p1</code></td><td><code>*(double, Point1)</code></td><td>(8.8, 6.6)</td></tr>
+    <tr><td><code>pd</code></td><td><code>p2 * c2</code></td><td><code>*(Point1, double)</code>, then <code>*(double, Point1)</code></td><td>(6.6, 3.3)</td></tr>
+    <tr><td><code>pe</code></td><td><code>(p1 + p2) + p3</code></td><td><code>+(Point1, Point1)</code> twice</td><td>(7, 4.9)</td></tr>
+    <tr><td><code>pf</code></td><td><code>(c1 * p1) * c2</code></td><td><code>*(double, Point1)</code>, then <code>*(Point1, double)</code> which delegates back</td><td>(26.4, 19.8)</td></tr>
+    <tr><td><code>pg</code></td><td><code>p1 + (p2 * c2)</code></td><td><code>*(Point1, double)</code>, then <code>+(Point1, Point1)</code></td><td>(11, 6.6)</td></tr>
+    <tr><td><code>ph</code></td><td><code>c1 * ((p1 + (p2 * c2)))</code></td><td><code>*(Point1, double)</code>, <code>+(Point1, Point1)</code>, <code>*(double, Point1)</code></td><td>(22, 13.2)</td></tr>
+    <tr><td><code>pj</code></td><td><code>-p1</code></td><td>unary <code>-(Point1)</code></td><td>(&minus;4.4, &minus;3.3)</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Trailing zeros vanish. <code>7.0</code> prints as <code>7</code>, <code>11.0</code> as <code>11</code>, <code>22.0</code> as <code>22</code>. Writing <code>7.0</code> on an
+      output-prediction question is wrong, and these questions carry no partial credit.</li>
+    <li><code>pe</code> is (7, 4.9) and not (7, 4.9000000000000004) because <code>cout</code> shows six significant digits by
+      default. The stored value really does have that rounding error; you just cannot see it.</li>
+    <li><code>pf</code> needs <em>both</em> multiplication overloads for one expression, and <code>ph</code> needs three
+      operator calls. Neither fact is visible in the source. This is exactly why the professor calls the
+      automatic precedence handling elegant &mdash; and why you have to slow down when you trace it.</li>
+    <li>The professor's own listing here skips the name <code>pi</code>, with the aside <em>"I have skipped 'pi'
+      for obvious reasons."</em> Naming a variable <code>pi</code> next to floating-point geometry is asking for
+      trouble.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; An operator that returns <code>void</code> <span class="muted small">(from the course notes)</span></h3>
+
+<p>The notes ask: <em>"Can the return type be void? Yes. (Try it.) But I have no idea what an operator
+with a void return type would do."</em> Take him up on it. Write an <code>operator+</code> for <code>Point1</code> whose
+return type is <code>void</code>, compile it, and then answer: what can you do with it, and what can you no longer
+do?</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> <code>void</code> is a legal return type for any function, and an operator is a
+  function, so the declaration will compile. The interesting question is what the <em>expression</em>
+  <code>p1 + p2</code> then means. An expression of type <code>void</code> has no value, so it can be used as a statement on
+  its own, but it cannot initialize anything, cannot be printed, and cannot be an operand of another
+  operator. To make it observably do <em>something</em>, the body has to have a side effect &mdash;
+  here, printing.</p>
+<div class="codewrap"><div class="cap">voidop.cpp</div><pre><code class="language-cpp">// voidop.cpp -- the professor's challenge: can an operator return void?
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() { x = 0.0; y = 0.0; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+// a void-returning operator+ : legal C++, but it yields no value
+void operator+ (const Point1 &amp;u, const Point1 &amp;v) {
+    cout &lt;&lt; "void operator+ ran: "
+         &lt;&lt; u.getx() + v.getx() &lt;&lt; " " &lt;&lt; u.gety() + v.gety() &lt;&lt; endl;
+}
+
+int main() {
+    Point1 p1, p2;
+    p1.set(4.4, 3.3);
+    p2.set(2.2, 1.1);
+
+    p1 + p2;              // legal: the expression is evaluated for its side effect
+    // Point1 pa = p1 + p2;    // would NOT compile: nothing to initialize pa with
+    // Point1 pe = p1 + p2 + p2;  // would NOT compile: void + Point1 has no meaning
+    return 0;
+}</code></pre></div>
+<pre class="out">void operator+ ran: 6.6 4.4</pre>
+  <p>It compiles and it runs. Uncomment the first commented line and you get:</p>
+<pre class="err">voidop_bad.cpp: In function 'int main()':
+voidop_bad.cpp:17:20: error: conversion from 'void' to non-scalar type 'Point1' requested
+   17 |     Point1 pa = p1 + p2;
+      |                 ~~~^~~~</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The line <code>p1 + p2;</code> on its own is a complete C++ statement. With an ordinary <code>Point1</code>-returning
+      <code>operator+</code> it would compute a sum and throw it away (and <code>-Wall</code> would not even warn you about
+      an object result). With the <code>void</code> version it is the <em>only</em> way to use the operator.</li>
+    <li>You lose composition entirely. <code>p1 + p2 + p3</code> requires the first <code>+</code> to produce a value for the
+      second <code>+</code> to consume, and <code>void</code> is not a value. That is why every useful operator returns
+      something.</li>
+    <li>So the professor's "I have no idea what it would do" is the right verdict, and the reason is now
+      precise: an operator's return value <em>is</em> its result, and an operator with no result can
+      only communicate by side effect. The language permits it; design sense forbids it.</li>
+    <li>The one genuinely common exception you will meet is an operator that returns a reference for
+      chaining rather than a value &mdash; <code>operator=</code> and <code>operator&lt;&lt;</code>. Those return a reference
+      precisely so that composition keeps working.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; <code>Rational</code>: a free function, then the same thing as an operator <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+
+<p>Given the <code>Rational</code> class below, (a) implement <code>set</code>, (b) implement <code>add1</code>, which adds 1 to the
+rational number (hint: <em>p</em>/<em>q</em> + 1 = (<em>p</em>+<em>q</em>)/<em>q</em>), and
+(c) implement the free function <code>product</code> that returns the product of two rational numbers &mdash; you
+do not need to reduce the fraction. Then (d), which the exam did not ask but this class does: rewrite
+<code>product</code> as an <code>operator*</code> so that <code>r1 * r2</code> works.</p>
+
+<pre><code class="language-cpp">class Rational {
+private:
+    int numerator, denominator;
+public:
+    void set(int a, int b) { /* part (a) */ }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void add1() { /* part (b) */ }
+    void print() const { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+};
+
+Rational product(const Rational &amp;x, const Rational &amp;y) { /* part (c) */ }</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Parts (a) and (b) are one line each and carry no partial credit on the
+  exam, so write them exactly. Part (c) is the interesting one: <code>product</code> is a <em>free</em> function
+  and <code>numerator</code>/<code>denominator</code> are <em>private</em>, so it cannot touch them directly &mdash; it must
+  go through <code>getn()</code> and <code>getd()</code>, and it must build its answer through <code>set</code>. Part (d) is then a
+  rename: change the function's name to <code>operator*</code> and the call site from <code>product(r1, r2)</code> to
+  <code>r1 * r2</code>. Nothing in the body changes.</p>
+<div class="codewrap"><div class="cap">rational.cpp</div><pre><code class="language-cpp">// rational.cpp -- Fall 2023 Exam 1 Problem 4, with product rewritten as operator*
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+private:
+    int numerator, denominator;
+public:
+    Rational() { numerator = 0; denominator = 1; }
+
+    void set(int a, int b) {
+        numerator = a;
+        denominator = b;
+    }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+
+    void add1() {                       // p/q + 1 = (p+q)/q
+        numerator = numerator + denominator;
+    }
+    void print() const {
+        cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl;
+    }
+};
+
+// (c) the exam's free function, unchanged
+Rational product(const Rational &amp;x, const Rational &amp;y) {
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}
+
+// the same computation, spelled as an operator -- still a free function
+Rational operator* (const Rational &amp;x, const Rational &amp;y) {
+    Rational answer;
+    answer.set(x.getn() * y.getn(), x.getd() * y.getd());
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();
+    r1.print();
+    r2.print();
+
+    Rational p = product(r1, r2);
+    p.print();
+
+    Rational q = r1 * r2;
+    q.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">5/3
+4/5
+20/15
+20/15</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>add1</code> changes only the numerator. 2/3 + 1 = 5/3, so <code>r1.print()</code> gives <code>5/3</code>. Students who
+      write <code>numerator = numerator + 1</code> get <code>3/3</code>, which is a different number.</li>
+    <li><code>product</code> must declare a <code>Rational</code> and return it &mdash; the exam rubric gives 2 of its 6
+      points for exactly that, 2 more for computing the numerator and denominator through the <code>get</code>
+      methods, and 2 for calling <code>set</code> on the result. Points are attached to the <em>shape</em> of the
+      answer, so write the shape even if the arithmetic escapes you.</li>
+    <li><code>20/15</code> is not reduced, and the exam says explicitly you do not need to reduce it. Do not
+      write a <code>gcd</code>.</li>
+    <li>Part (d) is the whole lesson of today in one edit: <code>operator*</code> and <code>product</code> are the same
+      function with different names. If you would rather make it a method, it becomes
+      <code>Rational operator* (const Rational &amp;y) const</code> with <em>one</em> parameter &mdash; and then
+      it can use <code>numerator</code> and <code>y.numerator</code> directly and does not need the accessors at all.</li>
+    <li>The exam stem as printed says <code>Class Rational {</code> with a capital <code>C</code>, and declares the free
+      function as <code>Ration product(...)</code>, dropping the <code>al</code>. Both are typos in the paper and both are
+      repeated in the rubric. Write <code>class</code> and <code>Rational</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; <code>Matrix</code>: the five special members <span class="muted small">(from the Summer 2025 Midterm)</span></h3>
+
+<p>Given the following program with a <code>Matrix</code> class:</p>
+
+<pre><code class="language-cpp">class Matrix {
+public:
+    Matrix() {
+        cout &lt;&lt; "default constructor" &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+    }
+    void set(int r, int c) { *rows = r; *cols = c; }
+    void print() { cout &lt;&lt; *rows &lt;&lt; " x " &lt;&lt; *cols &lt;&lt; " matrix" &lt;&lt; endl; }
+    // non-default constructor, destructor, copy constructor,
+    // assignment operation, and operator* overloading omitted here
+
+private:
+    int *rows, *cols;
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Give an implementation for the non-default constructor that takes two parameters to initialize the matrix dimensions and prints "non-default constructor" as its first instruction. [4 pts] Then the destructor [4], the deep-copy constructor [5] and the assignment operation [6], each printing its own name first.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> These four are Class 14 and Class 15 material and the shapes are fixed.
+    Each <code>new</code>ed scalar needs its own allocation; the copy constructor allocates fresh memory and
+    copies the pointed-to <em>values</em>, never the pointers; the assignment operator additionally
+    guards against self-assignment and frees the old storage first. Every one of them prints its
+    announcement message before doing anything else, because Problem 5's trace depends on the order.</p>
+<pre><code class="language-cpp">    Matrix(int r, int c) {
+        cout &lt;&lt; "non-default constructor" &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+        *rows = r;
+        *cols = c;
+    }
+    ~Matrix() {
+        cout &lt;&lt; "destructor" &lt;&lt; endl;
+        delete rows;
+        delete cols;
+    }
+    Matrix(const Matrix &amp;orig) {
+        cout &lt;&lt; "copy constructor" &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+        *rows = *(orig.rows);
+        *cols = *(orig.cols);
+    }
+    Matrix&amp; operator= (const Matrix &amp;rhs) {
+        cout &lt;&lt; "assignment operation" &lt;&lt; endl;
+        if (this == &amp;rhs) return *this;
+        delete rows;
+        delete cols;
+        rows = new int;
+        cols = new int;
+        *rows = *(rhs.rows);
+        *cols = *(rhs.cols);
+        return *this;
+    }</code></pre>
+    <p>The rubric gives <strong>2 points for each title line</strong> on its own. Write
+    <code>Matrix&amp; operator=(const Matrix &amp;rhs) {</code> even if you write nothing else.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Give an implementation for <code>operator*</code> overloading that returns a new <code>Matrix</code>, where (<em>r</em>&#8321; &times; <em>c</em>&#8321; matrix) * (<em>r</em>&#8322; &times; <em>c</em>&#8322; matrix) = (<em>r</em>&#8321; &times; <em>c</em>&#8322; matrix), and prints "operator*" as its first instruction. [6 pts]</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> This is today's material. The left operand is a <code>Matrix</code>, so write it as
+    a method &mdash; which means <strong>one</strong> parameter, the right operand. The result's row
+    count comes from <code>*this</code> and its column count from the other matrix. Build the result with the
+    non-default constructor and return it <em>by value</em>: it is a new object, so a reference return
+    would dangle.</p>
+<pre><code class="language-cpp">    Matrix operator* (const Matrix &amp;other) const {
+        cout &lt;&lt; "operator*" &lt;&lt; endl;
+        Matrix result(*rows, *(other.cols));
+        return result;
+    }</code></pre>
+    <p>Because the method is a member of <code>Matrix</code>, <code>other.rows</code> and <code>other.cols</code> are reachable even
+    though they are private. The professor's rubric also accepts a version that default-constructs the
+    result and assigns into it:</p>
+<pre><code class="language-cpp">    Matrix operator* (const Matrix &amp;other) const {
+        cout &lt;&lt; "operator*" &lt;&lt; endl;
+        Matrix result;
+        *(result.rows) = *rows;
+        *(result.cols) = *(other.cols);
+        return result;
+    }</code></pre>
+    <p>The two differ in what Problem 5 prints &mdash; the first announces "non-default constructor",
+    the second "default constructor" &mdash; and the rubric explicitly allows either.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Assuming your <code>Matrix</code> class is correctly implemented, what is the output of this <code>main</code>? [15 pts, roughly 1 point per line]</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Go statement by statement and write down every special member that
+    fires, in order. Remember that a temporary created by <code>operator*</code> is destroyed at the end of the
+    full statement when its value has been consumed by an assignment &mdash; but when the statement is
+    an initialization like <code>Matrix d = a * c;</code>, the compiler builds the result directly into <code>d</code> and
+    there is no extra copy and no extra destructor.</p>
+<div class="codewrap"><div class="cap">matrix.cpp</div><pre><code class="language-cpp">// matrix.cpp -- Summer 2025 Midterm Problems 4 and 5, complete and runnable
+#include &lt;iostream&gt;
+using namespace std;
+
+class Matrix {
+public:
+    Matrix() {
+        cout &lt;&lt; "default constructor" &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+    }
+    Matrix(int r, int c) {
+        cout &lt;&lt; "non-default constructor" &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+        *rows = r;
+        *cols = c;
+    }
+    ~Matrix() {
+        cout &lt;&lt; "destructor" &lt;&lt; endl;
+        delete rows;
+        delete cols;
+    }
+    Matrix(const Matrix &amp;orig) {
+        cout &lt;&lt; "copy constructor" &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+        *rows = *(orig.rows);
+        *cols = *(orig.cols);
+    }
+    Matrix&amp; operator= (const Matrix &amp;rhs) {
+        cout &lt;&lt; "assignment operation" &lt;&lt; endl;
+        if (this == &amp;rhs) return *this;
+        delete rows;
+        delete cols;
+        rows = new int;
+        cols = new int;
+        *rows = *(rhs.rows);
+        *cols = *(rhs.cols);
+        return *this;
+    }
+    Matrix operator* (const Matrix &amp;other) const {
+        cout &lt;&lt; "operator*" &lt;&lt; endl;
+        Matrix result(*rows, *(other.cols));
+        return result;
+    }
+
+    void set(int r, int c) { *rows = r; *cols = c; }
+    void print() const { cout &lt;&lt; *rows &lt;&lt; " x " &lt;&lt; *cols &lt;&lt; " matrix" &lt;&lt; endl; }
+
+private:
+    int *rows, *cols;
+};
+
+int main() {
+    Matrix a(2,3), b;
+    b.set(4, 5);
+    Matrix c = b;
+    c.print();
+    b = a * c;
+    b.print();
+    Matrix d = a * c;
+    d.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">non-default constructor
+default constructor
+copy constructor
+4 x 5 matrix
+operator*
+non-default constructor
+assignment operation
+destructor
+2 x 5 matrix
+operator*
+non-default constructor
+2 x 5 matrix
+destructor
+destructor
+destructor
+destructor</pre>
+    <p>Sixteen lines, which is what the rubric says to expect. Here is the accounting:</p>
+    <table class="trace">
+      <tr><th>Statement</th><th>Lines printed</th></tr>
+      <tr><td><code>Matrix a(2,3), b;</code></td><td><code>non-default constructor</code>, then <code>default constructor</code></td></tr>
+      <tr><td><code>Matrix c = b;</code></td><td><code>copy constructor</code> &mdash; initialization from an existing object, not assignment</td></tr>
+      <tr><td><code>c.print();</code></td><td><code>4 x 5 matrix</code></td></tr>
+      <tr><td><code>b = a * c;</code></td><td><code>operator*</code>, <code>non-default constructor</code> (building <code>result</code>), <code>assignment operation</code>, then <code>destructor</code> as the temporary dies at the semicolon</td></tr>
+      <tr><td><code>b.print();</code></td><td><code>2 x 5 matrix</code></td></tr>
+      <tr><td><code>Matrix d = a * c;</code></td><td><code>operator*</code>, <code>non-default constructor</code> &mdash; and <strong>no</strong> destructor, because the result is built straight into <code>d</code></td></tr>
+      <tr><td><code>d.print();</code></td><td><code>2 x 5 matrix</code></td></tr>
+      <tr><td><code>return 0;</code></td><td>four <code>destructor</code> lines, for <code>d</code>, <code>c</code>, <code>b</code>, <code>a</code> in reverse order of construction</td></tr>
+    </table>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>The difference between line 4's group and line 6's group is the whole trick of this question.
+        <code>b = a * c;</code> is an <em>assignment</em> to an object that already exists, so the temporary is a
+        separate object that has to be destroyed. <code>Matrix d = a * c;</code> is an <em>initialization</em>, so
+        the compiler constructs the result in <code>d</code>'s storage and no temporary ever exists. Getting this
+        pair right is worth several points.</li>
+      <li><code>Matrix c = b;</code> calls the <strong>copy constructor</strong>, not <code>operator=</code>. The <code>=</code> in a
+        declaration is initialization. Class 14 and Class 15 made this distinction; the exam tests it
+        every single term.</li>
+      <li>Destruction is in reverse order of construction: <code>d</code>, <code>c</code>, <code>b</code>, <code>a</code>. That is
+        <code>a</code>'s memory being released last even though it was built first.</li>
+      <li>Run under <code>valgrind</code> this program allocates 14 blocks and frees 14 &mdash; no
+        leaks. If your <code>operator=</code> forgets the two <code>delete</code>s, or your destructor forgets them, it will
+        still print all sixteen lines correctly and still leak. The trace question cannot detect a
+        leak; only the memory checker can.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; <code>Polynomial::operator+</code> over a dynamic array <span class="muted small">(from the Fall 2023 Exam 2)</span></h3>
+
+<p>The <code>Polynomial</code> class stores its coefficients in a dynamically allocated array,
+<code>coefficients[i]</code> being the coefficient of <em>x</em><sup><em>i</em></sup>, with <code>degree</code> the highest
+power. Give an implementation for <code>operator+</code> overloading, so that adding two polynomials of possibly
+different degrees produces their sum.</p>
+
+<pre><code class="language-cpp">class Polynomial {
+public:
+    Polynomial(double c[], int d) {
+        degree = d;
+        coefficients = new double[degree+1];
+        for (int i = degree; i &gt;= 0; i--) { coefficients[i] = c[i]; }
+    }
+    void print() const {
+        for (int i = degree; i &gt;= 1; i--) {
+            cout &lt;&lt; coefficients[i] &lt;&lt; "*x^" &lt;&lt; i &lt;&lt; " + ";
+        }
+        cout &lt;&lt; coefficients[0] &lt;&lt; endl;
+    }
+    // destructor, copy constructor, assignment operation, and
+    // operator+ overloading omitted here
+protected:
+    double *coefficients;
+    int degree;
+};</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The left operand is a <code>Polynomial</code>, so make <code>operator+</code> a method with one
+  parameter. Three steps in the body: find the larger of the two degrees; build an array of that many
+  coefficients, adding whichever inputs exist at each index; then construct the result from that array.
+  Because the only constructor available takes a <code>double[]</code> and a degree, the natural implementation
+  fills a temporary array, hands it to the constructor, and then deletes it &mdash; the constructor
+  copies, so the temporary is no longer needed.</p>
+  <p>The class needs its destructor, copy constructor and <code>operator=</code> too (parts (a)&ndash;(c) of the
+  original exam question, and Class 15's material); the full listing below has them so the program is
+  actually runnable and leak-free.</p>
+<div class="codewrap"><div class="cap">polynomial.cpp</div><pre><code class="language-cpp">// polynomial.cpp -- Fall 2023 Exam 2, the operator+ part, made runnable
+#include &lt;iostream&gt;
+using namespace std;
+
+class Polynomial {
+public:
+    Polynomial(double c[], int d) {
+        degree = d;
+        coefficients = new double[degree+1];
+        for (int i = degree; i &gt;= 0; i--) { coefficients[i] = c[i]; }
+    }
+    ~Polynomial() { delete[] coefficients; }
+
+    Polynomial(const Polynomial &amp;orig) {
+        degree = orig.degree;
+        coefficients = new double[degree+1];
+        for (int i = 0; i &lt;= degree; i++) { coefficients[i] = orig.coefficients[i]; }
+    }
+    Polynomial&amp; operator= (const Polynomial &amp;rhs) {
+        if (this == &amp;rhs) return *this;
+        delete[] coefficients;
+        degree = rhs.degree;
+        coefficients = new double[degree+1];
+        for (int i = 0; i &lt;= degree; i++) { coefficients[i] = rhs.coefficients[i]; }
+        return *this;
+    }
+
+    Polynomial operator+ (const Polynomial &amp;p) const {
+        int maxDegree = degree;
+        if (maxDegree &lt; p.degree) maxDegree = p.degree;
+
+        double *newCoefficients = new double[maxDegree+1];
+        for (int i = 0; i &lt;= maxDegree; i++) {
+            double coefficient = 0;
+            if (i &lt;= degree)   coefficient += coefficients[i];
+            if (i &lt;= p.degree) coefficient += p.coefficients[i];
+            newCoefficients[i] = coefficient;
+        }
+
+        Polynomial result(newCoefficients, maxDegree);
+        delete[] newCoefficients;
+        return result;
+    }
+
+    void print() const {
+        for (int i = degree; i &gt;= 1; i--) {
+            cout &lt;&lt; coefficients[i] &lt;&lt; "*x^" &lt;&lt; i &lt;&lt; " + ";
+        }
+        cout &lt;&lt; coefficients[0] &lt;&lt; endl;
+    }
+
+protected:
+    double *coefficients;
+    int degree;
+};
+
+int main() {
+    double a1[3] = {1.1, 2.2, 3.3}, a2[2] = {2, 1};
+    Polynomial p1(a1, 2), p2(a2, 1);
+    p1.print();
+    p2.print();
+    Polynomial p3 = p1 + p2;
+    p3.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">3.3*x^2 + 2.2*x^1 + 1.1
+1*x^1 + 2
+3.3*x^2 + 3.2*x^1 + 3.1</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Read the output against the data. <code>a1</code> is <code>{1.1, 2.2, 3.3}</code>, so <code>coefficients[0]</code> is 1.1 and
+      <code>coefficients[2]</code> is 3.3 &mdash; and <code>print</code> walks <em>down</em> from <code>degree</code>, so the first
+      thing printed is <code>coefficients[2]</code>, giving <code>3.3*x^2 + 2.2*x^1 + 1.1</code>. The constant term is
+      printed last. Several versions of this question circulate with expected-output comments that read
+      the array in the opposite order; the version above is the arithmetic the code actually performs,
+      and it is the one the professor's Final Problem Set prints.</li>
+    <li>The sum's middle coefficient is 2.2 + 1 = 3.2, and its constant term is 1.1 + 2 = 3.1. The
+      degree-2 term has no partner in <code>p2</code>, so it passes through unchanged &mdash; which is what the
+      two separate <code>if</code> guards are for. Dropping them and looping to <code>p.degree</code> would read off the end
+      of the shorter array.</li>
+    <li><code>Polynomial p3 = p1 + p2;</code> is an initialization, so the result of <code>operator+</code> is built directly
+      into <code>p3</code>; no copy constructor call and no temporary destructor. Compare Problem 4(c).</li>
+    <li>The rubric awards a point each for: the title line, finding the degree, allocating the array,
+      computing the coefficients, constructing the result, deleting the temporary array, and returning
+      the result. That is seven separate places to earn credit in one function &mdash; write the
+      skeleton first, then fill it in.</li>
+    <li>The published rubric for the assignment operator contains <code>if (this == &amp;other)</code> while the
+      parameter is named <code>rhs</code>, and the <code>operator+</code> body refers to <code>other.degree</code> when the parameter is
+      <code>p</code>. Both are transcription slips in the answer key; the code above uses the declared parameter
+      names.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; <code>Complex</code>: four operators, three of them methods <span class="muted small">(added)</span></h3>
+
+<p>Write a <code>Complex</code> class holding <code>double re, im</code> with a default constructor, a two-argument
+constructor and a <code>print</code> that shows <code>re + imi</code>. Then add, in whichever form each one requires:</p>
+
+<ul>
+  <li><code>operator+</code> for two <code>Complex</code> values;</li>
+  <li>unary <code>operator-</code>;</li>
+  <li><code>operator*</code> for <code>Complex * double</code>;</li>
+  <li><code>operator*</code> for <code>double * Complex</code>.</li>
+</ul>
+
+<p>Then show that <code>2.0 * a + b * 3.0</code> works.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Apply the &sect;7 procedure to each of the four. <code>a + b</code>: left operand is a
+  <code>Complex</code>, no language restriction, wants the private data &rarr; method, one parameter. Unary <code>-</code>:
+  operand is a <code>Complex</code> &rarr; method, zero parameters. <code>c * 2.0</code>: left operand is a <code>Complex</code> &rarr;
+  method, one <code>double</code> parameter. <code>2.0 * c</code>: left operand is a <code>double</code> &rarr; <strong>must</strong> be
+  a free function, and it should delegate so the arithmetic exists once. All four return by value, and
+  all three methods are <code>const</code>.</p>
+<div class="codewrap"><div class="cap">complexops.cpp</div><pre><code class="language-cpp">// complexops.cpp -- scaling a complex number from both sides
+#include &lt;iostream&gt;
+using namespace std;
+
+class Complex {
+public:
+    Complex() { re = 0.0; im = 0.0; }
+    Complex(double a, double b) { re = a; im = b; }
+
+    double getre() const { return re; }
+    double getim() const { return im; }
+
+    void print() const {
+        cout &lt;&lt; re &lt;&lt; " + " &lt;&lt; im &lt;&lt; "i" &lt;&lt; endl;
+    }
+
+    Complex operator+ (const Complex &amp;other) const {   // method: one parameter
+        return Complex(re + other.re, im + other.im);
+    }
+    Complex operator- () const {                       // unary: no parameter
+        return Complex(-re, -im);
+    }
+    Complex operator* (double s) const {               // Complex * double
+        return Complex(re * s, im * s);
+    }
+private:
+    double re, im;
+};
+
+// double * Complex -- left operand is not a Complex, so this cannot be a method
+Complex operator* (double s, const Complex &amp;c) {
+    return c * s;                                      // delegate to the method
+}
+
+int main() {
+    Complex a(1.5, 2.5), b(3.0, -1.0);
+
+    Complex sum  = a + b;
+    Complex left = 2.0 * a;
+    Complex right = a * 2.0;
+    Complex neg  = -b;
+    Complex mix  = 2.0 * a + b * 3.0;
+
+    sum.print();
+    left.print();
+    right.print();
+    neg.print();
+    mix.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">4.5 + 1.5i
+3 + 5i
+3 + 5i
+-3 + 1i
+12 + 2i</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Three of the four are methods and exactly one is free, and which one is forced entirely by
+      what sits to the left of the symbol. That is the decision procedure of &sect;7, applied
+      mechanically.</li>
+    <li><code>2.0 * a</code> and <code>a * 2.0</code> print the same thing, but they took different routes: the first went
+      through the free function and then into the method, the second went straight to the method. If
+      you had written only the method, the first line would not compile at all.</li>
+    <li><code>neg.print()</code> shows <code>-3 + 1i</code>, because negating <code>3.0 - 1.0i</code> gives <code>-3.0 + 1.0i</code>. Any <code>print</code>
+      built by concatenating <code>" + "</code> will render a negative imaginary part awkwardly; fixing that
+      properly means testing the sign, which is a good use for the stream operators in Class 18.</li>
+    <li><code>2.0 * a + b * 3.0</code> needs three operator calls in the right order: both multiplications
+      (precedence) and then the addition. You wrote no code at all to make that ordering happen.</li>
+    <li>The bodies here use <code>return Complex(...)</code> directly rather than the professor's
+      "declare, <code>set</code>, return" shape. Both are correct; the constructor form is shorter and is possible
+      only because the class has a two-argument constructor.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>An <strong>overloaded operator is a function whose name is the keyword <code>operator</code> followed by
+        an operator symbol</strong>. The compiler rewrites <code>p1 + p2</code> as a call to <code>operator+</code>.
+        Everything you know about functions still applies.</li>
+      <li>Its inputs are called <strong>operands</strong>. Two operands means <strong>binary</strong>,
+        one means <strong>unary</strong>; <code>-</code> is both, and the two forms are separate overloads.</li>
+      <li>The <strong>return type is not obvious</strong> and you choose it: an object for
+        <code>+ - *</code>, <code>bool</code> for comparisons, a reference for <code>=</code> and <code>&lt;&lt;</code>.</li>
+      <li>As a <strong>free function</strong>, a binary operator takes two parameters and reaches the
+        object's data through public accessors. As a <strong>class method</strong>, it takes
+        <strong>one</strong> &mdash; the left operand is the object itself &mdash; and it can use the
+        private members directly. A unary operator as a method takes none.</li>
+      <li>Operators that do not change their operands take <code>const</code> reference parameters, and as methods
+        are marked <code>const</code>. Forget it and the operator stops working on <code>const</code> objects.</li>
+      <li>If the <strong>left operand is not an object of your class</strong>, the operator
+        <strong>must</strong> be a free function. <code>p * 2.0</code> can be a method; <code>2.0 * p</code> cannot. Write
+        both orders, and have one delegate to the other.</li>
+      <li><strong>Precedence, associativity and operand count are fixed by the symbol</strong> and come
+        for free &mdash; <code>p1 + p2*c2</code> groups correctly without you doing anything, and you cannot
+        change that grouping.</li>
+      <li>You cannot invent operators (<code>**</code>), cannot overload <code>.</code> <code>.*</code> <code>::</code> <code>?:</code> <code>sizeof</code>, and every
+        overload must have at least one operand of class or enumeration type. <code>operator=</code> must be a
+        method; you wrote one in Class 15.</li>
+      <li>Return <strong>by value</strong> from <code>+ - *</code> &mdash; the result is a new object, and a
+        reference to it would dangle. Return <strong>by reference</strong> only when the thing returned
+        outlives the call, as <code>*this</code> does in <code>operator=</code>.</li>
+    </ul>
+    <p><strong>Coming up in Class 18:</strong> the operator you have used since day one &mdash;
+    <code>cout &lt;&lt; x</code> &mdash; and why it has to be a free function, plus <code>friend</code> functions and
+    <code>friend</code> classes, the mechanism that lets a free operator reach a class's private data without
+    going through accessors.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 16 &middot; Static &amp; Namespaces</div><div class="pending">posts Tue Oct 27</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 18 &middot; Operators II</div><div class="pending">posts Tue Nov 3</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

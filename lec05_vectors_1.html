@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 5 — Vectors I | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 5 &middot; Vectors I</span><span class="sep">|</span><span class="where">Tue Sep 15</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 5 &middot; CSCI 211</div>
+  <h1>Vectors I &mdash; Storing a List of Values</h1>
+  <p class="sub">The container you will use in almost every program for the rest of the semester: an array that knows how long it is, and that can grow while the program runs.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain why a plain C++ array is not enough when the amount of data is not known until the program runs.</li>
+      <li>Include the right header and declare a vector in each of the forms the course uses: empty, sized, sized-and-filled, and brace-initialized.</li>
+      <li>Say exactly what each declaration form puts in the elements, and why parentheses and braces mean different things.</li>
+      <li>Read and write elements with the subscript operator <code>[]</code>, using the same syntax you already use for arrays.</li>
+      <li>State what really happens when you index a vector out of bounds, and use <code>at()</code> when you want the error to be caught.</li>
+      <li>Grow a vector with <code>push_back</code> and report its length with <code>size()</code>.</li>
+      <li>Walk a vector with a <code>for</code> loop without tripping the signed/unsigned warning.</li>
+      <li>Pass a vector to a function by value or by <code>const</code> reference, and say which one copies the data.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Why an array is not enough</a></li>
+    <li><a href="#s2">The vector: a generalized array</a></li>
+    <li><a href="#s3">Declaring a vector</a></li>
+    <li><a href="#s4">Getting and setting elements</a></li>
+    <li><a href="#s5">Out of bounds: what really happens</a></li>
+    <li><a href="#s6">Growing a vector: <code>push_back</code> and <code>size()</code></a></li>
+    <li><a href="#s7">Passing a vector to a function</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Why an array is not enough</h2>
+
+<p>Start from something you already know. In CSCI 111 you stored a list of numbers in an array:</p>
+
+<pre><code class="language-cpp">int a[10];</code></pre>
+
+<p>That one line makes ten integers, side by side in memory, reachable as <code>a[0]</code> through <code>a[9]</code>. It
+is fast, it is simple, and it has one property that quietly ruins it for real programs: <strong>the
+length is fixed at 10, a number you have to know in advance.</strong> Not "in advance" as in "before
+the loop starts" &mdash; in advance as in <em>while you are typing the source code</em>, before the
+program has ever run, before anyone has entered any data.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; array</span></div>
+  <div class="bd">
+    <p>An <strong>array</strong> is a block of memory holding a fixed number of values, all of the
+    same type, laid out one after another. The declaration <code>int a[10];</code> reserves room for
+    exactly ten <code>int</code>s. Individual values are reached by <strong>subscripting</strong>:
+    <code>a[0]</code> is the first, <code>a[9]</code> the last.</p>
+    <p>Two facts about an array are going to matter all class:</p>
+    <ul>
+      <li>Its length is baked in at compile time and can never change.</li>
+      <li>The array itself does <em>not</em> know its own length. If you pass <code>a</code> to a
+        function, you must pass the number 10 along beside it, and if the two ever disagree, nothing
+        in the language notices.</li>
+    </ul>
+  </div>
+</div>
+
+<p>Here is the problem the course notes use to make the point, and it is worth sitting with for a
+moment because it is completely ordinary:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the motivating problem</span></div>
+  <div class="bd">
+    <p>Suppose we want to have arrays <code>x</code> and <code>y</code> of type <code>double</code>,
+    to hold the <em>(x, y)</em> coordinates of the vertices of a polygon.</p>
+    <p>How big do you make them? A triangle needs 3. A pentagon needs 5. A traced outline of a
+    coastline might need 40,000. The number of vertices is not known when you write the program
+    &mdash; it is known when the user opens a file or finishes clicking. An array cannot express
+    that.</p>
+  </div>
+</div>
+
+<p>Students usually reach for one of two workarounds, and both are bad. The first is to declare the
+array enormously large &mdash; <code>double x[100000];</code> &mdash; and use only the front of it.
+That wastes memory, and it still fails on the polygon with 100,001 vertices. The second is to keep
+a separate counter variable that says how much of the array is really in use:</p>
+
+<div class="codewrap"><div class="cap">fixedarray.cpp</div><pre><code class="language-cpp">// fixedarray.cpp -- an array's length is fixed at compile time
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a[10];               // exactly 10 ints, forever
+    for (int i = 0; i &lt; 10; ++i) {
+        a[i] = i * i;
+    }
+    cout &lt;&lt; "a[9] = " &lt;&lt; a[9] &lt;&lt; endl;
+
+    int n = 3;               // suppose we discover we only needed 3
+    cout &lt;&lt; "we used " &lt;&lt; n &lt;&lt; " of the 10 slots" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<p>That counter <code>n</code> is the tell. You are now carrying two things around &mdash; the data
+and the length &mdash; and hand-keeping them in agreement in every function that touches the array.
+Every bug in that bookkeeping is an out-of-bounds access, and out-of-bounds accesses in C++ do not
+politely stop your program. They corrupt it.</p>
+
+<p>The C++ answer is a type that carries the length <em>inside itself</em> and that can change that
+length while the program runs. That type is <code>vector</code>, and it is the subject of today and
+Class 6.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.1</div>
+  <div class="bd">
+    <p>Think about the array workarounds above before we look at any new syntax.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A student writes <code>int a[n];</code> where <code>n</code> is an ordinary <code>int</code> variable read from <code>cin</code>. Is that legal standard C++?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> The length of an array must be a compile-time constant. A few
+        compilers, <code>g++</code> among them, accept this as a non-standard extension called a
+        <em>variable-length array</em>, which is exactly why students get away with it and then are
+        baffled when the same code is rejected elsewhere or crashes for large <code>n</code>.</p>
+        <p>Write it and compile with the flags this course uses and you are relying on an extension
+        the language does not promise. Do not build habits on it. The two standard answers are a
+        <code>vector</code> (today) and dynamically allocated memory with <code>new</code> (Class 8).</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Why is "just declare it big enough" not merely wasteful but actually unsafe?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because "big enough" is a guess, and the program has no way to tell you when the guess was
+        wrong. If you declare <code>double x[1000];</code> and the data turns out to have 1,200
+        points, the loop that fills it writes <code>x[1000]</code> through <code>x[1199]</code> into
+        memory that belongs to something else &mdash; other variables, the function's own
+        bookkeeping, anything. The program does not stop. It keeps running with silently corrupted
+        state, and the crash, if it comes at all, comes somewhere else entirely.</p>
+        <p>That is the failure mode this whole topic exists to avoid: <em>a wrong answer is worse
+        than an error message</em>, because an error message tells you where to look.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>The vector: a generalized array</h2>
+
+<p>The course notes give <code>vector</code> a name that is worth adopting: a vector is a
+<strong>generalized array</strong>. It behaves like an array &mdash; same subscripting syntax, same
+"all elements have the same type", same contiguous storage &mdash; and it adds information and
+abilities that a bare array does not have.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; vector</span></div>
+  <div class="bd">
+    <p>A <strong>vector</strong> is a standard-library type that stores a sequence of values of one
+    type, keeps track of how many it is holding, and can change that number while the program runs.
+    The element type is written in <strong>angle brackets</strong> after the word:
+    <code>vector&lt;int&gt;</code>, <code>vector&lt;double&gt;</code>, <code>vector&lt;string&gt;</code>.</p>
+    <p>Two words we will use constantly:</p>
+    <ul>
+      <li>An <strong>element</strong> is one stored value.</li>
+      <li>The <strong>index</strong> (or <em>subscript</em>) of an element is its position, counting
+        from <strong>0</strong>, exactly as with an array.</li>
+    </ul>
+    <p>The number of elements a vector currently holds is its <strong>size</strong>, and you ask for
+    it by calling the method <code>size()</code>.</p>
+  </div>
+</div>
+
+<p>Here is the property list from the course notes, which is the clearest statement of what you are
+getting:</p>
+
+<ol>
+  <li>The length doesn't need to be specified in advance (default = 0).</li>
+  <li>The length can be specified later, during program execution.</li>
+  <li>The length can change, during program execution.</li>
+  <li>We are permitted to "resize" a vector, and it can be resized to a smaller value if desired.</li>
+  <li>As opposed to a C++ array, a vector knows its length.</li>
+  <li>A vector contains internal information, including its length.</li>
+  <li>This is part of the notion of a generalized array: a vector contains extra information.</li>
+</ol>
+
+<p>Properties 5 and 6 are the ones that pay off immediately. Because the length travels with the
+data, a function that receives a vector does not need a separate length parameter, and the two can
+never fall out of step.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; you need the header</span></div>
+  <div class="bd">
+    <p>Vectors do not come with <code>#include &lt;iostream&gt;</code>. You must include the vector header
+    yourself:</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;</code></pre>
+    <p>Leave it out and the message is a familiar one from Class 1 &mdash; a name the compiler has
+    never heard of:</p>
+<pre class="err">novector.cpp: In function 'int main()':
+novector.cpp:5:5: error: 'vector' was not declared in this scope
+    5 |     vector&lt;int&gt; v;
+      |     ^~~~~~
+novector.cpp:2:1: note: 'std::vector' is defined in header '&lt;vector&gt;'; did you forget to '#include &lt;vector&gt;'?</pre>
+    <p>Read the <code>note:</code> line. Modern <code>g++</code> names the missing header for you.
+    Also note the follow-on errors underneath it in the real transcript &mdash; <em>"expected
+    primary-expression before 'int'"</em> and <em>"'v' was not declared in this scope"</em> &mdash;
+    which are pure fallout. Fix the first error and the rest evaporate.</p>
+  </div>
+</div>
+
+<p>Before the syntax, one connection. You have used a class with methods already, probably without
+calling it that: <code>string</code>.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>string</code> is a class, and that is the pattern</span></div>
+  <div class="bd">
+    <p>This is the course notes' bridge into vectors. A <code>string</code> is not a built-in type
+    like <code>int</code> &mdash; it is a class from the standard library, it carries its own data,
+    and you operate on it by calling <em>methods</em> with the dot operator. Predict both lines.</p>
+<div class="codewrap"><div class="cap">stringrecap.cpp</div><pre><code class="language-cpp">// stringrecap.cpp -- a string is a class: it carries data AND methods
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    string s("abcd");
+    cout &lt;&lt; s &lt;&lt; endl;
+    s.insert(0, "ABCD");
+    cout &lt;&lt; s &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">abcd
+ABCDabcd</pre>
+<p>Three things to carry forward into vectors:</p>
+<ul>
+  <li><code>string s("abcd");</code> constructs the object by passing an initial value <em>in
+    parentheses</em>. Vectors are constructed the same way, and the parentheses will matter in
+    &sect;3.</li>
+  <li><code>s.insert(0, "ABCD")</code> is a <strong>method call</strong> &mdash; object, dot, method
+    name, arguments. <code>push_back</code>, <code>size</code> and <code>at</code> are all called exactly like this.</li>
+  <li>You never told the string how long "abcd" was. It knows. That is the same deal a vector
+    offers.</li>
+</ul>
+<p>A vector is a class too, and in Class 9 you will start writing classes of your own. Until then it
+is enough to know that <em>a class packages data together with the operations on it</em> &mdash;
+which is precisely the definition of an object from Class 1.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.2</div>
+  <div class="bd">
+    <p>Explain, in one sentence each, what goes wrong in the following two situations. Neither is a
+    trick question; both are about the difference between an array and a vector.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A function is declared <code>double sum(double a[], int n);</code> and a caller passes an array of 12 values but writes <code>sum(a, 10)</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The function happily adds up the first ten and reports that as the total &mdash; a
+        <strong>silently wrong answer</strong>, with no error at compile time and none at run time.
+        The array had no way to contradict the number 10, because an array does not know its own
+        length.</p>
+        <p>Change the parameter to a vector and the bug becomes impossible to write: there is no
+        second argument to get wrong, because the length rides along inside the vector.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> The same function is declared <code>double sum(double a[], int n);</code> and the caller writes <code>sum(a, 20)</code> for that same 12-element array.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The loop runs off the end of the array and reads eight <code>double</code>s' worth of
+        memory that was never part of it. What it finds there is whatever happened to be in those
+        bytes, so the total is garbage &mdash; and if the function had been <em>writing</em> instead
+        of reading, it would have overwritten unrelated variables.</p>
+        <p>Once again there is no error message. The C++ rule is uniform and it is the point of
+        &sect;5 below: <strong>subscripting outside the valid range is your mistake to prevent, not
+        the language's to detect.</strong></p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Declaring a vector</h2>
+
+<p>Line up the array declarations you already know against their vector counterparts. This is the
+comparison the course notes draw, and it is the fastest way to read vector syntax.</p>
+
+<table class="trace">
+  <tr><th>What you want</th><th>Array</th><th>Vector</th></tr>
+  <tr><td>Ten characters</td><td><code>char arr_c[10];</code></td><td><code>vector&lt;char&gt; vec_c(10);</code></td></tr>
+  <tr><td>Ten ints</td><td><code>int arr_i[10];</code></td><td><code>vector&lt;int&gt; vec_i(10);</code></td></tr>
+  <tr><td>Ten doubles</td><td><code>double arr_d[10];</code></td><td><code>vector&lt;double&gt; vec_d(10);</code></td></tr>
+  <tr><td>Length decided later</td><td><em>impossible</em></td><td><code>vector&lt;double&gt; x;</code></td></tr>
+</table>
+
+<p>Notice that in the vector column the length is <em>an ordinary expression</em>. It does not have
+to be a literal. This compiles, and it is the whole reason vectors exist:</p>
+
+<pre><code class="language-cpp">int n = 10;                  // n could just as well have come from cin
+vector&lt;char&gt;   vec_c(n);
+vector&lt;int&gt;    vec_i(n);
+vector&lt;double&gt; vec_d(n);</code></pre>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; parentheses, not square brackets</span></div>
+  <div class="bd">
+    <p>The course notes flag this explicitly, and it is worth the emphasis: <strong>note the syntax
+    &mdash; it is parentheses, i.e. <code>(n)</code>, not square brackets <code>[n]</code>.</strong></p>
+    <p>Write square brackets and the line still compiles, which is what makes this dangerous:</p>
+<pre><code class="language-cpp">const int n = 10;
+vector&lt;int&gt; vec_i[n];        // WRONG: an array of 10 empty vectors!</code></pre>
+    <p>That declares an <em>array of ten vectors</em>, each one empty. Nothing complains until you
+    try to use it as though it held integers, and then the message is a wall of template noise:</p>
+<pre class="err">brackets.cpp: In function 'int main()':
+brackets.cpp:8:16: error: no match for 'operator=' (operand types are 'std::vector&lt;int&gt;' and 'int')
+    8 |     vec_i[0] = 5;
+      |                ^</pre>
+    <p>The useful part is in the parentheses at the end of the first line:
+    <em>operand types are</em> <code>std::vector&lt;int&gt;</code> <em>and</em> <code>int</code>. The compiler is telling you that <code>vec_i[0]</code>
+    is a whole vector, not an <code>int</code>. Whenever an error mentions a type you did not think
+    you had written, go back and re-read the declaration.</p>
+  </div>
+</div>
+
+<h3>What is in the elements?</h3>
+
+<p>An ordinary C++ array contains <strong>uninitialized</strong> memory when it is declared. A
+sized vector does not.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; garbage versus zero</span></div>
+  <div class="bd">
+    <p>Two five-element containers, declared side by side and immediately printed. Predict both
+    lines &mdash; and predict how confident you are about each one.</p>
+<div class="codewrap"><div class="cap">garbage.cpp</div><pre><code class="language-cpp">// garbage.cpp -- an array starts as garbage; a vector starts as zeros
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int arr[5];              // uninitialized: whatever bytes were already there
+    vector&lt;int&gt; vec(5);      // length 5, every element initialized to 0
+
+    cout &lt;&lt; "array : ";
+    for (int i = 0; i &lt; 5; ++i) cout &lt;&lt; arr[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; "vector: ";
+    for (int i = 0; i &lt; 5; ++i) cout &lt;&lt; vec[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">array : 1651076199 779647075 1600677166 1819242352 152078576
+vector: 0 0 0 0 0</pre>
+<p><strong>The array line is machine-dependent and the numbers above are only representative.</strong>
+Reading an uninitialized variable has no defined answer in C++; those five values are simply
+whatever bytes were sitting in that piece of the stack. Running the same executable a second time on
+the same machine produced a different last value. Never write a program that depends on them.</p>
+<p>The vector line, by contrast, is guaranteed. <code>vector&lt;int&gt; vec(5);</code> value-initializes
+its elements, so every one of them is <code>0</code>. For a <code>vector&lt;double&gt;</code> they
+would all be <code>0</code>; for a <code>vector&lt;string&gt;</code>, empty strings. The course
+notes state the rule directly: <em>if we do not specify data values, they will be defaulted to
+zero.</em></p>
+<p>This is a real reason to prefer a vector even when you <em>do</em> know the length in advance. The
+array version has a whole class of bug the vector version simply cannot have.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Supplying an initial value</h3>
+
+<p>If zero is not the starting value you want, give the fill value as a second argument:</p>
+
+<pre><code class="language-cpp">int n = 10;
+vector&lt;char&gt;   vec_c(n, ' ');      // ten blanks
+vector&lt;int&gt;    vec_i(n, 1);        // ten ones
+vector&lt;double&gt; vec_d(n, 3.14);     // ten copies of 3.14</code></pre>
+
+<p>And if you know the actual values at the point of declaration, you can list them in braces,
+exactly as you would initialize an array with <code>int a[] = {1, 2, 4, 8, 16};</code>:</p>
+
+<pre><code class="language-cpp">vector&lt;int&gt; powers{1, 2, 4, 8, 16};      // five elements, size 5</code></pre>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the four declaration forms, side by side</span></div>
+  <div class="bd">
+    <p>This program declares one vector in each form and reports its size and contents. Work out all
+    five lines before revealing &mdash; two of them catch nearly everyone.</p>
+<div class="codewrap"><div class="cap">braceinit.cpp</div><pre><code class="language-cpp">// braceinit.cpp -- parentheses and braces mean different things
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+void show(const string &amp;label, const vector&lt;int&gt; &amp;v) {
+    cout &lt;&lt; label &lt;&lt; " size = " &lt;&lt; v.size() &lt;&lt; ", contents:";
+    int n = v.size();
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; " " &lt;&lt; v[i];
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    vector&lt;int&gt; a(3);            // three elements, all 0
+    vector&lt;int&gt; b{3};            // ONE element, whose value is 3
+    vector&lt;int&gt; c(3, 7);         // three elements, all 7
+    vector&lt;int&gt; d{3, 7};         // TWO elements: 3 and 7
+    vector&lt;int&gt; e{1, 2, 4, 8, 16};
+
+    show("a(3)  ", a);
+    show("b{3}  ", b);
+    show("c(3,7)", c);
+    show("d{3,7}", d);
+    show("e{...}", e);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">a(3)   size = 3, contents: 0 0 0
+b{3}   size = 1, contents: 3
+c(3,7) size = 3, contents: 7 7 7
+d{3,7} size = 2, contents: 3 7
+e{...} size = 5, contents: 1 2 4 8 16</pre>
+<p>The rule, in one line: <strong>parentheses describe the vector; braces list its contents.</strong></p>
+<table class="trace">
+  <tr><th>Declaration</th><th>Reads as</th><th>Size</th></tr>
+  <tr><td><code>a(3)</code></td><td>"make a vector <em>of length</em> 3"</td><td>3</td></tr>
+  <tr><td><code>b{3}</code></td><td>"make a vector <em>containing</em> 3"</td><td>1</td></tr>
+  <tr><td><code>c(3, 7)</code></td><td>"length 3, every element 7"</td><td>3</td></tr>
+  <tr><td><code>d{3, 7}</code></td><td>"containing 3 and 7"</td><td>2</td></tr>
+  <tr><td><code>e{1,2,4,8,16}</code></td><td>"containing those five values"</td><td>5</td></tr>
+</table>
+<p>The trap is <code>b</code> versus <code>a</code>: one character of difference, and a vector of
+three zeros becomes a vector holding the single number 3. When a loop over <code>b</code> mysteriously
+runs once, this is why.</p>
+<p>Two smaller points worth stealing from this program. <code>show</code> takes its parameters by
+<code>const</code> reference, which we come back to in &sect;7. And <code>int n = v.size();</code>
+before the loop is the idiom the course notes use &mdash; &sect;6 explains why it is written that
+way rather than putting <code>v.size()</code> straight into the loop condition.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.3</div>
+  <div class="bd">
+    <p>For each declaration, state the size of the vector and the value of every element. Assume
+    <code>int n = 4;</code> is in scope.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>vector&lt;double&gt; v;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Size <strong>0</strong>. There are no elements at all &mdash; not "four empty slots",
+        <em>none</em>. Any subscript, including <code>v[0]</code>, is out of bounds until something
+        is pushed into it.</p>
+        <p>This is the normal way to start when the data is going to be read in, and it is the form
+        every exam program in this course begins with.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>vector&lt;int&gt; v(n);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Size <strong>4</strong>, elements <code>0 0 0 0</code>. The length may be a variable, and
+        with no fill value given the elements default to zero.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>vector&lt;int&gt; v(n, -1);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Size <strong>4</strong>, elements <code>-1 -1 -1 -1</code>. The second argument is the
+        value every element starts at, not an extra element.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>vector&lt;int&gt; v{n};</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Size <strong>1</strong>, the single element <code>4</code>. Braces list contents, so this
+        is a vector holding the current value of <code>n</code>.</p>
+        <p><strong>Things to notice.</strong> Parts (b) and (d) differ by two characters and produce
+        completely different objects. When you are reading someone else's code &mdash; or your own
+        from last week &mdash; check the bracket shape before you assume you know the size. And when
+        <em>writing</em>, prefer to make your intent obvious: <code>vector&lt;int&gt; v(n, 0);</code>
+        says "n zeros" out loud, even though the <code>, 0</code> is redundant.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Getting and setting elements</h2>
+
+<p>Now the good news, and it is genuinely the reason this type is easy to adopt: <strong>the syntax
+to get and set the values of elements is exactly the same as for a C++ array.</strong> No new
+notation to learn.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the subscript operator <code>[]</code></span></div>
+  <div class="bd">
+    <p>For a vector <code>v</code> and an integer <code>i</code> in range, the expression
+    <code>v[i]</code> names the element at index <code>i</code>. It can be used on either side of an
+    assignment:</p>
+    <ul>
+      <li><code>cout &lt;&lt; v[i];</code> <em>gets</em> the value.</li>
+      <li><code>v[i] = 2 * i;</code> <em>sets</em> the value.</li>
+    </ul>
+    <p>Valid indices run from <code>0</code> to <code>v.size() - 1</code>. Indices count from zero,
+    just as they do for arrays, so a vector of size 10 has no element <code>v[10]</code>.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; fill, print, overwrite, print again</span></div>
+  <div class="bd">
+    <p>This is the get/set program from the course notes. Two vectors of ten elements are created
+    with fill values, printed, overwritten by a loop, and printed again. Before you reveal: what is
+    the very first line of output, and what is the very last?</p>
+<div class="codewrap"><div class="cap">getset.cpp</div><pre><code class="language-cpp">// getset.cpp -- getting and setting vector elements with []
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n = 10;
+    vector&lt;int&gt;    vec_i(n, 1);
+    vector&lt;double&gt; vec_d(n, 3.14);
+
+    // print initial values
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; i &lt;&lt; " " &lt;&lt; vec_i[i] &lt;&lt; " " &lt;&lt; vec_d[i] &lt;&lt; endl;
+    }
+    cout &lt;&lt; endl;
+
+    // set the values
+    for (int i = 0; i &lt; n; ++i) {
+        vec_i[i] = 2 * i;
+        vec_d[i] = i + 0.5;
+    }
+
+    // print updated values
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; i &lt;&lt; " " &lt;&lt; vec_i[i] &lt;&lt; " " &lt;&lt; vec_d[i] &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0 1 3.14
+1 1 3.14
+2 1 3.14
+3 1 3.14
+4 1 3.14
+5 1 3.14
+6 1 3.14
+7 1 3.14
+8 1 3.14
+9 1 3.14
+
+0 0 0.5
+1 2 1.5
+2 4 2.5
+3 6 3.5
+4 8 4.5
+5 10 5.5
+6 12 6.5
+7 14 7.5
+8 16 8.5
+9 18 9.5</pre>
+<p>Walk the pieces:</p>
+<table class="trace">
+  <tr><th>Code</th><th>What happens</th></tr>
+  <tr><td><code>vector&lt;int&gt; vec_i(n, 1);</code></td><td>Ten <code>int</code>s, all set to 1. That is the first block of output: the middle column is <code>1</code> ten times.</td></tr>
+  <tr><td><code>vector&lt;double&gt; vec_d(n, 3.14);</code></td><td>Ten <code>double</code>s, all 3.14 &mdash; the right column.</td></tr>
+  <tr><td><code>vec_i[i] = 2 * i;</code></td><td><strong>Sets.</strong> The subscript expression is the target of an assignment, exactly as with an array.</td></tr>
+  <tr><td><code>vec_d[i] = i + 0.5;</code></td><td><code>i</code> is an <code>int</code> and <code>0.5</code> is a <code>double</code>, so the sum is a <code>double</code>. Index 0 gives 0.5, index 9 gives 9.5.</td></tr>
+  <tr><td><code>cout &lt;&lt; vec_i[i]</code></td><td><strong>Gets.</strong> Same notation, read instead of written.</td></tr>
+</table>
+<p>One formatting detail to file away, because it is worth points on this professor's exams: the
+<code>double</code> column prints <code>0.5</code>, <code>1.5</code>, &hellip; with no trailing
+zeros, and if a value had come out exactly <code>4.0</code> it would have printed as
+<code>4</code>. That is the default six-significant-digit <code>cout</code> behavior from Class 3,
+and it applies inside vectors just as it does anywhere else.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.4</div>
+  <div class="bd">
+    <p>Consider these three lines, in order:</p>
+<pre><code class="language-cpp">vector&lt;int&gt; v(4, 2);
+v[1] = v[0] + v[3];
+v[2] = v[2] + v[1];</code></pre>
+    <p>What are the four elements of <code>v</code> at the end? Trace it one statement at a time.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The only trap is that the second and third statements read elements
+      that earlier statements may already have changed. Do them strictly in order and write the whole
+      vector out after each one.</p>
+      <table class="trace">
+        <tr><th>After</th><th><code>v[0]</code></th><th><code>v[1]</code></th><th><code>v[2]</code></th><th><code>v[3]</code></th><th>Why</th></tr>
+        <tr><td><code>vector&lt;int&gt; v(4, 2);</code></td><td>2</td><td>2</td><td>2</td><td>2</td><td>Length 4, fill value 2.</td></tr>
+        <tr><td><code>v[1] = v[0] + v[3];</code></td><td>2</td><td><strong>4</strong></td><td>2</td><td>2</td><td>2 + 2 = 4. Right-hand side is evaluated first, then stored.</td></tr>
+        <tr><td><code>v[2] = v[2] + v[1];</code></td><td>2</td><td>4</td><td><strong>6</strong></td><td>2</td><td><code>v[1]</code> is now 4, not the original 2. 2 + 4 = 6.</td></tr>
+      </table>
+      <p>Final contents: <code>2 4 6 2</code>.</p>
+      <p><strong>Things to notice.</strong> Answering "2 4 4 2" means you used the <em>old</em>
+      <code>v[1]</code> on the last line. Sequential statements take effect one after another, and
+      output-prediction questions on this professor's exams lean on exactly that: line (b) of his
+      trace problems always depends on the side effects of line (a).</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; five temperature readings</h3>
+
+<p>Declare a vector of five <code>double</code>s, all starting at zero. Set each one to a
+temperature of your choosing with <code>[]</code>, then loop over the vector printing each reading
+with its index, and finish by printing the average.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="21" data-starter="#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n = 5;
+    // declare a vector of n doubles, all zero
+
+
+    // set the five readings with []
+
+
+    // loop: print &quot;reading i: value&quot;, and accumulate a total
+
+
+    // print the average
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n = 5;
+    // declare a vector of n doubles, all zero
+
+
+    // set the five readings with []
+
+
+    // loop: print "reading i: value", and accumulate a total
+
+
+    // print the average
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.5</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output for the readings 68.5, 71.0, 69.25,
+    75.0 and 66.75.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Declare with the sized-and-filled form so the elements start at a
+      known value. Assign the five readings by index. Then one loop does double duty: it prints each
+      element and adds it into a running total, so no second pass is needed. The average is the total
+      divided by <code>n</code> &mdash; and since <code>total</code> is a <code>double</code>, that
+      division is floating point, not integer division.</p>
+<div class="codewrap"><div class="cap">temps.cpp</div><pre><code class="language-cpp">// temps.cpp -- exercise 1: a vector of five readings
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n = 5;
+    vector&lt;double&gt; temps(n, 0.0);      // five slots, all zero
+
+    temps[0] = 68.5;
+    temps[1] = 71.0;
+    temps[2] = 69.25;
+    temps[3] = 75.0;
+    temps[4] = 66.75;
+
+    double total = 0.0;
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; "reading " &lt;&lt; i &lt;&lt; ": " &lt;&lt; temps[i] &lt;&lt; endl;
+        total += temps[i];
+    }
+    cout &lt;&lt; "average: " &lt;&lt; total / n &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">reading 0: 68.5
+reading 1: 71
+reading 2: 69.25
+reading 3: 75
+reading 4: 66.75
+average: 70.1</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>71.0</code> and <code>75.0</code> print as <code>71</code> and <code>75</code>. The
+          values are correct <code>double</code>s; it is only the display that drops the trailing
+          zero. Writing <code>71.0</code> as your exam answer would be marked wrong.</li>
+        <li><code>total / n</code> is <code>double / int</code>, so the <code>int</code> is converted
+          and the division is floating point. Had <code>total</code> been declared <code>int</code>,
+          you would have got <code>70</code> &mdash; a silently wrong answer of the kind Class 1
+          warned about.</li>
+        <li>The declaration <code>vector&lt;double&gt; temps(n, 0.0);</code> could have been
+          <code>vector&lt;double&gt; temps(n);</code> &mdash; the zeros are the default. Spelling the
+          fill value out costs four characters and removes any doubt for the reader.</li>
+        <li>Indices go <code>0</code> to <code>4</code>. There is no <code>temps[5]</code>, and what
+          happens if you write one is the subject of the next section.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Out of bounds: what really happens</h2>
+
+<p>Here is the sentence from the course notes, and it is the most important correction on this
+page:</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; correcting a claim you will see repeated</span></div>
+  <div class="bd">
+    <p>The course notes state:</p>
+    <ul>
+      <li><em>"The C++ program above compiles successfully, but generates a run-time error."</em></li>
+      <li><em>"Attempts to get/set values which are out of bounds results in a run-time error."</em></li>
+    </ul>
+    <p><strong>That is not what the language guarantees, and relying on it will cost you.</strong>
+    The subscript operator on a vector performs <em>no bounds checking whatsoever</em>. Indexing
+    outside the valid range is <strong>undefined behavior</strong>: the standard says nothing at all
+    about what happens next. In practice it may crash, and often does when the index is wildly
+    wrong &mdash; but it may equally well read whatever bytes happen to be next in memory and carry
+    on as if nothing were wrong. Writing out of bounds may silently corrupt an unrelated variable.</p>
+    <p>The corrected statement to memorize: <strong>an out-of-bounds subscript is undefined behavior
+    &mdash; often a crash, never a promise.</strong> The method that <em>does</em> promise a run-time
+    error is <code>at()</code>, which we meet below and which the course notes never mention.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; undefined behavior</span></div>
+  <div class="bd">
+    <p><strong>Undefined behavior</strong> means the C++ standard places no requirement at all on
+    what the program does. It is not "an error", it is not "unspecified but one of a few options" &mdash;
+    it is a blank check. A program with undefined behavior may crash, may produce wrong answers, may
+    appear to work perfectly on your machine and fail on the grader's, and may behave differently at
+    two different optimization levels.</p>
+    <p>Undefined behavior is why C++ is fast: the compiler is allowed to assume you never do it, and
+    can therefore skip every check. It is also why C++ is dangerous, and why the discipline of
+    checking your own indices is not optional.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; reading <code>v[10]</code> from a three-element vector</span></div>
+  <div class="bd">
+    <p>A vector of size 3, so the only legal indices are 0, 1 and 2. Then we read index 10. Before
+    you reveal, commit to an answer: does this program crash, print something, or refuse to
+    compile?</p>
+<div class="codewrap"><div class="cap">oob.cpp</div><pre><code class="language-cpp">// oob.cpp -- reading past the end of a vector with []
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; v(3, 7);      // legal indices are 0, 1, 2
+
+    cout &lt;&lt; "v.size() = " &lt;&lt; v.size() &lt;&lt; endl;
+    cout &lt;&lt; "v[0] = " &lt;&lt; v[0] &lt;&lt; endl;
+    cout &lt;&lt; "v[2] = " &lt;&lt; v[2] &lt;&lt; endl;
+
+    cout &lt;&lt; "about to read v[10]..." &lt;&lt; endl;
+    cout &lt;&lt; "v[10] = " &lt;&lt; v[10] &lt;&lt; endl;      // NOT an error the language checks
+    cout &lt;&lt; "still running." &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">v.size() = 3
+v[0] = 7
+v[2] = 7
+about to read v[10]...
+v[10] = 1634038304
+still running.</pre>
+<p>It compiled without a single warning, it printed a number for <code>v[10]</code>, it reached the
+last line, and it exited with status 0 &mdash; the code for "finished normally". As far as the
+operating system is concerned, nothing went wrong.</p>
+<p><strong>The value <code>1634038304</code> is machine-dependent and shown here only as a
+representative result.</strong> It is not "the value of <code>v[10]</code>", because there is no such
+element; it is whatever bit pattern happened to be sitting seven <code>int</code>s past the end of
+the vector's storage on this run, on this machine, with this compiler. On a different machine it
+could be a different number, a zero, or a crash.</p>
+<p>Now sit with the consequence. If <code>v[10]</code> had been on the <em>left</em> of an
+assignment, the program would have written that number into memory it does not own. Nothing would
+have printed. The damage would surface later &mdash; a different variable with an impossible value,
+a crash three functions away &mdash; and the line that actually caused it would look innocent.</p>
+
+</div></details>
+
+    <p>To be fair to the course notes: sometimes it really does crash. Here is their own out-of-bounds
+    program, which subscripts an <em>empty</em> vector ten times. Predict what this one does.</p>
+<div class="codewrap"><div class="cap">oob_prof.cpp</div><pre><code class="language-cpp">// oob_prof.cpp -- the version from the course notes: an EMPTY vector, indexed 0..9
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n = 10;
+    vector&lt;int&gt; vec_i;        // length not specified, default = 0
+
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; i &lt;&lt; " " &lt;&lt; vec_i[i] &lt;&lt; endl;   // out of bounds on every iteration
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Segmentation fault (core dumped)</pre>
+<p>Exit status 139, and not one line of the loop's output ever appeared &mdash; the process died
+before <code>cout</code>'s buffer was flushed. So the notes' claim is <em>true of this particular
+program on this particular machine</em>, and that is exactly the trap. Two programs, both making the
+same category of mistake: one dies loudly, the other lies quietly. You cannot tell which you will
+get, which is why you must not rely on either.</p>
+<p>The other half of the notes' advice is completely sound, though, and worth repeating:
+<strong>you must populate a vector before you attempt to get or set its elements.</strong> A vector
+declared with no length has size 0 and no valid indices at all. Populating it is &sect;6.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>The checked alternative: <code>at()</code></h3>
+
+<p>C++ does offer a subscript that checks. It is a method called <code>at()</code>, it takes the index as an
+argument instead of putting it in brackets, and when the index is out of range it does something
+specific and reliable.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>at()</code> and <code>std::out_of_range</code></span></div>
+  <div class="bd">
+    <p><code>v.at(i)</code> means the same element as <code>v[i]</code> when <code>i</code> is in
+    range, and can be read or assigned in exactly the same way. The difference is what happens when
+    <code>i</code> is <em>not</em> in range: <code>at()</code> <strong>throws</strong> an exception
+    of type <code>std::out_of_range</code>.</p>
+    <p>An exception that nobody catches terminates the program immediately, with a diagnostic message
+    naming the problem. That is a genuine, guaranteed run-time error &mdash; the thing the course
+    notes claim <code>[]</code> gives you, delivered by the method that actually gives it.</p>
+    <p>The cost is a comparison on every access, which is why <code>[]</code> exists and why it is
+    what you will use in ordinary loops. The rule of thumb: <strong>use <code>[]</code> when the
+    index provably comes from the loop bounds; reach for <code>at()</code> when the index came from
+    somewhere you do not control, or when you are hunting a bug.</strong></p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same mistake, made with <code>at()</code></span></div>
+  <div class="bd">
+    <p>Identical vector, identical bad index, one method call instead of brackets. This time the
+    program does not get to the last line.</p>
+<div class="codewrap"><div class="cap">atdemo.cpp</div><pre><code class="language-cpp">// atdemo.cpp -- at() checks the index; [] does not
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; v(3, 7);      // legal indices are 0, 1, 2
+
+    cout &lt;&lt; "v.at(2) = " &lt;&lt; v.at(2) &lt;&lt; endl;
+    cout &lt;&lt; "about to call v.at(10)..." &lt;&lt; endl;
+    cout &lt;&lt; "v.at(10) = " &lt;&lt; v.at(10) &lt;&lt; endl;
+    cout &lt;&lt; "you will never see this line." &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">v.at(2) = 7
+about to call v.at(10)...
+terminate called after throwing an instance of 'std::out_of_range'
+  what():  vector::_M_range_check: __n (which is 10) &gt;= this-&gt;size() (which is 3)</pre>
+<p>Read that message closely, because it is doing you an enormous favor. It names the exception type
+(<code>std::out_of_range</code>), it names the offending index (10) and it names the size (3). The
+shell reports the process as <em>Aborted</em>, exit status 134. Compare that with the previous
+program, which printed a plausible-looking integer and reported success.</p>
+<p><strong>This is the single most useful debugging trick in this section.</strong> If a program that
+uses vectors is behaving strangely &mdash; wrong numbers, crashes in unrelated places &mdash;
+temporarily change every <code>v[i]</code> to <code>v.at(i)</code> and run it again. Either it now
+stops precisely at the bad index and tells you what it was, or your bug is somewhere else and you
+have ruled out a whole category of cause in about a minute.</p>
+<p>Two caveats. First, <code>at()</code> does not appear anywhere in this course's own notes or on
+any of its exams, so use <code>[]</code> when you are asked to reproduce the course's style; keep
+<code>at()</code> for your own debugging. Second, exceptions as a language feature &mdash; how to
+<em>catch</em> one instead of letting it terminate the program &mdash; are beyond this course; here
+we only need the fact that an uncaught one stops everything.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.6</div>
+  <div class="bd">
+    <p>A classmate says: "Out-of-bounds indexing is fine to leave in, because C++ will tell you at
+    run time when you get it wrong."</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What is wrong with that statement?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The subscript operator performs no check at all, so there is nothing to "tell you". An
+        out-of-bounds subscript is <strong>undefined behavior</strong>. A crash is one possible
+        outcome, not a guaranteed one, and the more common outcome for a small overshoot is that the
+        program reads or writes memory next door and keeps going.</p>
+        <p>The correct version of the sentence: <em>"C++ will sometimes crash, and when it does not,
+        the program is still wrong."</em></p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Given <code>vector&lt;int&gt; v(3, 7);</code>, which of <code>v[3]</code>, <code>v.at(3)</code>, <code>v[2]</code>, <code>v.at(2)</code> are safe, and what does each do?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Expression</th><th>Safe?</th><th>What happens</th></tr>
+          <tr><td><code>v[2]</code></td><td>Yes</td><td>The last valid element. Value 7.</td></tr>
+          <tr><td><code>v.at(2)</code></td><td>Yes</td><td>Same element, same value 7, after a range check that passes.</td></tr>
+          <tr><td><code>v[3]</code></td><td><strong>No</strong></td><td>Undefined behavior. One past the end. May print garbage, may crash.</td></tr>
+          <tr><td><code>v.at(3)</code></td><td><strong>No</strong>, but it says so</td><td>Throws <code>std::out_of_range</code> and terminates the program with a message naming the index and the size.</td></tr>
+        </table>
+        <p><strong>Things to notice.</strong> "One past the end" is the classic off-by-one, and it is
+        the reason the loop condition is written <code>i &lt; n</code> and never <code>i &lt;= n</code>.
+        A vector of size 3 has indices 0, 1, 2 &mdash; the largest valid index is always
+        <code>size() - 1</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Growing a vector: <code>push_back</code> and <code>size()</code></h2>
+
+<p>We have declared vectors of a length known when the line was written. The whole promise of this
+type, though, was that the length can be decided while the program runs. Here is how.</p>
+
+<p>The course notes state the rules precisely:</p>
+
+<ul>
+  <li>New elements can be added to a vector only <strong>at the end</strong> of the vector.</li>
+  <li>Elements can also be removed from the end of a vector.</li>
+  <li>In other words, we can both increase and decrease the length of a vector during program
+    execution.</li>
+  <li>To add extra elements to a vector, we employ the <code>push_back()</code> method.</li>
+</ul>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>push_back</code> and <code>size</code></span></div>
+  <div class="bd">
+    <p><code>v.push_back(value)</code> appends <code>value</code> to the end of the vector,
+    <strong>increasing its size by exactly one</strong>. It is the only way we will add elements this
+    semester. There is no <code>push_front</code> on a vector, and you cannot create an element by
+    assigning to an index that does not exist yet.</p>
+    <p><code>v.size()</code> returns the number of elements currently stored. It is a question, not a
+    command &mdash; it changes nothing. After <code>k</code> calls to <code>push_back</code> on a
+    fresh vector, <code>v.size()</code> is <code>k</code> and the valid indices are
+    <code>0</code> through <code>k - 1</code>.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; assigning to an index that does not exist</span></div>
+  <div class="bd">
+    <p>This is the number one vector bug and it looks completely reasonable:</p>
+<pre><code class="language-cpp">vector&lt;int&gt; v;         // size 0
+v[0] = 5;              // WRONG: there is no element 0 to assign to</code></pre>
+    <p>It compiles. It is undefined behavior, for exactly the reasons in &sect;5. The vector does not
+    grow to accommodate you &mdash; growing is <code>push_back</code>'s job, and nothing else's:</p>
+<pre><code class="language-cpp">vector&lt;int&gt; v;         // size 0
+v.push_back(5);        // size 1; v[0] now exists and equals 5
+v[0] = 9;              // fine: element 0 exists, so this overwrites it</code></pre>
+    <p>The rule to say out loud: <strong><code>push_back</code> creates elements;
+    <code>[]</code> only changes ones that already exist.</strong></p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; four pushes, then a loop driven by <code>size()</code></span></div>
+  <div class="bd">
+    <p>The course notes' <code>push_back</code> program. The vector is declared with no length at
+    all, then grown four times. Predict the four lines of output &mdash; and in particular predict
+    what each column is.</p>
+<div class="codewrap"><div class="cap">pushback.cpp</div><pre><code class="language-cpp">// pushback.cpp -- growing a vector one element at a time
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; vec_i;            // length not specified, default = 0
+
+    vec_i.push_back(2);           // push onto end of vector, length = 1
+    vec_i.push_back(4);           // push onto end of vector, length = 2
+    vec_i.push_back(8);           // push onto end of vector, length = 3
+    vec_i.push_back(16);          // push onto end of vector, length = 4
+
+    int n = vec_i.size();         // get length of vector
+
+    // print values
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; i &lt;&lt; " " &lt;&lt; vec_i[i] &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0 2
+1 4
+2 8
+3 16</pre>
+<p>The left column is the <em>index</em>, the right column is the <em>value</em>. Students who
+predicted <code>2 4 8 16</code> on one line forgot that the loop prints <code>i</code> first.</p>
+<table class="trace">
+  <tr><th>Statement</th><th>Size after</th><th>Contents</th></tr>
+  <tr><td><code>vector&lt;int&gt; vec_i;</code></td><td>0</td><td><em>(empty)</em></td></tr>
+  <tr><td><code>vec_i.push_back(2);</code></td><td>1</td><td>2</td></tr>
+  <tr><td><code>vec_i.push_back(4);</code></td><td>2</td><td>2 4</td></tr>
+  <tr><td><code>vec_i.push_back(8);</code></td><td>3</td><td>2 4 8</td></tr>
+  <tr><td><code>vec_i.push_back(16);</code></td><td>4</td><td>2 4 8 16</td></tr>
+</table>
+<p>Note the shape of the last three lines of the program &mdash; it is the standard way to walk a
+vector and you will write it dozens of times:</p>
+<pre><code class="language-cpp">int n = vec_i.size();
+for (int i = 0; i &lt; n; ++i) {
+    cout &lt;&lt; i &lt;&lt; " " &lt;&lt; vec_i[i] &lt;&lt; endl;
+}</code></pre>
+<p>Because <code>size()</code> is asked once, before the loop, this pattern also makes it obvious
+that the length is not changing inside the loop. If you <em>do</em> <code>push_back</code> inside a
+loop whose bound you captured beforehand, the new elements are not visited &mdash; sometimes what
+you want, sometimes a bug, always worth being deliberate about.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; watching <code>size()</code> change</span></div>
+  <div class="bd">
+    <p>Same idea with <code>string</code> elements, printing the size after every push so you can see
+    it move. Note that <code>vector</code> is not limited to numbers: any type can go in the angle
+    brackets.</p>
+<div class="codewrap"><div class="cap">sizetrack.cpp</div><pre><code class="language-cpp">// sizetrack.cpp -- watching size() change as the vector grows
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; names;
+    cout &lt;&lt; "start:       size = " &lt;&lt; names.size() &lt;&lt; endl;
+
+    names.push_back("Ada");
+    cout &lt;&lt; "after Ada:   size = " &lt;&lt; names.size() &lt;&lt; endl;
+
+    names.push_back("Grace");
+    cout &lt;&lt; "after Grace: size = " &lt;&lt; names.size() &lt;&lt; endl;
+
+    names.push_back("Alan");
+    cout &lt;&lt; "after Alan:  size = " &lt;&lt; names.size() &lt;&lt; endl;
+
+    int n = names.size();
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; i &lt;&lt; " " &lt;&lt; names[i] &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">start:       size = 0
+after Ada:   size = 1
+after Grace: size = 2
+after Alan:  size = 3
+0 Ada
+1 Grace
+2 Alan</pre>
+<p>Every <code>push_back</code> adds exactly one, and the new element always lands at the end &mdash;
+at index <code>size() - 1</code> as it stood immediately before the call. A vector of strings needs
+both <code>#include &lt;string&gt;</code> and <code>#include &lt;vector&gt;</code>; forgetting the
+first works by accident on some compilers, because <code>&lt;iostream&gt;</code> drags it in, and
+then fails on others. Include what you use.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the signed/unsigned warning</span></div>
+  <div class="bd">
+    <p>You will be tempted to skip the extra variable and write the call straight into the loop
+    condition:</p>
+<pre><code class="language-cpp">for (int i = 0; i &lt; v.size(); ++i) {
+    cout &lt;&lt; v[i] &lt;&lt; " ";
+}</code></pre>
+    <p>This works, and you will see it in this course's own exam solutions. But compile with
+    <code>-Wall</code> and:</p>
+<pre class="err">signcmp.cpp: In function 'int main()':
+signcmp.cpp:9:23: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector&lt;int&gt;::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+    9 |     for (int i = 0; i &lt; v.size(); ++i) {      // int compared with an unsigned size
+      |                     ~~^~~~~~~~~~</pre>
+    <p><code>size()</code> does not return an <code>int</code>. It returns an <strong>unsigned</strong>
+    type &mdash; a type that cannot represent negative numbers, because a length never is one. Comparing
+    a signed <code>int</code> against an unsigned value forces a conversion, and the conversion goes
+    the surprising way: the <code>int</code> becomes unsigned, so a negative <code>i</code> would turn
+    into an enormous positive number.</p>
+    <p>It is a warning, not an error, and at the sizes in this course nothing goes wrong. Two clean
+    ways to silence it, both used in this course's materials:</p>
+<pre><code class="language-cpp">int n = v.size();                                  // capture it once, as an int
+for (int i = 0; i &lt; n; ++i) { /* ... */ }
+
+for (size_t i = 0; i &lt; v.size(); ++i) { /* ... */ } // or match the type</code></pre>
+    <p>Prefer the first; it is the form the course notes themselves use, it reads well, and it makes
+    the loop bound obvious. Never ignore a warning just because the program runs.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.7</div>
+  <div class="bd">
+    <p>Work out what this fragment prints. It is written in the style of the output-prediction
+    questions on this professor's exams, where the size and an element are printed with no separator
+    between them.</p>
+<pre><code class="language-cpp">vector&lt;int&gt; v;
+for (int k = 1; k &lt;= 6; ++k) {
+    if (k % 2 == 0) v.push_back(k);
+}
+cout &lt;&lt; v.size() &lt;&lt; v[0] &lt;&lt; endl;</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Run the loop by hand and write down the vector's contents after every
+      iteration. Then read the <code>cout</code> chain strictly left to right, remembering that
+      nothing separates the two values.</p>
+      <table class="trace">
+        <tr><th><code>k</code></th><th><code>k % 2 == 0</code>?</th><th>Action</th><th>Contents after</th></tr>
+        <tr><td>1</td><td>no</td><td>&mdash;</td><td><em>(empty)</em></td></tr>
+        <tr><td>2</td><td>yes</td><td><code>push_back(2)</code></td><td>2</td></tr>
+        <tr><td>3</td><td>no</td><td>&mdash;</td><td>2</td></tr>
+        <tr><td>4</td><td>yes</td><td><code>push_back(4)</code></td><td>2 4</td></tr>
+        <tr><td>5</td><td>no</td><td>&mdash;</td><td>2 4</td></tr>
+        <tr><td>6</td><td>yes</td><td><code>push_back(6)</code></td><td>2 4 6</td></tr>
+      </table>
+      <p>So <code>v.size()</code> is <strong>3</strong> and <code>v[0]</code> is <strong>2</strong>,
+      and the printed line is:</p>
+<pre class="out">32</pre>
+      <p><strong>Things to notice.</strong> <code>32</code> is two numbers jammed together, not
+      thirty-two. This professor uses that formatting deliberately &mdash; on his exams a printed
+      <code>14</code> can mean "size 1, then the value 4". When you answer one of these, write the
+      digits exactly as they would appear, with no spaces you were not given.</p>
+      <p>Also note that <code>v[0]</code> is <code>2</code>, not <code>1</code>. The first element is
+      whatever was pushed first, and the loop's first push happened at <code>k = 2</code>.</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; count them and find the largest</h3>
+
+<p>Read integers from the user until they type <code>-1</code>, storing them in a vector. Then report
+how many numbers were entered and which was the largest. Handle the case where the user types
+<code>-1</code> immediately.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="25" data-starter="#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; v;
+    int x;
+
+    cout &lt;&lt; &quot;Enter some integers (-1 to stop): &quot;;
+    // read until x is -1, pushing each value onto v
+
+
+    // report how many were entered
+
+
+    // guard: what if none were entered?
+
+
+    // scan the vector for the largest value
+
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; v;
+    int x;
+
+    cout &lt;&lt; "Enter some integers (-1 to stop): ";
+    // read until x is -1, pushing each value onto v
+
+
+    // report how many were entered
+
+
+    // guard: what if none were entered?
+
+
+    // scan the vector for the largest value
+
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.8</div>
+  <div class="bd">
+    <p>Complete the exercise above, and give the output for the input
+    <code>12 45 7 45 3 -1</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The input loop is the pattern every "write a complete program"
+      question in this course uses: read one value <em>before</em> the loop, then loop while it is not
+      the sentinel, pushing and reading again at the bottom. Reading first is what stops the sentinel
+      itself from being stored.</p>
+      <p>For the maximum, do not start from 0 &mdash; every input could be negative. Start from
+      <code>v[0]</code> and compare from index 1 onward. That is only valid if the vector is not
+      empty, which is exactly why the guard has to come first.</p>
+<div class="codewrap"><div class="cap">largest.cpp</div><pre><code class="language-cpp">// largest.cpp -- exercise 2: read until -1, report how many and which was largest
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; v;
+    int x;
+
+    cout &lt;&lt; "Enter some integers (-1 to stop): ";
+    cin &gt;&gt; x;
+    while (x != -1) {
+        v.push_back(x);
+        cin &gt;&gt; x;
+    }
+
+    int n = v.size();
+    cout &lt;&lt; "You entered " &lt;&lt; n &lt;&lt; " numbers." &lt;&lt; endl;
+
+    if (n == 0) {
+        cout &lt;&lt; "No maximum to report." &lt;&lt; endl;
+        return 0;
+    }
+
+    int largest = v[0];
+    for (int i = 1; i &lt; n; ++i) {
+        if (v[i] &gt; largest) largest = v[i];
+    }
+    cout &lt;&lt; "The largest was " &lt;&lt; largest &lt;&lt; "." &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Enter some integers (-1 to stop): You entered 5 numbers.
+The largest was 45.</pre>
+      <p>This run was made with the input fed in from a file, so the digits you would have typed do
+      not appear on screen. In a terminal you would see them right after the prompt, on the same
+      line.</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The sentinel <code>-1</code> is read but never pushed, so <code>size()</code> is 5, not 6.
+          Getting that off by one is the most common way to lose points on this question.</li>
+        <li><code>largest</code> starts at <code>v[0]</code> and the loop starts at <code>i = 1</code>.
+          Starting at <code>i = 0</code> would work too, just with one redundant comparison; starting
+          <code>largest</code> at <code>0</code> would be a real bug for all-negative input.</li>
+        <li>The guard returns early rather than nesting the whole rest of the function inside an
+          <code>if</code>. Both are fine; early return keeps the indentation flat.</li>
+        <li>45 appears twice, and the answer is still 45. Worth testing &mdash; a comparison written
+          with <code>&gt;=</code> instead of <code>&gt;</code> would also give 45 here, so this input
+          does not distinguish them. Good test data pins down one behavior at a time.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Passing a vector to a function</h2>
+
+<p>In Class 2 we took apart the two ampersands that made <code>swap2</code> work and
+<code>swap1</code> a no-op. That distinction &mdash; call by value versus call by reference &mdash;
+becomes much more consequential now, because a vector can be big.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the three ways to take a vector parameter</span></div>
+  <div class="bd">
+    <table class="trace">
+      <tr><th>Parameter</th><th>Copy made?</th><th>Can the function change the caller's vector?</th><th>Use it when</th></tr>
+      <tr><td><code>vector&lt;int&gt; v</code></td><td><strong>Yes</strong> &mdash; every element</td><td>No</td><td>You need a private scratch copy to modify.</td></tr>
+      <tr><td><code>vector&lt;int&gt; &amp;v</code></td><td>No</td><td><strong>Yes</strong></td><td>The function's job is to fill or modify the caller's vector.</td></tr>
+      <tr><td><code>const vector&lt;int&gt; &amp;v</code></td><td>No</td><td>No &mdash; the compiler forbids it</td><td><strong>The default for read-only access.</strong></td></tr>
+    </table>
+    <p>The third row is the one to make automatic. <code>const</code> reference gives you the speed of
+    a reference with the safety of a value: no copying, and any attempt to write through it is a
+    compile-time error rather than a surprise for the caller.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; by value, by reference, by <code>const</code> reference</span></div>
+  <div class="bd">
+    <p>Three functions, all with the same body apart from the parameter. The first takes a copy, the
+    second a reference, the third a <code>const</code> reference and only reads. Predict all five
+    lines of output.</p>
+<div class="codewrap"><div class="cap">passing.cpp</div><pre><code class="language-cpp">// passing.cpp -- a vector parameter taken by value is a COPY
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+// by value: v is a brand-new vector, initialized from a copy of the argument
+void doubleAll(vector&lt;int&gt; v) {
+    int n = v.size();
+    for (int i = 0; i &lt; n; ++i) {
+        v[i] = 2 * v[i];
+    }
+    cout &lt;&lt; "  inside doubleAll:    " &lt;&lt; v[0] &lt;&lt; " " &lt;&lt; v[1] &lt;&lt; " " &lt;&lt; v[2] &lt;&lt; endl;
+}
+
+// by reference: v is another name for the caller's own vector
+void doubleAllRef(vector&lt;int&gt; &amp;v) {
+    int n = v.size();
+    for (int i = 0; i &lt; n; ++i) {
+        v[i] = 2 * v[i];
+    }
+    cout &lt;&lt; "  inside doubleAllRef: " &lt;&lt; v[0] &lt;&lt; " " &lt;&lt; v[1] &lt;&lt; " " &lt;&lt; v[2] &lt;&lt; endl;
+}
+
+// by const reference: no copy is made, and the compiler forbids writing to it
+void printAll(const vector&lt;int&gt; &amp;v) {
+    int n = v.size();
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    vector&lt;int&gt; nums;
+    nums.push_back(1);
+    nums.push_back(2);
+    nums.push_back(3);
+
+    cout &lt;&lt; "before:                "; printAll(nums);
+    doubleAll(nums);
+    cout &lt;&lt; "after doubleAll:       "; printAll(nums);
+    doubleAllRef(nums);
+    cout &lt;&lt; "after doubleAllRef:    "; printAll(nums);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">before:                1 2 3
+  inside doubleAll:    2 4 6
+after doubleAll:       1 2 3
+  inside doubleAllRef: 2 4 6
+after doubleAllRef:    2 4 6</pre>
+<p>This is Class 2's <code>swap1</code> and <code>swap2</code> all over again, with a container
+instead of two <code>int</code>s.</p>
+<ul>
+  <li><code>doubleAll</code> genuinely doubled everything &mdash; it printed <code>2 4 6</code> from
+    the inside. Then it returned, its private copy was destroyed, and the caller's vector was exactly
+    as it had been. The work was real and completely wasted.</li>
+  <li><code>doubleAllRef</code> differs by a single <code>&amp;</code> and the change survives the
+    return, because <code>v</code> was never a copy &mdash; it was another name for
+    <code>nums</code>.</li>
+  <li><code>printAll</code> takes a <code>const</code> reference and is called three times without
+    ever copying the data.</li>
+</ul>
+<p>Now the part that does not show up in the output at all, and matters more than the part that does:
+<strong>every call to <code>doubleAll</code> copies the entire vector, element by element.</strong>
+With three elements that is invisible. With a vector of a million doubles it is eight megabytes of
+copying, per call, silently, because someone left out one character. That is why "pass by
+<code>const</code> reference" is the default advice for any parameter that is not a simple built-in
+type.</p>
+<p>You will see exactly <em>how</em> that copy is made, and be asked to write the code that makes it,
+when we reach the copy constructor in Class 14.</p>
+
+</div></details>
+
+    <p>One more question about the third function. It promised not to modify its argument. What
+    happens if it breaks that promise?</p>
+<div class="codewrap"><div class="cap">constwrite.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+void zeroOut(const vector&lt;int&gt; &amp;v) {
+    v[0] = 0;                 // breaking the const promise
+}
+
+int main() {
+    vector&lt;int&gt; nums(3, 5);
+    zeroOut(nums);
+    cout &lt;&lt; nums[0] &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constwrite.cpp: In function 'void zeroOut(const std::vector&lt;int&gt;&amp;)':
+constwrite.cpp:6:10: error: assignment of read-only location '(&amp; v)-&gt;std::vector&lt;int&gt;::operator[](0)'
+    6 |     v[0] = 0;                 // breaking the const promise</pre>
+<p>Compile-time error, no executable produced &mdash; the same <em>"assignment of read-only"</em>
+phrasing you met in Class 1, now applied to an element reached through a <code>const</code>
+reference. The <code>const</code> does not merely apply to the vector object itself; it reaches
+through <code>[]</code> to the elements as well.</p>
+<p>This is the payoff of the <code>const</code> in the signature. A reader of
+<code>void printAll(const vector&lt;int&gt; &amp;v)</code> knows, without reading one line of the
+body, that calling it cannot change their data. The compiler has already checked.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>For a vector parameter, pick in this order:</p>
+    <ol>
+      <li>Only reading it? <code>const vector&lt;T&gt; &amp;v</code>.</li>
+      <li>Modifying the caller's vector on purpose? <code>vector&lt;T&gt; &amp;v</code>.</li>
+      <li>Need a scratch copy you can wreck? <code>vector&lt;T&gt; v</code> &mdash; and say so in a
+        comment, so the next reader knows the copy is deliberate.</li>
+    </ol>
+    <p>Plain <code>vector&lt;T&gt; v</code> chosen by accident is the most expensive typo in the
+    language.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.9</div>
+  <div class="bd">
+    <p>A student writes this function, intending it to add a value to the end of the caller's
+    vector.</p>
+<pre><code class="language-cpp">void addItem(vector&lt;int&gt; v, int value) {
+    v.push_back(value);
+}
+
+int main() {
+    vector&lt;int&gt; data;
+    addItem(data, 10);
+    addItem(data, 20);
+    cout &lt;&lt; data.size() &lt;&lt; endl;
+    return 0;
+}</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does the program print, and why?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">0</pre>
+        <p>The parameter <code>v</code> is taken <strong>by value</strong>, so each call receives a
+        fresh copy of <code>data</code>. <code>push_back</code> grows the copy, the call ends, the
+        copy is destroyed, and <code>data</code> is untouched. Two calls, two wasted copies, size
+        still 0.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What is the smallest edit that fixes it?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>One ampersand, in the parameter list:</p>
+<pre><code class="language-cpp">void addItem(vector&lt;int&gt; &amp;v, int value) {
+    v.push_back(value);
+}</code></pre>
+        <p>Now <code>v</code> is another name for <code>data</code>, the pushes land on the original,
+        and the program prints <code>2</code>. Nothing at the call site changes &mdash;
+        <code>addItem(data, 10);</code> is written the same either way, which is precisely why you
+        have to read the function's declaration to know what it does to your variables.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Would <code>const vector&lt;int&gt; &amp;v</code> work here?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No</strong>, and that is the feature working as intended. <code>push_back</code>
+        modifies the vector, so calling it through a <code>const</code> reference is a compile-time
+        error &mdash; the same class of message as the <code>v[0] = 0;</code> example above.</p>
+        <p><strong>Things to notice.</strong> Use this as a design check on your own code. If you
+        write <code>const</code> on a parameter and the function stops compiling, the function was
+        modifying something; decide whether that was intentional. If it compiles, you have a
+        machine-checked guarantee that it only reads. Either way you learn something, which is why
+        writing <code>const</code> first and removing it if necessary is the better habit.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; a function that counts</h3>
+
+<p>Write a function <code>countAbove</code> that takes a vector of <code>int</code> and a limit, and
+returns how many elements are strictly greater than the limit. Take the vector in the way that
+copies nothing and cannot modify the caller's data. Then call it three times from
+<code>main</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+// Fill in the parameter list: no copy, no modification.
+int countAbove(                        , int limit) {
+
+    return 0;
+}
+
+int main() {
+    vector&lt;int&gt; scores;
+    scores.push_back(88);
+    scores.push_back(42);
+    scores.push_back(95);
+    scores.push_back(60);
+    scores.push_back(73);
+
+    // call countAbove with 50, 70 and 99, printing each result
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+// Fill in the parameter list: no copy, no modification.
+int countAbove(                        , int limit) {
+
+    return 0;
+}
+
+int main() {
+    vector&lt;int&gt; scores;
+    scores.push_back(88);
+    scores.push_back(42);
+    scores.push_back(95);
+    scores.push_back(60);
+    scores.push_back(73);
+
+    // call countAbove with 50, 70 and 99, printing each result
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.10</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> "No copy, no modification" is precisely <code>const</code> reference,
+      so the signature is <code>int countAbove(const vector&lt;int&gt; &amp;v, int limit)</code>. The
+      body is a counter initialized to zero, one pass over the vector, and an <code>if</code> per
+      element. <code>limit</code> is a single <code>int</code>, so passing it by value is right &mdash;
+      references buy nothing for a built-in type.</p>
+<div class="codewrap"><div class="cap">countabove.cpp</div><pre><code class="language-cpp">// countabove.cpp -- exercise 3: a function that reads a vector without copying it
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int countAbove(const vector&lt;int&gt; &amp;v, int limit) {
+    int count = 0;
+    int n = v.size();
+    for (int i = 0; i &lt; n; ++i) {
+        if (v[i] &gt; limit) ++count;
+    }
+    return count;
+}
+
+int main() {
+    vector&lt;int&gt; scores;
+    scores.push_back(88);
+    scores.push_back(42);
+    scores.push_back(95);
+    scores.push_back(60);
+    scores.push_back(73);
+
+    cout &lt;&lt; "above 50: " &lt;&lt; countAbove(scores, 50) &lt;&lt; endl;
+    cout &lt;&lt; "above 70: " &lt;&lt; countAbove(scores, 70) &lt;&lt; endl;
+    cout &lt;&lt; "above 99: " &lt;&lt; countAbove(scores, 99) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">above 50: 4
+above 70: 3
+above 99: 0</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The counts: above 50 are 88, 95, 60, 73 &mdash; four. Above 70 are 88, 95, 73 &mdash;
+          three. Above 99, none, and the function correctly returns 0 rather than doing anything
+          special.</li>
+        <li>"Strictly greater" means <code>&gt;</code>. Had the limit been 88, <code>&gt;</code> would
+          give 1 and <code>&gt;=</code> would give 2. Read the wording of the problem; on an exam this
+          is the difference between full marks and none.</li>
+        <li>The function never asks how long the vector is &mdash; it asks the vector. That is
+          property 5 from &sect;2 paying for itself: no second parameter to keep in sync, no way for
+          the caller to lie about the length.</li>
+        <li>This signature is worth practicing until it is muscle memory. On this professor's exams,
+          the "title line" of a function is worth points on its own, and
+          <code>const vector&lt;int&gt; &amp;</code> is the form his own rubrics show.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 5.11</div>
+  <div class="bd">
+    <p>Write a single C++ statement for each task. Do not write complete programs.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Declare a vector of <code>double</code> called <code>prices</code> with no elements.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">vector&lt;double&gt; prices;</code></pre>
+        <p>No parentheses, no braces &mdash; and definitely not <code>vector&lt;double&gt; prices();</code>,
+        which declares a <em>function</em> taking no arguments and returning a vector.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Declare a vector of 20 <code>int</code>s, every element equal to <code>-1</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">vector&lt;int&gt; counts(20, -1);</code></pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Append the value <code>3.5</code> to <code>prices</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">prices.push_back(3.5);</code></pre>
+        <p>Not <code>prices[0] = 3.5;</code> &mdash; there is no element 0 yet, and assigning to one
+        that does not exist is undefined behavior, not growth.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> Print the number of elements currently in <code>prices</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">cout &lt;&lt; prices.size() &lt;&lt; endl;</code></pre>
+        <p><code>size</code> is a method, so it needs the parentheses. <code>prices.size</code> without
+        them does not name the number of elements.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(e)</span> Write the title line only of a function <code>average</code> that takes a vector of <code>int</code> without copying it and returns a <code>double</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">double average(const vector&lt;int&gt; &amp;v)</code></pre>
+        <p><strong>Things to notice.</strong> Four decisions are visible in that one line and each is
+        worth stating: return type <code>double</code> because an average is fractional;
+        <code>const</code> because the function only reads; <code>&amp;</code> because a copy would be
+        wasteful; and no length parameter, because the vector already knows.</p>
+        <p>This is exactly the shape of a "write C++ statements to carry out the following tasks"
+        exam question &mdash; five short items, uniformly weighted, usually with no partial credit.
+        Practice writing them cleanly and completely, semicolons and all.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 5</span></div>
+  <div class="bd">
+    <p>Problem 1 is the polygon question posed in the course notes for this lecture, which the slides
+    leave unanswered. Problems 2, 3 and 4 are taken from this professor's own exams &mdash; two
+    "write a complete program" questions and one "write a function" question &mdash; and Problem 5 is
+    an output-prediction item adapted from his exam trace format. Problem 6 was written for these
+    notes.</p>
+    <p>Vectors appear on eight of this professor's ten graded papers, always in the same two roles:
+    <em>store the input</em> in Problem 1 of a midterm, and <em>predict the size and an element</em>
+    in the trace problem. Both are represented below. Work each one on paper or in a compiler before
+    opening the answer &mdash; output-prediction parts carry no partial credit, so the habit of
+    committing to an answer first is worth building now.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; The polygon vertices <span class="muted small">(from the course notes)</span></h3>
+
+<p>The course notes pose this and move on: <em>suppose we want to have arrays <code>x</code> and
+<code>y</code> of type <code>double</code>, to hold the (x, y) coordinates of the vertices of a
+polygon.</em> Solve it. Write a program that reads vertex coordinates until the user enters the pair
+<code>-1 -1</code>, stores them in two parallel vectors, prints them back, and reports the perimeter
+of the polygon.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The reason an array cannot do this job is that the vertex count is not
+  known until the user stops typing, so start with two empty vectors and <code>push_back</code> a
+  coordinate into each on every reading. The two vectors stay the same length by construction, which
+  is what makes them <em>parallel</em>: vertex <code>i</code> is
+  <code>(x[i], y[i])</code>.</p>
+  <p>For the perimeter, add the distance from each vertex to the next, and wrap the last vertex back
+  around to the first &mdash; that closing edge is what makes it a polygon rather than an open path.
+  The index of "the next vertex" is <code>(i + 1) % n</code>, which is <code>i + 1</code> everywhere
+  except the last step, where it becomes 0.</p>
+  <p>The reading function needs to <em>fill</em> the caller's vectors, so its parameters are plain
+  references. The perimeter function only reads, so its parameters are <code>const</code>
+  references.</p>
+<div class="codewrap"><div class="cap">polygon.cpp</div><pre><code class="language-cpp">// polygon.cpp -- the polygon problem from the course notes, solved with vectors
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+// read vertices until the sentinel pair, into two parallel vectors
+void readVertices(vector&lt;double&gt; &amp;x, vector&lt;double&gt; &amp;y) {
+    double a, b;
+    cout &lt;&lt; "Enter x y for each vertex (-1 -1 to stop): ";
+    cin &gt;&gt; a &gt;&gt; b;
+    while (!(a == -1 &amp;&amp; b == -1)) {
+        x.push_back(a);
+        y.push_back(b);
+        cin &gt;&gt; a &gt;&gt; b;
+    }
+}
+
+double perimeter(const vector&lt;double&gt; &amp;x, const vector&lt;double&gt; &amp;y) {
+    int n = x.size();
+    if (n &lt; 2) return 0.0;
+
+    double total = 0.0;
+    for (int i = 0; i &lt; n; ++i) {
+        int j = (i + 1) % n;                 // wrap the last vertex back to the first
+        double dx = x[j] - x[i];
+        double dy = y[j] - y[i];
+        total += sqrt(dx * dx + dy * dy);
+    }
+    return total;
+}
+
+int main() {
+    vector&lt;double&gt; x;
+    vector&lt;double&gt; y;
+
+    readVertices(x, y);
+
+    int n = x.size();
+    cout &lt;&lt; "Vertices read: " &lt;&lt; n &lt;&lt; endl;
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; "  (" &lt;&lt; x[i] &lt;&lt; ", " &lt;&lt; y[i] &lt;&lt; ")" &lt;&lt; endl;
+    }
+    cout &lt;&lt; "Perimeter: " &lt;&lt; perimeter(x, y) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+  <p>Run with the vertices of a 3-4-5 right triangle: <code>0 0</code>, <code>4 0</code>,
+  <code>4 3</code>, then the sentinel.</p>
+<pre class="out">Enter x y for each vertex (-1 -1 to stop): Vertices read: 3
+  (0, 0)
+  (4, 0)
+  (4, 3)
+Perimeter: 12</pre>
+  <p>(The input was piped in, so the typed numbers do not echo. In a terminal they appear on the
+  prompt line.)</p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The perimeter is 4 + 3 + 5 = 12, which is the check that the wrap-around edge was included.
+      Drop the <code>% n</code> and you get 7 &mdash; a plausible-looking wrong answer, which is the
+      worst kind.</li>
+    <li>Two parallel vectors is the design the course notes suggest, and it works. The alternative
+      &mdash; one vector of <code>Point</code> objects &mdash; is better, and it is available to you
+      from Class 9 onward. Note what makes it better: with parallel vectors nothing prevents
+      <code>x</code> and <code>y</code> from having different lengths, so you are back to
+      hand-maintained bookkeeping.</li>
+    <li><code>readVertices</code> takes non-<code>const</code> references because filling the vectors
+      <em>is</em> its job. Had they been <code>const</code>, the <code>push_back</code> calls would
+      not compile.</li>
+    <li><code>sqrt</code> needs <code>#include &lt;cmath&gt;</code>. It sometimes compiles without it
+      because another header pulled it in; do not rely on that.</li>
+    <li>The guard <code>if (n &lt; 2) return 0.0;</code> keeps a single vertex or an empty input from
+      producing nonsense. Guards on empty vectors are worth writing every time.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Evens and odds <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+
+<p>Write a complete C++ program that does the following.</p>
+<ol>
+  <li>The program asks the user to enter some integers until 0 to stop.</li>
+  <li>Stores those numbers into a vector or vectors.</li>
+  <li>Then prints the even and odd numbers separately.</li>
+</ol>
+<p>An example run of the program follows:</p>
+<pre class="out">Enter some integers until 0 to stop: 2 4 3 1 5 8 9 6 7 0
+Evens: 2 4 8 6
+Odds: 3 1 5 9 7</pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Three stages, and the grading rubric for this question pays for each
+  separately: a standard beginning and ending; a read-into-a-vector loop; and the two filtered
+  prints.</p>
+  <p>The input loop is the sentinel pattern: read one value before the loop, then loop while it is
+  not 0, pushing and reading again at the bottom. That ordering is what keeps the sentinel out of the
+  vector.</p>
+  <p>For the printing there are two equally acceptable designs. One vector plus two filtered passes
+  is shown here; two vectors, sorting each input as it arrives, is the other, and the professor's own
+  rubric gives both.</p>
+<div class="codewrap"><div class="cap">evensodds.cpp</div><pre><code class="language-cpp">// evensodds.cpp -- read integers until 0, then print the evens and the odds
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int x;
+    vector&lt;int&gt; v;
+
+    cout &lt;&lt; "Enter some integers until 0 to stop: ";
+    cin &gt;&gt; x;
+    while (x != 0) {
+        v.push_back(x);
+        cin &gt;&gt; x;
+    }
+
+    int n = v.size();
+
+    cout &lt;&lt; "Evens: ";
+    for (int i = 0; i &lt; n; ++i) {
+        if (v[i] % 2 == 0) cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; "Odds: ";
+    for (int i = 0; i &lt; n; ++i) {
+        if (v[i] % 2 != 0) cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Enter some integers until 0 to stop: Evens: 2 4 8 6
+Odds: 3 1 5 9 7</pre>
+  <p>The run above was fed the sample input from a file rather than typed, which is why the digits do
+  not appear after the prompt. The two result lines match the exam's sample run exactly.</p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The alternative design, straight from the rubric, sorts on the way in:
+<pre><code class="language-cpp">vector&lt;int&gt; evens, odds;
+cin &gt;&gt; x;
+while (x != 0) {
+    if (x % 2 == 0) evens.push_back(x);
+    else            odds.push_back(x);
+    cin &gt;&gt; x;
+}</code></pre>
+      Two vectors, one pass, no filtering at print time. Either answer receives full credit; pick
+      whichever you can write correctly under time pressure.</li>
+    <li><code>x % 2 == 0</code> is the even test. For possibly-negative input be careful:
+      <code>-3 % 2</code> is <code>-1</code> in C++, not <code>1</code>, so testing
+      <code>x % 2 == 1</code> would miss every negative odd number. Testing <code>!= 0</code> is
+      safe.</li>
+    <li>The trailing space after each number matches the sample run. Prompt strings and spacing are
+      part of the specification on this professor's exams &mdash; copy them from the sample run
+      exactly.</li>
+    <li>Note what is <em>not</em> here: no array, no maximum size, no count-first pass over the
+      input. The rubric's own wording is "stores those numbers into a vector or vectors", and this is
+      the reason vectors are taught before the first exam.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Average and above-average <span class="muted small">(from the Winter 2025 Midterm)</span></h3>
+
+<p>Write a complete C++ program that does the following.</p>
+<ul>
+  <li>The program asks the user to enter some positive integers until 0 to stop.</li>
+  <li>The program should set up just enough space to store those inputs.</li>
+  <li>Then print the average of those input values and all the inputs above the average.</li>
+</ul>
+<p>An example run of the program follows:</p>
+<pre class="out">Enter some positive integers (0 to stop): 3 1 4 1 5 9 2 6 0
+Average of those inputs: 3.875
+Inputs above the average: 4 5 9 6</pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> "Set up just enough space to store those inputs" is the exam's way of
+  saying <em>do not declare a fixed array of 100</em>. A vector grown by <code>push_back</code> holds
+  exactly as many as arrive.</p>
+  <p>The average needs the total and the count. Accumulate the total inside the input loop so no
+  second pass is needed, and take the count from <code>size()</code>. Declare the total as a
+  <code>double</code> so that <code>total / n</code> is floating-point division &mdash; if both were
+  <code>int</code> the answer would be 3, not 3.875.</p>
+  <p>Then one more pass compares each stored value against the average. Note that this pass is only
+  possible <em>because</em> the inputs were stored; a running average alone would not let you go back
+  and filter them.</p>
+<div class="codewrap"><div class="cap">average.cpp</div><pre><code class="language-cpp">// average.cpp -- read positive integers until 0, print the average and everything above it
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int x;
+    vector&lt;int&gt; v;
+    double total = 0;
+
+    cout &lt;&lt; "Enter some positive integers (0 to stop): ";
+    cin &gt;&gt; x;
+    while (x != 0) {
+        v.push_back(x);
+        total += x;
+        cin &gt;&gt; x;
+    }
+
+    int n = v.size();
+    if (n == 0) {
+        cout &lt;&lt; "No inputs." &lt;&lt; endl;
+        return 0;
+    }
+
+    double average = total / n;
+    cout &lt;&lt; "Average of those inputs: " &lt;&lt; average &lt;&lt; endl;
+
+    cout &lt;&lt; "Inputs above the average: ";
+    for (int i = 0; i &lt; n; ++i) {
+        if (v[i] &gt; average) cout &lt;&lt; v[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Enter some positive integers (0 to stop): Average of those inputs: 3.875
+Inputs above the average: 4 5 9 6</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The average of 3, 1, 4, 1, 5, 9, 2, 6 is 31/8 = 3.875, and it prints as <code>3.875</code>
+      &mdash; four significant digits, comfortably inside <code>cout</code>'s default of six. An
+      average like 31/7 would print as <code>4.42857</code>, six digits and no more.</li>
+    <li>The comparison <code>v[i] &gt; average</code> compares an <code>int</code> with a
+      <code>double</code>. C++ converts the <code>int</code> to <code>double</code> and compares
+      exactly, so 4 makes the cut and 3 does not.</li>
+    <li><code>total</code> is <code>double</code> even though every input is an <code>int</code>.
+      That single choice is what makes the division correct. Writing <code>int total</code> and then
+      <code>double average = total / n;</code> is the classic error &mdash; the division happens
+      <em>before</em> the conversion, so 31/8 becomes 3 and only then becomes 3.0.</li>
+    <li>The published rubric for this question contains several typos in its own solution code, among
+      them a missing semicolon and a <code>total</code> variable that is never declared. Read exam
+      solutions critically; compile before you trust.</li>
+    <li>The <code>n == 0</code> guard is not in the rubric, but dividing by <code>size()</code> when
+      the user types 0 immediately would divide by zero. It costs three lines.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; A function over two vectors <span class="muted small">(from the Fall 2023 Final)</span></h3>
+
+<p>Write a function called <code>calc_grade</code> that takes in an integer vector for grades and a
+<code>double</code> vector for weights on grades with equal size, and returns the weighted grade. If
+the sizes of the two given vectors do not match, return <code>-1</code>.</p>
+
+<p>For example, a program that uses the function follows:</p>
+
+<pre><code class="language-cpp">int main() {
+    vector&lt;int&gt; grades{85, 90, 70, 65};
+    vector&lt;int&gt; grades2{80, 80, 80};
+    vector&lt;double&gt; weights{0.1, 0.2, 0.3, 0.4};
+
+    cout &lt;&lt; calc_grade(grades, weights) &lt;&lt; endl;
+    // prints 73.5, since 85*0.1 + 90*0.2 + 70*0.3 + 65*0.4 = 73.5
+
+    cout &lt;&lt; calc_grade(grades2, weights) &lt;&lt; endl;
+    // prints -1, since grades2 has size 3 and weights has size 4
+
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Read the specification for the three things it is paying for. The
+  <em>title line</em> comes first: the return type is <code>double</code> because a weighted average
+  is fractional, and both parameters are <code>const</code> references because the function only
+  reads them and neither should be copied. The professor's own rubric awards two points for that
+  line alone.</p>
+  <p>Then the size check, which must come before any loop &mdash; if the sizes differ, there is no
+  meaningful index range to loop over. Then the accumulation: a running <code>double</code> total,
+  one pass, multiplying matching elements.</p>
+<div class="codewrap"><div class="cap">calcgrade.cpp</div><pre><code class="language-cpp">// calcgrade.cpp -- a weighted grade from two parallel vectors
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+double calc_grade(const vector&lt;int&gt; &amp;grades, const vector&lt;double&gt; &amp;weights) {
+    if (grades.size() != weights.size()) {
+        return -1;
+    }
+
+    double weighted_grade = 0;
+    int n = grades.size();
+    for (int i = 0; i &lt; n; ++i) {
+        weighted_grade += grades[i] * weights[i];
+    }
+    return weighted_grade;
+}
+
+int main() {
+    vector&lt;int&gt;    grades{85, 90, 70, 65};
+    vector&lt;int&gt;    grades2{80, 80, 80};
+    vector&lt;double&gt; weights{0.1, 0.2, 0.3, 0.4};
+
+    cout &lt;&lt; calc_grade(grades, weights)  &lt;&lt; endl;   // 73.5
+    cout &lt;&lt; calc_grade(grades2, weights) &lt;&lt; endl;   // -1
+    return 0;
+}</code></pre></div>
+<pre class="out">73.5
+-1</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The size check is what the vectors' self-knowledge buys you. With raw arrays the function
+      would have to be told both lengths and could not detect the mismatch at all &mdash; it would
+      read past the end of <code>grades2</code> and return a garbage number.</li>
+    <li><code>grades[i] * weights[i]</code> is <code>int</code> times <code>double</code>, so the
+      product is a <code>double</code> and nothing is truncated. Had <code>weighted_grade</code> been
+      declared <code>int</code>, 73.5 would have come out as 73.</li>
+    <li><code>return -1;</code> returns the <code>int</code> <code>-1</code> from a function declared
+      to return <code>double</code>; it is converted to <code>-1.0</code> and prints as
+      <code>-1</code>, matching the specification. Using a sentinel value like this is common but
+      fragile &mdash; if a legitimate weighted grade could ever be <code>-1</code>, the caller could
+      not tell the two apart.</li>
+    <li>The professor's rubric accepts the by-value signature
+      <code>double calc_grade(vector&lt;int&gt; grades, vector&lt;double&gt; weights)</code> as well.
+      It is correct, and it copies both vectors on every call for no reason. Write the
+      <code>const</code> reference version.</li>
+    <li>The braces in <code>vector&lt;int&gt; grades{85, 90, 70, 65};</code> list the contents, so
+      that vector has size 4 &mdash; the &sect;3 rule, appearing on a real exam.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 5 &mdash; What is the output? <span class="muted small">(adapted from the Fall 2023 Exam 1)</span></h3>
+
+<p>Consider the following program. State the exact output at each of the three labelled lines.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; v;
+    for (int n = 1; n &lt; 10; ++n) {
+        if (n % 2 == 0) v.push_back(n);
+        if (n % 3 == 0) v.push_back(n);
+    }
+    cout &lt;&lt; v.size() &lt;&lt; v[0] &lt;&lt; endl;                  // line (a)
+    cout &lt;&lt; v[1] &lt;&lt; v[2] &lt;&lt; v[3] &lt;&lt; endl;              // line (b)
+
+    vector&lt;double&gt; w(3, 1.5);
+    w[1] = 4;
+    cout &lt;&lt; w.size() &lt;&lt; " " &lt;&lt; w[0] &lt;&lt; " " &lt;&lt; w[1] &lt;&lt; " " &lt;&lt; w[2] &lt;&lt; endl;   // line (c)
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> What is the output at line (a)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Build the vector one iteration at a time. The two <code>if</code>s are
+    independent, so a value of <code>n</code> divisible by both 2 and 3 is pushed <em>twice</em>.</p>
+    <table class="trace">
+      <tr><th><code>n</code></th><th>divisible by 2?</th><th>divisible by 3?</th><th>Contents after</th></tr>
+      <tr><td>1</td><td>no</td><td>no</td><td><em>(empty)</em></td></tr>
+      <tr><td>2</td><td>yes</td><td>no</td><td>2</td></tr>
+      <tr><td>3</td><td>no</td><td>yes</td><td>2 3</td></tr>
+      <tr><td>4</td><td>yes</td><td>no</td><td>2 3 4</td></tr>
+      <tr><td>5</td><td>no</td><td>no</td><td>2 3 4</td></tr>
+      <tr><td>6</td><td>yes</td><td>yes</td><td>2 3 4 6 6</td></tr>
+      <tr><td>7</td><td>no</td><td>no</td><td>2 3 4 6 6</td></tr>
+      <tr><td>8</td><td>yes</td><td>no</td><td>2 3 4 6 6 8</td></tr>
+      <tr><td>9</td><td>no</td><td>yes</td><td>2 3 4 6 6 8 9</td></tr>
+    </table>
+    <p>So the size is 7 and <code>v[0]</code> is 2, printed with nothing between them:</p>
+<pre class="out">72</pre>
+    <p>Not "seventy-two". This professor prints a size immediately followed by an element on purpose,
+    and the whole point of the question is whether you notice that two separate numbers have been
+    run together.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> What is the output at line (b)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>From the final contents <code>2 3 4 6 6 8 9</code>: <code>v[1]</code> is 3,
+    <code>v[2]</code> is 4, <code>v[3]</code> is 6.</p>
+<pre class="out">346</pre>
+    <p>The trap here is the double push at <code>n = 6</code>. If you assumed one push per iteration
+    you would have the contents as <code>2 3 4 6 8 9</code>, size 6, and would answer
+    <code>62</code> for (a) and <code>346</code> for (b) &mdash; right for the wrong reason on (b)
+    and wrong on (a). Track the vector, not the loop counter.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> What is the output at line (c)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><code>vector&lt;double&gt; w(3, 1.5);</code> is the sized-and-filled form: three elements, all
+    1.5. Then <code>w[1] = 4;</code> overwrites the middle one. The <code>4</code> is an
+    <code>int</code> literal converted to the <code>double</code> 4.0 on the way in.</p>
+<pre class="out">3 1.5 4 1.5</pre>
+    <p><strong>Things to notice.</strong> The stored value is 4.0, and <code>cout</code> prints it as
+    <code>4</code> &mdash; the default formatting drops the trailing zero. Answering <code>4.0</code>
+    on an exam is wrong, and this professor's rubrics depend on that rule in several places.</p>
+    <p>Across all three parts, the discipline that gets you full marks is the same: keep an explicit
+    written record of the container's contents after every statement that changes it, then read the
+    <code>cout</code> chain left to right, printing only what is actually there. Parts like these
+    carry no partial credit.</p>
+  </div></details>
+</div>
+
+<h3>Problem 6 &mdash; Write five C++ statements <span class="muted small">(added)</span></h3>
+
+<p>Write C++ statements to carry out the following tasks. Do not write a complete program; give a
+single line, or a few lines, of C++ for each.</p>
+<ol>
+  <li>Declare an empty vector of <code>double</code> called <code>prices</code>.</li>
+  <li>Declare a vector of 4 <code>int</code>s called <code>counts</code>, every element equal to 1.</li>
+  <li>Append the value <code>19.99</code> to <code>prices</code>.</li>
+  <li>Change the third element of <code>counts</code> to 7.</li>
+  <li>Print, on one line separated by spaces, the number of elements in <code>counts</code>, the
+    third element of <code>counts</code>, and the first element of <code>prices</code>.</li>
+</ol>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Only two of the five require thought. Task 4 says the <em>third</em>
+  element, and indices count from zero, so that is <code>counts[2]</code> &mdash; the single most
+  common way to lose the point on a question like this. Task 3 says append, which is
+  <code>push_back</code> and never <code>prices[0] = 19.99;</code>, because <code>prices</code> is
+  empty and element 0 does not exist yet.</p>
+  <p>Here are the five statements, wrapped in a program so they can actually be run:</p>
+<div class="codewrap"><div class="cap">fivestatements.cpp</div><pre><code class="language-cpp">// fivestatements.cpp -- the five statements, in a program so they can be run
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;double&gt; prices;                          // (1)
+    vector&lt;int&gt; counts(4, 1);                       // (2)
+    prices.push_back(19.99);                        // (3)
+    counts[2] = 7;                                  // (4)
+    cout &lt;&lt; counts.size() &lt;&lt; " " &lt;&lt; counts[2] &lt;&lt; " " &lt;&lt; prices[0] &lt;&lt; endl;   // (5)
+    return 0;
+}</code></pre></div>
+<pre class="out">4 7 19.99</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The order of statements (3) and (4) is not interchangeable with the declarations. Statement
+      (4) is legal only because <code>counts</code> was declared with four elements; the same line
+      applied to <code>prices</code> would be undefined behavior.</li>
+    <li><code>counts.size()</code> prints <code>4</code>, not <code>3</code>. Changing an element
+      never changes the size; only <code>push_back</code> does, in this class.</li>
+    <li><code>19.99</code> prints as <code>19.99</code> &mdash; four significant digits, inside
+      <code>cout</code>'s default of six. A price of <code>19.90</code> would print as
+      <code>19.9</code>.</li>
+    <li>On an exam that asks for five statements, write exactly five and number them in comments.
+      This format is uniformly weighted and usually carries no partial credit, so a clearly labelled
+      answer to four of the five still scores four fifths.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>An array's length is fixed when you write the code and the array does not know its own
+        length. A <strong>vector</strong> fixes both problems: think of it as a
+        <strong>generalized array</strong> that carries its length inside itself and can change it
+        while the program runs.</li>
+      <li>You need <code>#include &lt;vector&gt;</code>. The element type goes in angle brackets:
+        <code>vector&lt;int&gt;</code>, <code>vector&lt;double&gt;</code>, <code>vector&lt;string&gt;</code>.</li>
+      <li>Four declaration forms: <code>vector&lt;int&gt; v;</code> (size 0), <code>vector&lt;int&gt; v(n);</code> (n elements, all
+        zero), <code>vector&lt;int&gt; v(n, 7);</code> (n elements, all 7), and <code>vector&lt;int&gt; v{1, 2, 4};</code> (exactly
+        those three elements). <strong>Parentheses describe the vector; braces list its
+        contents.</strong></li>
+      <li>The length in parentheses may be a variable. It is parentheses, <code>(n)</code>, never square
+        brackets <code>[n]</code> &mdash; <code>vector&lt;int&gt; v[n];</code> is an array of n vectors.</li>
+      <li>Get and set with <code>[]</code>, exactly as for an array. Valid indices are <code>0</code> through
+        <code>size() - 1</code>.</li>
+      <li>An out-of-bounds subscript is <strong>undefined behavior</strong>, not a guaranteed
+        run-time error. It may crash, and it may just as easily read or write memory it does not
+        own and keep going. <code>at()</code> is the checked alternative: it throws <code>std::out_of_range</code> and
+        stops the program with a message naming the index and the size.</li>
+      <li><code>push_back(value)</code> appends one element and increases the size by one &mdash; it is the only
+        way to create elements. Assigning to an index that does not exist does not grow anything.</li>
+      <li><code>size()</code> reports the current number of elements. Capture it as
+        <code>int n = v.size();</code> before a loop to keep <code>-Wall</code> quiet about the signed/unsigned
+        comparison.</li>
+      <li>Pass a vector by <code>const</code> reference when the function only reads it, by plain reference when
+        it must modify the caller's vector, and by value only when you deliberately want a scratch
+        copy &mdash; a by-value vector parameter copies every element.</li>
+    </ul>
+    <p><strong>Coming up in Class 6:</strong> the rest of the vector interface &mdash; the difference
+    between <em>size</em> and <em>capacity</em>, reading the ends with <code>front()</code> and
+    <code>back()</code>, shrinking with <code>pop_back()</code> and <code>clear()</code>, changing
+    the length outright with <code>resize()</code>, and building a vector of vectors to get a
+    two-dimensional table.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 4 &middot; File I/O</div><div class="pending">posts Thu Sep 10</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 6 &middot; Vectors II</div><div class="pending">posts Thu Sep 17</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

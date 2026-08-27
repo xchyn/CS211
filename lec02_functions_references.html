@@ -1,0 +1,2821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 2 — Functions &amp; References | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 2 &middot; Functions &amp; References</span><span class="sep">|</span><span class="where">Thu Sep 3</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 2 &middot; CSCI 211</div>
+  <h1>Functions, References and Multi-File Programs</h1>
+  <p class="sub">The two ampersands we left hanging at the end of Class 1, taken apart properly &mdash; and everything that follows from them.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain in terms of memory what <em>call by value</em> does to an argument, and why a by-value swap cannot possibly work.</li>
+      <li>Write a function that changes its caller's variable by declaring a <em>reference</em> parameter.</li>
+      <li>Use a <code>const</code> reference parameter, and say why it is the right default for anything larger than a number.</li>
+      <li>Return a reference from a function safely, and recognize the dangling-reference bug that makes returning one dangerous.</li>
+      <li>Overload a function name, and predict which overload a particular call selects.</li>
+      <li>Write a forward declaration and say exactly when the compiler needs one.</li>
+      <li>Split a program into a header file and several source files, and compile them together with one <code>g++</code> command.</li>
+      <li>Read an <em>"undefined reference to"</em> linker error and fix it.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Call by value: the function gets a copy</a></li>
+    <li><a href="#s2">Call by reference: another name for the same variable</a></li>
+    <li><a href="#s3"><code>const</code> reference parameters</a></li>
+    <li><a href="#s4">References as return values</a></li>
+    <li><a href="#s5">Function overloading</a></li>
+    <li><a href="#s6">Forward declarations</a></li>
+    <li><a href="#s7">Splitting a program across files</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Call by value: the function gets a copy</h2>
+
+<p>Class 1 ended with a promise. We looked at two functions called <code>swap1</code> and
+<code>swap2</code>, identical except for two <code>&amp;</code> characters in a parameter list. One
+of them swapped its caller's variables and one of them did nothing at all, and we said the
+explanation was Class 2's business. This is Class 2, so let's collect.</p>
+
+<p>The whole thing turns on one question: <strong>when you call a function, what exactly does the
+parameter hold?</strong> Everyone's first instinct is "the variable I passed in." That instinct is
+wrong, and it is wrong by default in C++.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; argument, parameter, call by value</span></div>
+  <div class="bd">
+    <p>An <strong>argument</strong> is the thing you write at the <em>call site</em>:
+    the <code>n</code> in <code>tryToChange(n);</code>.</p>
+    <p>A <strong>parameter</strong> is the variable named in the function's own <em>declaration</em>:
+    the <code>x</code> in <code>void tryToChange(int x)</code>.</p>
+    <p><strong>Call by value</strong> means that when the call happens, the parameter is created as a
+    brand-new variable, in its own storage, and <em>initialized with a copy of the argument's
+    value</em>. From then on the two have nothing to do with each other. The function can scribble on
+    its parameter as much as it likes; it is scribbling on its own copy, and the copy is thrown away
+    when the function returns.</p>
+    <p>Call by value is what you get in C++ unless you specifically ask for something else. Every
+    parameter you have written since CSCI 111 has been call by value.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a function that tries, and fails, to change its caller</span></div>
+  <div class="bd">
+    <p>This program prints four lines. Two of them come from inside the function and two from
+    <code>main</code>. Predict all four, paying particular attention to the last one.</p>
+<div class="codewrap"><div class="cap">byvalue.cpp</div><pre><code class="language-cpp">// byvalue.cpp -- what a by-value parameter really is
+#include &lt;iostream&gt;
+using namespace std;
+
+void tryToChange(int x) {
+    cout &lt;&lt; "   inside, on arrival:  x = " &lt;&lt; x &lt;&lt; endl;
+    x = 99;
+    cout &lt;&lt; "   inside, after x = 99: x = " &lt;&lt; x &lt;&lt; endl;
+}
+
+int main() {
+    int n = 5;
+    cout &lt;&lt; "before: n = " &lt;&lt; n &lt;&lt; endl;
+    tryToChange(n);
+    cout &lt;&lt; "after:  n = " &lt;&lt; n &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">before: n = 5
+   inside, on arrival:  x = 5
+   inside, after x = 99: x = 99
+after:  n = 5</pre>
+<p>The assignment <code>x = 99;</code> genuinely happened &mdash; look at the third line, <code>x</code>
+really is 99 inside the function. And yet <code>n</code> came out the other side as 5. Here is the
+step-by-step:</p>
+<table class="trace">
+  <tr><th>Step</th><th><code>n</code> in <code>main</code></th><th><code>x</code> in <code>tryToChange</code></th><th>What happened</th></tr>
+  <tr><td>1</td><td>5</td><td>&mdash;</td><td><code>n</code> is created and set to 5.</td></tr>
+  <tr><td>2</td><td>5</td><td>5</td><td>The call. A <em>new</em> variable <code>x</code> is created and <em>copied</em> from <code>n</code>.</td></tr>
+  <tr><td>3</td><td>5</td><td>99</td><td><code>x = 99;</code> writes into <code>x</code>. Nothing points back at <code>n</code>.</td></tr>
+  <tr><td>4</td><td>5</td><td>gone</td><td>The function returns. <code>x</code> is destroyed. <code>n</code> was never touched.</td></tr>
+</table>
+<p>Now go back to Class 1's puzzle and it evaporates. <code>swap1(int u, int v)</code> received copies
+of <code>a</code> and <code>b</code>, swapped the two copies perfectly correctly, and then dropped
+them on the floor. The function was never broken; the parameter passing was.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A by-value parameter is a <strong>local variable of the function</strong> that happens to start
+    out with a copy of the argument's value. Assigning to it is exactly as private as assigning to any
+    other local. If a function has to change something in its caller, call by value cannot do it
+    &mdash; not by being written more cleverly, not ever.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.1</div>
+  <div class="bd">
+    <p>A student is told that <code>swap1</code> does not work and tries to fix it like this,
+    without touching the parameter list:</p>
+<pre><code class="language-cpp">void swap1(int u, int v) {
+    int t = u;
+    u = v;
+    v = t;
+    return;             // "make sure the changes get sent back"
+}</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Does the added <code>return;</code> change anything?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. A bare <code>return;</code> in a <code>void</code> function means "stop here" and nothing else. Every
+        <code>void</code> function already returns implicitly when it falls off the end, so the line is
+        completely redundant &mdash; it neither helps nor hurts.</p>
+        <p>The bug is not that the changes fail to get "sent back". The bug is that the changes were
+        never made to <code>a</code> and <code>b</code> in the first place. They were made to
+        <code>u</code> and <code>v</code>, which are different variables in different storage.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Could you fix it by writing <code>return u, v;</code> or by returning something?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. A C++ function returns exactly <strong>one</strong> value. (<code>return u, v;</code> is legal
+        syntax but it is the comma operator &mdash; it evaluates <code>u</code>, throws it away, and
+        returns <code>v</code>. It would not even compile here, because the function is <code>void</code>.)</p>
+        <p>You could redesign the whole thing so the caller writes something like
+        <code>a = firstOf(a,b); b = secondOf(a,b);</code>, but that is a different function with a
+        different interface, and it is fragile. The right fix is to change how the parameters
+        arrive &mdash; which is &sect;2.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Class 1 mentioned that <code>gcd(int a, int b)</code> deliberately modifies its parameters as it works. Why is call by value the *right* choice there?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because <code>gcd</code> is a <em>query</em>: the caller wants an answer, not a side
+        effect. Euclid's algorithm is easiest to write if you may chew up <code>a</code> and
+        <code>b</code> as you go, and call by value hands you two scratch variables for free while
+        guaranteeing the caller's originals survive.</p>
+        <p>That is the general rule and it is worth stating positively: <strong>call by value is not
+        a mistake, it is a decision.</strong> Use it when the function should not be able to touch the
+        caller's data. Reach for a reference only when the function genuinely has to.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>Call by reference: another name for the same variable</h2>
+
+<p>C++ gives you a second option, and the syntax for it is a single character.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; reference, call by reference</span></div>
+  <div class="bd">
+    <p>A <strong>reference</strong> is an alias &mdash; a second name for a variable that already
+    exists. You declare one by putting <code>&amp;</code> after the type:</p>
+    <p><code>int &amp;r = a;</code> makes <code>r</code> another name for <code>a</code>. There is no
+    new integer anywhere. Reading <code>r</code> reads <code>a</code>; writing <code>r</code> writes
+    <code>a</code>. The two names are <strong>bound</strong> together for the rest of
+    <code>r</code>'s life.</p>
+    <p><strong>Call by reference</strong> is what you get when a <em>parameter</em> is declared as a
+    reference: <code>void f(int &amp;x)</code>. No copy is made at the call. The parameter
+    <code>x</code> is bound to whatever variable the caller passed, so everything the function does
+    to <code>x</code> lands on the caller's variable.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same function, one ampersand different</span></div>
+  <div class="bd">
+    <p>This is byte-for-byte the program from &sect;1 with <code>int x</code> changed to
+    <code>int &amp;x</code>. Nothing else moved &mdash; not <code>main</code>, not the call, not the
+    body. Predict the four lines again.</p>
+<div class="codewrap"><div class="cap">byref.cpp</div><pre><code class="language-cpp">// byref.cpp -- the same function, one ampersand different
+#include &lt;iostream&gt;
+using namespace std;
+
+void tryToChange(int &amp;x) {
+    cout &lt;&lt; "   inside, on arrival:  x = " &lt;&lt; x &lt;&lt; endl;
+    x = 99;
+    cout &lt;&lt; "   inside, after x = 99: x = " &lt;&lt; x &lt;&lt; endl;
+}
+
+int main() {
+    int n = 5;
+    cout &lt;&lt; "before: n = " &lt;&lt; n &lt;&lt; endl;
+    tryToChange(n);
+    cout &lt;&lt; "after:  n = " &lt;&lt; n &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">before: n = 5
+   inside, on arrival:  x = 5
+   inside, after x = 99: x = 99
+after:  n = 99</pre>
+<p>Only the last line differs from &sect;1, and it differs completely. Inside the function, the name
+<code>x</code> <em>is</em> <code>main</code>'s <code>n</code>. There is one integer in this program,
+and it has two names.</p>
+<p>Notice what did <strong>not</strong> change: <code>main</code> still writes
+<code>tryToChange(n);</code> with no decoration whatsoever. You cannot tell from a call site whether
+an argument is going to be modified. You have to go and look at the function's declaration. That is
+a genuine readability cost of references, and it is the reason experienced C++ programmers keep
+function declarations somewhere easy to find &mdash; a habit that turns into header files in
+&sect;7.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>If you want proof that no copy is made, ask the program where its variables live. The
+<code>&amp;</code> operator applied to a variable &mdash; as in <code>&amp;n</code> &mdash; yields
+that variable's address in memory. We study addresses properly in Class 7; for today just read them
+as identity tags. Two names with the same address are the same object.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; two jobs, one symbol</span></div>
+  <div class="bd">
+    <p>The character <code>&amp;</code> does two unrelated things in C++, and they are easy to
+    confuse:</p>
+    <ul>
+      <li>In a <strong>declaration</strong>, after a type &mdash; <code>int &amp;r = a;</code>,
+        <code>void f(int &amp;x)</code> &mdash; it means <em>"this is a reference."</em></li>
+      <li>In an <strong>expression</strong>, in front of a variable &mdash; <code>&amp;n</code>
+        &mdash; it is the <em>address-of</em> operator.</li>
+    </ul>
+    <p>Tell them apart by asking whether a type name is sitting to the left. If yes, it is a
+    reference declaration. If no, it is address-of. (There is a third use, <code>a &amp; b</code>
+    for bitwise AND, which this course does not need, and <code>a &amp;&amp; b</code> for logical AND,
+    which it does.)</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a copy lives somewhere else; a reference does not</span></div>
+  <div class="bd">
+    <p>These are the two one-line functions from the course notes, put into a runnable program and
+    made to print the address of their parameter. Before you look: which of the three addresses do
+    you expect to match?</p>
+<div class="codewrap"><div class="cap">addresses.cpp</div><pre><code class="language-cpp">// addresses.cpp -- a copy lives somewhere else; a reference does not
+#include &lt;iostream&gt;
+using namespace std;
+
+void print_call_by_val(int x) {
+    cout &lt;&lt; "   by value:     x = " &lt;&lt; x &lt;&lt; "   at address " &lt;&lt; &amp;x &lt;&lt; endl;
+}
+
+void print_call_by_ref(int &amp;y) {
+    cout &lt;&lt; "   by reference: y = " &lt;&lt; y &lt;&lt; "   at address " &lt;&lt; &amp;y &lt;&lt; endl;
+}
+
+int main() {
+    int n = 7;
+    cout &lt;&lt; "in main:      n = " &lt;&lt; n &lt;&lt; "   at address " &lt;&lt; &amp;n &lt;&lt; endl;
+    print_call_by_val(n);
+    print_call_by_ref(n);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">in main:      n = 7   at address 0x7fff06b79244
+   by value:     x = 7   at address 0x7fff06b7922c
+   by reference: y = 7   at address 0x7fff06b79244</pre>
+<p>The exact hexadecimal numbers are <strong>representative, not reproducible</strong>: they change
+from machine to machine and even from run to run, because the operating system deliberately puts the
+stack somewhere different each time. What is completely reproducible is the <em>pattern</em>:</p>
+<ul>
+  <li><code>print_call_by_val</code>'s parameter sits at a <strong>different</strong> address from
+    <code>n</code>. It is a separate object holding a copy of the value 7.</li>
+  <li><code>print_call_by_ref</code>'s parameter sits at <strong>exactly</strong> <code>n</code>'s
+    address. It is not a second object. It is <code>n</code>.</li>
+</ul>
+<p>Both functions print the same <em>value</em>, which is why the professor's two slides look
+pointless side by side &mdash; and that is the lesson. When a function only <em>reads</em> its
+parameter, by value and by reference are indistinguishable from the outside. The difference is
+entirely about cost and about write access, and those are the two things &sect;3 is built on.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.2</div>
+  <div class="bd">
+    <p>References have two rules that surprise everybody the first time. Work these out before
+    revealing.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Does this compile? <code>int a = 1; int &amp;r; r = a;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. A reference is a <em>name for something</em>, so there has to be a something at the
+        moment you declare it. Here is g++ 13.3:</p>
+<pre class="err">refinit.cpp: In function 'int main()':
+refinit.cpp:6:10: error: 'r' declared as reference but not initialized
+    6 |     int &amp;r;         // no variable to bind to
+      |          ^</pre>
+        <p>Compare with an ordinary <code>int a;</code>, which is perfectly legal (and holds garbage).
+        A reference has no "uninitialized" state to fall into &mdash; there is no such thing as a
+        name for nothing.</p>
+        <p>Reference <em>parameters</em> look like an exception, but they are not: the argument at the
+        call site is what initializes them, and a call always supplies one.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Predict all three lines of this program.</p>
+<div class="codewrap"><div class="cap">rebind.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a = 1, b = 2;
+    int &amp;r = a;
+    cout &lt;&lt; "a = " &lt;&lt; a &lt;&lt; ", b = " &lt;&lt; b &lt;&lt; ", r = " &lt;&lt; r &lt;&lt; endl;
+    r = b;          // does this rebind r to b, or assign b's value into a?
+    cout &lt;&lt; "a = " &lt;&lt; a &lt;&lt; ", b = " &lt;&lt; b &lt;&lt; ", r = " &lt;&lt; r &lt;&lt; endl;
+    b = 99;
+    cout &lt;&lt; "a = " &lt;&lt; a &lt;&lt; ", b = " &lt;&lt; b &lt;&lt; ", r = " &lt;&lt; r &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">a = 1, b = 2, r = 1
+a = 2, b = 2, r = 2
+a = 2, b = 99, r = 2</pre>
+        <p>The line <code>r = b;</code> did <strong>not</strong> rebind <code>r</code>. It assigned
+        <code>b</code>'s value <em>through</em> <code>r</code>, which means it assigned into
+        <code>a</code>. That is why <code>a</code> became 2.</p>
+        <p>The third line is the proof: setting <code>b</code> to 99 leaves <code>r</code> showing 2.
+        If <code>r</code> had been rebound to <code>b</code>, it would now show 99.</p>
+        <p><strong>Once a reference is bound, it is bound for life.</strong> Every later use of the
+        name &mdash; read or write &mdash; goes to the original target. When we meet pointers in
+        Class 7 you will see the contrast: a pointer <em>can</em> be pointed somewhere else, and that
+        flexibility is exactly what makes pointers more dangerous than references.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; a function that changes its caller</h3>
+
+<p>Write <code>applyBonus</code> so that it adds a bonus to a student's score, capped at 100, and the
+change is visible back in <code>main</code>. Write <code>report</code> so that it can print a name
+and a score but cannot possibly change either.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="27" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// Should CHANGE the caller&#39;s score. Cap it at 100.
+void applyBonus(int score, int bonus) {
+
+}
+
+// Should only READ. Make it impossible for this function to modify anything.
+void report(string name, int score) {
+    cout &lt;&lt; name &lt;&lt; &quot;: &quot; &lt;&lt; score &lt;&lt; endl;
+}
+
+int main() {
+    string student = &quot;Ana&quot;;
+    int score = 88;
+
+    report(student, score);
+    applyBonus(score, 7);
+    report(student, score);
+    applyBonus(score, 20);
+    report(student, score);
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// Should CHANGE the caller's score. Cap it at 100.
+void applyBonus(int score, int bonus) {
+
+}
+
+// Should only READ. Make it impossible for this function to modify anything.
+void report(string name, int score) {
+    cout &lt;&lt; name &lt;&lt; ": " &lt;&lt; score &lt;&lt; endl;
+}
+
+int main() {
+    string student = "Ana";
+    int score = 88;
+
+    report(student, score);
+    applyBonus(score, 7);
+    report(student, score);
+    applyBonus(score, 20);
+    report(student, score);
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.3</div>
+  <div class="bd">
+    <p>Complete the exercise above, and give the exact three lines of output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Take the two parameters one at a time and ask two questions about
+      each: <em>does the function need to change it?</em> and <em>is it expensive to copy?</em></p>
+      <ul>
+        <li><code>score</code> in <code>applyBonus</code> &mdash; must change, so
+          <code>int &amp;score</code>.</li>
+        <li><code>bonus</code> &mdash; only read, and it is a single <code>int</code>, so plain
+          <code>int bonus</code> is fine.</li>
+        <li><code>name</code> in <code>report</code> &mdash; only read, but a <code>string</code> can be long,
+          so <code>const string &amp;name</code>.</li>
+        <li><code>score</code> in <code>report</code> &mdash; only read; <code>const int &amp;score</code>
+          follows the professor's slide, though plain <code>int</code> would be just as good here.</li>
+      </ul>
+<div class="codewrap"><div class="cap">applybonus.cpp</div><pre><code class="language-cpp">// applybonus.cpp -- one reference parameter, one value parameter, one const reference
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+void applyBonus(int &amp;score, int bonus) {
+    score = score + bonus;
+    if (score &gt; 100) {
+        score = 100;
+    }
+}
+
+void report(const string &amp;name, const int &amp;score) {
+    cout &lt;&lt; name &lt;&lt; ": " &lt;&lt; score &lt;&lt; endl;
+}
+
+int main() {
+    string student = "Ana";
+    int score = 88;
+
+    report(student, score);
+    applyBonus(score, 7);
+    report(student, score);
+    applyBonus(score, 20);
+    report(student, score);
+    return 0;
+}</code></pre></div>
+<pre class="out">Ana: 88
+Ana: 95
+Ana: 100</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The cap matters. 88 + 20 is 108, and the third line still prints 100. Putting the rule
+          inside the function is exactly the encapsulation argument from Class 1, one size down.</li>
+        <li><code>applyBonus(score, 7);</code> looks identical to a by-value call. Only the
+          declaration tells you that <code>score</code> is at risk.</li>
+        <li>If you wrote <code>void applyBonus(int &amp;score, int &amp;bonus)</code> the program
+          would still compile &mdash; but then <code>applyBonus(score, 7);</code> would <em>not</em>,
+          because a literal <code>7</code> is not a variable and cannot be bound to a plain
+          <code>int &amp;</code>. We meet that error head-on in &sect;3.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span><code>const</code> reference parameters</h2>
+
+<p>So far references look like a tool for changing your caller's variables. They have a second job
+that is used far more often, and it comes from a cost you have not had to think about yet.</p>
+
+<p>Copying an <code>int</code> is free &mdash; four bytes, one machine instruction. Copying a
+<code>string</code> holding a paragraph of text means allocating memory and copying every character.
+Copying an object of one of the classes we build after Exam 1 can mean copying an entire array. When
+you pass such a thing by value to a function that only wants to <em>read</em> it, you pay for a full
+copy and get nothing for the money.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; constant call by reference</span></div>
+  <div class="bd">
+    <p>A <strong><code>const</code> reference parameter</strong> is written
+    <code>const T &amp;name</code>. The <code>&amp;</code> says <em>"do not copy the argument, bind to
+    it"</em>; the <code>const</code> says <em>"and I promise not to modify it."</em></p>
+    <p>You get the speed of passing by reference together with the safety of passing by value. The
+    compiler enforces the promise: any attempt to assign to the parameter inside the function is a
+    compile-time error.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; proving the copy really happens</span></div>
+  <div class="bd">
+    <p>A <code>string</code> keeps its characters in a block of memory of its own. If we print the
+    address of that block, we can watch a by-value parameter make a whole second copy of 100,000
+    characters &mdash; and watch a <code>const</code> reference not bother. Which two of the three
+    addresses will match?</p>
+<div class="codewrap"><div class="cap">constref.cpp</div><pre><code class="language-cpp">// constref.cpp -- a by-value string parameter really does copy every character
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+void by_value(string s) {
+    cout &lt;&lt; "   by value:      characters at " &lt;&lt; (const void*)s.data()
+         &lt;&lt; ", length " &lt;&lt; s.size() &lt;&lt; endl;
+}
+
+void by_const_ref(const string &amp;s) {
+    cout &lt;&lt; "   by const ref:  characters at " &lt;&lt; (const void*)s.data()
+         &lt;&lt; ", length " &lt;&lt; s.size() &lt;&lt; endl;
+}
+
+int main() {
+    string big(100000, 'x');
+    cout &lt;&lt; "in main:       characters at " &lt;&lt; (const void*)big.data()
+         &lt;&lt; ", length " &lt;&lt; big.size() &lt;&lt; endl;
+    by_value(big);
+    by_const_ref(big);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">in main:       characters at 0x562bc3a732b0, length 100000
+   by value:      characters at 0x562bc3a8c970, length 100000
+   by const ref:  characters at 0x562bc3a732b0, length 100000</pre>
+<p>Again the hexadecimal values are representative &mdash; yours will differ. The pattern is the
+point. <code>by_value</code> got its own block of 100,000 characters at a different address: the
+program really did allocate and copy all of it, just so a function could print a number and throw
+the copy away. <code>by_const_ref</code> is looking straight at <code>main</code>'s characters.</p>
+<p><code>string(100000, 'x')</code> is a constructor call that builds a string of 100,000 copies of
+the letter <code>x</code>; <code>.data()</code> hands back the address of the first character, and
+the cast to <code>const void*</code> is only there to make <code>cout</code> print the address rather
+than the 100,000 characters. Neither is exam material &mdash; the measurement is.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the compiler enforces the promise</span></div>
+  <div class="bd">
+    <p>Here is the professor's <code>print_const_call_by_ref</code> with one line added: an
+    assignment to the parameter. What does g++ do?</p>
+<div class="codewrap"><div class="cap">constbad2.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void print_const_call_by_ref(const int &amp;z) {
+    z = 99;                 // the promise is broken here
+    cout &lt;&lt; z &lt;&lt; endl;
+}
+
+int main() {
+    int n = 5;
+    print_const_call_by_ref(n);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constbad2.cpp: In function 'void print_const_call_by_ref(const int&amp;)':
+constbad2.cpp:5:7: error: assignment of read-only reference 'z'
+    5 |     z = 99;                 // the promise is broken here
+      |     ~~^~~~</pre>
+<p>Class 1 taught you to recognize <em>"assignment of read-only variable"</em>. This is its sibling:
+<em>"assignment of read-only <strong>reference</strong>"</em>. Same broken promise, one level of
+indirection out.</p>
+<p>Notice what the <code>const</code> is protecting. It is not protecting <code>z</code> &mdash;
+<code>z</code> is not really a variable at all. It is protecting <code>main</code>'s <code>n</code>,
+which is sitting there fully modifiable, and which this function has been handed direct access to.
+The <code>const</code> is the only thing standing between the caller's data and a function that has
+no business changing it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>There is one more difference between <code>int &amp;</code> and <code>const int &amp;</code>, and
+it bites people who take references too far.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what a plain reference will not accept</span></div>
+  <div class="bd">
+    <p>Both functions only read their parameter, so both calls look harmless. Exactly one of them
+    compiles. Which, and why?</p>
+<div class="codewrap"><div class="cap">litbind.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void print_call_by_ref(int &amp;y) {
+    cout &lt;&lt; y &lt;&lt; endl;
+}
+
+void print_const_call_by_ref(const int &amp;z) {
+    cout &lt;&lt; z &lt;&lt; endl;
+}
+
+int main() {
+    print_const_call_by_ref(42);    // fine
+    print_call_by_ref(42);          // not fine
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">litbind.cpp: In function 'int main()':
+litbind.cpp:14:23: error: cannot bind non-const lvalue reference of type 'int&amp;' to an rvalue of type 'int'
+    14 |     print_call_by_ref(42);          // not fine
+       |                       ^~
+litbind.cpp:4:29: note:   initializing argument 1 of 'void print_call_by_ref(int&amp;)'
+    4 | void print_call_by_ref(int &amp;y) {
+      |                        ~~~~~^</pre>
+<p>Strip the jargon out of that message and it says something reasonable. A plain <code>int &amp;</code>
+parameter is a licence to modify the caller's variable &mdash; so the caller has to <em>have</em> a
+variable. The literal <code>42</code> is not a variable; there is nothing to write back into. C++
+refuses the call rather than let you write into a value that will vanish.</p>
+<p>A <code>const int &amp;</code> has no such problem, because it has promised not to write anything.
+The compiler quietly makes a temporary <code>int</code> holding 42, binds <code>z</code> to it, and
+keeps it alive until the call finishes.</p>
+<p>The vocabulary in the message is worth knowing even though this course does not lean on it: an
+<strong>lvalue</strong> is something with a place in memory that you could assign to
+(<code>n</code>, <code>a[3]</code>); an <strong>rvalue</strong> is a bare value with no home
+(<code>42</code>, <code>x + 1</code>, the result of a function that returns by value).</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; choosing how to pass a parameter</span></div>
+  <div class="bd">
+    <p>For every parameter you ever write, ask two questions in this order:</p>
+    <ol>
+      <li><strong>Does the function need to change the caller's variable?</strong>
+        If yes &rarr; <code>T &amp;name</code>. Stop.</li>
+      <li><strong>Is the type expensive to copy?</strong> A <code>string</code>, an array-holding object, any
+        class of your own &mdash; yes. An <code>int</code>, <code>double</code>, <code>char</code>, <code>bool</code> &mdash; no.
+        <ul>
+          <li>Expensive &rarr; <code>const T &amp;name</code>.</li>
+          <li>Cheap &rarr; plain <code>T name</code>. (Passing a <code>double</code> by <code>const</code> reference is not
+            wrong, just pointless: the reference itself costs as much as the copy.)</li>
+        </ul>
+      </li>
+    </ol>
+    <p>That is the entire decision. Written out as a table:</p>
+    <table class="trace">
+      <tr><th>Situation</th><th>Write</th><th>Example</th></tr>
+      <tr><td>Must modify the caller's variable</td><td><code>T &amp;x</code></td><td><code>void swap2(int &amp;u, int &amp;v)</code></td></tr>
+      <tr><td>Read-only, small type</td><td><code>T x</code></td><td><code>int gcd(int a, int b)</code></td></tr>
+      <tr><td>Read-only, large type</td><td><code>const T &amp;x</code></td><td><code>void report(const string &amp;name)</code></td></tr>
+      <tr><td>Read-only array</td><td><code>const T x[]</code> plus a length</td><td><code>void print_const(int n, const int a[])</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.4</div>
+  <div class="bd">
+    <p>For each function below, decide whether the parameter list is right, and if not, fix it.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>void printReceipt(string customer, double total);</code> &mdash; prints a receipt, changes nothing.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>customer</code> is read-only and expensive, so it should be a <code>const</code> reference.
+        <code>total</code> is read-only and cheap, so leave it alone:</p>
+<pre><code class="language-cpp">void printReceipt(const string &amp;customer, double total);</code></pre>
+        <p>The version as written compiles and behaves identically. It just copies the whole customer
+        name on every single call for no reason. Multiply that by a loop over 50,000 receipts and it
+        stops being academic.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>void addInterest(const double &amp;balance, double rate);</code> &mdash; is supposed to grow the balance.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Broken. The function must modify <code>balance</code>, so the <code>const</code> has to go &mdash; and
+        with it the reason for the reference is now "I must change it" rather than "it is big":</p>
+<pre><code class="language-cpp">void addInterest(double &amp;balance, double rate);</code></pre>
+        <p>As written, the body could not contain <code>balance = balance * (1 + rate);</code> at all
+        &mdash; that is <em>"assignment of read-only reference"</em> at compile time. This is
+        <code>const</code> doing its job: the mistake is caught in the signature, not discovered later
+        by a customer whose balance never grew.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>int countVowels(string &amp;text);</code> &mdash; counts vowels, changes nothing. It compiles. What breaks?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Two things, and the second is worse than the first.</p>
+        <p>First, the missing <code>const</code> means nothing stops a future edit to the body from
+        corrupting the caller's string. The signature no longer documents the function's intent.</p>
+        <p>Second &mdash; and this is the one that stings &mdash; <code>countVowels("hello");</code>
+        will not compile. A string literal is not a <code>string</code> variable, so there is nothing for a plain
+        <code>string &amp;</code> to bind to, exactly as with <code>42</code> above. Adding the
+        <code>const</code> makes that call legal:</p>
+<pre><code class="language-cpp">int countVowels(const string &amp;text);</code></pre>
+        <p>This is why <code>const</code> reference is the default for read-only parameters and not
+        merely a nicety. Leaving it off restricts who is allowed to call you.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>References as return values</h2>
+
+<p>A reference can also be what a function <em>hands back</em>. Write the <code>&amp;</code> after the
+return type: <code>int&amp; f(...)</code>. This is a real and useful feature &mdash; the
+<code>[]</code> operator we write for our own classes in Class 17 depends on it &mdash; and it is
+also the easiest way in this course to write a program that crashes.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; returning a reference to something that outlives the call</span></div>
+  <div class="bd">
+    <p>This is the professor's <code>returnReference1</code>. It takes a reference and gives the same
+    reference straight back. In <code>main</code>, <code>b</code> is declared as a reference and
+    initialized from the call. Predict both lines &mdash; especially the second, after
+    <code>b = 4;</code>.</p>
+<div class="codewrap"><div class="cap">returnref1.cpp</div><pre><code class="language-cpp">// returnref1.cpp -- returning a reference to something that outlives the call
+#include &lt;iostream&gt;
+using namespace std;
+
+int&amp; returnReference1(int &amp;x) {
+    return x;
+}
+
+int main() {
+    int a = 3;
+    int &amp;b = returnReference1(a);
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    b = 4;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">3 3
+4 4</pre>
+<p>Follow the aliasing chain. <code>x</code> is bound to <code>a</code>. The function returns
+<code>x</code> <em>as a reference</em>, so what comes back is not the value 3 but "<code>a</code>
+itself." <code>int &amp;b = ...</code> then binds <code>b</code> to that. Result:
+<code>b</code> is a third name for the one integer in this program.</p>
+<p>So <code>b = 4;</code> writes into <code>a</code>, and the second line prints <code>4 4</code>.
+The aliasing survived the round trip through the function.</p>
+<p>Change one character and the whole thing changes. If <code>main</code> said
+<code>int b = returnReference1(a);</code> &mdash; no <code>&amp;</code> &mdash; then <code>b</code>
+would be an ordinary <code>int</code> <em>copied</em> from <code>a</code>, and the output would be
+<code>3 3</code> then <code>3 4</code>. Try it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.5</div>
+  <div class="bd">
+    <p>Using <code>returnReference1</code> exactly as written above, what does each <code>main</code> print?</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>int a = 3; int b = returnReference1(a); b = 4; cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">3 4</pre>
+        <p><code>b</code> is a plain <code>int</code>, so the reference returned by the function is
+        immediately read and its value copied into <code>b</code>. From then on <code>b</code> is an
+        independent variable, and <code>b = 4;</code> leaves <code>a</code> at 3.</p>
+        <p>This is the single most important thing to see about returning a reference: <strong>whether
+        the aliasing survives is decided at the call site, by the caller's declaration</strong>, not by
+        the function.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>int a = 3; returnReference1(a) = 7; cout &lt;&lt; a &lt;&lt; endl;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">7</pre>
+        <p>Yes, you really can put a function call on the left-hand side of an assignment &mdash;
+        provided the function returns a non-<code>const</code> reference. The call evaluates to
+        <code>a</code> itself, so the statement means <code>a = 7;</code>.</p>
+        <p>It looks like a party trick. It is not: it is precisely how <code>v[3] = 10;</code> works
+        for a class that defines <code>operator[]</code>, which is Class 17. A function that returns
+        by value could never appear on the left of <code>=</code>, because there would be nothing
+        there to assign to.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<p>Now the dangerous case. The course notes present this next function under exactly the same neutral
+heading as the one above, with no commentary and no output. Read it very carefully.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; returning a reference to a local variable</span></div>
+  <div class="bd">
+    <p><code>returnReference2</code> declares a local <code>double</code> and returns a reference to
+    it. Ask yourself one question before revealing: <em>how long does <code>y</code> exist?</em></p>
+<div class="codewrap"><div class="cap">returnref2.cpp</div><pre><code class="language-cpp">// returnref2.cpp -- DO NOT WRITE THIS. Returns a reference to a dead variable.
+#include &lt;iostream&gt;
+using namespace std;
+
+double&amp; returnReference2() {
+    double y = 3.1415;
+    return y;
+}
+
+int main() {
+    double d = returnReference2();
+    cout &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>It compiles &mdash; but only with a warning, and the warning is telling you the program is
+broken:</p>
+<pre class="err">returnref2.cpp: In function 'double&amp; returnReference2()':
+returnref2.cpp:7:12: warning: reference to local variable 'y' returned [-Wreturn-local-addr]
+    7 |     return y;
+      |            ^
+returnref2.cpp:6:12: note: declared here
+    6 |     double y = 3.1415;
+      |            ^</pre>
+<p>And on this machine, running it does this:</p>
+<pre class="shell">$ ./returnref2
+Segmentation fault</pre>
+<p><code>y</code> is a local variable. It is created when the function starts and
+<strong>destroyed when the function returns</strong> &mdash; its storage on the stack is handed back
+and will be reused by the next function call that comes along. The reference that
+<code>returnReference2</code> hands to <code>main</code> therefore names an object that no longer
+exists. Reading it in <code>double d = returnReference2();</code> is <strong>undefined
+behavior</strong>: the language makes no promise at all about what happens.</p>
+<p>"No promise at all" is the part students underestimate. On this machine it crashed. On another
+machine, or with different optimization settings, the same program may print <code>3.1415</code> and
+look completely fine &mdash; which is far worse, because then the bug ships. <em>Never trust a
+program that only appears to work.</em> Trust the warning.</p>
+
+</div></details>
+
+    <p>Here is the fix, and it is a downgrade in a good way: if the value has to be computed fresh
+    inside the function, return it <strong>by value</strong>.</p>
+<div class="codewrap"><div class="cap">returnref_fixed.cpp</div><pre><code class="language-cpp">// returnref_fixed.cpp -- the same function, returning by value
+#include &lt;iostream&gt;
+using namespace std;
+
+double returnValue2() {
+    double y = 3.1415;
+    return y;
+}
+
+int main() {
+    double d = returnValue2();
+    cout &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">3.1415</pre>
+<p>One character removed and the program is correct. Returning by value copies <code>y</code>'s value
+out <em>before</em> <code>y</code> is destroyed, so there is nothing dangling.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; a defect in the course notes, and the rule that avoids it</span></div>
+  <div class="bd">
+    <p>The original Lecture 2 notes present <code>returnReference2</code> under the same heading as
+    <code>returnReference1</code>, with no output and no comment saying it is wrong. Copied into an
+    assignment as if it were a model, it is a genuine bug &mdash; a dangling reference and undefined
+    behavior. It is shown here only as the counter-example.</p>
+    <p>The rule, and it has no exceptions worth learning yet:</p>
+    <p><strong>Return a reference only to something that will still be alive after the function
+    returns.</strong> That means: a reference <em>parameter</em> the caller handed you (as in
+    <code>returnReference1</code>), an element of an array or object owned by someone else, or a data
+    member of the object the method belongs to. Never a local variable.</p>
+    <p>If you are unsure, return by value. It costs a copy and it is always correct.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a returned reference you can assign to</span></div>
+  <div class="bd">
+    <p>Here is the useful version of the idea. <code>elementAt</code> returns a reference to an
+    element of an array that lives in <code>main</code> &mdash; so the array outlives every call.
+    Predict all three lines.</p>
+<div class="codewrap"><div class="cap">elementref.cpp</div><pre><code class="language-cpp">// elementref.cpp -- a returned reference can be assigned to
+#include &lt;iostream&gt;
+using namespace std;
+
+int&amp; elementAt(int a[], int i) {
+    return a[i];
+}
+
+int main() {
+    int scores[5] = {10, 20, 30, 40, 50};
+
+    cout &lt;&lt; "scores[2] = " &lt;&lt; elementAt(scores, 2) &lt;&lt; endl;
+    elementAt(scores, 2) = 99;
+    cout &lt;&lt; "scores[2] = " &lt;&lt; scores[2] &lt;&lt; endl;
+
+    for (int i = 0; i &lt; 5; ++i) {
+        cout &lt;&lt; scores[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">scores[2] = 30
+scores[2] = 99
+10 20 99 40 50</pre>
+<p><code>elementAt(scores, 2) = 99;</code> is the same trick as Quick Check 2.5(b), and it is safe
+here for one reason only: <code>scores</code> belongs to <code>main</code>, so the thing the returned
+reference names is still very much alive when <code>main</code> writes to it.</p>
+<p>Note also what the parameter <code>int a[]</code> is doing. It is <em>not</em> a copy of the
+array &mdash; more on that in &sect;5 &mdash; which is why the function can hand out a reference into
+the caller's data in the first place.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Function overloading</h2>
+
+<p>In C++ two different functions may share a name, as long as the compiler can tell the calls
+apart.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; function overloading, signature</span></div>
+  <div class="bd">
+    <p><strong>Function overloading</strong> is declaring two or more functions with the
+    <em>same name</em> but different <strong>parameter lists</strong>. At each call, the compiler
+    looks at the number and types of the arguments and picks the one that matches. This is called
+    <strong>overload resolution</strong>, and it happens entirely at compile time.</p>
+    <p>The <strong>signature</strong> of a function is its name plus its parameter list. The return
+    type is <em>not</em> part of the signature, which is why two functions cannot be distinguished by
+    return type alone.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; two functions called <code>print_const</code></span></div>
+  <div class="bd">
+    <p>This is the professor's overloading example. There are two functions named
+    <code>print_const</code>, and <code>main</code> calls each one once. Predict the output exactly
+    &mdash; there is a trap in it, and most people fall in.</p>
+<div class="codewrap"><div class="cap">overload.cpp</div><pre><code class="language-cpp">// overload.cpp -- two functions, one name
+#include &lt;iostream&gt;
+using namespace std;
+
+void print_const(const int &amp;z) {
+    cout &lt;&lt; z &lt;&lt; endl;
+}
+
+void print_const(int n, const int a[]) {
+    for (int i = 0; i &lt; n; ++i)
+        cout &lt;&lt; a[i] &lt;&lt; endl;
+}
+
+int main() {
+    int n = 3;
+    int a[] = {7, 10, 12};
+    print_const(n);
+    print_const(n, a);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">3
+7
+10
+12</pre>
+<p>The trap is the first line. <code>print_const(n)</code> has <em>one</em> argument, so it matches
+the one-parameter overload, and it prints the value of <code>n</code>, which is <strong>3</strong>.
+It has nothing to do with the array. Almost everyone reading quickly assumes the two calls are
+"print the length" and "print the array"; the first one is just printing an integer that happens to
+be 3.</p>
+<table class="trace">
+  <tr><th>Call</th><th>Arguments</th><th>Overload chosen</th><th>Prints</th></tr>
+  <tr><td><code>print_const(n)</code></td><td>one <code>int</code></td><td><code>print_const(const int &amp;z)</code></td><td><code>3</code></td></tr>
+  <tr><td><code>print_const(n, a)</code></td><td>an <code>int</code> and an <code>int</code> array</td><td><code>print_const(int n, const int a[])</code></td><td><code>7</code>, <code>10</code>, <code>12</code> on three lines</td></tr>
+</table>
+<p>Two details in the second overload are worth naming now, because they will be in every
+array-handling function you write this semester:</p>
+<ul>
+  <li><code>int a[] = {7, 10, 12};</code> declares an array of three <code>int</code>s. You do not
+    write the length &mdash; the compiler counts the initializers for you.</li>
+  <li>An array parameter <strong>does not carry its length</strong>. That is why the length has to be
+    passed as a separate parameter <code>n</code>, and why the convention in this course is
+    <code>(int n, const int a[])</code>.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<p>That second point deserves its own moment, because it is where <code>const</code> earns its keep
+on arrays.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; an array parameter is not a copy</span></div>
+  <div class="bd">
+    <p>There is no <code>&amp;</code> anywhere in this program. Does <code>main</code>'s array
+    survive the call?</p>
+<div class="codewrap"><div class="cap">arraymod.cpp</div><pre><code class="language-cpp">// arraymod.cpp -- an array parameter is not a copy
+#include &lt;iostream&gt;
+using namespace std;
+
+void zeroOut(int n, int a[]) {
+    for (int i = 0; i &lt; n; ++i)
+        a[i] = 0;
+}
+
+int main() {
+    int a[] = {7, 10, 12};
+    zeroOut(3, a);
+    for (int i = 0; i &lt; 3; ++i)
+        cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0 0 0</pre>
+<p>It does not. Arrays are the exception to everything you just learned about call by value: an array
+argument is <strong>never</strong> copied. What actually gets passed is the address of the first
+element, so <code>a[i]</code> inside the function reaches straight into <code>main</code>'s array.
+Class 7 explains the mechanism properly, under the name <em>array-to-pointer decay</em>. For today,
+memorize the consequence: <strong>a function with an array parameter can rewrite your array whether
+you expected it to or not.</strong></p>
+<p>Which is precisely why the professor writes <code>const int a[]</code> in a function that only
+prints. It restores the protection that call by value would normally have given you.</p>
+
+</div></details>
+
+    <p>And the <code>const</code> is checked, not decorative. Add one write to the printing version
+    and the program stops compiling:</p>
+<div class="codewrap"><div class="cap">constarray.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void print_const(int n, const int a[]) {
+    for (int i = 0; i &lt; n; ++i) {
+        a[i] = 0;               // try to clear the caller's array
+        cout &lt;&lt; a[i] &lt;&lt; endl;
+    }
+}
+
+int main() {
+    int a[] = {7, 10, 12};
+    print_const(3, a);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constarray.cpp: In function 'void print_const(int, const int*)':
+constarray.cpp:6:14: error: assignment of read-only location '*(a + ((sizetype)(((long unsigned int)i) * 4)))'
+    6 |         a[i] = 0;               // try to clear the caller's array
+      |         ~~~~~^~~</pre>
+<p>The error text is ugly because the compiler has already rewritten <code>a[i]</code> into address
+arithmetic &mdash; note that it even reports the parameter as <code>const int*</code> rather than
+<code>const int[]</code>, which is a strong hint about what an array parameter really is. Ignore the
+noise and read the first three words: <em>assignment of read-only</em>. Same broken promise as
+always.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.6</div>
+  <div class="bd">
+    <p>Two overloads of <code>show</code> differ only in the parameter type.</p>
+<div class="codewrap"><div class="cap">ambig.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void show(int x)    { cout &lt;&lt; "int:    " &lt;&lt; x &lt;&lt; endl; }
+void show(double x) { cout &lt;&lt; "double: " &lt;&lt; x &lt;&lt; endl; }
+
+int main() {
+    show(7);
+    show(7.0);
+    show('B');
+    return 0;
+}</code></pre></div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What are the three lines of output?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">int:    7
+double: 7
+int:    66</pre>
+        <p>The first two are easy: <code>7</code> is an <code>int</code> literal, <code>7.0</code> is a <code>double</code>
+        literal, each matches its overload exactly.</p>
+        <p>The third is the interesting one. There is no <code>show(char)</code>, so the compiler must
+        convert. <code>char</code> converts to <code>int</code> more readily than to
+        <code>double</code>, so the <code>int</code> overload wins, and the character <code>'B'</code> arrives as
+        its numeric code, <strong>66</strong>.</p>
+        <p>And do not miss line 2: <code>7.0</code> prints as <code>7</code>, because
+        <code>cout</code> drops trailing zeros. The label is the only thing telling you which
+        overload ran.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Would adding <code>int show(int x);</code> alongside the existing <code>void show(int x)</code> be legal?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. The return type is not part of the signature, so those two are the same function
+        declared twice with contradictory return types. g++ 13.3 says:</p>
+<pre class="err">badoverload.cpp:5:8: error: ambiguating new declaration of 'double f(int)'
+    5 | double f(int x) { return x + 0.5; }
+      |        ^
+badoverload.cpp:4:6: note: old declaration 'int f(int)'
+    4 | int  f(int x) { return x + 1; }
+      |      ^</pre>
+        <p>(That message is from the same experiment with a function called <code>f</code>.) The
+        reason is easy to see once you ask how the compiler would choose: in <code>f(3);</code>,
+        written as a statement with the result thrown away, there is nothing in the call to indicate
+        which return type you wanted. <strong>Overloads must differ in their parameter list.</strong></p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; overload one name three ways</h3>
+
+<p>Write three overloads of <code>maxOf</code>: one for two <code>int</code>s, one for two
+<code>double</code>s, and one for an array of <code>int</code> with its length. Use <code>const</code>
+references for the read-only parameters and <code>const int a[]</code> for the array.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+// 1. the larger of two ints
+
+
+// 2. the larger of two doubles
+
+
+// 3. the largest element of an array of n ints
+
+
+int main() {
+    int p = 4, q = 9;
+    double x = 2.5, y = 1.5;
+    int data[] = {3, 17, 8, 17, 2};
+
+    cout &lt;&lt; maxOf(p, q) &lt;&lt; endl;
+    cout &lt;&lt; maxOf(x, y) &lt;&lt; endl;
+    cout &lt;&lt; maxOf(5, data) &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+// 1. the larger of two ints
+
+
+// 2. the larger of two doubles
+
+
+// 3. the largest element of an array of n ints
+
+
+int main() {
+    int p = 4, q = 9;
+    double x = 2.5, y = 1.5;
+    int data[] = {3, 17, 8, 17, 2};
+
+    cout &lt;&lt; maxOf(p, q) &lt;&lt; endl;
+    cout &lt;&lt; maxOf(x, y) &lt;&lt; endl;
+    cout &lt;&lt; maxOf(5, data) &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.7</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Three functions, one name, three different parameter lists &mdash; so
+      overload resolution can separate them. Each one only reads its parameters, so every parameter is
+      either a <code>const</code> reference or a <code>const</code> array. The array version needs a length, and it starts
+      its search from <code>a[0]</code> rather than from 0, which would be wrong for an array of
+      negative numbers.</p>
+<div class="codewrap"><div class="cap">maxof.cpp</div><pre><code class="language-cpp">// maxof.cpp -- three overloads of one name
+#include &lt;iostream&gt;
+using namespace std;
+
+int maxOf(const int &amp;a, const int &amp;b) {
+    return (a &gt; b) ? a : b;
+}
+
+double maxOf(const double &amp;a, const double &amp;b) {
+    return (a &gt; b) ? a : b;
+}
+
+int maxOf(int n, const int a[]) {
+    int best = a[0];
+    for (int i = 1; i &lt; n; ++i) {
+        if (a[i] &gt; best) {
+            best = a[i];
+        }
+    }
+    return best;
+}
+
+int main() {
+    int p = 4, q = 9;
+    double x = 2.5, y = 1.5;
+    int data[] = {3, 17, 8, 17, 2};
+
+    cout &lt;&lt; maxOf(p, q) &lt;&lt; endl;
+    cout &lt;&lt; maxOf(x, y) &lt;&lt; endl;
+    cout &lt;&lt; maxOf(5, data) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">9
+2.5
+17</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The three parameter lists are <code>(const int&amp;, const int&amp;)</code>,
+          <code>(const double&amp;, const double&amp;)</code> and
+          <code>(int, const int[])</code>. All different, so all three are legal overloads.</li>
+        <li>Returning <code>a</code> or <code>b</code> <em>by value</em> is deliberate. Returning
+          <code>const int&amp;</code> would work for these particular calls but invites the
+          Section&nbsp;4 disaster the moment somebody writes
+          <code>maxOf(3, 4)</code> with literals.</li>
+        <li><code>best = a[0]</code> rather than <code>best = 0</code>. Seeding a maximum with zero is
+          one of the classic silent bugs: it gives the right answer on every test case you happen to
+          try with positive numbers, and the wrong answer forever after.</li>
+        <li>The array has two 17s. Ties are fine &mdash; the strict <code>&gt;</code> keeps the first
+          one, and the answer is the same either way.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Forward declarations</h2>
+
+<p>The C++ compiler reads your file <strong>from top to bottom, once</strong>. It cannot use a name it
+has not seen yet. Usually that costs you nothing &mdash; you define your helper functions above
+<code>main</code> out of habit. Then you hit a case where no ordering works.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; two functions that each need the other</span></div>
+  <div class="bd">
+    <p><code>f1</code> calls <code>f2</code>, and <code>f2</code> calls <code>f1</code>. Whichever one
+    you write first, it refers to a name the compiler has not met. What does g++ say?</p>
+<div class="codewrap"><div class="cap">fwdbad.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+string f1(int a) {
+    if (a &gt;= 0) { return "f1"; }
+    else {
+        string s = string("f1 first, ");
+        return s + f2(a);
+    }
+}
+
+string f2(int a) {
+    if (a &lt; 0) { return "f2"; }
+    else {
+        string s = string("f2 first, ");
+        return s + f1(a);
+    }
+}
+
+int main() {
+    cout &lt;&lt; f1(3) &lt;&lt; endl;
+    cout &lt;&lt; f1(-3) &lt;&lt; endl;
+    cout &lt;&lt; f2(4) &lt;&lt; endl;
+    cout &lt;&lt; f2(-4) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">fwdbad.cpp: In function 'std::string f1(int)':
+fwdbad.cpp:9:20: error: 'f2' was not declared in this scope; did you mean 'f1'?
+    9 |         return s + f2(a);
+      |                    ^~
+      |                    f1</pre>
+<p>Class 1 said <em>"was not declared in this scope"</em> usually means a typo, a missing
+<code>#include</code>, or a variable used before it was declared. This is the fourth cause: a function
+used before it was declared. Swapping the two function bodies does not help &mdash; then
+<code>f2</code> would be the one complaining about <code>f1</code>. The dependency is a cycle, and no
+linear ordering can break a cycle.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; forward declaration (function prototype)</span></div>
+  <div class="bd">
+    <p>A <strong>forward declaration</strong> &mdash; also called a <strong>function prototype</strong>
+    &mdash; is <em>just the function signature, terminated with a semicolon instead of a body</em>:</p>
+    <p><code>string f1(int a);</code></p>
+    <p>It tells the compiler <em>"a function with this name, these parameter types and this return
+    type exists somewhere; trust me and let me call it."</em> The compiler then has everything it
+    needs to check your calls. Where the body actually is &mdash; further down the file, or in a
+    completely different file &mdash; is not its problem; that is the linker's job.</p>
+    <p>The parameter <em>names</em> in a forward declaration are optional and are ignored:
+    <code>string f1(int);</code> declares the same function. Write the names anyway. They are
+    documentation.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same program, fixed</span></div>
+  <div class="bd">
+    <p>Two extra lines above <code>main</code> and the cycle is broken. Note that this also lets us
+    put <code>main</code> first, which many people find easier to read. Predict the four lines.</p>
+<div class="codewrap"><div class="cap">fwdgood.cpp</div><pre><code class="language-cpp">// fwdgood.cpp -- mutual recursion, made legal by two forward declarations
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+string f1(int a);       // forward declaration
+string f2(int a);       // forward declaration
+
+int main() {
+    cout &lt;&lt; f1(3)  &lt;&lt; endl;
+    cout &lt;&lt; f1(-3) &lt;&lt; endl;
+    cout &lt;&lt; f2(4)  &lt;&lt; endl;
+    cout &lt;&lt; f2(-4) &lt;&lt; endl;
+    return 0;
+}
+
+string f1(int a) {
+    if (a &gt;= 0) { return "f1"; }
+    else {
+        string s = string("f1 first, ");
+        return s + f2(a);
+    }
+}
+
+string f2(int a) {
+    if (a &lt; 0) { return "f2"; }
+    else {
+        string s = string("f2 first, ");
+        return s + f1(a);
+    }
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">f1
+f1 first, f2
+f2 first, f1
+f2</pre>
+<p>Trace one line and the rest follow. <code>f1(-3)</code>: the argument is negative, so
+<code>f1</code> takes the <code>else</code> branch, builds the string <code>"f1 first, "</code> and
+appends <code>f2(-3)</code>. Inside <code>f2</code> the argument is still negative, so
+<code>f2</code> returns <code>"f2"</code> immediately. Concatenated:
+<code>"f1 first, f2"</code>.</p>
+<table class="trace">
+  <tr><th>Call</th><th>Sign of <code>a</code></th><th>Path</th><th>Result</th></tr>
+  <tr><td><code>f1(3)</code></td><td>non-negative</td><td><code>f1</code> returns at once</td><td><code>f1</code></td></tr>
+  <tr><td><code>f1(-3)</code></td><td>negative</td><td><code>f1</code> &rarr; <code>f2</code>, which returns at once</td><td><code>f1 first, f2</code></td></tr>
+  <tr><td><code>f2(4)</code></td><td>non-negative</td><td><code>f2</code> &rarr; <code>f1</code>, which returns at once</td><td><code>f2 first, f1</code></td></tr>
+  <tr><td><code>f2(-4)</code></td><td>negative</td><td><code>f2</code> returns at once</td><td><code>f2</code></td></tr>
+</table>
+<p>The recursion is only ever one level deep here, because whichever function is entered second
+always finds itself in its base case. That is what makes this a safe example to hand a class &mdash;
+mutual recursion that actually recursed would need a much more careful argument that it terminates.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the missing semicolon, and the missing include</span></div>
+  <div class="bd">
+    <p>Two things go wrong with forward declarations, and both are easy to spot once named:</p>
+    <ul>
+      <li><strong>Writing <code>string f1(int a)</code> without the semicolon.</strong> That is the
+        start of a <em>definition</em>, and the compiler will demand a body. A prototype is the
+        signature <em>plus a semicolon</em>. Nothing else.</li>
+      <li><strong>Forgetting the header the declaration depends on.</strong> The version of this
+        program in the course notes returns <code>string</code> but never
+        <code>#include &lt;string&gt;</code>, so it cannot compile as printed. If a declaration
+        mentions a type, that type has to be visible first. The corrected listing above adds the
+        include.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.8</div>
+  <div class="bd">
+    <p>Write the forward declaration for each of these functions. Only the declaration &mdash; no
+    body.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A function <code>average</code> that takes an array of <code>double</code> and its length, changes neither, and returns a <code>double</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">double average(int n, const double a[]);</code></pre>
+        <p>Length first, then the <code>const</code> array &mdash; the convention the course notes use. The
+        parameter names are optional but keep them.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A function <code>normalize</code> that takes a <code>string</code> by reference and modifies it in place, returning nothing.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">void normalize(string &amp;text);</code></pre>
+        <p>No <code>const</code>, because the whole job of the function is to modify the argument. <code>void</code>,
+        because the modified string goes back through the parameter rather than through a return
+        value.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Two overloads of <code>describe</code>: one taking a <code>const string&amp;</code>, one taking an <code>int</code> and a <code>const int</code> array.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">void describe(const string &amp;s);
+void describe(int n, const int a[]);</code></pre>
+        <p>Overloads are declared exactly like any other function &mdash; one prototype each. The
+        compiler collects them all and picks between them at each call.</p>
+        <p><strong>Things to notice.</strong> Once you can write these three lines you have written
+        the entire contents of a header file. That is all a header is: a list of prototypes. Which is
+        &sect;7.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Splitting a program across files</h2>
+
+<p>Everything so far has lived in one <code>.cpp</code> file. Real projects do not. The course notes
+give three reasons, and all three are practical rather than aesthetic:</p>
+
+<ul>
+  <li>If all the code is in one file, editing even a small part means <strong>the entire project must
+    be recompiled</strong>. On a large program that is the difference between two seconds and two
+    minutes, every time you fix a typo.</li>
+  <li><strong>Multiple developers can work simultaneously</strong> on different source files without
+    fighting over the same file.</li>
+  <li><strong>A source file can be included in multiple different projects</strong> &mdash; write a
+    good set of matrix routines once, use it in three programs.</li>
+</ul>
+
+<p>So we want <code>main</code> in one file and the functions it calls in another. But the compiler
+reads each file top to bottom and knows nothing about any other file, so a call to a function defined
+elsewhere is a name it has never seen &mdash; the exact error from &sect;6. The course notes put it
+plainly: <em>functions in one file may call functions defined in a different file, but this might
+cause a problem; to avoid the problem, C++ supports forward declarations.</em></p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; header file</span></div>
+  <div class="bd">
+    <p>A <strong>header file</strong> is a file that holds <em>declarations</em>, so that any source
+    file needing them can pull them in with <code>#include</code>. By convention it is named with a
+    <code>.h</code> suffix.</p>
+    <p>Include one of your own headers with <strong>double quotes</strong>:
+    <code>#include "swap.h"</code>. The quoted form looks in your project directory first. The
+    angle-bracket form &mdash; <code>#include &lt;iostream&gt;</code> &mdash; is for the standard
+    library and looks only in the system directories.</p>
+    <p>A project therefore consists of a set of <code>.cpp</code> source files, which hold the
+    <strong>definitions</strong>, and a set of <code>.h</code> header files, which hold the
+    <strong>declarations</strong>. Each source file includes the headers describing whatever it
+    needs to call.</p>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><code>#include "swap.h"</code> is not magic and it is not "importing a module". The
+    preprocessor literally <strong>pastes the text of the header into your file</strong> before the
+    compiler sees it. Everything about headers &mdash; why they contain declarations and not
+    definitions, why they need include guards &mdash; follows from that one fact.</p>
+  </div>
+</div>
+
+<h3>The <code>swap</code> project</h3>
+
+<p>Here is the course notes' worked example. We want a driver that swaps a pair of <code>int</code>s,
+a pair of <code>double</code>s and a pair of <code>string</code>s &mdash; three overloads of one name,
+tying &sect;5 back in &mdash; with the swap functions living in their own source file.</p>
+
+<p>The header declares the three overloads and nothing else:</p>
+
+<div class="codewrap"><div class="cap">swap.h</div><pre><code class="language-cpp">// swap.h -- declarations only
+#ifndef SWAP_H
+#define SWAP_H
+
+#include &lt;string&gt;
+
+void swap(int &amp;u, int &amp;v);
+void swap(double &amp;u, double &amp;v);
+void swap(std::string &amp;u, std::string &amp;v);
+
+#endif</code></pre></div>
+
+<p>The source file defines them. It includes its own header &mdash; that is how the compiler checks
+that each definition matches the declaration it published:</p>
+
+<div class="codewrap"><div class="cap">swap.cpp</div><pre><code class="language-cpp">// swap.cpp -- the definitions
+#include "swap.h"
+
+void swap(int &amp;u, int &amp;v) {
+    int t = u;
+    u = v;
+    v = t;
+}
+
+void swap(double &amp;u, double &amp;v) {
+    double t = u;
+    u = v;
+    v = t;
+}
+
+void swap(std::string &amp;u, std::string &amp;v) {
+    std::string t = u;
+    u = v;
+    v = t;
+}</code></pre></div>
+
+<p>And the driver includes the header &mdash; <strong>never</strong> the <code>.cpp</code> file:</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; compiling three files into one program</span></div>
+  <div class="bd">
+    <p>Predict the six lines this prints, then check the compile command carefully: both
+    <code>.cpp</code> files are named, and the <code>.h</code> file is not.</p>
+<div class="codewrap"><div class="cap">main.cpp</div><pre><code class="language-cpp">// main.cpp -- the driver
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include "swap.h"
+using namespace std;
+
+int main() {
+    int a = 3, b = 4;
+    double x = 2.2, y = 3.3;
+    string s("abcd"), t("alpha");
+
+    cout &lt;&lt; "original:" &lt;&lt; endl;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    cout &lt;&lt; s &lt;&lt; " " &lt;&lt; t &lt;&lt; endl;
+
+    swap(a, b);
+    swap(x, y);
+    swap(s, t);
+
+    cout &lt;&lt; "swap:" &lt;&lt; endl;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    cout &lt;&lt; s &lt;&lt; " " &lt;&lt; t &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="shell">g++ main.cpp swap.cpp -o prog
+./prog</pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">original:
+3 4
+2.2 3.3
+abcd alpha
+swap:
+4 3
+3.3 2.2
+alpha abcd</pre>
+<p>All three swaps worked, and <code>main</code> called them all by the same name. Overload
+resolution picked <code>swap(int&amp;, int&amp;)</code>, <code>swap(double&amp;, double&amp;)</code>
+and <code>swap(std::string&amp;, std::string&amp;)</code> from the three declarations the header
+brought in.</p>
+<p>Three things about the command line:</p>
+<ul>
+  <li><strong>You list every <code>.cpp</code> file</strong>, separated by spaces. Order does not
+    matter.</li>
+  <li><strong>You never list a <code>.h</code> file.</strong> Headers are not compiled &mdash; they
+    are pasted into the <code>.cpp</code> files that include them, and get compiled as part of those.
+    Typing <code>g++ ... swap.h</code> is a beginner tell.</li>
+  <li><code>-o prog</code> names the single executable produced from all of them. There is one
+    program at the end, not two.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<p>What actually happens under that one command is two distinct phases, and knowing which phase an
+error came from tells you where to look for the mistake.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; from source files to one executable</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Preprocess.</strong> Each <code>#include</code> is replaced by the text of the file
+        it names. Now each <code>.cpp</code> is one long self-contained chunk of code.</li>
+      <li><strong>Compile.</strong> Each chunk is compiled <em>independently</em> into an object file
+        (<code>main.o</code>, <code>swap.o</code>). Calls to functions declared but not defined in
+        that file are left as unresolved holes. This is the phase that checks your syntax and your
+        types &mdash; and it is the phase the header exists to satisfy.</li>
+      <li><strong>Link.</strong> The object files are combined, and every hole is filled by finding
+        the matching definition in one of the others. Anything still missing is a
+        <em>linker</em> error.</li>
+    </ol>
+    <p>You can run the phases yourself. <code>-c</code> means "compile only, do not link":</p>
+<pre class="shell">g++ -c main.cpp      # produces main.o
+g++ -c swap.cpp      # produces swap.o
+g++ main.o swap.o -o prog      # link them together</pre>
+    <p>This is the payoff promised at the top of the section: edit <code>main.cpp</code> and you only
+    need to recompile <code>main.cpp</code>, then relink. <code>swap.o</code> is reused untouched.
+    On a project with two hundred source files, that is the difference between a workable edit-compile
+    cycle and an unusable one.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; forgetting the second source file</span></div>
+  <div class="bd">
+    <p>You will do this within a week of starting your first multi-file assignment. Compile the same
+    project, but name only <code>main.cpp</code>:</p>
+<pre class="shell">g++ main.cpp -o prog</pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">/usr/bin/ld: /tmp/cc4ZjmDr.o: in function `main':
+main.cpp:(.text+0x1f4): undefined reference to `swap(int&amp;, int&amp;)'
+/usr/bin/ld: main.cpp:(.text+0x207): undefined reference to `swap(double&amp;, double&amp;)'
+/usr/bin/ld: main.cpp:(.text+0x21a): undefined reference to `swap(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;)'
+collect2: error: ld returned 1 exit status</pre>
+<p>Read the shape of this message rather than every character.</p>
+<ul>
+  <li><code>/usr/bin/ld</code> is <strong>the linker</strong>, not the compiler. That alone tells you
+    your code compiled fine &mdash; the syntax is correct and the types check. Phase 3 failed, not
+    phase 2.</li>
+  <li><em>"undefined reference to"</em> means: <em>somebody promised me this function exists and
+    nobody delivered a body.</em> The promise was the declaration in <code>swap.h</code>.</li>
+  <li>The horrible third line is just <code>swap(std::string&amp;, std::string&amp;)</code> with
+    <code>std::string</code> spelled out in full. <code>std::string</code> is an abbreviation for
+    <code>std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt;&gt;</code>.
+    You will see this every time a <code>string</code> appears in a linker error; learn to skim past it.</li>
+</ul>
+<p>The fix is to name the missing file:</p>
+<pre class="shell">g++ main.cpp swap.cpp -o prog</pre>
+<p><strong>Compiler error or linker error?</strong> is the first question to ask of any multi-file
+build failure. <em>"was not declared in this scope"</em> means you forgot the
+<code>#include</code>. <em>"undefined reference to"</em> means you forgot the <code>.cpp</code> on the
+command line, or you declared a function and never wrote its body, or the body's signature does not
+exactly match the declaration.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.9</div>
+  <div class="bd">
+    <p>A student's project has <code>area.h</code>, <code>area.cpp</code> and <code>main.cpp</code>.
+    Diagnose each failure and give the fix.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> They compile with <code>g++ main.cpp area.cpp area.h -o prog</code> and get a pile of unfamiliar errors.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>They handed the header to the compiler as if it were a source file. Never name a
+        <code>.h</code> on the command line &mdash; it reaches the compiler through the
+        <code>#include</code> in each <code>.cpp</code>, and naming it separately makes g++ treat it as
+        a compilation unit in its own right (and, as a side effect, leave a stray precompiled-header
+        file lying about).</p>
+<pre class="shell">g++ main.cpp area.cpp -o prog</pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>main.cpp</code> forgot <code>#include "area.h"</code>. Compiler error or linker error?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Compiler</strong> error, in <code>main.cpp</code>: <em>"'area' was not declared in
+        this scope"</em>. Without the header, the compiler has never heard of the function, so it
+        cannot even check the call, let alone leave a hole for the linker.</p>
+        <p>Fix: add <code>#include "area.h"</code> at the top of <code>main.cpp</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>area.h</code> declares <code>double area(double w, double h);</code> but <code>area.cpp</code> defines <code>double area(double w);</code>. What happens?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>main.cpp</code> compiles (the header promised a two-parameter function),
+        <code>area.cpp</code> compiles (a one-parameter function is a perfectly good function), and
+        then the link fails with <em>"undefined reference to `area(double, double)'"</em>.</p>
+        <p>This is the failure mode overloading makes possible: because two functions may share a
+        name, a mismatched parameter list is not "the same function written wrong", it is
+        <em>a different function</em>, and nothing complains until link time. When a linker error names
+        a function that you are certain you wrote, <strong>compare the parameter lists character by
+        character</strong> &mdash; that is almost always where the difference is.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; three defects in the notes' <code>swap.h</code></span></div>
+  <div class="bd">
+    <p>The header printed in the original course notes is shorter than the one above:</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+using namespace std;
+void swap(int &amp;u, int &amp;v);
+void swap(double &amp;u, double &amp;v);
+void swap(string &amp;u, string &amp;v);</code></pre>
+    <p>It compiles and the project runs, but it has three problems, and since a header is exactly the
+    kind of file you copy as a template, they are worth fixing now.</p>
+    <ol>
+      <li><strong>No include guard.</strong> A header gets pasted in wherever it is included, and in a
+        real project it is easy for one <code>.cpp</code> to end up including the same header twice
+        through two different routes. Repeating a <em>declaration</em> is harmless; repeating
+        anything else is not. This is a real error from a two-line header with no guard:
+<pre class="err">In file included from roster.h:1,
+                 from main.cpp:3:
+limits.h:2:11: error: redefinition of 'const int MAX_STUDENTS'
+    2 | const int MAX_STUDENTS = 100;
+      |           ^~~~~~~~~~~~</pre>
+        The cure is the three lines in the corrected <code>swap.h</code>:
+        <code>#ifndef SWAP_H</code> / <code>#define SWAP_H</code> at the top and
+        <code>#endif</code> at the bottom. The first time through, <code>SWAP_H</code> is not defined,
+        so the body is processed and the name gets defined; every later time, the body is skipped.
+        Put one in every header you ever write, named after the file.</li>
+      <li><strong><code>using namespace std;</code> inside a header.</strong> The header is pasted
+        into every file that includes it, so this forces the entire <code>std</code> namespace on all
+        of them whether they wanted it or not &mdash; and they cannot opt out. In a header, spell it
+        <code>std::string</code>. Inside your own <code>.cpp</code> files, <code>using namespace
+        std;</code> remains fine. We look at namespaces properly in Class 16.</li>
+      <li><strong>The name <code>swap</code> collides with <code>std::swap</code>.</strong> The
+        standard library already has a function template called <code>swap</code>, and
+        <code>using namespace std;</code> in <code>main.cpp</code> makes it visible. See the next
+        example for what that costs.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the bug that hides because the answer is right</span></div>
+  <div class="bd">
+    <p>Cut the project down to one <code>swap</code>, put a marker inside it so we can see when it
+    runs, and then <em>forget the <code>#include</code></em> in the driver. Does it fail to compile,
+    fail to link, or print something?</p>
+<div class="codewrap"><div class="cap">swap_marked.cpp</div><pre><code class="language-cpp">// swap.cpp
+#include &lt;iostream&gt;
+#include "swap.h"
+
+void swap(int &amp;u, int &amp;v) {
+    std::cout &lt;&lt; "   [our swap.cpp ran]" &lt;&lt; std::endl;
+    int t = u;
+    u = v;
+    v = t;
+}</code></pre></div>
+<div class="codewrap"><div class="cap">main_noinclude.cpp</div><pre><code class="language-cpp">// main.cpp
+#include &lt;iostream&gt;
+// #include "swap.h"        &lt;-- forgotten
+using namespace std;
+
+int main() {
+    int a = 3, b = 4;
+    swap(a, b);
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="shell">g++ main.cpp swap.cpp -o prog
+./prog</pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">4 3</pre>
+<p>It compiled, it linked, it printed the right answer &mdash; and <strong>our function never
+ran</strong>. The marker line is missing. <code>using namespace std;</code> made
+<code>std::swap</code> visible, the compiler found it, used it, and never gave the missing
+<code>#include</code> a second thought.</p>
+<p>Put the <code>#include "swap.h"</code> back and the marker appears, because now a non-template
+exact match is available and it beats the standard library's template:</p>
+<pre class="out">   [our swap.cpp ran]
+4 3</pre>
+<p>This is the most instructive failure on the page, because the symptom is <em>correct output</em>.
+Nothing warns you. On a project where your version does something the standard one does not &mdash;
+logging, counting, a different definition of "swap" for your own class &mdash; you would spend an
+afternoon on it.</p>
+<p>Two habits prevent it, and you should adopt both: <strong>give your own functions names the
+standard library does not already use</strong> (<code>my_swap</code>, <code>swapValues</code>), and
+<strong>include the header for anything you call</strong>, every time, even when it seems to work
+without it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; split a program into three files</h3>
+
+<p>Turn a one-file statistics program into a project. <code>stats.h</code> declares two functions,
+<code>stats.cpp</code> defines them, <code>main.cpp</code> uses them. <code>mean</code> returns the
+average of an array; <code>minMax</code> reports both the smallest and the largest &mdash; two answers
+from one function, so it needs reference parameters.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here (three files, one box)</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="// ---------- stats.h ----------
+#ifndef STATS_H
+#define STATS_H
+
+// declare mean(...) and minMax(...) here
+
+#endif
+
+// ---------- stats.cpp ----------
+#include &quot;stats.h&quot;
+
+// define them here
+
+// ---------- main.cpp ----------
+#include &lt;iostream&gt;
+#include &quot;stats.h&quot;
+using namespace std;
+
+int main() {
+    int data[] = {12, 4, 19, 7, 3};
+    int lo = 0, hi = 0;
+
+    cout &lt;&lt; &quot;mean = &quot; &lt;&lt; mean(5, data) &lt;&lt; endl;
+    minMax(5, data, lo, hi);
+    cout &lt;&lt; &quot;min  = &quot; &lt;&lt; lo &lt;&lt; endl;
+    cout &lt;&lt; &quot;max  = &quot; &lt;&lt; hi &lt;&lt; endl;
+    return 0;
+}">// ---------- stats.h ----------
+#ifndef STATS_H
+#define STATS_H
+
+// declare mean(...) and minMax(...) here
+
+#endif
+
+// ---------- stats.cpp ----------
+#include "stats.h"
+
+// define them here
+
+// ---------- main.cpp ----------
+#include &lt;iostream&gt;
+#include "stats.h"
+using namespace std;
+
+int main() {
+    int data[] = {12, 4, 19, 7, 3};
+    int lo = 0, hi = 0;
+
+    cout &lt;&lt; "mean = " &lt;&lt; mean(5, data) &lt;&lt; endl;
+    minMax(5, data, lo, hi);
+    cout &lt;&lt; "min  = " &lt;&lt; lo &lt;&lt; endl;
+    cout &lt;&lt; "max  = " &lt;&lt; hi &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 2.10</div>
+  <div class="bd">
+    <p>Complete the exercise above: write all three files, give the compile command, and give the
+    exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Start from the signatures, because they decide everything else.
+      <code>mean</code> reads an array and returns one number, so
+      <code>double mean(int n, const int a[])</code>. <code>minMax</code> has to produce
+      <em>two</em> answers, and a function can only return one value &mdash; so the two answers leave
+      through reference parameters: <code>void minMax(int n, const int a[], int &amp;lo, int
+      &amp;hi)</code>. Note how the parameter list documents the direction of travel: the
+      <code>const</code> things come in, the reference things go out.</p>
+      <p>Those two lines, wrapped in an include guard, <em>are</em> the header.</p>
+<div class="codewrap"><div class="cap">stats.h</div><pre><code class="language-cpp">// stats.h -- declarations only
+#ifndef STATS_H
+#define STATS_H
+
+double mean(int n, const int a[]);
+void minMax(int n, const int a[], int &amp;lo, int &amp;hi);
+
+#endif</code></pre></div>
+<div class="codewrap"><div class="cap">stats.cpp</div><pre><code class="language-cpp">// stats.cpp -- the definitions
+#include "stats.h"
+
+double mean(int n, const int a[]) {
+    double sum = 0.0;
+    for (int i = 0; i &lt; n; ++i) {
+        sum += a[i];
+    }
+    return sum / n;
+}
+
+void minMax(int n, const int a[], int &amp;lo, int &amp;hi) {
+    lo = a[0];
+    hi = a[0];
+    for (int i = 1; i &lt; n; ++i) {
+        if (a[i] &lt; lo) lo = a[i];
+        if (a[i] &gt; hi) hi = a[i];
+    }
+}</code></pre></div>
+<div class="codewrap"><div class="cap">main.cpp</div><pre><code class="language-cpp">// main.cpp -- the driver
+#include &lt;iostream&gt;
+#include "stats.h"
+using namespace std;
+
+int main() {
+    int data[] = {12, 4, 19, 7, 3};
+    int lo = 0, hi = 0;
+
+    cout &lt;&lt; "mean = " &lt;&lt; mean(5, data) &lt;&lt; endl;
+    minMax(5, data, lo, hi);
+    cout &lt;&lt; "min  = " &lt;&lt; lo &lt;&lt; endl;
+    cout &lt;&lt; "max  = " &lt;&lt; hi &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="shell">g++ main.cpp stats.cpp -o prog
+./prog</pre>
+<pre class="out">mean = 9
+min  = 3
+max  = 19</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>sum</code> is declared <code>double</code>, not <code>int</code>. The five values add
+          up to 45 and 45 divided by 5 is exactly 9, so this example would survive integer
+          division &mdash; but change one value and <code>sum / n</code> with two <code>int</code>s would silently
+          truncate. Make the accumulator a <code>double</code> and the bug cannot happen.</li>
+        <li><code>minMax</code> seeds both answers with <code>a[0]</code> and starts the loop at
+          <code>i = 1</code>. Seeding <code>lo</code> with 0 would report a minimum of 0 for an array
+          of positive numbers.</li>
+        <li><code>lo</code> and <code>hi</code> are initialized in <code>main</code> even though
+          <code>minMax</code> overwrites them immediately. That habit costs nothing and saves you the
+          day you call a function that returns early.</li>
+        <li><code>stats.cpp</code> includes <code>stats.h</code>. It does not strictly need to &mdash;
+          but if you later change the header and forget to change the definition, this include is what
+          turns a silent link failure into a clear compile error.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 2</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 are the two exercises the professor poses in the original notes for this
+    lecture: <em>"how to complete this project if the swap functions are in a source file?"</em> and
+    <em>"consider the following two functions and a main program to call them &mdash; how do we write
+    that code?"</em>. Problems 3, 4 and 5 are additional, written in the three formats this course's
+    exams actually use: <em>write C++ statements to carry out the following tasks</em>, <em>write a
+    complete C++ program</em>, and <em>what is the output for each of the following lines</em>.</p>
+    <p>A note on how <code>const</code> and references are examined. They are almost never asked about
+    directly &mdash; you will not be asked "what is a reference?" &mdash; but they are required to be
+    <em>correct</em> in every function signature you are asked to write, and a write-code question
+    typically pays points for the signature line on its own. Getting the parameter list right is
+    therefore among the cheapest marks on the paper.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Complete the multi-file swap project <span class="muted small">(from the course notes)</span></h3>
+
+<p>You are given this driver, which swaps three pairs of variables of three different types. Write
+the header file and the source file that make it work, and give the command that compiles the whole
+project into one executable.</p>
+
+<pre><code class="language-cpp">int main() {
+    int a = 3, b = 4;
+    double x = 2.2, y = 3.3;
+    string s("abcd"), t("alpha");
+    cout &lt;&lt; "original:" &lt;&lt; endl;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    cout &lt;&lt; s &lt;&lt; " " &lt;&lt; t &lt;&lt; endl;
+    swap(a, b);
+    swap(x, y);
+    swap(s, t);
+    cout &lt;&lt; "swap:" &lt;&lt; endl;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    cout &lt;&lt; s &lt;&lt; " " &lt;&lt; t &lt;&lt; endl;
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Work backwards from the three calls. <code>swap(a, b)</code> passes two
+  <code>int</code>s and must change them, so it needs <code>(int &amp;u, int &amp;v)</code> &mdash;
+  no <code>const</code> anywhere, since modification is the whole job. The same reasoning gives the
+  <code>double</code> and <code>string</code> versions. Three functions, one name, three different
+  parameter lists: legal overloads.</p>
+  <p>Then split them. The <em>declarations</em> go in <code>swap.h</code> so that
+  <code>main.cpp</code> can be compiled without ever seeing the bodies; the <em>definitions</em> go
+  in <code>swap.cpp</code>. <code>main.cpp</code> gains one line, <code>#include "swap.h"</code>.</p>
+<div class="codewrap"><div class="cap">swap.h</div><pre><code class="language-cpp">// swap.h -- declarations only
+#ifndef SWAP_H
+#define SWAP_H
+
+#include &lt;string&gt;
+
+void swap(int &amp;u, int &amp;v);
+void swap(double &amp;u, double &amp;v);
+void swap(std::string &amp;u, std::string &amp;v);
+
+#endif</code></pre></div>
+<div class="codewrap"><div class="cap">swap.cpp</div><pre><code class="language-cpp">// swap.cpp -- the definitions
+#include "swap.h"
+
+void swap(int &amp;u, int &amp;v) {
+    int t = u;
+    u = v;
+    v = t;
+}
+
+void swap(double &amp;u, double &amp;v) {
+    double t = u;
+    u = v;
+    v = t;
+}
+
+void swap(std::string &amp;u, std::string &amp;v) {
+    std::string t = u;
+    u = v;
+    v = t;
+}</code></pre></div>
+<div class="codewrap"><div class="cap">main.cpp</div><pre><code class="language-cpp">// main.cpp -- the driver
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include "swap.h"
+using namespace std;
+
+int main() {
+    int a = 3, b = 4;
+    double x = 2.2, y = 3.3;
+    string s("abcd"), t("alpha");
+
+    cout &lt;&lt; "original:" &lt;&lt; endl;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    cout &lt;&lt; s &lt;&lt; " " &lt;&lt; t &lt;&lt; endl;
+
+    swap(a, b);
+    swap(x, y);
+    swap(s, t);
+
+    cout &lt;&lt; "swap:" &lt;&lt; endl;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    cout &lt;&lt; s &lt;&lt; " " &lt;&lt; t &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="shell">g++ main.cpp swap.cpp -o prog
+./prog</pre>
+<pre class="out">original:
+3 4
+2.2 3.3
+abcd alpha
+swap:
+4 3
+3.3 2.2
+alpha abcd</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The three bodies are identical apart from the type of the temporary. That repetition is real,
+      and C++ has a proper answer for it &mdash; <em>function templates</em>, in Class 25. Writing the
+      three by hand now is what makes the template version obvious later.</li>
+    <li>The temporary must have the same type as the things being swapped. A <code>double</code>
+      swap with an <code>int</code> temporary compiles and silently truncates.</li>
+    <li>The header uses <code>std::string</code> and does not say <code>using namespace std;</code>,
+      for the reason given in the warning box in &sect;7. <code>main.cpp</code> keeps its
+      <code>using namespace std;</code>, which is fine because it is a source file.</li>
+    <li>If you name only <code>main.cpp</code> on the command line you get three
+      <em>"undefined reference to"</em> errors from the linker, not from the compiler.</li>
+    <li>In your own work, prefer <code>my_swap</code> to <code>swap</code>. The standard library
+      already defines <code>std::swap</code>, and with <code>using namespace std;</code> in scope the
+      two can be confused &mdash; sometimes silently.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Two functions that call each other <span class="muted small">(from the course notes)</span></h3>
+
+<p>Write a complete program containing two functions, <code>f1</code> and <code>f2</code>, that each
+call the other, and a <code>main</code> that prints <code>f1(3)</code>, <code>f1(-3)</code>,
+<code>f2(4)</code> and <code>f2(-4)</code>. <code>f1</code> returns the string <code>"f1"</code> when
+its argument is non-negative and otherwise returns <code>"f1 first, "</code> followed by whatever
+<code>f2</code> returns; <code>f2</code> returns <code>"f2"</code> when its argument is negative and
+otherwise returns <code>"f2 first, "</code> followed by whatever <code>f1</code> returns.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The bodies are straightforward; the difficulty is entirely structural.
+  Whichever function is written first refers to a function the compiler has not met, and no ordering
+  fixes that because the dependency is a cycle. So declare both signatures before either body:
+  <code>string f1(int a);</code> and <code>string f2(int a);</code>. With the declarations in place
+  the bodies may go anywhere, and putting <code>main</code> first reads nicely.</p>
+  <p>Two details the printed version in the notes gets wrong and you should not: the program returns
+  <code>string</code>, so it needs <code>#include &lt;string&gt;</code>; and a forward declaration
+  ends in a semicolon, not a body.</p>
+<div class="codewrap"><div class="cap">fwdgood.cpp</div><pre><code class="language-cpp">// fwdgood.cpp -- mutual recursion, made legal by two forward declarations
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+string f1(int a);       // forward declaration
+string f2(int a);       // forward declaration
+
+int main() {
+    cout &lt;&lt; f1(3)  &lt;&lt; endl;
+    cout &lt;&lt; f1(-3) &lt;&lt; endl;
+    cout &lt;&lt; f2(4)  &lt;&lt; endl;
+    cout &lt;&lt; f2(-4) &lt;&lt; endl;
+    return 0;
+}
+
+string f1(int a) {
+    if (a &gt;= 0) { return "f1"; }
+    else {
+        string s = string("f1 first, ");
+        return s + f2(a);
+    }
+}
+
+string f2(int a) {
+    if (a &lt; 0) { return "f2"; }
+    else {
+        string s = string("f2 first, ");
+        return s + f1(a);
+    }
+}</code></pre></div>
+<pre class="out">f1
+f1 first, f2
+f2 first, f1
+f2</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Only <em>one</em> of the two functions needs a forward declaration in principle &mdash;
+      whichever is defined second. Declaring both is the normal practice: it costs one line, it puts
+      the whole interface at the top of the file where a reader can find it, and it means you can
+      reorder the definitions later without breaking anything.</li>
+    <li><code>s + f2(a)</code> works because <code>string</code> overloads <code>operator+</code> to
+      mean concatenation. That is operator overloading, and you will write your own in Class 17.</li>
+    <li>The parameter <code>int a</code> is by value on purpose. Neither function modifies it and an
+      <code>int</code> is cheap, so a reference would buy nothing.</li>
+    <li>An alternative structure the professor's version does not use: put the declarations in a
+      header. That is exactly the same idea one file larger, which is what Problem 1 is about.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Write C++ statements <span class="muted small">(added, in the style of the "write C++ statements" exam problem)</span></h3>
+
+<p>Do not write complete programs. Just give a single line, or a few lines, of C++ for each task.</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare an <code>int</code> called <code>count</code> initialized to 0, and then declare <code>alias</code> as a second name for it.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int count = 0;
+int &amp;alias = count;</code></pre>
+    <p>The <code>&amp;</code> goes after the type. A reference must be initialized in the same
+    statement that declares it &mdash; <code>int &amp;alias; alias = count;</code> is an error, and it
+    is <em>not</em> the same thing.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Write the forward declaration of a function <code>scale</code> that multiplies every element of an array of <code>double</code> by a factor, given the array's length. The factor must not be copied and must not be modified.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">void scale(int n, double a[], const double &amp;factor);</code></pre>
+    <p>The array is <strong>not</strong> <code>const</code> here &mdash; the function's job is to
+    change it. The factor is <code>const double &amp;</code> because the task says so. And
+    <code>void</code>, because the result comes back through the array.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Write the forward declaration of a function <code>longest</code> that takes two strings it may not modify and does not copy, and returns a <code>string</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">string longest(const string &amp;s, const string &amp;t);</code></pre>
+    <p>Both parameters are <code>const string &amp;</code>: reference for "do not copy", <code>const</code> for
+    "may not modify". The return type is a plain <code>string</code>, by value &mdash; returning
+    <code>const string&amp;</code> here would be the &sect;4 disaster if the function ever built a new
+    string locally.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Write the lines that stop the header <code>shapes.h</code> being processed twice in one compilation.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">#ifndef SHAPES_H
+#define SHAPES_H
+
+// ... declarations go here ...
+
+#endif</code></pre>
+    <p>The guard name is conventionally the file name in capitals with the dot replaced by an
+    underscore. It only has to be unique within the project. The <code>#endif</code> goes at the very
+    bottom of the file, after everything.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Given <code>void bump(int &amp;n);</code> and the <code>count</code> from part (a), write the statement that makes <code>count</code> equal to 1.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">bump(count);</code></pre>
+    <p>No <code>&amp;</code> at the call site. The reference is declared in the function's parameter
+    list, and the caller writes a perfectly ordinary call &mdash; which is exactly why you have to
+    read the declaration to know that <code>count</code> is about to change.</p>
+    <p><strong>Things to notice.</strong> Every one of these five answers is a signature or a
+    declaration, and that is not an accident. On this course's exams the write-code problems award
+    points for the signature line by itself, and a signature is right or wrong on three decisions:
+    reference or not, <code>const</code> or not, and what comes back. Practice writing them until they are
+    automatic.</p>
+  </div></details>
+</div>
+
+<h3>Problem 4 &mdash; Write a complete C++ program <span class="muted small">(added, in the style of the Problem&nbsp;1 exam question)</span></h3>
+
+<p>Write a complete C++ program that lets the user enter positive integers, one after another, until
+they enter <code>0</code> to stop. The program should then report how many numbers were entered, the
+average of those numbers, and finally print all the inputs that are above the average. Use a separate
+function for each of the three jobs, and give each function the correct parameter list.</p>
+
+<p>A sample run, with the user's typing on the first line:</p>
+
+<pre class="shell">Enter positive integers, 0 to stop: 4 8 15 16 23 42 0</pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Three jobs, three functions, and the parameter list of each falls straight
+  out of the &sect;3 procedure:</p>
+  <ul>
+    <li><code>readNumbers</code> has to fill an array <em>and</em> report how many it read. The array
+      parameter is already effectively by reference (&sect;5), and the count has to come back to
+      <code>main</code>, so it is <code>int &amp;count</code>. Return type <code>void</code>.</li>
+    <li><code>average</code> only reads, so <code>(int n, const double a[])</code>-style:
+      <code>double average(int n, const int a[])</code>.</li>
+    <li><code>printAbove</code> only reads, so the array is <code>const</code> and the limit is a <code>const</code>
+      reference.</li>
+  </ul>
+  <p>The sentinel loop is the standard shape: read one value <em>before</em> the loop, then loop while
+  it is not the sentinel, storing and reading the next one. Guard against a user who types
+  <code>0</code> immediately, otherwise the average divides by zero.</p>
+<div class="codewrap"><div class="cap">aboveavg.cpp</div><pre><code class="language-cpp">// aboveavg.cpp -- read numbers until 0, report the average, list those above it
+#include &lt;iostream&gt;
+using namespace std;
+
+const int CAPACITY = 100;
+
+// fills a[] from cin, stops at the sentinel 0, reports how many were read
+void readNumbers(int a[], int &amp;count) {
+    count = 0;
+    int x;
+    cout &lt;&lt; "Enter positive integers, 0 to stop: ";
+    cin &gt;&gt; x;
+    while (x != 0 &amp;&amp; count &lt; CAPACITY) {
+        a[count] = x;
+        ++count;
+        cin &gt;&gt; x;
+    }
+}
+
+double average(int n, const int a[]) {
+    double sum = 0.0;
+    for (int i = 0; i &lt; n; ++i) {
+        sum += a[i];
+    }
+    return sum / n;
+}
+
+void printAbove(int n, const int a[], const double &amp;limit) {
+    for (int i = 0; i &lt; n; ++i) {
+        if (a[i] &gt; limit) {
+            cout &lt;&lt; a[i] &lt;&lt; " ";
+        }
+    }
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    int data[CAPACITY];
+    int count = 0;
+
+    readNumbers(data, count);
+    if (count == 0) {
+        cout &lt;&lt; "No numbers entered." &lt;&lt; endl;
+        return 0;
+    }
+
+    double avg = average(count, data);
+    cout &lt;&lt; "You entered " &lt;&lt; count &lt;&lt; " numbers." &lt;&lt; endl;
+    cout &lt;&lt; "The average is " &lt;&lt; avg &lt;&lt; endl;
+    cout &lt;&lt; "Above the average: ";
+    printAbove(count, data, avg);
+    return 0;
+}</code></pre></div>
+  <p>Compiled and run with the six numbers and the sentinel fed in:</p>
+<pre class="shell">g++ aboveavg.cpp -o aboveavg
+echo "4 8 15 16 23 42 0" | ./aboveavg</pre>
+<pre class="out">Enter positive integers, 0 to stop: You entered 6 numbers.
+The average is 18
+Above the average: 23 42</pre>
+  <p>(The prompt and the first line of results run together because the input came from a pipe rather
+  than the keyboard. Typed at a terminal, your six numbers would appear right after the colon.)</p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>readNumbers(data, count)</code> changes <em>two</em> things in <code>main</code> by two
+      different mechanisms: the array, because arrays are never copied, and <code>count</code>,
+      because it was declared <code>int &amp;count</code>. Only the second one is visible in the
+      call &mdash; another reason to read declarations.</li>
+    <li><code>sum</code> is a <code>double</code>. With <code>int sum</code>, the expression
+      <code>sum / n</code> would be integer division and this run would report an average of 18 by
+      luck, then get the next one wrong.</li>
+    <li>The comparison <code>a[i] &gt; limit</code> compares an <code>int</code> with a
+      <code>double</code>; C++ converts the <code>int</code> and compares as <code>double</code>,
+      which is what you want. Writing <code>&gt;=</code> would additionally print any value exactly
+      equal to the average &mdash; read the question and decide deliberately.</li>
+    <li>The fixed <code>CAPACITY</code> array is a Class 2 answer. On the real exam this question
+      expects a <code>vector</code>, which grows to fit and needs no capacity guess. Vectors are
+      Class 5, and this program is three lines shorter once you have them.</li>
+    <li>Exam technique: the rubric for this style of question gives a point or two for the "standard
+      beginning and standard ending" &mdash; the <code>#include</code>s, <code>using namespace
+      std;</code>, <code>int main()</code>, <code>return 0;</code> &mdash; and then points per stage.
+      Write the skeleton first, always. Partial credit is real on this problem.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 5 &mdash; What is the output <span class="muted small">(added, in the style of the output-prediction exam problem)</span></h3>
+
+<p>State the exact output of this program. Answer for the whole program, line by line &mdash; and on
+an exam, remember that this style of question carries no partial credit, so trace it rather than
+guessing.</p>
+
+<div class="codewrap"><div class="cap">predict.cpp</div><pre><code class="language-cpp">// predict.cpp -- what does each line print?
+#include &lt;iostream&gt;
+using namespace std;
+
+void mystery(int a, int &amp;b, const int &amp;c) {
+    a = a + 1;
+    b = b + 1;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; " " &lt;&lt; c &lt;&lt; endl;
+}
+
+void show(int x)    { cout &lt;&lt; "int:    " &lt;&lt; x &lt;&lt; endl; }
+void show(double x) { cout &lt;&lt; "double: " &lt;&lt; x &lt;&lt; endl; }
+
+int main() {
+    int p = 10, q = 20, r = 30;
+    mystery(p, q, r);                            // (a)
+    cout &lt;&lt; p &lt;&lt; " " &lt;&lt; q &lt;&lt; " " &lt;&lt; r &lt;&lt; endl;   // (b)
+    mystery(q, q, q);                            // (c)
+    cout &lt;&lt; p &lt;&lt; " " &lt;&lt; q &lt;&lt; " " &lt;&lt; r &lt;&lt; endl;   // (d)
+    show(7);                                     // (e)
+    show(7.0);                                   // (f)
+    show('B');                                   // (g)
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Handle <code>mystery</code> by writing down, for each call, what each of
+  its three parameters is bound to. <code>a</code> is a copy; <code>b</code> is the caller's variable;
+  <code>c</code> is the caller's variable, read-only. Then keep a running table of
+  <code>p</code>, <code>q</code>, <code>r</code>, because line (c) depends on what line (a) did.</p>
+<pre class="out">11 21 30
+10 21 30
+22 22 22
+10 22 30
+int:    7
+double: 7
+int:    66</pre>
+  <table class="trace">
+    <tr><th>Line</th><th>What is bound to what</th><th>Prints</th><th><code>p q r</code> after</th></tr>
+    <tr><td>(a)</td><td><code>a</code> = copy of <code>p</code> (10&rarr;11); <code>b</code> is <code>q</code> (20&rarr;21); <code>c</code> is <code>r</code></td><td><code>11 21 30</code></td><td>10 21 30</td></tr>
+    <tr><td>(b)</td><td>&mdash;</td><td><code>10 21 30</code></td><td>10 21 30</td></tr>
+    <tr><td>(c)</td><td><code>a</code> = copy of <code>q</code> (21&rarr;22); <code>b</code> <em>and</em> <code>c</code> are both <code>q</code>. <code>b = b + 1</code> sets <code>q</code> to 22, and <code>c</code> reads it back as 22</td><td><code>22 22 22</code></td><td>10 22 30</td></tr>
+    <tr><td>(d)</td><td>&mdash;</td><td><code>10 22 30</code></td><td>10 22 30</td></tr>
+    <tr><td>(e)</td><td><code>7</code> is an <code>int</code> literal</td><td><code>int:    7</code></td><td>&mdash;</td></tr>
+    <tr><td>(f)</td><td><code>7.0</code> is a <code>double</code> literal</td><td><code>double: 7</code></td><td>&mdash;</td></tr>
+    <tr><td>(g)</td><td>no <code>show(char)</code>; <code>char</code> converts to <code>int</code> more readily than to <code>double</code></td><td><code>int:    66</code></td><td>&mdash;</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Line (a) is the whole lecture in one call: <code>p</code> survives untouched because it was
+      copied, <code>q</code> changes because it was bound, <code>r</code> is reachable but
+      write-protected.</li>
+    <li>Line (c) is the trap. Passing the same variable as two different parameters is called
+      <strong>aliasing</strong>, and here it means <code>c</code> &mdash; the <em>read-only</em>
+      parameter &mdash; sees a value change under it. <code>const</code> promises that <em>this
+      function</em> will not write through <code>c</code>. It never promised the value could not
+      change by some other route. This surprises experienced programmers too.</li>
+    <li>Line (f) prints <code>7</code>, not <code>7.0</code>: <code>cout</code> drops trailing zeros.
+      Only the label reveals which overload ran.</li>
+    <li>Line (g): <code>'B'</code> is character code 66. If you answered <code>int:    B</code> you
+      lost the point &mdash; the value was converted to <code>int</code> <em>before</em> it was printed, so the
+      letter is gone by the time <code>cout</code> sees it.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li><strong>Call by value</strong> is the default. The parameter is a new local variable holding
+        a <em>copy</em> of the argument, so the function cannot touch the caller's data. That is why
+        <code>swap1</code> did nothing.</li>
+      <li><strong>Call by reference</strong> &mdash; <code>T &amp;x</code> in the parameter list
+        &mdash; binds the parameter to the caller's variable. One object, two names. That is why
+        <code>swap2</code> worked.</li>
+      <li>A reference must be initialized when it is declared and can never be rebound afterwards.
+        The call site looks identical either way, so you must read the declaration.</li>
+      <li><strong><code>const T &amp;x</code></strong> gives you the speed of a reference with the
+        safety of a copy, and is the right default for any parameter that is read-only and expensive
+        to copy. Breaking the promise is <em>"assignment of read-only reference"</em> at compile
+        time. Unlike a plain <code>T &amp;</code>, a <code>const</code> reference will also bind to a
+        literal.</li>
+      <li>A function may <strong>return a reference</strong>, but only to something that outlives the
+        call. Returning a reference to a local variable is undefined behavior; g++ warns
+        <em>"reference to local variable returned"</em>. When in doubt, return by value.</li>
+      <li><strong>Overloading</strong> lets several functions share a name if their parameter lists
+        differ. The return type is not part of the signature and cannot distinguish overloads.</li>
+      <li>An <strong>array parameter is never copied</strong>, so write <code>const int a[]</code>
+        whenever the function only reads it &mdash; and pass the length separately, because an array
+        parameter does not carry one.</li>
+      <li>A <strong>forward declaration</strong> is the signature plus a semicolon. It lets you call a
+        function the compiler has not seen the body of &mdash; essential for mutual recursion and for
+        every multi-file project.</li>
+      <li>A <strong>header file</strong> holds declarations; a <code>.cpp</code> file holds
+        definitions. Include your own headers with <code>#include "name.h"</code>, guard every header
+        with <code>#ifndef</code>/<code>#define</code>/<code>#endif</code>, keep
+        <code>using namespace std;</code> out of them, and compile with
+        <code>g++ main.cpp other.cpp -o prog</code> &mdash; every <code>.cpp</code>,
+        never a <code>.h</code>.</li>
+      <li><em>"was not declared in this scope"</em> is a compiler error &mdash; you forgot an
+        <code>#include</code>. <em>"undefined reference to"</em> is a <strong>linker</strong> error
+        &mdash; you forgot a <code>.cpp</code> on the command line, or the definition's parameter list
+        does not match the declaration's.</li>
+    </ul>
+    <p><strong>Coming up in Class 3:</strong> the operators that show up on every output-prediction
+    question &mdash; prefix versus postfix <code>++</code> and <code>--</code>, controlling how
+    <code>cout</code> formats numbers, and using <code>break</code> and <code>continue</code> to steer
+    a loop.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><a href="lec01_intro_oop.html"><div class="dir">&larr; Previous</div><div class="t">Class 1 &middot; Intro &amp; OOP</div></a><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 3 &middot; Operators &amp; Loops</div><div class="pending">posts Tue Sep 8</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

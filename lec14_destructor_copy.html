@@ -1,0 +1,3152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 14 — Destructor &amp; Copy | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 14 &middot; Destructor &amp; Copy</span><span class="sep">|</span><span class="where">Tue Oct 20</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 14 &middot; CSCI 211</div>
+  <h1>Destructors, Deep Copy and the Copy Constructor</h1>
+  <p class="sub">Class 13 gave your objects a birth certificate. Today they get a death certificate &mdash; and you find out what happens when two objects try to bury the same body.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain why a class that allocates memory with <code>new</code> leaks that memory unless you write a <strong>destructor</strong>, and prove it with a tool.</li>
+      <li>Write a destructor with the correct syntax, and state the three rules: name is <code>~</code> plus the class name, no return type, no parameters.</li>
+      <li>Say exactly when a destructor runs &mdash; end of scope, <code>delete</code>, end of program &mdash; and why you never call one by hand.</li>
+      <li>Describe what the compiler-generated destructor does and, crucially, what it does <em>not</em> do.</li>
+      <li>Explain the difference between a <strong>shallow copy</strong> and a <strong>deep copy</strong>, and predict the two failures a shallow copy causes.</li>
+      <li>Write a correct deep-copy <strong>copy constructor</strong> with the signature <code>ClassName(const ClassName &amp;other)</code>, and say why the parameter must be a reference.</li>
+      <li>Name the three situations that invoke a copy constructor, and recognize the case where C++17 guarantees no copy happens at all.</li>
+      <li>Split a class into declarations inside the class body and definitions outside it, using <code>ClassName::</code> scope resolution.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Where the memory goes when the object dies</a></li>
+    <li><a href="#s2">The destructor</a></li>
+    <li><a href="#s3"><code>new</code> calls the constructor, <code>delete</code> calls the destructor</a></li>
+    <li><a href="#s4">Copy an object that owns memory, and watch it explode</a></li>
+    <li><a href="#s5">Shallow copy versus deep copy</a></li>
+    <li><a href="#s6">Writing the copy constructor</a></li>
+    <li><a href="#s7">The three places a copy constructor fires</a></li>
+    <li><a href="#s8">Declarations inside, definitions outside</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; why this class matters more than most</span></div>
+  <div class="bd">
+    <p>Look at any exam this professor has ever given and you will find the same question: <em>"give an
+    implementation for the destructor, the copy constructor, and the assignment operator."</em> It is on
+    nine of his ten graded papers, and it is always worth 20 to 40 points. Today you learn two of those
+    three; Class 15 finishes the set.</p>
+    <p>There is no way to bluff it. Either you can write these four or five lines from memory, or you
+    cannot. So today's material is worth over-learning.</p>
+  </div>
+</div>
+
+<h2 id="s1"><span class="num">1.</span>Where the memory goes when the object dies</h2>
+
+<p>Everything so far in Classes 9, 10 and 13 has used classes whose data members are plain values &mdash;
+two <code>double</code>s, an <code>int</code>, a <code>string</code>. Those classes are easy: when the
+object goes away, its members go away with it, and that is the end of the story.</p>
+
+<p>Today's class is different, and the difference is the whole lecture. Here is the professor's running
+example for the next two classes: a class whose object <em>owns a block of heap memory</em>.</p>
+
+<div class="codewrap"><div class="cap">pstrings.cpp</div><pre><code class="language-cpp">// pstrings.cpp -- a class that owns dynamic memory but never releases it
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class PStrings {
+public:
+    PStrings(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+    }
+    // destroy
+    // copy
+    // assign
+    void print() const {
+        cout &lt;&lt; "length = " &lt;&lt; length &lt;&lt; endl;
+        cout &lt;&lt; "pstr: ";
+        for (int i = 0; i &lt; length; ++i)
+            cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    PStrings ps(n, s);
+    ps.print();
+    return 0;
+}</code></pre></div>
+
+<p>Read the constructor carefully, because that one line is the source of every problem in this lecture:</p>
+
+<pre><code class="language-cpp">pstr = new string[length];</code></pre>
+
+<p>The object <code>ps</code> itself lives on the stack in <code>main</code>, and it is small &mdash; an
+<code>int</code> and a pointer. But the array of three <code>string</code>s that <code>pstr</code> points
+at lives on the heap, and from Class 8 you know the rule for heap memory: <strong>memory obtained from
+<code>new</code> is released only by <code>delete</code>.</strong> Nothing else releases it. Not the end of a function, not the
+end of a scope, not the end of <code>main</code>.</p>
+
+<p>Now look at the three comment lines the professor left in the middle of the class:</p>
+
+<pre><code class="language-cpp">    // destroy
+    // copy
+    // assign</code></pre>
+
+<p>Those are placeholders for the three functions this class needs and does not have. We write
+<code>destroy</code> and <code>copy</code> today; <code>assign</code> is Class 15.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; memory leak</span></div>
+  <div class="bd">
+    <p>A <strong>memory leak</strong> is heap memory that your program allocated and can no longer reach
+    &mdash; the last pointer to it was destroyed or overwritten &mdash; and which therefore can never be
+    released. The block stays checked out from the operating system until the process exits.</p>
+    <p>A leak is not a crash. The program runs, prints the right answer, and exits with status 0. That is
+    exactly what makes leaks dangerous: nothing tells you. A server that leaks a kilobyte per request
+    looks perfect in testing and falls over after three weeks in production.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the program that "works" and still leaks</span></div>
+  <div class="bd">
+    <p>Compile and run the program above. It prints the right thing. Then run it under
+    <code>valgrind</code>, a memory-checking tool that watches every allocation and release your program
+    performs. Predict what valgrind will say before you look.</p>
+<pre class="shell">g++ pstrings.cpp -o pstrings
+./pstrings
+valgrind --leak-check=full ./pstrings</pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>The program's own output is unremarkable:</p>
+<pre class="out">length = 3
+pstr: a b c</pre>
+    <p>And here is what the tool reports. Everything below is <code>valgrind</code> output, not the
+    program's:</p>
+<pre class="out">==32532== HEAP SUMMARY:
+==32532==     in use at exit: 104 bytes in 1 blocks
+==32532==   total heap usage: 3 allocs, 2 frees, 77,928 bytes allocated
+==32532==
+==32532== 104 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==32532==    at 0x48485C3: operator new[](unsigned long)
+==32532==    by 0x10A658: PStrings::PStrings(int, std::string*)
+==32532==    by 0x10A4A7: main
+==32532==
+==32532== LEAK SUMMARY:
+==32532==    definitely lost: 104 bytes in 1 blocks</pre>
+    <p>Three lines are worth reading twice.</p>
+    <ul>
+      <li><strong>"3 allocs, 2 frees."</strong> The program asked the heap for memory three times and gave
+        it back twice. One block never came home.</li>
+      <li><strong>"definitely lost"</strong> is valgrind's strongest verdict. It does not mean "might be a
+        problem." It means: at the moment the program exited, this block was allocated and no pointer
+        anywhere in the program still referred to it.</li>
+      <li>The stack trace names the culprit exactly &mdash; <code>operator new[]</code>, called from
+        <code>PStrings::PStrings</code>, called from <code>main</code>. That is our
+        <code>new string[length]</code>.</li>
+    </ul>
+    <p>The leak is 104 bytes here because a <code>string</code> object is 32 bytes and the array carries a
+    small bookkeeping header. Three <code>string</code>s do not sound like much. Put this class in a loop
+    that constructs a million objects and you have leaked 100 MB.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>So the question is: <em>who is supposed to call <code>delete []</code>?</em> Not <code>main</code>
+&mdash; <code>main</code> cannot even see <code>pstr</code>, it is private. The only code that knows this
+object owns a heap block is the class itself. So the class has to clean up after itself, and C++ gives it a
+place to do exactly that.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.1</div>
+  <div class="bd">
+    <p>For each of these three classes, decide whether it needs you to write a destructor, and say why in
+    one sentence.</p>
+<pre><code class="language-cpp">class A {
+private:
+    double x, y;
+};
+
+class B {
+private:
+    string name;
+    int count;
+};
+
+class C {
+private:
+    int size;
+    double *data;      // set with data = new double[size];
+};</code></pre>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Class <code>A</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> Two <code>double</code>s are plain values living inside the object itself.
+        When the object dies, the storage that held them is reclaimed automatically, whether that storage
+        was on the stack or inside a bigger object. There is nothing left over to release.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Class <code>B</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No</strong> &mdash; and this one is the interesting case. A <code>string</code> usually
+        <em>does</em> own heap memory: a long string keeps its characters in a heap buffer. But
+        <code>string</code> is itself a class, and it has its own destructor that frees that buffer.
+        When a <code>B</code> object dies, the destructor of its <code>name</code> member runs
+        automatically.</p>
+        <p>That is the rule to remember: <strong>the compiler cleans up members that know how to clean up
+        themselves.</strong> You inherit correct behavior for free from every well-written class you use as
+        a member.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Class <code>C</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Yes.</strong> <code>data</code> is a <em>raw pointer</em>. A raw pointer is a plain value
+        &mdash; a machine address, eight bytes. Destroying it destroys the eight bytes and does nothing
+        whatever to the memory those eight bytes pointed at.</p>
+        <p><strong>Things to notice.</strong> The test that separates (c) from (a) and (b) is not "does the
+        class use the heap?" It is: <em>does this class hold the only pointer to a heap block that nobody
+        else will free?</em> If the answer is yes, the class <strong>owns</strong> that block, and an owner
+        must have a destructor. Every exam question in this course that asks for a destructor has exactly
+        this shape &mdash; one or two raw pointer members and a <code>new</code> in the constructor.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>The destructor</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; destructor</span></div>
+  <div class="bd">
+    <p>A <strong>destructor</strong> is a special member function that is invoked automatically when an
+    object is destroyed. In the professor's words: <em>"the destructor of a class is invoked when an object
+    goes out of scope."</em> Its job is to release any resource the object acquired and is responsible
+    for.</p>
+    <p>It is the mirror image of a constructor. A constructor is the last thing that happens as an object
+    comes into existence; a destructor is the last thing that happens before it stops existing.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; destructor syntax, all three rules</span></div>
+  <div class="bd">
+    <ol>
+      <li>The <strong>name</strong> is a tilde <code>~</code> followed by the name of the class:
+        <code>~PStrings</code>.</li>
+      <li>There is <strong>no return type</strong>. Not <code>void</code>, not anything. Just the name.</li>
+      <li>There are <strong>no parameters</strong>. The parentheses are always empty.</li>
+    </ol>
+    <p>Rules 2 and 3 together have a consequence worth stating separately: <strong>a class has exactly one
+    destructor.</strong> Constructors can be overloaded because they differ in their parameter lists;
+    destructors have no parameter list to differ in. As the professor puts it: <em>"there is only one
+    destructor for a C++ class. Unlike constructors, there are no 'non-default' destructors."</em></p>
+  </div>
+</div>
+
+<p>Applied to our class, the whole thing is three lines:</p>
+
+<pre><code class="language-cpp">class PStrings {
+public:
+    // destroy
+    ~PStrings() {
+        delete [] pstr;
+    }
+    // etc
+};</code></pre>
+
+<p><code>delete []</code>, with the brackets, because the memory came from <code>new string[length]</code>,
+with the brackets. That pairing was the rule in Class 8 and it has not changed.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; you never call a destructor yourself</span></div>
+  <div class="bd">
+    <p>You write the destructor. You do not call it. The compiler emits the call for you at exactly the
+    right moment, and there is no situation in this course where writing <code>obj.~ClassName();</code>
+    by hand is the right thing to do.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; "cleaning up early" by calling the destructor</span></div>
+  <div class="bd">
+    <p>Every semester someone decides to be tidy and calls the destructor explicitly when they are finished
+    with an object. Here is what that costs:</p>
+<pre><code class="language-cpp">int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    PStringsD psd(n, s);
+    psd.~PStringsD();          // "cleaning up early"
+    cout &lt;&lt; "back in main" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+<pre class="out">PStringsD: destructor
+back in main
+Segmentation fault</pre>
+    <p>The destructor ran twice: once because you called it, and once again automatically when
+    <code>psd</code> went out of scope at the closing brace of <code>main</code>. The second run called
+    <code>delete []</code> on a pointer whose memory was already released, and the program died. Under
+    valgrind the same run reports <em>"Invalid free() / delete / delete[] / realloc()"</em> and
+    <em>"3 allocs, 4 frees"</em> &mdash; one more release than allocation.</p>
+    <p>Trust the compiler. Destruction is automatic, and it is one of the few things in C++ that is
+    genuinely hard to get wrong <em>if you leave it alone</em>.</p>
+  </div>
+</div>
+
+<h3>What the compiler generates when you write nothing</h3>
+
+<p>Just as with the default constructor in Class 13, <strong>if you do not write a destructor the compiler
+generates one for you.</strong> And just as with the default constructor, the professor's warning applies:
+the generated one <em>"may not do exactly what we want"</em>. He goes further and says it <em>"typically
+does nothing."</em></p>
+
+<p>That is very nearly right, and the precise version is worth having, because it explains Quick Check 14.1
+(b) as well as (c). The compiler-generated destructor:</p>
+
+<table class="trace">
+  <tr><th>For a member of this kind</th><th>The generated destructor&hellip;</th></tr>
+  <tr><td>built-in type (<code>int</code>, <code>double</code>, <code>char</code>)</td><td>does nothing at all &mdash; there is nothing to do</td></tr>
+  <tr><td>raw pointer (<code>string *pstr</code>)</td><td><strong>does nothing at all</strong> &mdash; it destroys the pointer, not the memory</td></tr>
+  <tr><td>class type (<code>string name</code>, another object)</td><td>calls <em>that</em> member's destructor</td></tr>
+</table>
+
+<p>So for a class made entirely of <code>int</code>s and pointers, "does nothing" is literally true. And on
+our <code>PStrings</code>, the professor's rhetorical question answers itself:
+<em>"How could it know to do such a thing?"</em> The compiler sees a <code>string *</code>. It has no way to
+know whether that pointer owns a heap array, points into the middle of somebody else's array, or is a
+borrowed reference to an object that will outlive us. Calling <code>delete []</code> on it would be a
+catastrophe in two of those three cases. So the compiler does the only safe thing and does nothing.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the generated destructor, watched under valgrind</span></div>
+  <div class="bd">
+    <p>This class has two members that both use the heap: a <code>string</code> long enough that it cannot
+    fit in the string's own small internal buffer, and a raw <code>int *</code>. No destructor is written.
+    Predict how many of the two heap blocks are released.</p>
+<div class="codewrap"><div class="cap">implicit_dtor.cpp</div><pre><code class="language-cpp">// implicit_dtor.cpp -- what does the compiler-generated destructor actually do?
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Holder {
+public:
+    Holder() {
+        tag = "a tag string long enough that it needs heap storage of its own";
+        counts = new int[100];
+        for (int i = 0; i &lt; 100; ++i) counts[i] = i;
+    }
+    // no destructor written -- the compiler generates one
+    void print() const {
+        cout &lt;&lt; "tag = " &lt;&lt; tag &lt;&lt; endl;
+        cout &lt;&lt; "counts[99] = " &lt;&lt; counts[99] &lt;&lt; endl;
+    }
+private:
+    string tag;
+    int *counts;
+};
+
+int main() {
+    Holder h;
+    h.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">tag = a tag string long enough that it needs heap storage of its own
+counts[99] = 99</pre>
+    <p>And the tool's verdict:</p>
+<pre class="out">==2260==   total heap usage: 4 allocs, 3 frees, 78,287 bytes allocated
+==2260==
+==2260== 400 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==2260==    at 0x48485C3: operator new[](unsigned long)
+==2260==    by 0x10933A: Holder::Holder()
+==2260==    by 0x109290: main
+==2260==
+==2260== LEAK SUMMARY:
+==2260==    definitely lost: 400 bytes in 1 blocks</pre>
+    <p>Four allocations, three releases. Exactly one block leaked, and it is the 400 bytes of
+    <code>new int[100]</code> &mdash; one hundred <code>int</code>s at four bytes each. The string's
+    heap buffer <em>was</em> released, and nobody wrote a line of code to do it: the generated destructor
+    for <code>Holder</code> called <code>tag</code>'s destructor, and <code>string</code>'s destructor knows
+    how to free its own buffer.</p>
+    <p>This is the entire rule in one experiment. <strong>The compiler handles members that handle
+    themselves. Raw pointers are on you.</strong></p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.2</div>
+  <div class="bd">
+    <p>Which of these destructor declarations are legal C++, and what does g++ say about the ones that are
+    not? Assume the class is called <code>Widget</code>.</p>
+<pre><code class="language-cpp">~Widget() { delete [] p; }             // (i)
+void ~Widget() { delete [] p; }        // (ii)
+~Widget(int n) { delete [] p; }        // (iii)
+Widget~() { delete [] p; }             // (iv)</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Check each one against the three rules: tilde-then-class-name, no return
+      type, no parameters.</p>
+      <table class="trace">
+        <tr><th>Line</th><th>Verdict</th><th>Which rule</th></tr>
+        <tr><td>(i)</td><td>Legal</td><td>All three satisfied. This is the only correct form.</td></tr>
+        <tr><td>(ii)</td><td><strong>Error</strong></td><td>Rule 2 &mdash; a destructor has no return type, and <code>void</code> is a return type.</td></tr>
+        <tr><td>(iii)</td><td><strong>Error</strong></td><td>Rule 3 &mdash; no parameters, ever.</td></tr>
+        <tr><td>(iv)</td><td><strong>Error</strong></td><td>Rule 1 &mdash; the tilde goes in front of the class name, not behind it.</td></tr>
+      </table>
+      <p>Here is what g++ really says for (ii) and (iii), compiled together in one class:</p>
+<pre class="err">dtor_syntax_err.cpp:7:5: error: return type specification for destructor invalid
+    7 |     void ~Widget() { delete [] p; }        // ERROR: destructors have no return type
+      |     ^~~~
+dtor_syntax_err.cpp:8:5: error: destructors may not have parameters
+    8 |     ~Widget(int n) { delete [] p; }        // ERROR: destructors take no arguments
+      |     ^
+dtor_syntax_err.cpp:8:5: error: 'Widget::~Widget()' cannot be overloaded with 'Widget::~Widget()'</pre>
+      <p><strong>Things to notice.</strong> That third message is the "only one destructor" rule stated by
+      the compiler itself. Once it has thrown away the illegal parameter list on line 8, what is left is a
+      second <code>~Widget()</code>, and it flatly refuses to have two.</p>
+    </div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the tilde that is not a tilde</span></div>
+  <div class="bd">
+    <p>In the original slides for this lecture, the destructor rule is printed as <em>"the name of the
+    destructor is &lsquo;&#8764;&rsquo; followed by the name of the class"</em> &mdash; and the character on
+    the slide is not the ASCII tilde <code>~</code> you type. It is U+223C, the mathematical
+    <em>tilde operator</em>. The two look nearly identical in a slide font and are completely different
+    characters to a compiler.</p>
+    <p>A student who copies that character straight off the slide into a source file gets this:</p>
+<pre class="err">tilde_err.cpp:7:5: error: extended character ∼ is not valid in an identifier
+    7 |     ∼Widget() { delete [] p; }
+      |     ^
+tilde_err.cpp:7:5: error: ISO C++ forbids declaration of '\U0000223cWidget' with no type [-fpermissive]</pre>
+    <p>Always type the tilde from your own keyboard &mdash; on a US layout it is <strong>Shift</strong>
+    plus the backtick key, above Tab. If you have pasted code from a slide, a PDF or a web page and get an
+    "extended character" error, that is what happened, and the fix is to retype the offending character
+    rather than hunt for it.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; give a class its destructor</h3>
+
+<p>Below is a <code>Roster</code> class that stores a dynamically allocated array of names. The constructor
+and <code>print</code> are written for you. Add the destructor. Then say, in a comment, what
+<code>valgrind</code> would report if you left it out.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Roster {
+public:
+    Roster(int n, string names[]) {
+        count = n;
+        people = new string[count];
+        for (int i = 0; i &lt; count; ++i)
+            people[i] = names[i];
+    }
+
+    // TODO: the destructor goes here.
+    //       Remember: ~Roster, no return type, no parameters.
+
+
+    void print() const {
+        cout &lt;&lt; &quot;Roster (&quot; &lt;&lt; count &lt;&lt; &quot;): &quot;;
+        for (int i = 0; i &lt; count; ++i) cout &lt;&lt; people[i] &lt;&lt; &quot; &quot;;
+        cout &lt;&lt; endl;
+    }
+private:
+    int count;
+    string *people;
+};
+
+int main() {
+    string names[] = {&quot;Ana&quot;, &quot;Ben&quot;, &quot;Cy&quot;};
+    Roster r(3, names);
+    r.print();
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Roster {
+public:
+    Roster(int n, string names[]) {
+        count = n;
+        people = new string[count];
+        for (int i = 0; i &lt; count; ++i)
+            people[i] = names[i];
+    }
+
+    // TODO: the destructor goes here.
+    //       Remember: ~Roster, no return type, no parameters.
+
+
+    void print() const {
+        cout &lt;&lt; "Roster (" &lt;&lt; count &lt;&lt; "): ";
+        for (int i = 0; i &lt; count; ++i) cout &lt;&lt; people[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int count;
+    string *people;
+};
+
+int main() {
+    string names[] = {"Ana", "Ben", "Cy"};
+    Roster r(3, names);
+    r.print();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.3</div>
+  <div class="bd">
+    <p>Write the destructor for <code>Roster</code>, and explain why <code>delete people;</code> would be
+    wrong even though it compiles.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> One member owns heap memory: <code>people</code>, allocated with
+      <code>new string[count]</code>. The destructor's only job is to hand that block back. The array form
+      of <code>new</code> demands the array form of <code>delete</code>.</p>
+<pre><code class="language-cpp">    ~Roster() {
+        delete [] people;
+    }</code></pre>
+      <p>That is the whole answer. Notice what is <em>not</em> in it: no loop, no
+      <code>people[i] = "";</code>, no setting <code>count</code> to zero. The object is about to cease to
+      exist; tidying its members is wasted work. The one thing that outlives the object is the heap block,
+      so the heap block is the one thing you deal with.</p>
+      <p><strong>Why <code>delete people;</code> is wrong.</strong> It compiles &mdash; the type is right,
+      it is a <code>string *</code> either way &mdash; so the compiler says nothing. But
+      <code>new string[3]</code> constructed three <code>string</code> objects and recorded somewhere that
+      there are three of them. Plain <code>delete</code> runs <em>one</em> destructor and releases the block
+      from the wrong starting address. This is undefined behavior; in practice it aborts. Here is what
+      really happens to this exact <code>Roster</code> with <code>delete people;</code> in its
+      destructor &mdash; it prints correctly, then dies on the way out:</p>
+<pre class="out">Roster (3): Ana Ben Cy
+munmap_chunk(): invalid pointer
+Aborted</pre>
+      <p><strong>Things to notice.</strong> On this professor's exams, the destructor sub-part is worth
+      3 or 4 points, of which 1 is for the signature line alone. Writing <code>~Roster() {</code> and
+      nothing else already scores. Writing <code>delete</code> where <code>delete []</code> belongs loses
+      the rest.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span><code>new</code> calls the constructor, <code>delete</code> calls the destructor</h2>
+
+<p>Now we can complete the class. The professor names the result <code>PStringsD</code> &mdash;
+<code>PStrings</code> plus a <strong>D</strong>estructor &mdash; and demonstrates it on both kinds of
+object at once: one built on the stack, one built with <code>new</code>.</p>
+
+<div class="codewrap"><div class="cap">pstringsd.cpp</div><pre><code class="language-cpp">// pstringsd.cpp -- PStrings plus a destructor; a stack object and a heap object
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class PStringsD {
+public:
+    PStringsD(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+    }
+    // destroy
+    ~PStringsD() {
+        delete [] pstr;
+    }
+    void print() const {
+        cout &lt;&lt; "length = " &lt;&lt; length &lt;&lt; endl;
+        cout &lt;&lt; "pstr: ";
+        for (int i = 0; i &lt; length; ++i)
+            cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    PStringsD psd(n, s);
+    psd.print();
+
+    PStringsD *ppsd = new PStringsD(n, s);
+    ppsd-&gt;print();
+    delete ppsd;
+    return 0;
+}</code></pre></div>
+
+<p>Run it and valgrind now reports <em>"5 allocs, 5 frees"</em> and
+<em>"All heap blocks were freed &mdash; no leaks are possible."</em> Five rather than two because there are
+two <code>PStringsD</code> objects now, and the second one is itself on the heap.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the two operators, restated for classes</span></div>
+  <div class="bd">
+    <ul>
+      <li><strong>Operator <code>new</code> invokes a suitable default or non-default constructor</strong> to
+        instantiate the object, then hands you a pointer to it.</li>
+      <li><strong>Operator <code>delete</code> invokes the destructor</strong>, then releases the object's own
+        storage.</li>
+    </ul>
+    <p>So <code>delete ppsd;</code> in the program above does two separate things in order: it runs
+    <code>~PStringsD()</code>, which releases the array of three strings, and only then releases the
+    <code>PStringsD</code> object itself. Forget the <code>delete</code> and you leak <em>both</em>.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the three moments a destructor runs</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>End of scope.</strong> A local object is destroyed at the closing brace of the block that
+        declared it. That includes the closing brace of a function, so a parameter or local object dies when
+        the function returns.</li>
+      <li><strong><code>delete</code>.</strong> An object created with <code>new</code> is destroyed exactly
+        when someone calls <code>delete</code> on its pointer &mdash; and never otherwise.</li>
+      <li><strong>End of the program.</strong> Objects in <code>main</code> are destroyed as
+      <code>main</code> returns.</li>
+    </ol>
+    <p>Within a single scope, objects are destroyed in <strong>reverse order of construction</strong>. Last
+    one built is first one destroyed &mdash; the stack of objects unwinds like any other stack.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; watching all three moments</span></div>
+  <div class="bd">
+    <p>This is the professor's class with one addition: each object carries a name, and the constructor and
+    destructor each print a line. Instrumenting special members this way is exactly what his exam questions
+    ask you to do, so get comfortable with it now.</p>
+    <p>Work out the complete output, in order, before you reveal it. There are 14 lines.</p>
+<div class="codewrap"><div class="cap">dtor_when.cpp</div><pre><code class="language-cpp">// dtor_when.cpp -- exactly when does the destructor run?
+class PStringsD {
+public:
+    PStringsD(int n, string s[], string who) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+        name = who;
+        cout &lt;&lt; name &lt;&lt; ": non-default constructor" &lt;&lt; endl;
+    }
+    ~PStringsD() {
+        delete [] pstr;
+        cout &lt;&lt; name &lt;&lt; ": destructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; name &lt;&lt; " (" &lt;&lt; length &lt;&lt; "): ";
+        for (int i = 0; i &lt; length; ++i)
+            cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+    string name;
+};
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+
+    cout &lt;&lt; "--- main begins ---" &lt;&lt; endl;
+    PStringsD outer(n, s, "outer");
+
+    {
+        cout &lt;&lt; "--- inner block begins ---" &lt;&lt; endl;
+        PStringsD inner(n, s, "inner");
+        inner.print();
+        cout &lt;&lt; "--- inner block ends ---" &lt;&lt; endl;
+    }
+
+    PStringsD *heap = new PStringsD(n, s, "heap");
+    heap-&gt;print();
+    cout &lt;&lt; "--- about to delete heap ---" &lt;&lt; endl;
+    delete heap;
+
+    outer.print();
+    cout &lt;&lt; "--- main is about to return ---" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">--- main begins ---
+outer: non-default constructor
+--- inner block begins ---
+inner: non-default constructor
+inner (3): a b c
+--- inner block ends ---
+inner: destructor
+heap: non-default constructor
+heap (3): a b c
+--- about to delete heap ---
+heap: destructor
+outer (3): a b c
+--- main is about to return ---
+outer: destructor</pre>
+    <table class="trace">
+      <tr><th>Line of output</th><th>What triggered it</th></tr>
+      <tr><td><code>inner: destructor</code></td><td><strong>End of scope.</strong> It appears immediately after <code>--- inner block ends ---</code>, i.e. at the closing brace, not at the end of <code>main</code>. The object <code>inner</code> no longer exists after that brace.</td></tr>
+      <tr><td><code>heap: destructor</code></td><td><strong><code>delete</code>.</strong> It appears after <code>--- about to delete heap ---</code>. Remove the <code>delete heap;</code> line and this message never prints at all &mdash; the object simply leaks, destructor and all.</td></tr>
+      <tr><td><code>outer: destructor</code></td><td><strong>End of the program.</strong> It is the very last line, after <code>--- main is about to return ---</code>. Note that it comes <em>after</em> the last statement of <code>main</code> but is still part of <code>main</code>'s execution.</td></tr>
+    </table>
+    <p>Two details students trip on. First, <code>outer</code> was constructed before <code>inner</code>
+    but destroyed after it &mdash; reverse order, exactly as promised. Second, the destructor message for
+    <code>heap</code> is printed by the object, and it prints <em>after</em> the <code>delete [] pstr;</code>
+    in the destructor body. Order inside the destructor body is yours to choose, and on his exams it is
+    specified: some questions say print the message as the <strong>first</strong> instruction, others say
+    the <strong>last</strong>. Read that sentence carefully; it changes the answer.</p>
+    <p>Under valgrind this program reports <em>"6 allocs, 6 frees"</em> and
+    <em>"All heap blocks were freed &mdash; no leaks are possible."</em></p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.4</div>
+  <div class="bd">
+    <p>A class <code>Tag</code> prints <code>"NAME: constructor"</code> when built and
+    <code>"NAME: destructor"</code> when destroyed. Give the exact output of this <code>main</code>.</p>
+<pre><code class="language-cpp">int main() {
+    Tag first("first");
+    Tag second("second");
+    Tag third("third");
+    cout &lt;&lt; "-- work happens here --" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Three objects in one scope. Construction runs top to bottom in declaration
+      order; destruction runs at the closing brace in the exact reverse.</p>
+<pre class="out">first: constructor
+second: constructor
+third: constructor
+-- work happens here --
+third: destructor
+second: destructor
+first: destructor</pre>
+      <p><strong>Things to notice.</strong> The three destructor lines all appear <em>after</em> the
+      <code>return 0;</code> statement's own output, because destruction of local objects is the last thing
+      a function does. On his exam trace questions this is worth remembering as a shape: a block of
+      construction messages, then the body's own output, then the same names in reverse. If your answer has
+      the destructor lines in construction order, you have made the single most common error on this
+      question type.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Copy an object that owns memory, and watch it explode</h2>
+
+<p>We now have a class that allocates in its constructor and releases in its destructor. It is balanced, it
+is leak-free, and it is <strong>still badly broken.</strong> All it takes to find out is to pass one of
+these objects to a function.</p>
+
+<p>The professor writes an ordinary-looking free function, one you have written a hundred times:</p>
+
+<pre><code class="language-cpp">void print(PStringsD psd_copy) {      // by value: a copy is made
+    psd_copy.print();
+}                                     // the copy dies here</code></pre>
+
+<p>Nothing about that is unusual. It takes its argument by value, like <code>swap1</code> back in Class 1,
+so the function gets a copy and cannot disturb the caller's object. That is the whole point of call by
+value. It is supposed to be the <em>safe</em> option.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the crash</span></div>
+  <div class="bd">
+    <p>Here is the complete program. The class is exactly the <code>PStringsD</code> from &sect;3 &mdash;
+    constructor allocates, destructor releases &mdash; and <code>main</code> does two entirely innocuous
+    things: it calls <code>print(psd)</code>, then it calls <code>psd.print()</code>.</p>
+    <p>Predict what happens. Be specific: how many lines print, and does the program finish?</p>
+<div class="codewrap"><div class="cap">shallow_crash.cpp</div><pre><code class="language-cpp">// shallow_crash.cpp -- destructor written, copy constructor NOT written
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class PStringsD {
+public:
+    PStringsD(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+    }
+    ~PStringsD() {
+        delete [] pstr;
+    }
+    void print() const {
+        cout &lt;&lt; "length = " &lt;&lt; length &lt;&lt; endl;
+        cout &lt;&lt; "pstr: ";
+        for (int i = 0; i &lt; length; ++i)
+            cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+void print(PStringsD psd_copy) {      // by value: a copy is made
+    psd_copy.print();
+}                                     // the copy dies here
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    PStringsD psd(n, s);
+    print(psd);
+    psd.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+    <p>It compiles without a single warning, even with <code>-Wall</code>. Then:</p>
+<pre class="out">length = 3
+pstr: a b c
+length = 3
+Segmentation fault</pre>
+    <p>Read that carefully. The <em>copy</em> printed perfectly &mdash; those first two lines are from
+    inside the function. Then <code>psd.print()</code> in <code>main</code> managed to print
+    <code>length = 3</code>, because <code>length</code> is a plain <code>int</code> sitting inside the
+    object and is still perfectly valid. And then it tried to read <code>pstr[0]</code> and the program
+    died.</p>
+    <p>The professor's summary of this program: <em>"a run-time fault occurs when <code>psd.print()</code>
+    executes."</em> That is precisely where it happened.</p>
+    <p>Valgrind explains it in one paragraph. This is tool output:</p>
+<pre class="out">==12667== Invalid read of size 8
+==12667==    at 0x49D3D44: std::operator&lt;&lt;(std::ostream&amp;, std::string const&amp;)
+==12667==    by 0x10A8CC: PStringsD::print() const
+==12667==    by 0x10A52F: main
+==12667==  Address 0x4e26090 is 16 bytes inside a block of size 104 free'd
+==12667==    at 0x484C45D: operator delete[](void*, unsigned long)
+==12667==    by 0x10A82D: PStringsD::~PStringsD()
+==12667==    by 0x10A520: main
+==12667==  Block was alloc'd at
+==12667==    at 0x48485C3: operator new[](unsigned long)
+==12667==    by 0x10A714: PStringsD::PStringsD(int, std::string*)
+==12667==    by 0x10A4E6: main</pre>
+    <p><em>"Invalid read &hellip; inside a block &hellip; free'd &hellip; by
+    <code>PStringsD::~PStringsD()</code>."</em> The block <code>main</code>'s object is reading from was
+    already released &mdash; by a destructor. But <code>main</code>'s object never had its destructor
+    called; it is still alive. So <em>whose</em> destructor freed it?</p>
+    <p>Run to the end and valgrind gives the second half of the answer:</p>
+<pre class="out">==14102== Invalid free() / delete / delete[] / realloc()
+==14102==    at 0x484C45D: operator delete[](void*, unsigned long)
+==14102==    by 0x10A82D: PStringsD::~PStringsD()
+==14102==    by 0x10A544: main
+==14102==  Address 0x4e26080 is 0 bytes inside a block of size 104 free'd
+==14102==
+==14102== HEAP SUMMARY:
+==14102==   total heap usage: 3 allocs, 4 frees, 77,928 bytes allocated</pre>
+    <p><strong>Three allocations, four frees.</strong> One block was released twice. That is the shape of
+    this bug, and once you learn to recognize "more frees than allocs" you can spot it in seconds.</p>
+    <p>(Interesting detail: under valgrind the program did <em>not</em> segfault. Valgrind's own allocator
+    does not hand freed pages back to the operating system immediately, so the invalid reads returned
+    garbage instead of killing the process. This is normal, and it is a good reminder that the visible
+    symptom of undefined behavior is not stable &mdash; the same bug can crash on your machine, run
+    "fine" on the grader's, and corrupt data on a third.)</p>
+
+</div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Shallow copy versus deep copy</h2>
+
+<p>To see what went wrong, ask the question nobody asked: when <code>main</code> called
+<code>print(psd)</code>, and the parameter <code>psd_copy</code> was created as a copy of
+<code>psd</code>&hellip; <strong>who wrote the code that made that copy?</strong></p>
+
+<p>You did not. Just as the compiler will generate a default constructor and a destructor for you, it will
+generate a <strong>copy constructor</strong> &mdash; the function whose job is to build a new object as a
+duplicate of an existing one. And its generated version does the obvious thing, which here is the wrong
+thing. In the professor's words, the compiler-generated copy <em>"simply copies all the data
+members"</em>:</p>
+
+<pre><code class="language-cpp">psd_copy.length = psd.length;
+psd_copy.pstr = psd.pstr;   // pstr in copy points to same
+                            // memory address as pstr in object
+                            // in main program</code></pre>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; shallow copy and deep copy</span></div>
+  <div class="bd">
+    <p>A <strong>shallow copy</strong> copies the values of all the data members, <em>including pointer
+    members</em>. Both objects end up holding the same address, so both point at one single block of
+    memory. This is the compiler's default behavior.</p>
+    <p>A <strong>deep copy</strong> allocates a fresh block of memory for the new object and copies the
+    <em>contents</em> of the original's block into it. The two objects then own two independent blocks that
+    happen to hold equal values.</p>
+    <p>For a class with no pointer members the two are the same thing, which is why you have never had to
+    think about this before. The moment a raw pointer appears in a class, they diverge completely.</p>
+  </div>
+</div>
+
+<p>Here is the picture. After the shallow copy, memory looks like this:</p>
+
+<table class="trace">
+  <tr><th></th><th><code>length</code></th><th><code>pstr</code></th><th>points at</th></tr>
+  <tr><td><code>psd</code> (in <code>main</code>)</td><td>3</td><td><code>0x4e26080</code></td><td rowspan="2" style="vertical-align:middle">one array: <code>"a" "b" "c"</code></td></tr>
+  <tr><td><code>psd_copy</code> (the parameter)</td><td>3</td><td><code>0x4e26080</code></td></tr>
+</table>
+
+<p>Two objects. Two <code>pstr</code> members. <strong>One array.</strong> (The address shown is the real
+one from the run above; it will differ on your machine.)</p>
+
+<p>Everything now follows mechanically. The function <code>print</code> returns, its parameter
+<code>psd_copy</code> goes out of scope, and its destructor runs &mdash; because we wrote one, and it is
+doing exactly what we told it to:</p>
+
+<pre><code class="language-cpp">delete [] pstr;   // releases memory in object in main program</code></pre>
+
+<p>The copy has released the array that <code>main</code>'s object is still using. <code>psd</code> is now
+holding a pointer to freed memory, and it does not know it. That is a <strong>dangling pointer</strong>,
+and reading through it is the segfault we saw. When <code>main</code> ends and <code>psd</code>'s own
+destructor runs, it calls <code>delete []</code> on the same address a second time &mdash; the invalid free
+valgrind reported.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; destructor without copy constructor is worse than neither</span></div>
+  <div class="bd">
+    <p>The version of the class with <strong>no</strong> destructor leaked memory but never crashed. Adding
+    the destructor fixed the leak and introduced a crash, because the class now frees memory it does not
+    exclusively own.</p>
+    <p>The lesson is not "don't write destructors." It is: <strong>a class that owns heap memory needs the
+    destructor <em>and</em> the copy constructor <em>and</em> the assignment operator, as a set.</strong>
+    Writing one of the three and not the others is how you build a class that is worse than the naive
+    version. Class 15 gives this rule its name.</p>
+  </div>
+</div>
+
+<h3>The other half of the damage</h3>
+
+<p>The double free is the loud failure. There is a quieter one, and in a large program it is worse, because
+nothing crashes and you get wrong answers instead.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; writing through one object, reading through the other</span></div>
+  <div class="bd">
+    <p>This class deliberately has <strong>no destructor</strong>, so the double free cannot happen and we
+    can look at the aliasing on its own. It still has no copy constructor, so copies are still shallow. The
+    program builds an object, copies it, changes element 0 <em>of the copy</em>, and prints both.</p>
+    <p>Predict both lines.</p>
+<div class="codewrap"><div class="cap">alias_shallow.cpp</div><pre><code class="language-cpp">// alias_shallow.cpp -- no destructor, no copy constructor: two objects, one array
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class PStrings {
+public:
+    PStrings(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+    }
+    void set(int n, const string &amp;s) {
+        if ((n &gt;= 0) &amp;&amp; (n &lt; length)) pstr[n] = s;
+    }
+    void print() const {
+        cout &lt;&lt; "length = " &lt;&lt; length &lt;&lt; endl;
+        cout &lt;&lt; "pstr: ";
+        for (int i = 0; i &lt; length; ++i)
+            cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    PStrings ps1(n, s);
+    PStrings ps2(ps1);          // compiler-generated copy constructor
+
+    ps2.set(0, "ALPHA");        // change the COPY only... or so you would think
+
+    cout &lt;&lt; "ps1: "; ps1.print();
+    cout &lt;&lt; "ps2: "; ps2.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">ps1: length = 3
+pstr: ALPHA b c
+ps2: length = 3
+pstr: ALPHA b c</pre>
+    <p><code>ps1</code> changed. Nobody asked it to. The line <code>ps2.set(0, "ALPHA");</code> names
+    <code>ps2</code> and only <code>ps2</code>, and it modified an object on the other side of the
+    program.</p>
+    <p>Of course it did &mdash; <code>ps2.pstr</code> and <code>ps1.pstr</code> hold the same address, so
+    <code>pstr[0] = s;</code> inside <code>set</code> writes into the one shared array. Both objects then
+    read that array back.</p>
+    <p>Think about how you would debug this in a real program. You would stare at
+    <code>ps1</code>, find that nothing anywhere assigns to it, and conclude the compiler is broken. The
+    call that damaged it is somewhere else entirely, possibly in another file, and it looks completely
+    innocent.</p>
+    <p>This program also leaks &mdash; deliberately. With no destructor, that one shared array is never
+    released, and valgrind reports <em>"definitely lost: 104 bytes in 1 blocks"</em>. Notice that it is
+    <em>one</em> block, not two: the copy never allocated anything.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.5</div>
+  <div class="bd">
+    <p>Consider this <code>main</code>, using the <code>PStringsD</code> from &sect;4 &mdash; destructor
+    written, copy constructor not written.</p>
+<pre><code class="language-cpp">int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    PStringsD a(n, s);
+    {
+        PStringsD b(a);      // shallow copy
+    }                        // b is destroyed here
+    a.print();               // what happens?
+    return 0;
+}</code></pre>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many blocks of memory does <code>new</code> allocate in this program, and how many times is <code>delete []</code> called?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>One</strong> allocation and <strong>two</strong> calls to <code>delete []</code>.</p>
+        <p><code>a</code>'s constructor allocates once. <code>b</code> is built by the compiler-generated
+        copy constructor, which allocates nothing &mdash; it just copies the pointer value. Then
+        <code>b</code>'s destructor releases the block at the closing brace of the inner scope, and
+        <code>a</code>'s destructor releases the same block again at the end of <code>main</code>.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What does <code>a.print()</code> do?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It reads through a dangling pointer. <code>a.length</code> is still 3, so the first line
+        <code>length = 3</code> prints correctly, and then the loop reads <code>pstr[0]</code> from freed
+        memory. The behavior is undefined: it may print garbage, it may print the original strings
+        (because nothing has reused the memory yet), or it may crash. On the run in &sect;4 it crashed.</p>
+        <p>"It sometimes works" is the worst possible property for a bug to have, and it is the normal
+        property of this one.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Exactly one line needs to change in the class to fix all of this. Which one, in words?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Not a change &mdash; an <em>addition</em>. The class needs a copy constructor that allocates its
+        own array instead of sharing the original's. Once <code>b</code> has its own block, its destructor
+        releases its own block, and <code>a</code> is untouched.</p>
+        <p><strong>Things to notice.</strong> Nothing in <code>main</code> is at fault, and no amount of
+        care in <code>main</code> can avoid the bug &mdash; <code>main</code> cannot even see
+        <code>pstr</code>. The defect is entirely in the class, which is exactly the right place for it to
+        be: fix the class once, and every one of the hundred programs that use it is fixed too. That is the
+        argument for encapsulation showing up as a practical benefit rather than a slogan.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Writing the copy constructor</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; copy constructor</span></div>
+  <div class="bd">
+    <p>A <strong>copy constructor</strong> is the constructor that builds a new object as a duplicate of an
+    existing object of the same class. Like every constructor it runs at the moment an object comes into
+    existence &mdash; the object it builds is brand new and has never held a value before.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; copy constructor syntax</span></div>
+  <div class="bd">
+    <ol>
+      <li>The <strong>name is the class name</strong>, like any constructor.</li>
+      <li>There is <strong>no return type</strong>, like any constructor.</li>
+      <li>It takes <strong>exactly one parameter: a <code>const</code> reference to an object of the same
+        class</strong>.</li>
+    </ol>
+    <p>The professor's own gloss on that list: items 1 and 2 tell the compiler this is a constructor; item 3
+    is what makes it the <em>copy</em> constructor rather than an ordinary non-default constructor. Get item
+    3 slightly wrong &mdash; take an <code>int</code>, take a different class &mdash; and you have written a
+    perfectly legal constructor that the compiler will never call to make a copy.</p>
+<pre><code class="language-cpp">ClassName(const ClassName &amp;other);</code></pre>
+    <p>The parameter name is up to you. The professor writes <code>orig</code> in the copy constructor
+    (the object being copied is the <em>original</em>) and <code>rhs</code> in the assignment operator you
+    will meet in Class 15.</p>
+  </div>
+</div>
+
+<p>And the body, for a class that owns a heap array, is always the same three moves: copy the size,
+<strong>allocate fresh memory</strong>, copy the contents one element at a time.</p>
+
+<pre><code class="language-cpp">class PStringsD {
+public:
+    // copy
+    PStringsD(const PStringsD &amp;orig) {
+        length = orig.length;
+        pstr = new string[length];          // allocate fresh memory
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = orig.pstr[i];         // copy the contents
+    }
+    // etc
+};</code></pre>
+
+<p>Compare that with what the compiler generates &mdash; <code>pstr = orig.pstr;</code> &mdash; and the
+whole lecture is in the difference between those two lines. The compiler copies the <em>pointer</em>. We
+copy what the pointer <em>points at</em>.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; accessing a private member of another object</span></div>
+  <div class="bd">
+    <p>Look at <code>orig.length</code> and <code>orig.pstr</code>. Both are <code>private</code>, and we
+    are reading them from outside the object that owns them. Is that legal?</p>
+    <p><strong>Yes.</strong> <code>private</code> is <em>per class</em>, not per object. Any member function
+    of <code>PStringsD</code> may touch the private members of <em>any</em> <code>PStringsD</code> object it
+    can reach, not merely its own. Without that rule no copy constructor or assignment operator could ever
+    be written.</p>
+    <p>Students routinely add a public getter for this, or make the members public "so the copy constructor
+    can see them." Neither is necessary, and the second throws away your encapsulation for nothing.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same crashing program, now correct</span></div>
+  <div class="bd">
+    <p>Here is <code>shallow_crash.cpp</code> from &sect;4 with the copy constructor added and
+    <strong>nothing else changed</strong> &mdash; <code>main</code> is identical, the free
+    <code>print</code> function is identical, it still takes its argument by value.</p>
+<div class="codewrap"><div class="cap">deep_fixed.cpp</div><pre><code class="language-cpp">// deep_fixed.cpp -- the same program, with a deep-copy copy constructor added
+class PStringsD {
+public:
+    PStringsD(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+    }
+    // destroy
+    ~PStringsD() {
+        delete [] pstr;
+    }
+    // copy
+    PStringsD(const PStringsD &amp;orig) {
+        length = orig.length;
+        pstr = new string[length];          // allocate fresh memory
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = orig.pstr[i];         // copy the contents
+    }
+    void print() const {
+        cout &lt;&lt; "length = " &lt;&lt; length &lt;&lt; endl;
+        cout &lt;&lt; "pstr: ";
+        for (int i = 0; i &lt; length; ++i)
+            cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+void print(PStringsD psd_copy) {
+    psd_copy.print();
+}
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    PStringsD psd(n, s);
+    print(psd);
+    psd.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">length = 3
+pstr: a b c
+length = 3
+pstr: a b c</pre>
+    <p>Four lines, exit status 0, no crash. And the tool report:</p>
+<pre class="out">==21659== HEAP SUMMARY:
+==21659==     in use at exit: 0 bytes in 0 blocks
+==21659==   total heap usage: 4 allocs, 4 frees, 78,032 bytes allocated
+==21659==
+==21659== All heap blocks were freed -- no leaks are possible
+==21659==
+==21659== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</pre>
+    <p>Compare the numbers with &sect;4's run of the same <code>main</code>:</p>
+    <table class="trace">
+      <tr><th>Version</th><th>allocs</th><th>frees</th><th>errors</th><th>Result</th></tr>
+      <tr><td>&sect;1, no destructor</td><td>3</td><td>2</td><td>1 (leak)</td><td>runs, leaks 104 bytes</td></tr>
+      <tr><td>&sect;4, destructor only</td><td>3</td><td>4</td><td>15</td><td>segfault</td></tr>
+      <tr><td>&sect;6, destructor + copy constructor</td><td>4</td><td>4</td><td>0</td><td>correct</td></tr>
+    </table>
+    <p>The extra allocation in the last row <em>is</em> the fix: the copy constructor allocated the array
+    that the parameter <code>psd_copy</code> owns, and <code>psd_copy</code>'s destructor released that one
+    and only that one. Allocs equal frees, errors zero. That is what you are aiming for every time.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Why the parameter must be a reference</h3>
+
+<p>Rule 3 said <code>const</code> <em>reference</em>. The <code>const</code> is good manners &mdash; you are
+not going to modify the thing you are copying, so say so, and it lets you copy from a <code>const</code>
+object. But the <code>&amp;</code> is not manners at all. Without it the code does not compile, and the
+reason is a small piece of pure logic worth walking through.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a copy constructor taking its parameter by value</span></div>
+  <div class="bd">
+    <p>Suppose you forget the ampersand:</p>
+<pre><code class="language-cpp">    PStringsD(PStringsD orig) {          // ERROR: not a reference
+        length = orig.length;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = orig.pstr[i];
+    }</code></pre>
+    <p>Before you read the compiler's answer, reason it out. The parameter <code>orig</code> is taken by
+    value, so calling this function requires making a copy of the argument. What function makes a copy of a
+    <code>PStringsD</code>?</p>
+<details class="soln reveal"><summary></summary><div class="ans">
+    <p>The copy constructor. Which is the function we are trying to call. Which would need to copy
+    <em>its</em> argument, which would need the copy constructor, which would need&hellip; The call can never
+    begin. It is infinite recursion, and not the kind that eventually hits a base case &mdash; the kind that
+    cannot execute a single step.</p>
+    <p>The compiler refuses outright. This is the real message from g++ 13.3:</p>
+<pre class="err">copyval_err.cpp:17:5: error: invalid constructor; you probably meant 'PStringsD (const PStringsD&amp;)'
+   17 |     PStringsD(PStringsD orig) {          // ERROR: not a reference
+      |     ^~~~~~~~~</pre>
+    <p>It is one of the few g++ diagnostics that hands you the corrected line. <em>"You probably meant
+    <code>PStringsD (const PStringsD&amp;)</code>"</em> &mdash; take the hint.</p>
+    <p>A reference parameter breaks the cycle because binding a reference copies nothing. The name
+    <code>orig</code> simply becomes another name for the caller's object, for the duration of the call. No
+    copy is required to start making a copy.</p>
+    <p>Note also what the <code>const</code> buys once the ampersand is there. With
+    <code>PStringsD(PStringsD &amp;orig)</code> &mdash; a reference but not <code>const</code> &mdash; the
+    code compiles, but you can no longer copy from a <code>const</code> object:</p>
+<pre class="err">prac_bugs.cpp:31:17: error: binding reference of type 'Names&amp;' to 'const Names' discards qualifiers
+   31 |     Names local(n);
+      |                 ^
+prac_bugs.cpp:17:18: note:   initializing argument 1 of 'Names::Names(Names&amp;)'
+   17 |     Names(Names &amp;orig) {
+      |           ~~~~~~~^~~~</pre>
+    <p>Since passing objects as <code>const</code> references is the normal way to pass them, a
+    non-<code>const</code> copy constructor breaks in practice almost immediately. Write both the
+    <code>const</code> and the <code>&amp;</code>, every time.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.6</div>
+  <div class="bd">
+    <p>For each of these five declarations inside <code>class Box</code>, say whether it is the copy
+    constructor, some other constructor, or not legal at all.</p>
+<pre><code class="language-cpp">Box(const Box &amp;b);        // (i)
+Box(Box b);               // (ii)
+Box(Box &amp;b);              // (iii)
+Box(const Box *b);        // (iv)
+Box(const Box &amp;b, int n); // (v)</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <table class="trace">
+        <tr><th>Line</th><th>Verdict</th><th>Why</th></tr>
+        <tr><td>(i)</td><td><strong>The copy constructor.</strong></td><td>Class name, no return type, one parameter that is a <code>const</code> reference to the same class. This is the form to memorize.</td></tr>
+        <tr><td>(ii)</td><td><strong>Not legal.</strong></td><td>By value, so calling it would require calling itself. <em>"invalid constructor; you probably meant 'Box (const Box&amp;)'"</em>.</td></tr>
+        <tr><td>(iii)</td><td>A copy constructor, but a defective one.</td><td>It compiles and the compiler will use it, but it cannot copy from a <code>const</code> object or from a temporary. Do not write it.</td></tr>
+        <tr><td>(iv)</td><td>An ordinary non-default constructor.</td><td>A <em>pointer</em> is not a reference. This is a perfectly legal one-argument constructor taking a <code>const Box *</code>, and the compiler will still generate a separate shallow copy constructor behind your back.</td></tr>
+        <tr><td>(v)</td><td>An ordinary non-default constructor.</td><td>Two parameters, so it is not the copy constructor. (It would count if the second parameter had a default value &mdash; but that is beyond this course.)</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> (iv) is the dangerous one on an exam and in real code. It looks
+      close enough to right that students write it and move on, and it costs the signature point <em>and</em>
+      leaves the class with the compiler's shallow copy still in place. Every symbol matters here:
+      <code>const</code>, the ampersand, and the class name repeated.</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; deep-copy a class with two heap members</h3>
+
+<p>This <code>Complex</code> class stores its real and imaginary parts as two separately allocated
+<code>double</code>s. (That is a strange way to store two numbers, and it is exactly the shape this
+professor uses on midterm exams, so practice it.) The constructor is written. Add the destructor and the
+copy constructor, and make each one print an announcement line.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Complex {
+public:
+    Complex(double r, double i) {
+        real = new double;
+        imag = new double;
+        *real = r;
+        *imag = i;
+        cout &lt;&lt; &quot;Complex: non-default constructor&quot; &lt;&lt; endl;
+    }
+
+    // TODO: destructor -- release BOTH doubles, then print
+    //       &quot;Complex: destructor&quot;
+
+
+    // TODO: copy constructor -- allocate two NEW doubles, then copy the
+    //       values across, then print &quot;Complex: copy constructor&quot;
+
+
+    void print() const {
+        cout &lt;&lt; *real &lt;&lt; &quot; + &quot; &lt;&lt; *imag &lt;&lt; &quot;i&quot; &lt;&lt; endl;
+    }
+    void setReal(double r) { *real = r; }
+private:
+    double *real;
+    double *imag;
+};
+
+int main() {
+    Complex a(3.0, 4.0);
+    a.print();
+    Complex b = a;              // copy constructor
+    b.setReal(10.0);
+    b.print();
+    a.print();
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Complex {
+public:
+    Complex(double r, double i) {
+        real = new double;
+        imag = new double;
+        *real = r;
+        *imag = i;
+        cout &lt;&lt; "Complex: non-default constructor" &lt;&lt; endl;
+    }
+
+    // TODO: destructor -- release BOTH doubles, then print
+    //       "Complex: destructor"
+
+
+    // TODO: copy constructor -- allocate two NEW doubles, then copy the
+    //       values across, then print "Complex: copy constructor"
+
+
+    void print() const {
+        cout &lt;&lt; *real &lt;&lt; " + " &lt;&lt; *imag &lt;&lt; "i" &lt;&lt; endl;
+    }
+    void setReal(double r) { *real = r; }
+private:
+    double *real;
+    double *imag;
+};
+
+int main() {
+    Complex a(3.0, 4.0);
+    a.print();
+    Complex b = a;              // copy constructor
+    b.setReal(10.0);
+    b.print();
+    a.print();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.7</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output of the program.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Two pointer members means two <code>new</code>s in every constructor and two
+      <code>delete</code>s in the destructor &mdash; plain <code>delete</code>, not <code>delete []</code>,
+      because these came from <code>new double</code> and not <code>new double[n]</code>. The copy
+      constructor must allocate before it copies; the classic wrong answer is
+      <code>real = orig.real;</code>, which shares the address.</p>
+<div class="codewrap"><div class="cap">complex_deep.cpp</div><pre><code class="language-cpp">    ~Complex() {
+        delete real;
+        delete imag;
+        cout &lt;&lt; "Complex: destructor" &lt;&lt; endl;
+    }
+    Complex(const Complex &amp;orig) {
+        real = new double;
+        imag = new double;
+        *real = *orig.real;
+        *imag = *orig.imag;
+        cout &lt;&lt; "Complex: copy constructor" &lt;&lt; endl;
+    }</code></pre></div>
+<pre class="out">Complex: non-default constructor
+3 + 4i
+Complex: copy constructor
+10 + 4i
+3 + 4i
+Complex: destructor
+Complex: destructor</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>*real = *orig.real;</code> has two dereferences and they are both essential. Dropping the
+          left-hand one gives <code>real = *orig.real;</code>, which will not compile; dropping the
+          right-hand one gives <code>*real = orig.real;</code>, which also will not compile. Dropping both
+          gives <code>real = orig.real;</code>, which compiles perfectly and is the shallow-copy bug.</li>
+        <li>The proof that the deep copy worked is the last two output lines: <code>b</code> reports
+          <code>10 + 4i</code> and <code>a</code> still reports <code>3 + 4i</code>. Had the copy been
+          shallow, both would say <code>10 + 4i</code>.</li>
+        <li>Two destructor lines, not one &mdash; <code>b</code> first, then <code>a</code>, in reverse
+          order of construction. Valgrind reports allocs and frees equal and zero errors.</li>
+        <li>The line <code>Complex b = a;</code> looks like an assignment and is <em>not</em> one. It calls
+          the copy constructor, which is why "copy constructor" appears in the output and not "assignment".
+          That distinction is the first thing Class 15 nails down.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>The three places a copy constructor fires</h2>
+
+<p>We found the copy constructor by way of a function call, but the professor is careful to point out that
+<em>"a function call is not the only occasion"</em>. There are three, and exam trace questions test all of
+them.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; when does a copy constructor run?</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Initializing a new object from an existing one.</strong> Both of these spellings do it,
+        and they are the same thing:
+<pre><code class="language-cpp">PStringsDC psdc2(psdc1);      // copy
+PStringsDC psdc3 = psdc1;     // also copy</code></pre>
+      </li>
+      <li><strong>Passing an object to a function by value.</strong> The parameter is a new object,
+        initialized from the argument.</li>
+      <li><strong>Returning an object from a function by value.</strong> The value handed back to the
+        caller is a new object &mdash; though see the warning below about what C++17 does here.</li>
+    </ol>
+    <p>His remark on case 1 is worth keeping: if an object already exists and you want a second one that is
+    mostly the same, it is simpler to copy it and then change what differs than to build the second one from
+    scratch. <em>"In this respect, a copy constructor is a non-default constructor where the input is a
+    reference to an object of the same class."</em></p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; every special member announces itself</span></div>
+  <div class="bd">
+    <p>Every special member of this class prints its own name, and <code>main</code> labels each statement
+    before executing it. Two helper functions return a <code>PStringsD</code> by value, one by returning a
+    named local variable and one by returning a temporary directly.</p>
+    <p>Work out the whole trace. In particular, count how many times you expect
+    <code>"copy constructor"</code> to appear.</p>
+<div class="codewrap"><div class="cap">copytrace.cpp</div><pre><code class="language-cpp">// copytrace.cpp -- every special member announces itself
+class PStringsD {
+public:
+    PStringsD(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+        cout &lt;&lt; "   PStringsD: non-default constructor" &lt;&lt; endl;
+    }
+    PStringsD(const PStringsD &amp;orig) {
+        length = orig.length;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = orig.pstr[i];
+        cout &lt;&lt; "   PStringsD: copy constructor" &lt;&lt; endl;
+    }
+    ~PStringsD() {
+        delete [] pstr;
+        cout &lt;&lt; "   PStringsD: destructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; "   PStringsD: print, length = " &lt;&lt; length &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+void show(PStringsD copy) {              // situation 2: pass by value
+    copy.print();
+}
+
+PStringsD makeNamed(int n, string s[]) { // situation 3a: return a named local
+    PStringsD local(n, s);
+    return local;
+}
+
+PStringsD makeTemp(int n, string s[]) {  // situation 3b: return a temporary
+    return PStringsD(n, s);
+}
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+
+    cout &lt;&lt; "(1) PStringsD psd(n, s);" &lt;&lt; endl;
+    PStringsD psd(n, s);
+
+    cout &lt;&lt; "(2) PStringsD psd2(psd);" &lt;&lt; endl;
+    PStringsD psd2(psd);
+
+    cout &lt;&lt; "(3) PStringsD psd3 = psd;" &lt;&lt; endl;
+    PStringsD psd3 = psd;
+
+    cout &lt;&lt; "(4) show(psd);" &lt;&lt; endl;
+    show(psd);
+
+    cout &lt;&lt; "(5) PStringsD psd4 = makeNamed(n, s);" &lt;&lt; endl;
+    PStringsD psd4 = makeNamed(n, s);
+
+    cout &lt;&lt; "(6) PStringsD psd5 = makeTemp(n, s);" &lt;&lt; endl;
+    PStringsD psd5 = makeTemp(n, s);
+
+    cout &lt;&lt; "(7) end of main" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+    <p>Compiled with <code>g++</code>:</p>
+<pre class="out">(1) PStringsD psd(n, s);
+   PStringsD: non-default constructor
+(2) PStringsD psd2(psd);
+   PStringsD: copy constructor
+(3) PStringsD psd3 = psd;
+   PStringsD: copy constructor
+(4) show(psd);
+   PStringsD: copy constructor
+   PStringsD: print, length = 3
+   PStringsD: destructor
+(5) PStringsD psd4 = makeNamed(n, s);
+   PStringsD: non-default constructor
+(6) PStringsD psd5 = makeTemp(n, s);
+   PStringsD: non-default constructor
+(7) end of main
+   PStringsD: destructor
+   PStringsD: destructor
+   PStringsD: destructor
+   PStringsD: destructor
+   PStringsD: destructor</pre>
+    <table class="trace">
+      <tr><th>Statement</th><th>What ran</th><th>Why</th></tr>
+      <tr><td>(1)</td><td>non-default constructor</td><td>Ordinary construction from an <code>int</code> and an array.</td></tr>
+      <tr><td>(2)</td><td><strong>copy constructor</strong></td><td>Situation 1 &mdash; a new object initialized from an existing one.</td></tr>
+      <tr><td>(3)</td><td><strong>copy constructor</strong></td><td>Situation 1 again. The <code>=</code> sign is a lie: <code>psd3</code> is being <em>created</em>, so this is a copy, not an assignment.</td></tr>
+      <tr><td>(4)</td><td>copy constructor, then print, then <strong>destructor</strong></td><td>Situation 2. The parameter is a new object; it is destroyed at the closing brace of <code>show</code>, which is why a destructor line appears in the middle of the program.</td></tr>
+      <tr><td>(5)</td><td>non-default constructor <em>only</em></td><td>Situation 3, and no copy happened. See below.</td></tr>
+      <tr><td>(6)</td><td>non-default constructor <em>only</em></td><td>Situation 3, and no copy happened, guaranteed.</td></tr>
+      <tr><td>(7)</td><td>five destructors</td><td><code>psd</code>, <code>psd2</code>, <code>psd3</code>, <code>psd4</code>, <code>psd5</code> &mdash; five live objects at the end of <code>main</code>, destroyed in reverse order.</td></tr>
+    </table>
+    <p>Six <code>PStringsD</code> objects are constructed in all &mdash; the five that survive to the end
+    of <code>main</code>, plus the parameter of <code>show</code> &mdash; and each one allocates exactly one
+    array. Valgrind confirms the balance: <em>"8 allocs, 8 frees &mdash; All heap blocks were freed"</em>,
+    the extra two allocations on each side being the ones the C++ runtime makes for itself before
+    <code>main</code> starts.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; copy elision</span></div>
+  <div class="bd">
+    <p><strong>Copy elision</strong> is the compiler's right to skip a copy that a strict reading of the
+    language would require, when the copy would only move a value from a temporary into its final home.</p>
+    <p>Since <strong>C++17 this is mandatory</strong> in one specific case: when an object is initialized
+    from a temporary of the same type &mdash; including the temporary produced by
+    <code>return ClassName(args);</code> &mdash; there is no copy to elide, because the standard says the
+    object is simply constructed in place. Not "the copy is optimized away." <em>There is no copy.</em></p>
+  </div>
+</div>
+
+<p>That is why lines (5) and (6) print only <code>"non-default constructor"</code>. Their two cases are
+subtly different, and it is worth separating them because only one of the two is guaranteed:</p>
+
+<table class="trace">
+  <tr><th>Case</th><th>What C++17 says</th></tr>
+  <tr><td>(6) <code>return PStringsD(n, s);</code> feeding <code>PStringsD psd5 = makeTemp(...);</code></td><td><strong>Guaranteed.</strong> No copy exists to be made, on any conforming compiler, at any optimization level.</td></tr>
+  <tr><td>(5) <code>return local;</code> feeding <code>PStringsD psd4 = makeNamed(...);</code></td><td><strong>Permitted, not required.</strong> This is called <em>named return value optimization</em>. Every real compiler does it, but a copy constructor must still be <em>available</em>, and in principle it could be called.</td></tr>
+</table>
+
+<p>You can watch the difference. g++ has a flag, <code>-fno-elide-constructors</code>, that turns off every
+elision it is allowed to turn off:</p>
+
+<pre class="shell">g++ -std=c++17 -fno-elide-constructors copytrace.cpp -o copytrace_noelide
+./copytrace_noelide</pre>
+
+<pre class="out">(5) PStringsD psd4 = makeNamed(n, s);
+   PStringsD: non-default constructor
+   PStringsD: copy constructor
+   PStringsD: destructor
+(6) PStringsD psd5 = makeTemp(n, s);
+   PStringsD: non-default constructor</pre>
+
+<p>Case (5) grew a copy constructor and a destructor &mdash; the copy that NRVO normally removes, and the
+death of the local variable it was copied from. Case (6) is unchanged, because the compiler was never
+allowed to make that copy in the first place. That is the difference between "optimization" and "language
+rule", demonstrated.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; elision does not excuse you from writing the copy constructor</span></div>
+  <div class="bd">
+    <p>It would be a serious mistake to read the trace above as "returning by value is free, so I don't need
+    a copy constructor." Cases (2), (3) and (4) all called it, and there is no elision anywhere in sight for
+    them. Copying from a named object that continues to exist afterwards is a real copy and always will be.</p>
+    <p>On this professor's exam trace questions, the rubrics assume exactly the behavior shown here: no copy
+    line for a returned temporary, a copy line for an initialization from a named object. Your job is to
+    write a correct copy constructor and then trace as the compiler actually behaves.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.8</div>
+  <div class="bd">
+    <p>A class <code>MyList</code> prints <code>"MyList: non-default constructor"</code>,
+    <code>"MyList: copy constructor"</code> and <code>"MyList: destructor"</code> from those three members.
+    Give the exact output of this program, compiled with <code>g++</code>.</p>
+<pre><code class="language-cpp">void display(MyList m) {
+    m.print();
+}
+
+int main() {
+    string s[2] = {"cat", "dog"};
+    MyList a(s, 2);
+    MyList b(a);
+    display(b);
+    MyList c = a;
+    c.print();
+    return 0;
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Walk down <code>main</code> one statement at a time and ask of each: is an
+      object being <em>created</em>, and if so from what? Then remember that the parameter of
+      <code>display</code> dies before <code>display</code> returns, and that the three objects in
+      <code>main</code> die at the end in reverse order.</p>
+<pre class="out">MyList: non-default constructor
+MyList: copy constructor
+MyList: copy constructor
+MyList (2 items): cat, dog,
+MyList: destructor
+MyList: copy constructor
+MyList (2 items): cat, dog,
+MyList: destructor
+MyList: destructor
+MyList: destructor</pre>
+      <table class="trace">
+        <tr><th>Statement</th><th>Lines it produces</th></tr>
+        <tr><td><code>MyList a(s, 2);</code></td><td><code>non-default constructor</code></td></tr>
+        <tr><td><code>MyList b(a);</code></td><td><code>copy constructor</code></td></tr>
+        <tr><td><code>display(b);</code></td><td><code>copy constructor</code> (the parameter), the <code>print</code> line, then <code>destructor</code> (the parameter dies)</td></tr>
+        <tr><td><code>MyList c = a;</code></td><td><code>copy constructor</code> &mdash; still an initialization</td></tr>
+        <tr><td><code>c.print();</code></td><td>the <code>print</code> line</td></tr>
+        <tr><td><code>return 0;</code></td><td>three <code>destructor</code> lines: <code>c</code>, <code>b</code>, <code>a</code></td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> Ten lines, and the professor's rubrics for this question format
+      award one point per line with no partial credit for a nearly-right ordering. Two places to lose
+      points: forgetting the destructor line in the middle (the by-value parameter) and putting the three
+      closing destructors in construction order. Also note the trailing comma and space in
+      <code>"cat, dog, "</code> &mdash; his <code>print</code> methods put a separator after every element
+      including the last, and the expected output in his rubrics shows it.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Declarations inside, definitions outside</h2>
+
+<p>Every class so far has had its function bodies written inside the class braces. That is fine for small
+classes and it is what you will do on an exam, where you are handed a class body and asked to fill in the
+members. But a real class is usually written the other way round: the class body lists only
+<em>declarations</em>, and the bodies live below it.</p>
+
+<p>The professor introduces the style with <code>PStringsDC</code> &mdash; <code>PStrings</code> plus
+<strong>D</strong>estructor plus <strong>C</strong>opy constructor.</p>
+
+<pre><code class="language-cpp">class PStringsDC {
+public:
+    PStringsDC(int n, string s[]);          // construct
+    ~PStringsDC();                          // destroy
+    PStringsDC(const PStringsDC &amp;orig);     // copy
+    void set(int n, const string &amp;s);
+    void print() const;
+private:
+    int length;
+    string *pstr;
+};</code></pre>
+
+<p>Read that class body on its own and you can see the entire interface in eleven lines &mdash; what it
+does, what it stores, what it costs to copy. That readability is the point of the style.</p>
+
+<p>The bodies then go outside, each one prefixed with the class name and the <strong>scope resolution
+operator</strong> <code>::</code>, which you first met on <code>std::cout</code> in Class 1:</p>
+
+<pre><code class="language-cpp">// construct
+PStringsDC::PStringsDC(int n, string s[]) {
+    length = n;
+    pstr = new string[length];
+    for (int i = 0; i &lt; length; ++i)
+        pstr[i] = s[i];
+}
+
+// destroy
+PStringsDC::~PStringsDC() {
+    delete [] pstr;
+}
+
+// copy
+PStringsDC::PStringsDC(const PStringsDC &amp;orig) {
+    length = orig.length;
+    pstr = new string[length];
+    for (int i = 0; i &lt; length; ++i)
+        pstr[i] = orig.pstr[i];
+}</code></pre>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; reading the qualified names</span></div>
+  <div class="bd">
+    <p><code>PStringsDC::~PStringsDC()</code> looks alarming the first time. Take it apart:</p>
+    <ul>
+      <li><code>PStringsDC::</code> &mdash; "the thing being defined belongs to class
+        <code>PStringsDC</code>";</li>
+      <li><code>~PStringsDC()</code> &mdash; "and its name is <code>~PStringsDC</code>", the destructor.</li>
+    </ul>
+    <p>The constructor is the same pattern with the name repeated for a different reason:
+    <code>PStringsDC::PStringsDC(...)</code> is "class <code>PStringsDC</code>, member named
+    <code>PStringsDC</code>". Once you see the <code>::</code> as a separator rather than part of either
+    name, all of these read easily.</p>
+    <p>The one thing to watch: <code>const</code> on a method is part of the signature, so a
+    <code>print</code> declared <code>void print() const;</code> must be defined
+    <code>void PStringsDC::print() const {</code>. Drop the trailing <code>const</code> and the compiler
+    tells you the member does not exist.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the deep copy proved, with the professor's own main</span></div>
+  <div class="bd">
+    <p>The class also gains a mutator, <code>set</code>, with a bounds check &mdash; without it we have no
+    way to modify one object and check whether the other changed. Then <code>main</code> does four things:
+    passes the object by value, copies it explicitly, modifies the copy, and prints both.</p>
+    <p>Predict all four blocks of output. The interesting one is the last.</p>
+<div class="codewrap"><div class="cap">pstringsdc.cpp</div><pre><code class="language-cpp">// pstringsdc.cpp -- declarations in the class, definitions outside
+// public method
+void PStringsDC::set(int n, const string &amp;s) {
+    if ((n &gt;= 0) &amp;&amp; (n &lt; length)) pstr[n] = s;
+}
+
+// public method
+void PStringsDC::print() const {
+    cout &lt;&lt; "length = " &lt;&lt; length &lt;&lt; endl;
+    cout &lt;&lt; "pstr: ";
+    for (int i = 0; i &lt; length; ++i)
+        cout &lt;&lt; pstr[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+}
+
+void print(PStringsDC psdc_copy) {
+    psdc_copy.print();
+}
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    string alpha("alpha");
+
+    PStringsDC psdc1(n, s);
+    print(psdc1);
+    psdc1.print();
+
+    PStringsDC psdc2(psdc1);      // copy
+    psdc2.set(0, alpha);
+    psdc2.print();
+    psdc1.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">length = 3
+pstr: a b c
+length = 3
+pstr: a b c
+length = 3
+pstr: alpha b c
+length = 3
+pstr: a b c</pre>
+    <p>The last two blocks are the proof that the deep copy works. <code>psdc2.set(0, alpha)</code> replaced
+    element 0 of <code>psdc2</code>'s array with <code>"alpha"</code>, and <code>psdc1</code> printed
+    <code>a b c</code>, entirely unaffected. Compare that with the &sect;5 experiment, where the identical
+    operation on a shallow copy changed both objects.</p>
+    <p>Valgrind: <em>"5 allocs, 5 frees &mdash; All heap blocks were freed &mdash; ERROR SUMMARY: 0
+    errors."</em> Three of those five allocations are ours, one per object: <code>psdc1</code>'s
+    constructor, the by-value parameter's copy constructor, and <code>psdc2</code>'s copy constructor. The
+    other two are made by the C++ runtime before <code>main</code> ever starts, which is why even the
+    do-nothing program in &sect;1 showed a baseline of two.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a mutator taking a <code>string</code> by value</span></div>
+  <div class="bd">
+    <p>The original notes declare the mutator as <code>void set(int n, string s)</code> &mdash;
+    <code>string</code> by value. It works, but it copies the whole string on every call, and it is
+    inconsistent with every other interface in this course, which takes objects by <code>const</code>
+    reference. It is written here as <code>void set(int n, const string &amp;s)</code>.</p>
+    <p>The general rule, and it is the one Class 2 established: pass small built-in types
+    (<code>int</code>, <code>double</code>, <code>char</code>, <code>bool</code>) by value, and pass
+    everything else &mdash; <code>string</code>, <code>vector</code>, your own classes &mdash; by
+    <code>const</code> reference unless you specifically need a copy. Now that you know a copy of an
+    owning class means a whole extra heap allocation, the cost of getting this wrong is concrete.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.9</div>
+  <div class="bd">
+    <p>A student splits the class as above but writes the definitions like this. Find the error in each of
+    the four and give the corrected line.</p>
+<pre><code class="language-cpp">PStringsDC(int n, string s[]) { }               // (a)
+void PStringsDC::~PStringsDC() { }              // (b)
+PStringsDC::PStringsDC(PStringsDC orig) { }     // (c)
+void PStringsDC::print() { }                    // (d)</code></pre>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>PStringsDC(int n, string s[]) { }</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Missing the <code>PStringsDC::</code> qualifier. As written this is not the class's constructor
+        at all; at namespace scope the compiler reads it as a function declaration and reports a name it has
+        never heard of. Corrected:</p>
+<pre><code class="language-cpp">PStringsDC::PStringsDC(int n, string s[]) { }</code></pre>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>void PStringsDC::~PStringsDC() { }</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The <code>void</code>. A destructor has no return type in its definition either, not just in its
+        declaration. <em>"return type specification for destructor invalid."</em> Corrected:</p>
+<pre><code class="language-cpp">PStringsDC::~PStringsDC() { }</code></pre>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>PStringsDC::PStringsDC(PStringsDC orig) { }</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The parameter is by value, so this is the infinite-recursion case from &sect;6:
+        <em>"invalid constructor; you probably meant 'PStringsDC (const PStringsDC&amp;)'."</em>
+        Corrected:</p>
+<pre><code class="language-cpp">PStringsDC::PStringsDC(const PStringsDC &amp;orig) { }</code></pre>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>void PStringsDC::print() { }</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The declaration inside the class said <code>void print() const;</code>. The trailing
+        <code>const</code> is part of the signature, so this definition does not match anything the class
+        declared, and g++ says <em>"no declaration matches 'void PStringsDC::print()'."</em> Corrected:</p>
+<pre><code class="language-cpp">void PStringsDC::print() const { }</code></pre>
+        <p><strong>Things to notice.</strong> All four errors are in the <em>signature</em>, none in a body.
+        When you split a class this way, the declaration and the definition have to agree character for
+        character apart from the parameter names &mdash; return type, <code>const</code>, reference
+        markers, everything. The fastest way to write the definitions correctly is to copy the declaration
+        line, paste it below the class, delete the semicolon, and insert <code>ClassName::</code> in front
+        of the member's name.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; split a class and add the two special members</h3>
+
+<p>Here is a <code>BookShelf</code> class in the shape this professor uses on final exams: a dynamic array
+of <code>string</code> and a count. The class body is given with declarations only, and
+<code>display</code> is already defined for you. Write the other three definitions, including the
+destructor and the deep-copy constructor. Each should print its announcement as its <em>last</em>
+instruction.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class BookShelf {
+public:
+    BookShelf(const string t[], int n);
+    ~BookShelf();
+    BookShelf(const BookShelf &amp;orig);
+    void display() const;
+private:
+    string *titles;
+    int count;
+};
+
+// TODO: BookShelf::BookShelf(const string t[], int n) -- allocate and copy,
+//       then print &quot;BookShelf: non-default constructor&quot;
+
+
+// TODO: BookShelf::~BookShelf() -- release, then print &quot;BookShelf: destructor&quot;
+
+
+// TODO: BookShelf::BookShelf(const BookShelf &amp;orig) -- deep copy,
+//       then print &quot;BookShelf: copy constructor&quot;
+
+
+void BookShelf::display() const {
+    cout &lt;&lt; &quot;BookShelf (&quot; &lt;&lt; count &lt;&lt; &quot; titles): &quot;;
+    for (int i = 0; i &lt; count; i++) cout &lt;&lt; titles[i] &lt;&lt; &quot;, &quot;;
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    string t[3] = {&quot;Iliad&quot;, &quot;Dune&quot;, &quot;Emma&quot;};
+    BookShelf shelf(t, 3);
+    shelf.display();
+    BookShelf copy = shelf;
+    copy.display();
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class BookShelf {
+public:
+    BookShelf(const string t[], int n);
+    ~BookShelf();
+    BookShelf(const BookShelf &amp;orig);
+    void display() const;
+private:
+    string *titles;
+    int count;
+};
+
+// TODO: BookShelf::BookShelf(const string t[], int n) -- allocate and copy,
+//       then print "BookShelf: non-default constructor"
+
+
+// TODO: BookShelf::~BookShelf() -- release, then print "BookShelf: destructor"
+
+
+// TODO: BookShelf::BookShelf(const BookShelf &amp;orig) -- deep copy,
+//       then print "BookShelf: copy constructor"
+
+
+void BookShelf::display() const {
+    cout &lt;&lt; "BookShelf (" &lt;&lt; count &lt;&lt; " titles): ";
+    for (int i = 0; i &lt; count; i++) cout &lt;&lt; titles[i] &lt;&lt; ", ";
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    string t[3] = {"Iliad", "Dune", "Emma"};
+    BookShelf shelf(t, 3);
+    shelf.display();
+    BookShelf copy = shelf;
+    copy.display();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.10</div>
+  <div class="bd">
+    <p>Write the three missing definitions for <code>BookShelf</code> and give the program's exact
+    output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Each definition is the declaration line with <code>BookShelf::</code>
+      inserted and the semicolon replaced by a body. The constructor allocates <code>n</code> strings and
+      copies them; the destructor does <code>delete []</code>; the copy constructor allocates
+      <code>orig.count</code> strings and copies element by element. All three announcements go last.</p>
+<pre><code class="language-cpp">BookShelf::BookShelf(const string t[], int n) {
+    count = n;
+    titles = new string[count];
+    for (int i = 0; i &lt; count; i++) titles[i] = t[i];
+    cout &lt;&lt; "BookShelf: non-default constructor" &lt;&lt; endl;
+}
+
+BookShelf::~BookShelf() {
+    delete [] titles;
+    cout &lt;&lt; "BookShelf: destructor" &lt;&lt; endl;
+}
+
+BookShelf::BookShelf(const BookShelf &amp;orig) {
+    count = orig.count;
+    titles = new string[count];
+    for (int i = 0; i &lt; count; i++) titles[i] = orig.titles[i];
+    cout &lt;&lt; "BookShelf: copy constructor" &lt;&lt; endl;
+}</code></pre>
+<pre class="out">BookShelf: non-default constructor
+BookShelf (3 titles): Iliad, Dune, Emma,
+BookShelf: copy constructor
+BookShelf (3 titles): Iliad, Dune, Emma,
+BookShelf: destructor
+BookShelf: destructor</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>BookShelf copy = shelf;</code> produced <code>"copy constructor"</code>, not an
+          assignment. Same trap as always.</li>
+        <li>Two destructor lines. <code>copy</code> is destroyed first, then <code>shelf</code>.</li>
+        <li>The copy constructor reads <code>orig.count</code> and <code>orig.titles[i]</code>, both
+          private, from inside a member function of the same class &mdash; legal, as &sect;6 explained.</li>
+        <li>If the announcement had to be the <strong>first</strong> instruction instead, the destructor
+          becomes <code>cout &lt;&lt; ... ; delete [] titles;</code> and the printed order of the last two
+          lines is unchanged &mdash; but on a question where the destructor prints a data member, printing
+          after <code>delete []</code> would read freed memory. Follow the wording exactly.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.11</div>
+  <div class="bd">
+    <p>Here is a class in the style of the midterm exams. Its data is two separately allocated
+    <code>double</code>s.</p>
+<pre><code class="language-cpp">class Matrix {
+public:
+    Matrix(double r, double c) {
+        rows = new double;
+        cols = new double;
+        *rows = r;
+        *cols = c;
+    }
+    // destructor and copy constructor omitted here
+private:
+    double *rows;
+    double *cols;
+};</code></pre>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Give the destructor.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    ~Matrix() {
+        delete rows;
+        delete cols;
+    }</code></pre>
+        <p>Two allocations, so two releases. Plain <code>delete</code>, because these came from
+        <code>new double</code> and not <code>new double[n]</code>. Writing <code>delete [] rows;</code>
+        here is undefined behavior and costs the point.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Give the deep-copy copy constructor.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Matrix(const Matrix &amp;orig) {
+        rows = new double;
+        cols = new double;
+        *rows = *orig.rows;
+        *cols = *orig.cols;
+    }</code></pre>
+        <p>Allocate first, then copy the pointed-at values. The signature line
+        <code>Matrix(const Matrix &amp;orig)</code> is worth a point on its own in his rubrics, so write it
+        even if you are unsure of the body.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A classmate writes the copy constructor as <code>rows = orig.rows; cols = orig.cols;</code>. Describe the two separate failures this causes.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Failure 1 &mdash; double free.</strong> Both objects hold the same two addresses. When
+        both are destroyed, <code>delete rows;</code> runs twice on one block. That is an invalid free; the
+        usual symptom is an abort or a segfault, and valgrind reports more frees than allocs.</p>
+        <p><strong>Failure 2 &mdash; aliasing.</strong> Before either is destroyed, any change to one object
+        is visible through the other, because there is only one <code>double</code> behind both. Code that
+        modifies a copy silently corrupts the original.</p>
+        <p><strong>Things to notice.</strong> Both failures come from the same missing pair of
+        <code>new</code>s, and both are invisible at compile time &mdash; the shallow version compiles
+        cleanly with <code>-Wall</code>. The only defenses are knowing the rule and running valgrind.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 14.12</div>
+  <div class="bd">
+    <p>True or false, with a one-line reason for each: a class whose only data members are an
+    <code>int</code>, a <code>double</code> and a <code>string</code> still needs you to write a destructor
+    and a copy constructor.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>False</strong> for both, and this is worth being able to say out loud in an exam room.</p>
+      <ul>
+        <li><strong>Destructor:</strong> not needed. <code>int</code> and <code>double</code> have nothing
+          to release, and <code>string</code> releases its own storage through its own destructor, which
+          the compiler-generated destructor calls for you.</li>
+        <li><strong>Copy constructor:</strong> not needed. The compiler-generated one copies the
+          <code>int</code>, copies the <code>double</code>, and calls <code>string</code>'s <em>own</em>
+          copy constructor for the <code>string</code> &mdash; which itself does a deep copy of the
+          characters. Member-by-member copying is exactly right when every member copies correctly.</li>
+      </ul>
+      <p><strong>Things to notice.</strong> The professor's Fall 2023 Final asks for the "five special
+      members" of a <code>Box</code> class whose members are three plain <code>double</code>s, and the
+      Summer 2024 Final does the same for a <code>Circle</code>. For those classes the deep copy is
+      <em>vacuous</em> &mdash; the correct answer is a copy constructor that copies the three doubles and
+      prints its announcement, and a destructor whose only job is to print. Write them anyway; that is what
+      the question asks for and the points are there. Just do not go inventing a <code>delete</code> for a
+      class that never called <code>new</code>.</p>
+      <p>The one-sentence test for the whole lecture: <strong>does this class contain a raw pointer that it
+      allocated?</strong> If yes, you owe it a destructor and a deep copy. If no, the compiler's versions
+      are already correct.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 14</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 are the professor's own <code>PStrings</code> exercises from the lecture notes.
+    Problems 3, 4 and 5 are taken from his exam bank &mdash; the <code>Polynomial</code> question from Fall
+    2023 Exam 2 and the <code>MyList</code> question and its trace from the Winter 2025 Final &mdash;
+    restricted to the parts covered by today's material. Problem 6 was written for these notes.</p>
+    <p>Problems 3 and 4 are the single most important thing on this page. This professor asks "give an
+    implementation for the destructor and the copy constructor" on nine of his ten graded papers. Practice
+    until you can write both from a blank page in under two minutes, and remember that the signature line
+    alone earns a point every time.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Fill in <code>// destroy</code> and <code>// copy</code> <span class="muted small">(from the course notes)</span></h3>
+
+<p>Take the <code>PStrings</code> class from &sect;1 &mdash; the one with the three placeholder comments.
+Write the destructor and the copy constructor. Then write a <code>main</code> that builds an object, copies
+it, modifies element 0 of the copy, and prints both objects, so that the output <em>proves</em> the copy is
+deep. You will need a <code>set</code> method too.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The destructor is one statement: <code>delete [] pstr;</code>, matching the
+  <code>new string[length]</code> in the constructor. The copy constructor is three moves &mdash; copy
+  <code>length</code>, allocate a fresh array of that size, copy the elements. The <code>set</code> method
+  needs a bounds check so a bad index cannot write outside the array. Then the proof: change the copy and
+  print both. If the original is unchanged, the copy was deep.</p>
+<div class="codewrap"><div class="cap">prac1.cpp</div><pre><code class="language-cpp">// prac1.cpp -- PStrings with the two missing special members filled in
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class PStrings {
+public:
+    PStrings(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+    }
+    // destroy
+    ~PStrings() {
+        delete [] pstr;
+    }
+    // copy
+    PStrings(const PStrings &amp;orig) {
+        length = orig.length;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = orig.pstr[i];
+    }
+    void set(int n, const string &amp;s) {
+        if ((n &gt;= 0) &amp;&amp; (n &lt; length)) pstr[n] = s;
+    }
+    void print() const {
+        cout &lt;&lt; "length = " &lt;&lt; length &lt;&lt; endl;
+        cout &lt;&lt; "pstr: ";
+        for (int i = 0; i &lt; length; ++i)
+            cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+
+    PStrings ps1(n, s);
+    PStrings ps2(ps1);          // the copy constructor runs here
+
+    ps2.set(0, "ALPHA");        // change the copy only
+
+    cout &lt;&lt; "ps1: "; ps1.print();
+    cout &lt;&lt; "ps2: "; ps2.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">ps1: length = 3
+pstr: a b c
+ps2: length = 3
+pstr: ALPHA b c</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The output <em>is</em> the test. <code>ps1</code> unchanged and <code>ps2</code> changed can only
+      happen if the two objects own separate arrays. Delete the <code>new</code> from the copy constructor
+      and both lines read <code>ALPHA b c</code>.</li>
+    <li>Valgrind reports <em>"All heap blocks were freed &mdash; no leaks are possible"</em> and zero
+      errors. Two objects, two allocations, two releases.</li>
+    <li><code>set</code> takes <code>const string &amp;s</code> rather than <code>string s</code>. The
+      original notes use the by-value form; the reference form avoids copying the string on every call.</li>
+    <li>The bounds check <code>(n &gt;= 0) &amp;&amp; (n &lt; length)</code> silently ignores a bad index.
+      That is the professor's choice and it is defensible for a small class. A production class would
+      throw, but exceptions are outside this course.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Predict the output of the professor's <code>PStringsDC</code> program <span class="muted small">(from the course notes)</span></h3>
+
+<p>The <code>PStringsDC</code> class from &sect;8 has a constructor, a destructor, a deep-copy copy
+constructor, <code>set</code> and <code>print</code>. Give the exact output of this <code>main</code>, and
+then say what each of the four output blocks would become if the copy constructor were deleted from the
+class.</p>
+
+<pre><code class="language-cpp">void print(PStringsDC psdc_copy) {
+    psdc_copy.print();
+}
+
+int main() {
+    int n = 3;
+    string s[] = {"a", "b", "c"};
+    string alpha("alpha");
+
+    PStringsDC psdc1(n, s);
+    print(psdc1);
+    psdc1.print();
+
+    PStringsDC psdc2(psdc1);
+    psdc2.set(0, alpha);
+    psdc2.print();
+    psdc1.print();
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> <code>print</code> takes its argument by value, so a copy is made and destroyed
+  inside the call, but nothing is printed about that &mdash; this class has no announcement messages. So
+  the visible output is four calls to <code>print</code>, two lines each. The only question that requires
+  thought is the fourth block: has <code>psdc1</code> been disturbed by the <code>set</code> call on
+  <code>psdc2</code>?</p>
+<pre class="out">length = 3
+pstr: a b c
+length = 3
+pstr: a b c
+length = 3
+pstr: alpha b c
+length = 3
+pstr: a b c</pre>
+  <p><strong>Without the copy constructor.</strong> The class still has its destructor, so this is exactly
+  the &sect;4 situation. Walking it through:</p>
+  <table class="trace">
+    <tr><th>Statement</th><th>What happens with no copy constructor</th></tr>
+    <tr><td><code>print(psdc1);</code></td><td>The parameter shallow-copies <code>psdc1</code>'s pointer, prints <code>a b c</code> correctly, and then its destructor releases the array <code>psdc1</code> is still using.</td></tr>
+    <tr><td><code>psdc1.print();</code></td><td>Reads freed memory. Undefined behavior &mdash; on the run in &sect;4 this printed <code>length = 3</code> and then crashed.</td></tr>
+    <tr><td>everything after</td><td>Never reached.</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The by-value parameter of the free function <code>print</code> is easy to miss because the function
+      looks so harmless. It is the reason the professor wrote it: an ordinary-looking function call, no
+      pointers in sight in <code>main</code>, and the program is destroyed.</li>
+    <li>Notice that the shallow version would fail on the <em>second</em> call, not the first. Whichever
+      object outlives the other is the one that reads freed memory.</li>
+    <li>Blocks 3 and 4 are the payoff: <code>alpha b c</code> then <code>a b c</code>. If a question like
+      this asks you to "explain the output", that pair of lines is the entire explanation &mdash; separate
+      arrays, separate lives.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; <code>Polynomial</code>: destructor and deep copy <span class="muted small">(from the Fall 2023 Exam 2)</span></h3>
+
+<p>Given the following class, give an implementation for (a) the destructor and (b) the copy constructor,
+performing a deep copy. (The original exam question also asks for the assignment operator and
+<code>operator+</code>; those are Classes 15 and 17.)</p>
+
+<pre><code class="language-cpp">class Polynomial {
+public:
+    Polynomial(double c[], int d) {
+        degree = d;
+        coefficients = new double[degree + 1];
+        for (int i = degree; i &gt;= 0; i--) { coefficients[i] = c[i]; }
+    }
+    void print() {
+        for (int i = degree; i &gt;= 1; i--) {
+            cout &lt;&lt; coefficients[i] &lt;&lt; "*x^" &lt;&lt; i &lt;&lt; " + ";
+        }
+        cout &lt;&lt; coefficients[0] &lt;&lt; endl;
+    }
+    // destructor, copy constructor, assignment operation, and
+    // operation+ overloading omitted here
+protected:
+    double *coefficients;
+    int degree;
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Give an implementation for the destructor. [3 points]</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    ~Polynomial() {
+        delete [] coefficients;
+    }</code></pre>
+    <p>The rubric for this part is <em>1 point for the title line, 2 points for deleting the dynamically
+    allocated array</em>. Note <code>delete []</code> with brackets: the constructor used
+    <code>new double[degree + 1]</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Give an implementation for the copy constructor to do the deep copy. [4 points]</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Same three moves as always, with one wrinkle: the array holds
+    <code>degree + 1</code> coefficients, not <code>degree</code>, because a polynomial of degree 2 has
+    coefficients for <code>x^2</code>, <code>x^1</code> and <code>x^0</code>. Copy <code>degree</code>,
+    allocate <code>degree + 1</code> doubles, loop from 0 to <code>degree</code> inclusive.</p>
+<pre><code class="language-cpp">    Polynomial(const Polynomial &amp;orig) {
+        degree = orig.degree;
+        coefficients = new double[degree + 1];
+        for (int i = 0; i &lt;= degree; i++) {
+            coefficients[i] = orig.coefficients[i];
+        }
+    }</code></pre>
+    <p>The rubric: <em>1 point title line, 1 point allocating the dynamic array, 2 points copying the
+    data</em>.</p>
+    <p>Here is the complete class with both parts in place, plus a <code>setCoefficient</code> so the deep
+    copy can be demonstrated:</p>
+<div class="codewrap"><div class="cap">prac_poly.cpp</div><pre><code class="language-cpp">// prac_poly.cpp -- Polynomial: the non-default constructor and print are given;
+//                  the destructor and the deep-copy copy constructor are the answer.
+#include &lt;iostream&gt;
+using namespace std;
+
+class Polynomial {
+public:
+    Polynomial(double c[], int d) {
+        degree = d;
+        coefficients = new double[degree + 1];
+        for (int i = degree; i &gt;= 0; i--) { coefficients[i] = c[i]; }
+    }
+    // (a) destructor
+    ~Polynomial() {
+        delete [] coefficients;
+    }
+    // (b) copy constructor -- deep copy
+    Polynomial(const Polynomial &amp;orig) {
+        degree = orig.degree;
+        coefficients = new double[degree + 1];
+        for (int i = 0; i &lt;= degree; i++) {
+            coefficients[i] = orig.coefficients[i];
+        }
+    }
+    void print() {
+        for (int i = degree; i &gt;= 1; i--) {
+            cout &lt;&lt; coefficients[i] &lt;&lt; "*x^" &lt;&lt; i &lt;&lt; " + ";
+        }
+        cout &lt;&lt; coefficients[0] &lt;&lt; endl;
+    }
+    void setCoefficient(int i, double v) {
+        if ((i &gt;= 0) &amp;&amp; (i &lt;= degree)) coefficients[i] = v;
+    }
+protected:
+    double *coefficients;
+    int degree;
+};
+
+int main() {
+    double a1[3] = {1.1, 2.2, 3.3};
+    Polynomial p1(a1, 2);
+    p1.print();
+
+    Polynomial p2(p1);          // copy constructor
+    p2.setCoefficient(0, 9.9);  // change the copy only
+    p2.print();
+    p1.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">3.3*x^2 + 2.2*x^1 + 1.1
+3.3*x^2 + 2.2*x^1 + 9.9
+3.3*x^2 + 2.2*x^1 + 1.1</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>Valgrind: <em>"All heap blocks were freed &mdash; no leaks are possible"</em>, zero errors.</li>
+      <li><code>degree + 1</code> appears in the constructor, in the copy constructor and nowhere else. If
+        you allocate <code>new double[degree]</code> in the copy constructor you get an array one element
+        too short and the loop writes past the end &mdash; a heap buffer overflow that valgrind catches
+        instantly and the compiler never mentions.</li>
+      <li>The loop direction does not matter for correctness. The professor's constructor counts down and
+        the rubric's copy constructor counts up; both touch every index from 0 to <code>degree</code>.</li>
+      <li>The data is <code>protected</code> rather than <code>private</code>. That makes no difference to
+        anything in this problem &mdash; it matters in Class 19, when a derived class needs access.</li>
+    </ul>
+  </div></details>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; two errata in that exam question</span></div>
+  <div class="bd">
+    <p>The <code>Polynomial</code> question is reproduced faithfully above except for two things that were
+    corrected.</p>
+    <ul>
+      <li>The original prints the class body ending with <code>}</code> and no semicolon. A class definition
+        must end with <code>};</code> &mdash; without it, compilation fails at the line <em>after</em> the
+        class, which is a genuinely confusing error to debug. Ironically, his own rubric for the derived-class
+        question awards a point for writing that semicolon.</li>
+      <li>The comments in the original <code>main</code> claim <code>p1.print()</code> shows
+        <code>1.1*x^2 + 2.2*x^1 + 3.3</code>. It does not. With <code>a1[3] = {1.1, 2.2, 3.3}</code> and
+        degree 2, <code>coefficients[2]</code> is 3.3 and <code>coefficients[0]</code> is 1.1, and
+        <code>print</code> counts down from the highest power. The real output, verified above, is
+        <code>3.3*x^2 + 2.2*x^1 + 1.1</code>. If an exam comment and the code disagree, <strong>trust the
+        code</strong> &mdash; and if you have time, say in one line why they disagree.</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Problem 4 &mdash; <code>MyList</code>: destructor and copy constructor with announcements <span class="muted small">(from the Winter 2025 Final)</span></h3>
+
+<p>Given the following class: (a) implement a destructor that prints <code>"MyList: destructor"</code> as
+its <strong>last</strong> instruction [3 points]; (b) implement a copy constructor that does a deep copy and
+prints <code>"MyList: copy constructor"</code> as its last instruction [5 points].</p>
+
+<pre><code class="language-cpp">class MyList {
+public:
+    MyList() : items(nullptr), size(0) {
+        cout &lt;&lt; "MyList: default constructor" &lt;&lt; endl;
+    }
+    MyList(const string s[], int n) : items(new string[n]), size(n) {
+        for (int i = 0; i &lt; size; i++) items[i] = s[i];
+        cout &lt;&lt; "MyList: non-default constructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; "MyList (" &lt;&lt; size &lt;&lt; " items): ";
+        for (int i = 0; i &lt; size; i++) cout &lt;&lt; items[i] &lt;&lt; ", ";
+        cout &lt;&lt; endl;
+    }
+    // destructor, copy constructor, assignment operation,
+    // and operation+ overloading omitted here
+protected:
+    string *items;
+    int size;
+};</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The wording matters twice. "As its <em>last</em> instruction" fixes the order
+  inside each body: do the work, then print. And "deep copy" fixes the copy constructor: allocate before
+  copying. Note also that the default constructor leaves <code>items</code> as <code>nullptr</code> with
+  <code>size</code> 0, so the destructor has to survive being called on an empty list &mdash; which it does,
+  because <code>delete []</code> on a null pointer is defined to do nothing.</p>
+<pre><code class="language-cpp">    ~MyList() {
+        delete [] items;
+        cout &lt;&lt; "MyList: destructor" &lt;&lt; endl;
+    }
+
+    MyList(const MyList &amp;orig) {
+        size = orig.size;
+        items = new string[size];
+        for (int i = 0; i &lt; size; i++) items[i] = orig.items[i];
+        cout &lt;&lt; "MyList: copy constructor" &lt;&lt; endl;
+    }</code></pre>
+  <p>Complete and running, with a <code>main</code> that exercises all three constructors:</p>
+<div class="codewrap"><div class="cap">prac_mylist.cpp</div><pre><code class="language-cpp">int main() {
+    string s[3] = {"red", "blue", "yellow"};
+    MyList empty;
+    empty.print();
+    MyList a(s, 3);
+    a.print();
+    MyList b = a;               // copy constructor
+    b.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">MyList: default constructor
+MyList (0 items):
+MyList: non-default constructor
+MyList (3 items): red, blue, yellow,
+MyList: copy constructor
+MyList (3 items): red, blue, yellow,
+MyList: destructor
+MyList: destructor
+MyList: destructor</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>MyList (0 items): </code> prints with a trailing space and no items &mdash; the loop body
+      never runs. Reproduce that faithfully on a trace question.</li>
+    <li>Three destructor lines at the end, in reverse order: <code>b</code>, <code>a</code>,
+      <code>empty</code>. Since none of them print a name they are indistinguishable, but the
+      <em>count</em> is graded.</li>
+    <li>The constructors use <strong>member initializer lists</strong> from Class 13:
+      <code>: items(new string[n]), size(n)</code>. The allocation happens in the initializer list rather
+      than the body, which is perfectly normal. Your copy constructor may use either style; the version
+      above assigns in the body to keep the three moves visible.</li>
+    <li>Valgrind reports zero leaks and zero errors, including for the empty list.</li>
+    <li>The original exam printout of this class contains three typos: <code>null</code> instead of
+      <code>nullptr</code>, <code>item[i]</code> instead of <code>items[i]</code> inside
+      <code>print</code>, and <code>sting *items</code> instead of <code>string *items</code>. All three
+      are corrected above. If a stem you are given does not compile, fix the obvious typo, note it, and
+      answer the question that was meant.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 5 &mdash; Trace the special members <span class="muted small">(from the Winter 2025 Final, adapted)</span></h3>
+
+<p>Assuming your <code>MyList</code> class is correctly implemented and prints the corresponding messages,
+what is the output of the following program? Compile with <code>g++</code>.</p>
+
+<pre><code class="language-cpp">void display(MyList m) {
+    m.print();
+}
+
+int main() {
+    string s[2] = {"cat", "dog"};
+    MyList a(s, 2);
+    MyList b(a);
+    display(b);
+    MyList c = a;
+    c.print();
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Take one statement at a time and ask two questions of each: is an object being
+  <em>created</em>, and is an object being <em>destroyed</em>? Creation from an existing object of the same
+  class means the copy constructor. Destruction happens at the end of the scope the object was declared in
+  &mdash; and the parameter of <code>display</code> was declared in <code>display</code>.</p>
+<div class="codewrap"><div class="cap">prac_trace.cpp</div><pre><code class="language-cpp">void display(MyList m) {
+    m.print();
+}
+
+int main() {
+    string s[2] = {"cat", "dog"};
+    MyList a(s, 2);
+    MyList b(a);
+    display(b);
+    MyList c = a;
+    c.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">MyList: non-default constructor
+MyList: copy constructor
+MyList: copy constructor
+MyList (2 items): cat, dog,
+MyList: destructor
+MyList: copy constructor
+MyList (2 items): cat, dog,
+MyList: destructor
+MyList: destructor
+MyList: destructor</pre>
+  <table class="trace">
+    <tr><th>Statement</th><th>Output produced</th><th>Reason</th></tr>
+    <tr><td><code>MyList a(s, 2);</code></td><td><code>non-default constructor</code></td><td>Built from an array and a count.</td></tr>
+    <tr><td><code>MyList b(a);</code></td><td><code>copy constructor</code></td><td>New object initialized from an existing one.</td></tr>
+    <tr><td rowspan="3"><code>display(b);</code></td><td><code>copy constructor</code></td><td>The parameter <code>m</code> is a new object built from <code>b</code>.</td></tr>
+    <tr><td><code>MyList (2 items): cat, dog, </code></td><td><code>m.print()</code>.</td></tr>
+    <tr><td><code>destructor</code></td><td><code>m</code> dies at the closing brace of <code>display</code>.</td></tr>
+    <tr><td><code>MyList c = a;</code></td><td><code>copy constructor</code></td><td>An initialization, not an assignment, despite the <code>=</code>.</td></tr>
+    <tr><td><code>c.print();</code></td><td><code>MyList (2 items): cat, dog, </code></td><td>&mdash;</td></tr>
+    <tr><td><code>return 0;</code></td><td>three <code>destructor</code> lines</td><td><code>c</code>, then <code>b</code>, then <code>a</code>.</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Ten lines, graded one point each with no partial credit. The two places people lose points are the
+      destructor in the middle (the by-value parameter) and the order of the final three.</li>
+    <li>There are four objects in this program and four destructor lines, three of them at the end. Counting
+      objects is a good check on your answer: every object that is constructed is destructed exactly once,
+      so the number of destructor lines must equal the number of constructor lines of all kinds.</li>
+    <li>Change <code>void display(MyList m)</code> to <code>void display(const MyList &amp;m)</code> and two
+      lines vanish &mdash; one copy constructor and one destructor. That single character is the difference
+      between an extra heap allocation per call and none, which is why the whole course insists on
+      <code>const</code> reference parameters.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Find the three bugs <span class="muted small">(added)</span></h3>
+
+<p>This class is supposed to own an array of names, clean up after itself, and copy safely. It does none of
+those three things correctly. Find all three bugs, say what each one causes, and give the corrected
+class.</p>
+
+<pre><code class="language-cpp">class Names {
+public:
+    Names(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+    }
+    ~Names() {
+        delete pstr;
+    }
+    Names(Names &amp;orig) {
+        length = orig.length;
+        pstr = orig.pstr;
+    }
+    void print() const {
+        for (int i = 0; i &lt; length; ++i) cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+void show(const Names &amp;n) {
+    Names local(n);
+    local.print();
+}
+
+int main() {
+    string s[] = {"a", "b", "c"};
+    Names n1(3, s);
+    show(n1);
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Check each special member against its rules. The destructor: does the
+  <code>delete</code> form match the <code>new</code> form? The copy constructor: is the parameter a
+  <code>const</code> reference, and does the body allocate? Work top to bottom and each bug appears in
+  turn.</p>
+  <table class="trace">
+    <tr><th>#</th><th>Bug</th><th>What it causes</th></tr>
+    <tr><td>1</td><td><code>delete pstr;</code> where the memory came from <code>new string[length]</code></td><td>Mismatched deallocation. Undefined behavior; in practice an abort. Compiles silently.</td></tr>
+    <tr><td>2</td><td><code>Names(Names &amp;orig)</code> &mdash; reference, but not <code>const</code></td><td>A <strong>compile error</strong> the moment you try to copy from a <code>const</code> object, which <code>show</code> does.</td></tr>
+    <tr><td>3</td><td><code>pstr = orig.pstr;</code> &mdash; no allocation</td><td>Shallow copy: aliasing while both live, double free when both die.</td></tr>
+  </table>
+  <p>Bug 2 is the only one the compiler catches, and it catches it at the call site rather than at the
+  definition:</p>
+<pre class="err">prac_bugs.cpp: In function 'void show(const Names&amp;)':
+prac_bugs.cpp:31:17: error: binding reference of type 'Names&amp;' to 'const Names' discards qualifiers
+   31 |     Names local(n);
+      |                 ^
+prac_bugs.cpp:17:18: note:   initializing argument 1 of 'Names::Names(Names&amp;)'
+   17 |     Names(Names &amp;orig) {
+      |           ~~~~~~~^~~~</pre>
+  <p>Add the missing <code>const</code> and the program compiles &mdash; and then dies:</p>
+<pre class="out">a b c
+munmap_chunk(): invalid pointer
+Aborted</pre>
+  <p>Valgrind names both remaining bugs at once. This is tool output:</p>
+<pre class="out">==20098== Invalid free() / delete / delete[] / realloc()
+==20098==    at 0x484A61D: operator delete(void*, unsigned long)
+==20098==    by 0x10A7D4: Names::~Names()
+==20098==    by 0x10A413: show(Names const&amp;)
+==20098==    by 0x10A542: main
+==20098==  Address 0x4e26088 is 8 bytes inside a block of size 104 alloc'd
+==20098==    at 0x48485C3: operator new[](unsigned long)
+==20098==    by 0x10A70E: Names::Names(int, std::string*)
+==20098==
+==20098==   total heap usage: 3 allocs, 4 frees, 77,928 bytes allocated</pre>
+  <p>Read the two clues. <em>"operator delete"</em> releasing a block allocated by
+  <em>"operator new[]"</em> is bug 1. <em>"3 allocs, 4 frees"</em> is bug 3 &mdash; two objects tried to
+  free one block. Here is the corrected class:</p>
+<div class="codewrap"><div class="cap">prac_bugs_fixed.cpp</div><pre><code class="language-cpp">// prac_bugs_fixed.cpp -- all three bugs repaired
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Names {
+public:
+    Names(int n, string s[]) {
+        length = n;
+        pstr = new string[length];
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = s[i];
+    }
+    ~Names() {
+        delete [] pstr;                     // fix 1: delete [] matches new[]
+    }
+    Names(const Names &amp;orig) {              // fix 2: const reference
+        length = orig.length;
+        pstr = new string[length];          // fix 3: fresh memory ...
+        for (int i = 0; i &lt; length; ++i)
+            pstr[i] = orig.pstr[i];         //         ... then copy contents
+    }
+    void print() const {
+        for (int i = 0; i &lt; length; ++i) cout &lt;&lt; pstr[i] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+private:
+    int length;
+    string *pstr;
+};
+
+void show(const Names &amp;n) {
+    Names local(n);
+    local.print();
+}
+
+int main() {
+    string s[] = {"a", "b", "c"};
+    Names n1(3, s);
+    show(n1);
+    n1.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">a b c
+a b c</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Valgrind on the fixed version: <em>"All heap blocks were freed &mdash; no leaks are possible"</em>,
+      <em>"ERROR SUMMARY: 0 errors from 0 contexts"</em>.</li>
+    <li>Two of the three bugs produce no diagnostic whatsoever, at any warning level. That is the argument
+      for learning the pattern by heart rather than relying on the compiler.</li>
+    <li>Bug 2 is instructive in a second way: the error is reported in <code>show</code>, a function that
+      contains no mistake at all. Compiler errors point at where the rule was <em>violated</em>, not always
+      at where it was <em>broken</em>. When an error makes no sense at the line it names, look at the
+      declaration it references in the <code>note:</code>.</li>
+    <li>A fourth improvement, not a bug: <code>show</code> already takes its parameter by
+      <code>const Names &amp;</code>, so the copy inside it is deliberate. Had it taken <code>Names n</code>
+      by value there would be two copies per call.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>A class whose constructor calls <code>new</code> <strong>owns</strong> heap memory, and memory from
+        <code>new</code> is released only by <code>delete</code>. Without a destructor, every object of that
+        class leaks.</li>
+      <li>A <strong>destructor</strong> is named <code>~ClassName</code>, has <strong>no return type</strong>
+        and <strong>no parameters</strong>. Because it has no parameter list, a class has exactly one
+        destructor; there is no such thing as a "non-default" destructor.</li>
+      <li>A destructor runs at <strong>end of scope</strong>, on <strong><code>delete</code></strong>, and at
+        <strong>the end of the program</strong>. Within a scope, objects are destroyed in reverse order of
+        construction. You never call a destructor by hand.</li>
+      <li>The compiler-generated destructor calls the destructors of class-type members and does
+        <strong>nothing at all</strong> for built-in types and raw pointers. That is why
+        <code>string</code> members clean themselves up and <code>string *</code> members do not.</li>
+      <li>The compiler-generated copy constructor performs a <strong>shallow copy</strong> &mdash; it copies
+        every data member, pointers included &mdash; so both objects point at the same block. That causes two
+        failures: <strong>writes through one object are visible through the other</strong>, and
+        <strong>both destructors free the same block</strong>.</li>
+      <li>A <strong>deep copy</strong> allocates fresh memory in the new object and copies the contents. The
+        <strong>copy constructor</strong> that does it has the signature
+        <code>ClassName(const ClassName &amp;orig)</code>: class name, no return type, one
+        <code>const</code>-reference parameter.</li>
+      <li>The parameter <em>must</em> be a reference. By value, calling the copy constructor would first
+        require calling the copy constructor &mdash; g++ refuses with <em>"invalid constructor; you probably
+        meant 'X (const X&amp;)'"</em>.</li>
+      <li>A copy constructor fires in three situations: <strong>initializing</strong> a new object from an
+        existing one (<code>X b(a);</code> and <code>X b = a;</code> are the same thing), <strong>passing by
+        value</strong>, and <strong>returning by value</strong> &mdash; except that C++17 guarantees no copy
+        at all when the returned thing is a temporary.</li>
+      <li>Splitting a class puts declarations in the body and definitions outside, qualified with
+        <code>ClassName::</code>. The two must agree exactly, trailing <code>const</code> included.</li>
+      <li>The test for whether all of this applies to a given class: <strong>does it hold a raw pointer to
+        memory it allocated?</strong> If not, the compiler's generated versions are already correct.</li>
+    </ul>
+    <p><strong>Coming up in Class 15:</strong> the third of the three &mdash; a destructor and a copy
+    constructor are still not enough, because <code>a = b;</code> on two <em>existing</em> objects goes
+    right back to shallow copying. We write <code>operator=</code>, meet the <code>this</code> pointer and
+    the self-assignment test <code>if (this == &amp;rhs)</code>, find out why assignment must return a
+    reference, and give the whole pattern its name: the Big Three.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 13 &middot; Constructors</div><div class="pending">posts Thu Oct 15</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 15 &middot; Assignment &amp; Big Three</div><div class="pending">posts Thu Oct 22</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

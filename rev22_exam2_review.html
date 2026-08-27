@@ -1,0 +1,3067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 22 — Exam 2 Review | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 22 &middot; Exam 2 Review</span><span class="sep">|</span><span class="where">Tue Nov 17</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 22 &middot; CSCI 211</div>
+  <h1>Review for Exam 2</h1>
+  <p class="sub">Exam 2 is next class. It concentrates on Classes 13 through 21 &mdash; constructors, the Big Three, operator overloading and inheritance &mdash; but like every exam in this course it is cumulative. Today we find the question it asks over and over, and drill it.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Describe the shape of Exam 2 &mdash; how many problems, which formats, how the points split, and where partial credit does and does not exist.</li>
+      <li>Write, from memory and without hesitating, the <strong>five special members</strong> of a class that owns heap memory: the non-default constructor, the destructor, the deep copy constructor, <code>operator=</code> and <code>operator+</code>.</li>
+      <li>Name the individual lines a rubric pays points for &mdash; the title line, the self-assignment guard, the <code>delete []</code> before reallocating, the <code>return *this;</code> &mdash; and never omit them.</li>
+      <li>Take a <code>main</code> that mixes construction, copy-initialization, assignment and a binary operator, and produce the <em>exact ordered list</em> of lines it prints.</li>
+      <li>Decide in one step whether an operator must be a member function or a free function, and choose its return type correctly.</li>
+      <li>Write a derived class to a bulleted specification: base initializer, <code>protected</code> access, an overridden method, and the closing <code>};</code>.</li>
+      <li>Predict construction and destruction order through an inheritance chain, including the order of data members.</li>
+      <li>Recognize object slicing on sight and say exactly what it costs.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">What Exam 2 actually looks like</a></li>
+    <li><a href="#s2">The Big Five, written out once</a></li>
+    <li><a href="#s3">Reading a constructor/destructor trace</a></li>
+    <li><a href="#s4">Operator overloading: member or free, and what to return</a></li>
+    <li><a href="#s5">Inheritance: the derived-class question</a></li>
+    <li><a href="#s6">Slicing, base pointers, and what each one loses</a></li>
+    <li><a href="#s7">Loose ends: namespaces, <code>const</code>, access</a></li>
+    <li><a href="#s8">The night-before checklist</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>What Exam 2 actually looks like</h2>
+
+<p>Nothing on this page is new material. Every definition, every code listing and every rule below
+appeared in Classes 13 to 21. What is new is the <em>arrangement</em>: today we organize the last
+nine classes the way the exam organizes them, which is not the way the lectures did.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; this paper is cumulative</span></div>
+  <div class="bd">
+    <p>The syllabus is explicit: <strong>every exam in this course may draw on all the material up
+    to the day it is given.</strong> Exam 2 concentrates on Classes 13&ndash;21, and most of the
+    points will be there &mdash; but Classes 1&ndash;10 are not off the table, and in practice they
+    are not really separable anyway.</p>
+    <p>Look at what the headline question actually requires. Writing the Big Three for a class that
+    owns memory is <em>impossible</em> without Class 8: you cannot write a deep copy without
+    <code>new</code> and <code>delete</code>, a destructor without knowing what a leak is, or a
+    self-assignment guard without understanding what two pointers aiming at one buffer means.
+    Classes 9 and 10 supply the class syntax that all of it is written in.</p>
+    <p>So the honest revision advice is not "go back and redo Exam 1." It is: if any of
+    <strong>pointers, <code>new</code>/<code>delete</code>, or <code>private</code> data with public
+    methods</strong> is still shaky, fix that first, because it is load-bearing for everything on
+    this page. <a href="rev11_exam1_review.html">Class 11</a> has the drills if you need them.</p>
+  </div>
+</div>
+
+<p>Start with the shape of the paper, because it changes how you should spend the next few days.
+Exam 2 is a <strong>50-minute, closed-book, 40-point</strong> paper. The last time this course ran
+in the same shape &mdash; Fall 2023 &mdash; the cover sheet said "4 questions out of 40 points" but
+the body was really three blocks:</p>
+
+<table class="trace">
+  <tr><th>Block</th><th>Points</th><th>What it asked</th><th>Format</th></tr>
+  <tr><td>Problems 1 &amp; 2 (combined)</td><td>20</td><td>Write the destructor, the deep copy constructor, <code>operator=</code> and <code>operator+</code> for a class that owns a dynamic array</td><td>write code</td></tr>
+  <tr><td>Problem 3</td><td>10</td><td>Write a derived class with one extra member, a constructor and an overridden method</td><td>write code</td></tr>
+  <tr><td>Problem 4</td><td>10</td><td>Predict the output of five lines, one of which does not compile</td><td>predict output</td></tr>
+</table>
+
+<p>Half the paper &mdash; twenty of the forty points &mdash; was one question: <em>implement the
+special members</em>. That is not a coincidence of one term. Across the ten graded papers in this
+course's bank, "give an implementation for the non-default constructor, destructor, copy
+constructor, assignment operation and <code>operator+</code>" appears on <strong>nine of ten</strong>. Its
+companion, "assuming your class is correctly implemented, what will be the output of the following
+<code>main</code>", appears on <strong>seven of ten</strong>. There is no other question in the course that
+comes close.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>If you can write the five special members of a heap-owning class correctly, from memory, in
+    about eight minutes, and then trace a six-line <code>main</code> that exercises them, you have secured the
+    large majority of the marks on this exam. Everything else on this page is second priority.</p>
+  </div>
+</div>
+
+<h3>The formats, and only the formats</h3>
+
+<p>This professor's exams are <strong>entirely code-based</strong>. In the whole bank of past papers
+there is no true/false, no multiple choice, no matching, no fill-in-the-vocabulary and no essay. You
+will either write C++ or say exactly what C++ prints. The formats that are in scope for Exam 2, in
+descending order of how many points they have historically been worth:</p>
+
+<table class="trace">
+  <tr><th>Format</th><th>How it is worded</th><th>Typical value</th></tr>
+  <tr><td>Implement the special members</td><td>"Give an implementation for the destructor / copy constructor to do the deep copy / assignment operation / <code>operator+</code> overloading"</td><td>20&ndash;25 pts</td></tr>
+  <tr><td>Constructor/destructor trace</td><td>"Assuming your X class is correctly implemented and prints the corresponding messages, what will be the output of the following main program?"</td><td>10&ndash;15 pts</td></tr>
+  <tr><td>Derived class</td><td>"Implement a Y class that inherits from X with the following requirements&hellip;"</td><td>10&ndash;15 pts</td></tr>
+  <tr><td>Output trace with an error line</td><td>"What is the output the program would print for each of the following lines? If the line cause compiler/runtime error, explain why&hellip;"</td><td>10 pts</td></tr>
+</table>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the two marking behaviors that decide your grade</span></div>
+  <div class="bd">
+    <ul>
+      <li><strong>Output-prediction parts carry no partial credit.</strong> Two points per line, all
+      or nothing. A trace that is right except for one missing <code>destructor</code> line scores zero on that
+      part. Count your lines before you move on.</li>
+      <li><strong>Write-code parts pay for the signature alone.</strong> Every rubric in the bank
+      allocates 1&ndash;4 points to what the professor calls the <em>title line</em> &mdash;
+      <code>BookShelf&amp; operator=(const BookShelf &amp;rhs)</code>, <code>class Library : public BookShelf {</code>
+      &mdash; before a single statement of the body. If you are out of time, or you cannot remember
+      the body, <strong>write the signature anyway</strong>. It is free money and students leave it
+      on the table every term.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; title line</span></div>
+  <div class="bd">
+    <p>The professor's word for the declaration part of a function or class: the return type, the
+    name, the parameter list, and (for a class) the base-class clause. This is the one piece of
+    exam vocabulary on this page that is not C++ &mdash; it is grading vocabulary. His rubrics say
+    things like "2 points for each title line and 2 points for implementation", which means the
+    marks are split roughly one-third signature, two-thirds body.</p>
+  </div>
+</div>
+
+<h3>How to spend fifty minutes</h3>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; a 50-minute plan for a 40-point paper</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Minute 0&ndash;2.</strong> Read all four problems. Find the special-members
+      question &mdash; it is worth half the paper.</li>
+      <li><strong>Minute 2&ndash;5.</strong> On the special-members question, write every
+      <em>title line</em> first, all four or five of them, with nothing underneath. You have now
+      banked 8&ndash;10 points in three minutes.</li>
+      <li><strong>Minute 5&ndash;22.</strong> Fill in the bodies, in this order: destructor (easiest),
+      copy constructor, <code>operator=</code>, <code>operator+</code> (hardest).</li>
+      <li><strong>Minute 22&ndash;34.</strong> Do the derived-class problem. Its title line,
+      its <code>};</code> and its <code>protected:</code>/<code>public:</code> labels are all separately worth points.</li>
+      <li><strong>Minute 34&ndash;47.</strong> Do the trace. Write one line of output per line, in
+      order, then <em>re-read your own class implementation</em> to check every announcement
+      message matches.</li>
+      <li><strong>Minute 47&ndash;50.</strong> Count destructor lines. One per object that was ever
+      constructed, temporaries included. This is the single most common place to drop points.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.1</div>
+  <div class="bd">
+    <p>An exam prints this class and says the destructor, copy constructor, assignment operation and
+    <code>operator+</code> are "omitted here". Before you write a single statement of a body, what four title
+    lines do you write down?</p>
+<pre><code class="language-cpp">class BookShelf {
+public:
+    BookShelf() : titles(NULL), count(0) { /* ... */ }
+    BookShelf(const string arr[], int n) { /* ... */ }
+    void display() const { /* ... */ }
+    // destructor, copy constructor, assignment operation,
+    // and operator+ overloading omitted here
+protected:
+    string *titles; int count;
+};</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">~BookShelf()
+BookShelf(const BookShelf &amp;orig)
+BookShelf&amp; operator=(const BookShelf &amp;rhs)
+BookShelf operator+(const BookShelf &amp;other)</code></pre>
+      <p>Four things to check on every one of them:</p>
+      <ul>
+        <li>The destructor and the copy constructor have <strong>no return type</strong> at all
+        &mdash; not <code>void</code>.</li>
+        <li>The copy constructor's parameter is a <strong><code>const</code> reference</strong>. Without the
+        <code>&amp;</code> the code does not even compile (Class 14).</li>
+        <li><code>operator=</code> returns <code>BookShelf&amp;</code> &mdash; a <em>reference</em> &mdash; so that
+        <code>a = b = c;</code> works (Class 15).</li>
+        <li><code>operator+</code> returns <code>BookShelf</code> <strong>by value</strong>, because the result is a new
+        object that must outlive the call (Class 17).</li>
+      </ul>
+      <p>Written in three minutes, that block is worth roughly a quarter of the whole exam and
+      contains no thinking at all. Do it first.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>The Big Five, written out once</h2>
+
+<p>This is the most important section on the page. Everything here is a compression of Classes 13,
+14, 15 and 17; nothing is new. What is new is that it is all in one place, on one class, so you can
+memorize it as a single block of text rather than four separate lectures.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the Big Three, and the Big Five on an exam</span></div>
+  <div class="bd">
+    <p>The <strong>Big Three</strong> (Class 15) are the <strong>destructor</strong>, the
+    <strong>copy constructor</strong> and the <strong>assignment operator</strong>. The rule is: if a
+    class needs one of them it needs all three, and a class needs them exactly when it owns a
+    resource &mdash; in this course, memory from <code>new</code> or <code>new[]</code>.</p>
+    <p>On this professor's exams the Big Three arrive with two companions: a
+    <strong>non-default constructor</strong> and a binary <strong><code>operator+</code></strong> (sometimes
+    <code>operator*</code>). Those five together are what the question always asks for, so those five are what
+    you rehearse. We will call them the <strong>Big Five</strong> for the rest of this page. That
+    name is a study label, not standard C++ terminology.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; deep copy</span></div>
+  <div class="bd">
+    <p>A <strong>shallow copy</strong> copies the pointer; a <strong>deep copy</strong> allocates
+    fresh memory in the destination and copies the <em>contents</em>. The compiler-generated copy
+    constructor and assignment operator are always shallow, which is why writing your own is the
+    whole point of the question.</p>
+  </div>
+</div>
+
+<h3>The canonical class</h3>
+
+<p>Here is a class in exactly the shape the exam uses: a dynamic array plus a count, a default
+constructor and a <code>display()</code> given to you, and everything else to write. The class and its
+messages are from the Summer 2025 Final; the bodies below are the correct answers, compiled and
+run.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; all five members, complete</span></div>
+  <div class="bd">
+    <p>Read the five members, then predict what the <code>main</code> at the bottom prints &mdash; every
+    announcement line, in order, destructors included. Then check.</p>
+<div class="codewrap"><div class="cap">bookshelf_full.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class BookShelf {
+public:
+    // ---------------- given to you in the stem ----------------
+    BookShelf() : titles(NULL), count(0) {
+        cout &lt;&lt; "BookShelf: default constructor" &lt;&lt; endl;
+    }
+    void display() const {
+        cout &lt;&lt; "BookShelf (" &lt;&lt; count &lt;&lt; " books): ";
+        for (int i = 0; i &lt; count; i++) cout &lt;&lt; titles[i] &lt;&lt; ", ";
+        cout &lt;&lt; endl;
+    }
+
+    // ---------------- 1. non-default constructor ----------------
+    BookShelf(const string arr[], int n) {
+        cout &lt;&lt; "BookShelf: non-default constructor" &lt;&lt; endl;
+        count = n;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = arr[i];
+    }
+
+    // ---------------- 2. destructor ----------------
+    ~BookShelf() {
+        cout &lt;&lt; "BookShelf: destructor" &lt;&lt; endl;
+        delete [] titles;
+    }
+
+    // ---------------- 3. copy constructor (deep copy) ----------------
+    BookShelf(const BookShelf &amp;orig) {
+        cout &lt;&lt; "BookShelf: copy constructor" &lt;&lt; endl;
+        count = orig.count;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = orig.titles[i];
+    }
+
+    // ---------------- 4. assignment operator ----------------
+    BookShelf&amp; operator=(const BookShelf &amp;rhs) {
+        cout &lt;&lt; "BookShelf: assignment operation" &lt;&lt; endl;
+        if (this == &amp;rhs) return *this;
+        delete [] titles;
+        count = rhs.count;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = rhs.titles[i];
+        return *this;
+    }
+
+    // ---------------- 5. operator+ ----------------
+    BookShelf operator+(const BookShelf &amp;other) {
+        cout &lt;&lt; "BookShelf: operator+" &lt;&lt; endl;
+        int n = count + other.count;
+        string *temp = new string[n];
+        for (int i = 0; i &lt; count; i++) temp[i] = titles[i];
+        for (int i = 0; i &lt; other.count; i++) temp[count + i] = other.titles[i];
+        BookShelf result(temp, n);
+        delete [] temp;
+        return result;
+    }
+
+protected:
+    string *titles;
+    int count;
+};
+
+int main() {
+    string a[2] = {"Dune", "Solaris"};
+    string b[3] = {"Emma", "Ulysses", "Beloved"};
+
+    BookShelf s1(a, 2), s2(b, 3);
+    s1.display();
+
+    BookShelf s3 = s1;          // copy constructor
+    s3.display();
+
+    s3 = s2;                    // operator=
+    s3.display();
+
+    s3 = s3;                    // self-assignment: the guard earns its keep
+    s3.display();
+
+    BookShelf s4 = s1 + s2;     // operator+
+    s4.display();
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">BookShelf: non-default constructor
+BookShelf: non-default constructor
+BookShelf (2 books): Dune, Solaris, 
+BookShelf: copy constructor
+BookShelf (2 books): Dune, Solaris, 
+BookShelf: assignment operation
+BookShelf (3 books): Emma, Ulysses, Beloved, 
+BookShelf: assignment operation
+BookShelf (3 books): Emma, Ulysses, Beloved, 
+BookShelf: operator+
+BookShelf: non-default constructor
+BookShelf (5 books): Dune, Solaris, Emma, Ulysses, Beloved, 
+BookShelf: destructor
+BookShelf: destructor
+BookShelf: destructor
+BookShelf: destructor</pre>
+<p>Four points worth pausing on, because each one is a place students lose marks:</p>
+<ul>
+  <li><strong><code>BookShelf s3 = s1;</code> prints "copy constructor", not "assignment operation".</strong>
+  <code>s3</code> is being <em>created</em>, so the <code>=</code> is initialization syntax, not assignment (Class 15).
+  Only the later <code>s3 = s2;</code>, where <code>s3</code> already exists, calls <code>operator=</code>.</li>
+  <li><strong>The self-assignment <code>s3 = s3;</code> still prints its announcement line.</strong> The
+  message is the first statement, so it runs before the guard returns. The guard prevents the
+  damage, not the printing.</li>
+  <li><strong><code>operator+</code> prints two lines,</strong> its own and then "non-default constructor",
+  because it builds its result with the non-default constructor. Traces routinely lose a point
+  here.</li>
+  <li><strong>Four destructor lines, not five.</strong> Four named objects exist: <code>s1</code>, <code>s2</code>, <code>s3</code>,
+  <code>s4</code>. The <code>result</code> inside <code>operator+</code> was <em>elided</em> &mdash; the compiler built it directly
+  into <code>s4</code> rather than copying it out &mdash; so there is no fifth object and no extra
+  destructor.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; writing the Big Five under pressure</span></div>
+  <div class="bd">
+    <p>Do it in this order every time. The order is chosen so that each step reuses the previous
+    one, which is what makes it reproducible when you are nervous.</p>
+    <ol>
+      <li><strong>Non-default constructor.</strong> <em>Announce, size, allocate, copy.</em>
+      No <code>delete</code> &mdash; there is nothing there yet.
+<pre><code class="language-cpp">BookShelf(const string arr[], int n) {
+    cout &lt;&lt; "BookShelf: non-default constructor" &lt;&lt; endl;
+    count = n;
+    titles = new string[count];
+    for (int i = 0; i &lt; count; i++) titles[i] = arr[i];
+}</code></pre>
+      </li>
+      <li><strong>Destructor.</strong> <em>Announce, release.</em> No parameters, no return type,
+      one <code>delete []</code> for every <code>new[]</code> in the class.
+<pre><code class="language-cpp">~BookShelf() {
+    cout &lt;&lt; "BookShelf: destructor" &lt;&lt; endl;
+    delete [] titles;
+}</code></pre>
+      </li>
+      <li><strong>Copy constructor.</strong> It is the non-default constructor with <code>orig</code> as the
+      source instead of a parameter array. Same four steps, and the parameter is
+      <code>const BookShelf &amp;orig</code>.
+<pre><code class="language-cpp">BookShelf(const BookShelf &amp;orig) {
+    cout &lt;&lt; "BookShelf: copy constructor" &lt;&lt; endl;
+    count = orig.count;
+    titles = new string[count];
+    for (int i = 0; i &lt; count; i++) titles[i] = orig.titles[i];
+}</code></pre>
+      </li>
+      <li><strong><code>operator=</code>.</strong> It is the copy constructor plus three lines: a
+      <em>guard</em> at the top, a <em>release</em> before reallocating, and a
+      <em><code>return *this;</code></em> at the bottom. Return type <code>BookShelf&amp;</code>.
+<pre><code class="language-cpp">BookShelf&amp; operator=(const BookShelf &amp;rhs) {
+    cout &lt;&lt; "BookShelf: assignment operation" &lt;&lt; endl;
+    if (this == &amp;rhs) return *this;     // guard
+    delete [] titles;                   // release
+    count = rhs.count;
+    titles = new string[count];
+    for (int i = 0; i &lt; count; i++) titles[i] = rhs.titles[i];
+    return *this;                       // chaining
+}</code></pre>
+      </li>
+      <li><strong><code>operator+</code>.</strong> <em>Announce, build the combined raw data, hand it to a
+      constructor, clean up the scratch, return by value.</em>
+<pre><code class="language-cpp">BookShelf operator+(const BookShelf &amp;other) {
+    cout &lt;&lt; "BookShelf: operator+" &lt;&lt; endl;
+    int n = count + other.count;
+    string *temp = new string[n];
+    for (int i = 0; i &lt; count; i++) temp[i] = titles[i];
+    for (int i = 0; i &lt; other.count; i++) temp[count + i] = other.titles[i];
+    BookShelf result(temp, n);
+    delete [] temp;
+    return result;
+}</code></pre>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the four lines rubrics single out</span></div>
+  <div class="bd">
+    <p>Past rubrics for this question award separate, named points for these. Write them even if the
+    rest of your body is shaky:</p>
+    <ol>
+      <li>The <strong>title line</strong> of each member &mdash; 1 to 2 points each, every time.</li>
+      <li><code>if (this == &amp;rhs) return *this;</code> &mdash; the self-assignment guard, its own point.</li>
+      <li><code>delete [] titles;</code> <em>before</em> reallocating inside <code>operator=</code> &mdash; its own point.</li>
+      <li><code>return *this;</code> at the end of <code>operator=</code> &mdash; its own point.</li>
+    </ol>
+  </div>
+</div>
+
+<h3>What goes wrong when you leave one out</h3>
+
+<p>You know this from Class 14, but it is worth seeing the failure one more time, because on the
+exam it is the reason the question is worth twenty points. Here is the same class with the copy
+constructor and the assignment operator simply not written &mdash; which is what happens if you skip
+that part of the question. It still compiles.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the cost of a missing copy constructor</span></div>
+  <div class="bd">
+    <p><code>s2</code> is copy-constructed from <code>s1</code>, then <code>s2</code> renames its first title. Predict both printed
+    lines, and predict what happens at <code>return 0;</code>.</p>
+<div class="codewrap"><div class="cap">bookshelf_shallow.cpp</div><pre><code class="language-cpp">class BookShelf {
+public:
+    BookShelf(const string arr[], int n) {
+        count = n;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = arr[i];
+    }
+    ~BookShelf() { delete [] titles; }
+    void display() const {
+        cout &lt;&lt; "BookShelf (" &lt;&lt; count &lt;&lt; " books): ";
+        for (int i = 0; i &lt; count; i++) cout &lt;&lt; titles[i] &lt;&lt; ", ";
+        cout &lt;&lt; endl;
+    }
+    void rename(int i, const string &amp;s) { titles[i] = s; }
+protected:
+    string *titles;
+    int count;
+};
+
+int main() {
+    string a[2] = {"Dune", "Solaris"};
+    BookShelf s1(a, 2);
+    BookShelf s2 = s1;          // compiler-generated copy: copies the POINTER
+    s2.rename(0, "Foundation");
+    cout &lt;&lt; "s1 says: "; s1.display();
+    cout &lt;&lt; "s2 says: "; s2.display();
+    return 0;                   // both destructors free the same block
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">s1 says: BookShelf (2 books): Foundation, Solaris, 
+s2 says: BookShelf (2 books): Foundation, Solaris, </pre>
+<p>and then the program dies. Run under <code>valgrind</code> the diagnosis is unambiguous:</p>
+<pre class="shell">Invalid free() / delete / delete[] / realloc()
+   Address 0x4e26080 is 0 bytes inside a block of size 72 free'd
+ERROR SUMMARY: 5 errors from 4 contexts</pre>
+<p>Two separate failures from one missing function:</p>
+<ul>
+  <li><strong>Aliasing.</strong> Renaming through <code>s2</code> changed <code>s1</code> too, because both objects hold
+  the same <code>titles</code> pointer. <code>s1</code> never asked to be modified.</li>
+  <li><strong>Double free.</strong> <code>s2</code> is destroyed, <code>delete [] titles;</code> runs; <code>s1</code> is destroyed,
+  the same <code>delete []</code> runs on the same address. That is the crash.</li>
+</ul>
+<p>The compiler-generated copy is not "broken" &mdash; it does exactly what it promises, which is to
+copy each data member. Copying a pointer copies the address, not the array. That is the whole
+argument for the Big Three in one sentence.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.2</div>
+  <div class="bd">
+    <p>A student hands in this <code>operator=</code> for the <code>BookShelf</code> class. It compiles. Find every defect
+    that a rubric would deduct for.</p>
+<pre><code class="language-cpp">BookShelf operator=(BookShelf rhs) {
+    cout &lt;&lt; "BookShelf: assignment operation" &lt;&lt; endl;
+    count = rhs.count;
+    titles = new string[count];
+    for (int i = 0; i &lt; count; i++) titles[i] = rhs.titles[i];
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Five defects, four of which are individually named in past rubrics:</p>
+      <ol>
+        <li><strong>Return type is <code>BookShelf</code>, not <code>BookShelf&amp;</code>.</strong> Returning by value copies
+        the object on every assignment and breaks the intent of chaining. Title-line points lost.</li>
+        <li><strong>Parameter is by value, not <code>const BookShelf &amp;rhs</code>.</strong> Every assignment now
+        copy-constructs an extra object &mdash; which, in a trace question, prints an extra
+        "copy constructor" line and destroys your answer. Title-line points lost.</li>
+        <li><strong>No self-assignment guard.</strong> <code>if (this == &amp;rhs) return *this;</code> is missing.
+        Its own point, every time.</li>
+        <li><strong>No <code>delete [] titles;</code> before reallocating.</strong> The old array is
+        abandoned &mdash; a leak on every assignment. Its own point.</li>
+        <li><strong>No <code>return *this;</code>.</strong> The function claims to return something and
+        returns nothing; with a non-<code>void</code> return type this is undefined behavior, and g++ warns
+        under <code>-Wall</code>. Its own point.</li>
+      </ol>
+      <p>Corrected:</p>
+<pre><code class="language-cpp">BookShelf&amp; operator=(const BookShelf &amp;rhs) {
+    cout &lt;&lt; "BookShelf: assignment operation" &lt;&lt; endl;
+    if (this == &amp;rhs) return *this;
+    delete [] titles;
+    count = rhs.count;
+    titles = new string[count];
+    for (int i = 0; i &lt; count; i++) titles[i] = rhs.titles[i];
+    return *this;
+}</code></pre>
+    </div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what the guard actually prevents</span></div>
+  <div class="bd">
+    <p>Same class, guard removed, and a <code>main</code> that assigns an object to itself. Nobody writes
+    <code>s = s;</code> on purpose &mdash; but <code>shelves[i] = shelves[j];</code> inside a loop does it the moment
+    <code>i == j</code>. Predict what the second <code>display()</code> prints.</p>
+<div class="codewrap"><div class="cap">noguard.cpp</div><pre><code class="language-cpp">// everything else exactly as in Section 2; only operator= changed
+    BookShelf&amp; operator=(const BookShelf &amp;rhs) {
+        // if (this == &amp;rhs) return *this;      &lt;-- the missing line
+        delete [] titles;
+        count = rhs.count;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = rhs.titles[i];
+        return *this;
+    }
+
+int main() {
+    string a[3] = {"Dune", "Solaris", "Roadside Picnic"};
+    BookShelf s(a, 3);
+    s.display();
+    s = s;              // legal C++, and a disaster
+    s.display();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">BookShelf (3 books): Dune, Solaris, Roadside Picnic, 
+BookShelf (3 books): , , , </pre>
+<p>Follow the four statements with <code>rhs</code> and <code>*this</code> being the <em>same object</em>:</p>
+<table class="trace">
+  <tr><th>Statement</th><th>Effect when <code>rhs</code> is <code>*this</code></th></tr>
+  <tr><td><code>delete [] titles;</code></td><td>the object's own array is destroyed &mdash; and <code>rhs.titles</code> was that array</td></tr>
+  <tr><td><code>count = rhs.count;</code></td><td>harmless: <code>count</code> is a plain <code>int</code>, still 3</td></tr>
+  <tr><td><code>titles = new string[count];</code></td><td>three fresh, empty strings</td></tr>
+  <tr><td><code>titles[i] = rhs.titles[i];</code></td><td>copies from memory that was just freed &mdash; the data is gone</td></tr>
+</table>
+<p>Three books became three empty strings, <strong>with no crash and no warning</strong>. That is
+the reason the guard is the first statement after the announcement and not an optional nicety.
+Reading freed memory is undefined behavior, so the exact result varies between machines and
+compilers &mdash; the run above is one real result, not a guarantee. "Undefined" is precisely what
+makes it dangerous.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; "first instruction" or "last instruction"?</span></div>
+  <div class="bd">
+    <p>Every version of this question tells you where the announcement message goes, and the wording
+    changes between terms. Fall 2023 and all three midterms say the message is the
+    <strong>first</strong> instruction. The Summer 2024 and Winter 2025 finals say <strong>last</strong>.
+    Summer 2025 went back to first.</p>
+    <p>It matters, because it flips the body of the destructor:</p>
+<pre><code class="language-cpp">// "prints ... as its FIRST instruction"        // "prints ... as its LAST instruction"
+~BookShelf() {                                  ~BookShelf() {
+    cout &lt;&lt; "BookShelf: destructor" &lt;&lt; endl;        delete [] titles;
+    delete [] titles;                               cout &lt;&lt; "BookShelf: destructor" &lt;&lt; endl;
+}                                               }</code></pre>
+    <p>Underline the words "first instruction" or "last instruction" in the question before you
+    write anything. The trace question that follows it is graded against your choice.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; a published answer key you should not copy</span></div>
+  <div class="bd">
+    <p>If you study from the Summer 2025 Final answer key, note that its copy-constructor answer for
+    <code>BookShelf</code> is the previous term's answer for a different class, pasted in by mistake: it is
+    named <code>MyList</code>, it copies members called <code>size</code> and <code>items</code> that <code>BookShelf</code> does not have, and
+    it prints "MyList: copy constructor". As printed it cannot compile against the <code>BookShelf</code> in
+    the question.</p>
+    <p>The correct answer is the one in the worked example above &mdash; class name <code>BookShelf</code>,
+    members <code>count</code> and <code>titles</code>, message "BookShelf: copy constructor". The lesson generalizes: on
+    this question, <strong>every identifier in your answer must come from the class printed in the
+    stem.</strong> Copying the shape of an answer you memorized from another class is exactly how
+    this error happens.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write the Big Five from memory</h3>
+
+<p>This is the one exercise on the page that matters most. Close the notes. The stem below is what
+the exam gives you; write the five members into the gap, in the order of the Procedure above, with
+the announcement messages exactly as named. Give yourself eight minutes.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; the Big Five, from memory</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class BookShelf {
+public:
+    BookShelf() : titles(NULL), count(0) {
+        cout &lt;&lt; &quot;BookShelf: default constructor&quot; &lt;&lt; endl;
+    }
+    void display() const {
+        cout &lt;&lt; &quot;BookShelf (&quot; &lt;&lt; count &lt;&lt; &quot; books): &quot;;
+        for (int i = 0; i &lt; count; i++) cout &lt;&lt; titles[i] &lt;&lt; &quot;, &quot;;
+        cout &lt;&lt; endl;
+    }
+
+    // (1) non-default constructor -- &quot;BookShelf: non-default constructor&quot;
+
+
+    // (2) destructor -- &quot;BookShelf: destructor&quot;
+
+
+    // (3) copy constructor, deep copy -- &quot;BookShelf: copy constructor&quot;
+
+
+    // (4) assignment operation -- &quot;BookShelf: assignment operation&quot;
+
+
+    // (5) operator+ combining two shelves -- &quot;BookShelf: operator+&quot;
+
+
+protected:
+    string *titles;
+    int count;
+};
+
+int main() {
+    string a[2] = {&quot;Dune&quot;, &quot;Solaris&quot;};
+    string b[3] = {&quot;Emma&quot;, &quot;Ulysses&quot;, &quot;Beloved&quot;};
+    BookShelf s1(a, 2), s2(b, 3);
+    BookShelf s3 = s1;
+    s3 = s2;
+    BookShelf s4 = s1 + s2;
+    s4.display();
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class BookShelf {
+public:
+    BookShelf() : titles(NULL), count(0) {
+        cout &lt;&lt; "BookShelf: default constructor" &lt;&lt; endl;
+    }
+    void display() const {
+        cout &lt;&lt; "BookShelf (" &lt;&lt; count &lt;&lt; " books): ";
+        for (int i = 0; i &lt; count; i++) cout &lt;&lt; titles[i] &lt;&lt; ", ";
+        cout &lt;&lt; endl;
+    }
+
+    // (1) non-default constructor -- "BookShelf: non-default constructor"
+
+
+    // (2) destructor -- "BookShelf: destructor"
+
+
+    // (3) copy constructor, deep copy -- "BookShelf: copy constructor"
+
+
+    // (4) assignment operation -- "BookShelf: assignment operation"
+
+
+    // (5) operator+ combining two shelves -- "BookShelf: operator+"
+
+
+protected:
+    string *titles;
+    int count;
+};
+
+int main() {
+    string a[2] = {"Dune", "Solaris"};
+    string b[3] = {"Emma", "Ulysses", "Beloved"};
+    BookShelf s1(a, 2), s2(b, 3);
+    BookShelf s3 = s1;
+    s3 = s2;
+    BookShelf s4 = s1 + s2;
+    s4.display();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.3</div>
+  <div class="bd">
+    <p>Compare what you wrote against the model answer, member by member, and score yourself the way
+    the rubric would.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>The five bodies are exactly the ones in the Procedure in this section. Score yourself on
+      this checklist, which is assembled from the point splits actually printed on past rubrics for
+      this question:</p>
+      <table class="trace">
+        <tr><th>Member</th><th>Worth</th><th>Must contain</th></tr>
+        <tr><td>non-default constructor</td><td>3&ndash;4</td><td>title line; <code>new</code> sized from the argument; a copy loop</td></tr>
+        <tr><td>destructor</td><td>3&ndash;4</td><td>title line (<code>~</code>, no return type, no parameters); <code>delete []</code></td></tr>
+        <tr><td>copy constructor</td><td>4&ndash;5</td><td>title line with <code>const</code> reference parameter; fresh <code>new</code>; a copy loop</td></tr>
+        <tr><td><code>operator=</code></td><td>5&ndash;6</td><td>title line returning <code>BookShelf&amp;</code>; guard; <code>delete []</code>; fresh <code>new</code>; copy loop; <code>return *this;</code></td></tr>
+        <tr><td><code>operator+</code></td><td>5&ndash;7</td><td>title line returning by value; build the combined data; construct the result; return it</td></tr>
+      </table>
+      <p>Two things to check that are easy to miss when you mark your own work:</p>
+      <ul>
+        <li>Did you write the announcement message in <em>every</em> one of the five? A missing
+        message is not just a style problem &mdash; the trace question is graded against it.</li>
+        <li>Did <code>operator+</code> free its scratch array (<code>delete [] temp;</code>) before returning? That is a
+        separately listed point on the Fall 2023 rubric.</li>
+      </ul>
+      <p>If you got fewer than four of the five substantially right, do this exercise again tomorrow
+      with the <code>Matrix</code> class in Section 3, which has a different data layout, and then again the
+      day after with <code>BookShelf</code>. Two passes on two layouts is enough.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Reading a constructor/destructor trace</h2>
+
+<p>The special-members question almost always has a twin immediately after it: <em>"Assuming your X
+class is correctly implemented and prints the corresponding messages, what will be the output of the
+following main program?"</em> It is worth 10&ndash;15 points, one point per printed line, and it has
+no partial credit per line &mdash; you either produce that line, in that position, or you do not.</p>
+
+<p>It is really a reading-comprehension exercise about six sentences of C++. There are only six
+things a line of <code>main</code> can do, and each maps to exactly one announcement.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; converting a line of <code>main</code> into printed lines</span></div>
+  <div class="bd">
+    <table class="trace">
+      <tr><th>What you see</th><th>What it calls</th><th>Lines printed</th></tr>
+      <tr><td><code>X a;</code></td><td>default constructor</td><td>"default constructor"</td></tr>
+      <tr><td><code>X b(1,2);</code></td><td>non-default constructor</td><td>"non-default constructor"</td></tr>
+      <tr><td><code>X c = b;</code> or <code>X c(b);</code></td><td><strong>copy</strong> constructor &mdash; <code>c</code> is being created</td><td>"copy constructor"</td></tr>
+      <tr><td><code>a = b;</code> (both already exist)</td><td><code>operator=</code></td><td>"assignment operation"</td></tr>
+      <tr><td><code>X d = a + b;</code></td><td><code>operator+</code>, whose body constructs the result</td><td>"operator+" then whichever constructor the body uses</td></tr>
+      <tr><td><code>b = a + c;</code></td><td><code>operator+</code>, then <code>operator=</code>, then the temporary dies</td><td>"operator+", the result's constructor, "assignment operation", "destructor"</td></tr>
+      <tr><td>end of <code>main</code></td><td>destructors, in <strong>reverse</strong> order of construction</td><td>one "destructor" per surviving object</td></tr>
+    </table>
+    <p>Then the two rules that finish the job:</p>
+    <ol>
+      <li>Count the objects that were <em>ever</em> constructed, and make sure your answer has one
+      destructor line for each one that is still alive at the end of the scope.</li>
+      <li>A temporary returned from <code>operator+</code> and then used to <em>initialize</em> a new object is
+      normally <strong>elided</strong> &mdash; built directly in place, so no extra copy constructor
+      and no extra destructor. A temporary returned and then <em>assigned</em> is a real object: it
+      is destroyed at the end of the statement, which is where the extra "destructor" line in the
+      middle of a trace comes from.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the 16-line trace, in full</span></div>
+  <div class="bd">
+    <p>This is a complete past question: the class, with all five members supplied, and the <code>main</code>
+    that traces it. The class stores its two scalars on the heap &mdash; <code>int *rows, *cols</code> &mdash;
+    which is the other data layout the exam uses, so read the members carefully too. Write down all
+    sixteen lines before revealing.</p>
+<div class="codewrap"><div class="cap">matrix_trace.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Matrix {
+public:
+    Matrix() {
+        cout &lt;&lt; "default constructor" &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+    }
+    Matrix(int r, int c) {
+        cout &lt;&lt; "non-default constructor" &lt;&lt; endl;
+        rows = new int; cols = new int;
+        *rows = r; *cols = c;
+    }
+    ~Matrix() {
+        cout &lt;&lt; "destructor" &lt;&lt; endl;
+        delete rows; delete cols;
+    }
+    Matrix(const Matrix &amp;orig) {
+        cout &lt;&lt; "copy constructor" &lt;&lt; endl;
+        rows = new int; cols = new int;
+        *rows = *(orig.rows); *cols = *(orig.cols);
+    }
+    Matrix&amp; operator=(const Matrix &amp;rhs) {
+        cout &lt;&lt; "assignment operation" &lt;&lt; endl;
+        if (this == &amp;rhs) return *this;
+        delete rows; delete cols;
+        rows = new int; cols = new int;
+        *rows = *(rhs.rows); *cols = *(rhs.cols);
+        return *this;
+    }
+    Matrix operator*(const Matrix &amp;other) {
+        cout &lt;&lt; "operator*" &lt;&lt; endl;
+        int newRows = *rows;
+        int newCols = *(other.cols);
+        Matrix result(newRows, newCols);
+        return result;
+    }
+    void set(int r, int c) { *rows = r; *cols = c; }
+    void print() { cout &lt;&lt; *rows &lt;&lt; " x " &lt;&lt; *cols &lt;&lt; " matrix" &lt;&lt; endl; }
+
+private:
+    int *rows, *cols;
+};
+
+int main() {
+    Matrix a(2,3), b;
+    b.set(4, 5);
+    Matrix c = b;
+    c.print();
+    b = a * c;
+    b.print();
+    Matrix d = a * c;
+    d.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">non-default constructor
+default constructor
+copy constructor
+4 x 5 matrix
+operator*
+non-default constructor
+assignment operation
+destructor
+2 x 5 matrix
+operator*
+non-default constructor
+2 x 5 matrix
+destructor
+destructor
+destructor
+destructor</pre>
+<p>Line by line, with the reason:</p>
+<table class="trace">
+  <tr><th>#</th><th>Line</th><th>Why</th></tr>
+  <tr><td>1</td><td><code>non-default constructor</code></td><td><code>Matrix a(2,3)</code></td></tr>
+  <tr><td>2</td><td><code>default constructor</code></td><td><code>b</code> in the same declaration &mdash; no arguments</td></tr>
+  <tr><td>&mdash;</td><td>&mdash;</td><td><code>b.set(4,5)</code> prints nothing; <code>set</code> has no message</td></tr>
+  <tr><td>3</td><td><code>copy constructor</code></td><td><code>Matrix c = b;</code> &mdash; <code>c</code> is being <em>created</em>, so this is a copy, not an assignment</td></tr>
+  <tr><td>4</td><td><code>4 x 5 matrix</code></td><td><code>c.print()</code></td></tr>
+  <tr><td>5</td><td><code>operator*</code></td><td><code>b = a * c;</code> evaluates the right side first</td></tr>
+  <tr><td>6</td><td><code>non-default constructor</code></td><td>&hellip;and <code>operator*</code>'s body builds <code>result</code> with <code>Matrix result(newRows, newCols);</code></td></tr>
+  <tr><td>7</td><td><code>assignment operation</code></td><td>the returned temporary is assigned into the existing <code>b</code></td></tr>
+  <tr><td>8</td><td><code>destructor</code></td><td>the temporary dies at the end of that statement &mdash; <strong>this is the line students omit</strong></td></tr>
+  <tr><td>9</td><td><code>2 x 5 matrix</code></td><td><code>b.print()</code>: a is 2&times;3, c is 4&times;5, so the product is 2&times;5</td></tr>
+  <tr><td>10&ndash;11</td><td><code>operator*</code> / <code>non-default constructor</code></td><td><code>Matrix d = a * c;</code> &mdash; same two lines as before</td></tr>
+  <tr><td>&mdash;</td><td>&mdash;</td><td><strong>no</strong> copy constructor and <strong>no</strong> destructor here: <code>d</code> is being initialized, so the result is built directly into <code>d</code></td></tr>
+  <tr><td>12</td><td><code>2 x 5 matrix</code></td><td><code>d.print()</code></td></tr>
+  <tr><td>13&ndash;16</td><td>four <code>destructor</code> lines</td><td><code>d</code>, <code>c</code>, <code>b</code>, <code>a</code> &mdash; reverse order of construction, though the message does not say which is which</td></tr>
+</table>
+<p>The published key for this question expects exactly these sixteen lines, and a real
+<code>g++</code> build produces them.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the two lines everybody drops</span></div>
+  <div class="bd">
+    <p><strong>(1)</strong> The constructor that runs <em>inside</em> <code>operator+</code> or <code>operator*</code>.
+    Your operator body says <code>Matrix result(r, c);</code> &mdash; that is a constructor call, and it
+    announces itself.</p>
+    <p><strong>(2)</strong> The <code>destructor</code> for the temporary when the operator's result feeds an
+    <em>assignment</em> rather than an initialization. <code>b = a * c;</code> produces one; <code>Matrix d = a * c;</code>
+    does not.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.4</div>
+  <div class="bd">
+    <p>Each part below is a complete <code>main</code> used with the <code>BookShelf</code> class from Section 2, with the
+    announcement messages exactly as written there. Assume <code>a</code> holds 2 titles and <code>b</code> holds 3. Give
+    the full output of each &mdash; every line, including the destructors.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>BookShelf x(a, 2); BookShelf y = x;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">BookShelf: non-default constructor
+BookShelf: copy constructor
+BookShelf: destructor
+BookShelf: destructor</pre>
+        <p><code>BookShelf y = x;</code> creates <code>y</code>, so it is the copy constructor &mdash; the <code>=</code> here is
+        initialization syntax, not assignment. Two objects, two destructors.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>BookShelf x(a, 2), y; y = x;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">BookShelf: non-default constructor
+BookShelf: default constructor
+BookShelf: assignment operation
+BookShelf: destructor
+BookShelf: destructor</pre>
+        <p>The only change from (a) is that <code>y</code> already exists by the time the <code>=</code> is reached, so
+        <code>operator=</code> runs instead of the copy constructor. One declaration statement, two
+        constructors: <code>x</code> gets the non-default one, <code>y</code> gets the default one.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>BookShelf x(a, 2), y(b, 3); BookShelf z = x + y;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">BookShelf: non-default constructor
+BookShelf: non-default constructor
+BookShelf: operator+
+BookShelf: non-default constructor
+BookShelf: destructor
+BookShelf: destructor
+BookShelf: destructor</pre>
+        <p>Four lines before the destructors. The fourth is <code>operator+</code>'s body constructing its
+        <code>result</code> with the non-default constructor &mdash; the line that is easiest to forget. There
+        is <strong>no</strong> copy-constructor line and only <strong>three</strong> destructors:
+        <code>result</code> is built directly into <code>z</code>, so it was never a separate object.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>BookShelf x(a, 2), y(b, 3), z; z = x + y;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">BookShelf: non-default constructor
+BookShelf: non-default constructor
+BookShelf: default constructor
+BookShelf: operator+
+BookShelf: non-default constructor
+BookShelf: assignment operation
+BookShelf: destructor
+BookShelf: destructor
+BookShelf: destructor
+BookShelf: destructor</pre>
+        <p>Ten lines, and <strong>four</strong> destructors for three named objects. The extra one
+        is the seventh line: because the result of <code>operator+</code> is <em>assigned</em> into an existing
+        <code>z</code> instead of initializing a new object, the temporary is a real object with a real
+        lifetime and it dies at the semicolon. Compare with (c), which has three destructors for the
+        same amount of arithmetic.</p>
+        <p>The whole difference between (c) and (d) is <code>BookShelf z = x + y;</code> versus
+        <code>BookShelf z; z = x + y;</code>. On a trace question that is two points.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; the other data layout</h3>
+
+<p>The exam alternates between two layouts: a dynamic <em>array</em> member (<code>string *titles</code> with a
+<code>count</code>, as in <code>BookShelf</code>) and one <code>new</code> per <em>scalar</em> (<code>int *rows, *cols</code>, as in <code>Matrix</code>).
+The five members are structurally identical; only <code>new[]</code>/<code>delete[]</code> versus <code>new</code>/<code>delete</code> changes.
+Write the five members for a raw-pointer layout without looking back at Section 3.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; the Big Five on a raw-pointer class</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Matrix {
+public:
+    Matrix() {
+        cout &lt;&lt; &quot;default constructor&quot; &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+    }
+    void set(int r, int c) { *rows = r; *cols = c; }
+    void print() { cout &lt;&lt; *rows &lt;&lt; &quot; x &quot; &lt;&lt; *cols &lt;&lt; &quot; matrix&quot; &lt;&lt; endl; }
+
+    // (1) non-default constructor, two ints, &quot;non-default constructor&quot;
+
+
+    // (2) destructor, &quot;destructor&quot;
+
+
+    // (3) copy constructor, deep copy, &quot;copy constructor&quot;
+
+
+    // (4) assignment operation, &quot;assignment operation&quot;
+
+
+    // (5) operator*, where (r1 x c1) * (r2 x c2) is (r1 x c2), &quot;operator*&quot;
+
+
+private:
+    int *rows, *cols;
+};
+
+int main() {
+    Matrix a(2,3), b;
+    b.set(4, 5);
+    Matrix c = b;
+    b = a * c;
+    b.print();
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Matrix {
+public:
+    Matrix() {
+        cout &lt;&lt; "default constructor" &lt;&lt; endl;
+        rows = new int;
+        cols = new int;
+    }
+    void set(int r, int c) { *rows = r; *cols = c; }
+    void print() { cout &lt;&lt; *rows &lt;&lt; " x " &lt;&lt; *cols &lt;&lt; " matrix" &lt;&lt; endl; }
+
+    // (1) non-default constructor, two ints, "non-default constructor"
+
+
+    // (2) destructor, "destructor"
+
+
+    // (3) copy constructor, deep copy, "copy constructor"
+
+
+    // (4) assignment operation, "assignment operation"
+
+
+    // (5) operator*, where (r1 x c1) * (r2 x c2) is (r1 x c2), "operator*"
+
+
+private:
+    int *rows, *cols;
+};
+
+int main() {
+    Matrix a(2,3), b;
+    b.set(4, 5);
+    Matrix c = b;
+    b = a * c;
+    b.print();
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.5</div>
+  <div class="bd">
+    <p>Check your five members against the model, and say which single line differs structurally
+    from the <code>BookShelf</code> version of the same member.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>The model answers are the five members shown in the Worked Example above. The structural
+      differences are only these:</p>
+      <table class="trace">
+        <tr><th>Member</th><th><code>BookShelf</code> (array member)</th><th><code>Matrix</code> (one <code>new</code> per scalar)</th></tr>
+        <tr><td>allocate</td><td><code>titles = new string[count];</code></td><td><code>rows = new int; cols = new int;</code></td></tr>
+        <tr><td>release</td><td><code>delete [] titles;</code></td><td><code>delete rows; delete cols;</code></td></tr>
+        <tr><td>copy the data</td><td>a <code>for</code> loop over <code>count</code> elements</td><td><code>*rows = *(orig.rows);</code> &mdash; dereference on <em>both</em> sides</td></tr>
+      </table>
+      <p>Everything else &mdash; the announcement, the guard, the <code>return *this;</code>, the return types
+      &mdash; is byte-for-byte the same. That is the payoff of memorizing the shape rather than one
+      particular class.</p>
+      <p>Two traps specific to this layout:</p>
+      <ul>
+        <li><strong><code>delete</code>, not <code>delete []</code>.</strong> <code>new int</code> pairs with <code>delete</code>; <code>new int[n]</code>
+        pairs with <code>delete []</code>. Mixing them is undefined behavior (Class 8).</li>
+        <li><strong><code>*rows = *(orig.rows);</code>, not <code>rows = orig.rows;</code>.</strong> The second one copies
+        the pointer &mdash; that is the shallow copy the question exists to catch.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Operator overloading: member or free, and what to return</h2>
+
+<p>Classes 17 and 18 covered a lot of ground: member operators, free operators, unary operators,
+stream operators, <code>friend</code>. For Exam 2 you need a much smaller subset than that, and it is worth
+knowing which subset, so you spend your revision time in the right place.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; overloaded operator, restated</span></div>
+  <div class="bd">
+    <p>An overloaded operator is a <strong>function whose name is the keyword <code>operator</code> followed by
+    an operator symbol</strong>. <code>p1 + p2</code> is rewritten by the compiler as a call to <code>operator+</code>.
+    Its inputs are called <strong>operands</strong>; two operands makes it <strong>binary</strong>,
+    one makes it <strong>unary</strong>.</p>
+    <p>Written as a <strong>member function</strong> a binary operator takes <strong>one</strong>
+    parameter &mdash; the left operand is the object itself, reachable as <code>*this</code> &mdash; and it can
+    touch private data directly. Written as a <strong>free function</strong> it takes
+    <strong>two</strong> parameters and must go through public accessors (or be a <code>friend</code>).</p>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; what is actually examined</span></div>
+  <div class="bd">
+    <p>In every past paper, the overloaded operator asked for is <code>operator+</code>, <code>operator*</code> or
+    <code>operator=</code>, and it is <strong>always written as a member function</strong>. <code>operator&lt;&lt;</code>
+    has never been asked for, and neither has <code>friend</code>. Drill the member form until it is automatic;
+    know the free form well enough to recognize when it is forced on you.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; when a free function is unavoidable</span></div>
+  <div class="bd">
+    <p>Three operators on one class: <code>operator+</code> and <code>operator*</code> as members, and a second
+    <code>operator*</code> as a free function. Work out which call goes to which, and what the last line
+    prints.</p>
+<div class="codewrap"><div class="cap">opreview.cpp</div><pre><code class="language-cpp">class Complex {
+public:
+    Complex(double a, double b) { re = a; im = b; }
+    double getre() const { return re; }
+    double getim() const { return im; }
+    void print() const { cout &lt;&lt; re &lt;&lt; " + " &lt;&lt; im &lt;&lt; "i" &lt;&lt; endl; }
+
+    Complex operator+ (const Complex &amp;other) const {  // member: ONE parameter
+        return Complex(re + other.re, im + other.im);
+    }
+    Complex operator* (double s) const {              // Complex * double
+        return Complex(re * s, im * s);
+    }
+    bool operator== (const Complex &amp;other) const {    // returns bool, not Complex
+        return re == other.re &amp;&amp; im == other.im;
+    }
+private:
+    double re, im;
+};
+
+// double * Complex -- the left operand is a double, so this CANNOT be a member
+Complex operator* (double s, const Complex &amp;c) {
+    return c * s;                                     // delegate to the member
+}
+
+int main() {
+    Complex a(1.5, 2.5), b(3.0, -1.0);
+
+    (a + b).print();
+    (a * 2.0).print();
+    (2.0 * a).print();
+    cout &lt;&lt; (a == b) &lt;&lt; " " &lt;&lt; (a == a) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">4.5 + 1.5i
+3 + 5i
+3 + 5i
+0 1</pre>
+<p><code>a * 2.0</code> finds the member: the left operand is a <code>Complex</code>, so the compiler looks inside
+<code>Complex</code> for <code>operator*</code>. <code>2.0 * a</code> cannot possibly find a member, because the left operand is a
+<code>double</code> and you cannot add members to <code>double</code>. Delete the free function and the program stops
+compiling:</p>
+<pre class="err">opreview_nofree.cpp: In function 'int main()':
+opreview_nofree.cpp:33:10: error: no match for 'operator*' (operand types are 'double' and 'Complex')
+   33 |     (2.0 * a).print();
+      |      ~~~ ^ ~
+      |      |     |
+      |      |     Complex</pre>
+<p>Note also the last line: <code>operator==</code> returns <code>bool</code>, and <code>cout</code> prints a <code>bool</code> as <code>0</code> or <code>1</code>
+unless you ask otherwise. And the free <code>operator*</code> does not duplicate any arithmetic &mdash; it
+delegates to the member with the operands swapped, which is the standard way to write the pair.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; deciding member vs free, and the return type</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Is the left operand an object of your class?</strong> No means it
+      <strong>must</strong> be a free function. Yes means you may choose, and on this exam you
+      choose member.</li>
+      <li><strong>Is it <code>operator=</code>?</strong> Then it <em>must</em> be a member &mdash; the language
+      requires it. A free <code>operator=</code> does not compile.</li>
+      <li><strong>Choose the return type from what the operator means:</strong></li>
+    </ol>
+    <table class="trace">
+      <tr><th>Operator</th><th>Return type</th><th>Why</th></tr>
+      <tr><td><code>+</code> <code>-</code> <code>*</code></td><td>the class, <strong>by value</strong></td><td>the result is a brand-new object; a reference to it would dangle</td></tr>
+      <tr><td><code>=</code></td><td><code>ClassName&amp;</code></td><td>so <code>a = b = c;</code> works &mdash; and <code>*this</code> outlives the call, so the reference is safe</td></tr>
+      <tr><td><code>==</code> <code>&lt;</code> <code>&gt;</code></td><td><code>bool</code></td><td>a comparison answers a yes/no question</td></tr>
+      <tr><td>unary <code>-</code></td><td>the class, by value; <strong>no parameters</strong> as a member</td><td>one operand, and it is the object itself</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.6</div>
+  <div class="bd">
+    <p>For each, say whether it can be a member function, must be a free function, or must be a
+    member function &mdash; and give the title line.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Adding two <code>BookShelf</code> objects: <code>s1 + s2</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Can be a member</strong>, and on this exam should be. The left operand is a
+        <code>BookShelf</code>.</p>
+<pre><code class="language-cpp">BookShelf operator+(const BookShelf &amp;other)</code></pre>
+        <p>One parameter, returns by value.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Appending a single title to a shelf: <code>s1 + "Dune"</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Can be a member.</strong> The left operand is still the <code>BookShelf</code>; only the
+        right operand changed type.</p>
+<pre><code class="language-cpp">BookShelf operator+(const string &amp;newTitle)</code></pre>
+        <p>This exact variant &mdash; <code>operator+</code> taking a <code>string</code> rather than another object of
+        the class &mdash; was the Winter 2025 final's version of the question, so read the
+        specification carefully rather than assuming the parameter is always the class itself.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Scaling from the left: <code>2.0 * m</code> where <code>m</code> is a <code>Matrix</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Must be a free function.</strong> The left operand is a <code>double</code>.</p>
+<pre><code class="language-cpp">Matrix operator*(double s, const Matrix &amp;m)</code></pre>
+        <p>Two parameters. If <code>Matrix</code> keeps its data private and offers no accessor, this free
+        function also needs a <code>friend</code> declaration inside <code>Matrix</code> &mdash; or it can simply delegate
+        to the member version, <code>return m * s;</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> Assigning one <code>BookShelf</code> to another: <code>s1 = s2</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Must be a member.</strong> C++ does not allow <code>operator=</code> to be a free function
+        at all.</p>
+<pre><code class="language-cpp">BookShelf&amp; operator=(const BookShelf &amp;rhs)</code></pre>
+        <p>Returns a reference to the class, takes one <code>const</code>-reference parameter. This is the
+        title line that appears on nine of the ten past papers &mdash; if there is one line on this
+        page to have memorized letter-perfect, it is this one.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Inheritance: the derived-class question</h2>
+
+<p>After the special members, the second most reliable question on Exam 2 is "implement a class <code>Y</code>
+that inherits from <code>X</code>". It has appeared on six of the ten past papers and it is always structured
+the same way: a short bulleted list of requirements, then a <code>main</code> with the expected output written
+in the comments.</p>
+
+<p>The requirements always arrive in this order: (i) what extra data member the derived class has
+&mdash; sometimes none; (ii) which constructors to write; (iii) sometimes a destructor; (iv) which
+method to override.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a complete derived class, to specification</span></div>
+  <div class="bd">
+    <p>Here is a past question, verbatim in substance. Given the <code>BookShelf</code> class of Section 2:</p>
+    <ul>
+      <li><code>Library</code> has one additional variable, the name of the library.</li>
+      <li>Write a non-default constructor that constructs the object and prints the name of the
+      object followed by ": non-default constructor" as its last instruction.</li>
+      <li>Write a destructor that prints the name of the object followed by ": destructor".</li>
+      <li>Write a <code>print</code> method like <code>BookShelf</code>'s <code>display</code>, but with "BookShelf" replaced by the
+      name of the <code>Library</code> object.</li>
+    </ul>
+    <p>Write the class before you look. Then check the output of the trace <code>main</code> at the bottom.</p>
+<div class="codewrap"><div class="cap">bookshelf_trace.cpp</div><pre><code class="language-cpp">class Library : public BookShelf {
+protected:
+    string name;
+public:
+    Library(string s, const string arr[], int k) : BookShelf(arr, k) {
+        name = s;
+        cout &lt;&lt; name &lt;&lt; ": non-default constructor" &lt;&lt; endl;
+    }
+    ~Library() {
+        cout &lt;&lt; name &lt;&lt; ": destructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; name &lt;&lt; " (" &lt;&lt; count &lt;&lt; " books): ";
+        for (int i = 0; i &lt; count; i++) cout &lt;&lt; titles[i] &lt;&lt; ", ";
+        cout &lt;&lt; endl;
+    }
+};
+
+int main() {
+    string genres[4] = {"sci-fi", "romance", "thriller", "comedy"};
+    BookShelf shelf;
+    shelf.display();
+    Library mainLib("Downtown", genres, 4);
+    mainLib.print();
+    shelf = mainLib;
+    shelf.display();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">BookShelf: default constructor
+BookShelf (0 books): 
+BookShelf: non-default constructor
+Downtown: non-default constructor
+Downtown (4 books): sci-fi, romance, thriller, comedy, 
+BookShelf: assignment operation
+BookShelf (4 books): sci-fi, romance, thriller, comedy, 
+Downtown: destructor
+BookShelf: destructor
+BookShelf: destructor</pre>
+<p>Everything the rubric pays for is visible in the first three lines of the class:</p>
+<ul>
+  <li><strong><code>class Library : public BookShelf {</code></strong> &mdash; the title line, 2 points on its
+  own. <code>public</code> is not optional; leave it out and you get private inheritance (Class 21), which
+  breaks everything downstream.</li>
+  <li><strong><code>protected:</code> and <code>public:</code> labels</strong> &mdash; a separately listed point on past
+  rubrics.</li>
+  <li><strong><code>string name;</code></strong> &mdash; the additional variable, its own point.</li>
+  <li><strong><code>: BookShelf(arr, k)</code></strong> &mdash; the base initializer. Without it the compiler
+  calls <code>BookShelf</code>'s default constructor and the shelf comes out empty.</li>
+  <li><strong>The closing <code>};</code></strong> &mdash; yes, really, its own point on more than one
+  rubric.</li>
+</ul>
+<p>Two things about the trace itself. <code>Library</code>'s constructor prints <em>second</em>, after
+"BookShelf: non-default constructor", because the base sub-object is built before the derived
+constructor's body runs. And the destructors go the other way: "Downtown: destructor" then
+"BookShelf: destructor", derived first, base second, automatically &mdash; you never write a call to
+the base destructor.</p>
+<p><code>print</code> accesses <code>count</code> and <code>titles</code> directly. That works only because they are
+<strong><code>protected</code></strong> in <code>BookShelf</code>. Had they been <code>private</code>, <code>Library</code> would be locked out
+exactly like the rest of the world, and the method would have to go through public accessors.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; forgetting the base initializer</span></div>
+  <div class="bd">
+    <p>If the base class has <em>no</em> default constructor &mdash; and a class written for this
+    exam usually does not &mdash; omitting the base initializer is not a silent bug, it is a
+    compile error, and the caret points at your derived constructor:</p>
+<pre class="err">nobaseinit_err.cpp: In constructor 'Pfunction::Pfunction(double*, int, double)':
+nobaseinit_err.cpp:40:47: error: no matching function for call to 'Polynomial::Polynomial()'
+   40 |     Pfunction(double c[], int d, double xVal) {   // no base initializer
+      |                                               ^</pre>
+    <p>The fix is to name the base in the initializer list, not to add statements to the body:
+    <code>Pfunction(double c[], int d, double xVal) : Polynomial(c, d) { x = xVal; }</code>. Writing
+    <code>Polynomial(c, d);</code> as a <em>statement</em> inside the body builds a temporary, destroys it, and
+    changes nothing (Class 20).</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; construction order, printed</span></div>
+  <div class="bd">
+    <p>The trace questions on the finals depend on knowing the exact order in which the pieces of a
+    derived object are built. Here every piece announces itself. Note that <code>Derived</code>'s initializer
+    list names <code>beta</code> before <code>alpha</code>, while the class declares <code>alpha</code> before <code>beta</code>. Predict the
+    order.</p>
+<div class="codewrap"><div class="cap">ctororder.cpp</div><pre><code class="language-cpp">class Part {
+public:
+    Part(const string &amp;n) : name(n) { cout &lt;&lt; "  Part " &lt;&lt; name &lt;&lt; ": constructor" &lt;&lt; endl; }
+    ~Part() { cout &lt;&lt; "  Part " &lt;&lt; name &lt;&lt; ": destructor" &lt;&lt; endl; }
+private:
+    string name;
+};
+
+class Base {
+public:
+    Base() : first("Base::first"), second("Base::second") {
+        cout &lt;&lt; "Base: constructor body" &lt;&lt; endl;
+    }
+    ~Base() { cout &lt;&lt; "Base: destructor body" &lt;&lt; endl; }
+private:
+    Part first;
+    Part second;
+};
+
+class Derived : public Base {
+public:
+    Derived() : beta("Derived::beta"), alpha("Derived::alpha") {   // list order is a lie
+        cout &lt;&lt; "Derived: constructor body" &lt;&lt; endl;
+    }
+    ~Derived() { cout &lt;&lt; "Derived: destructor body" &lt;&lt; endl; }
+private:
+    Part alpha;    // declared FIRST -- so built first
+    Part beta;     // declared SECOND
+};
+
+int main() {
+    cout &lt;&lt; "--- creating d ---" &lt;&lt; endl;
+    Derived d;
+    cout &lt;&lt; "--- leaving main ---" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">--- creating d ---
+  Part Base::first: constructor
+  Part Base::second: constructor
+Base: constructor body
+  Part Derived::alpha: constructor
+  Part Derived::beta: constructor
+Derived: constructor body
+--- leaving main ---
+Derived: destructor body
+  Part Derived::beta: destructor
+  Part Derived::alpha: destructor
+Base: destructor body
+  Part Base::second: destructor
+  Part Base::first: destructor</pre>
+<p><code>alpha</code> is built before <code>beta</code> even though the initializer list says otherwise. Members are
+initialized in <strong>declaration order</strong>, always. g++ will even tell you when the two
+disagree:</p>
+<pre class="err">ctororder.cpp: In constructor 'Derived::Derived()':
+ctororder.cpp:33:10: warning: 'Derived::beta' will be initialized after [-Wreorder]
+   33 |     Part beta;     // declared SECOND
+      |          ^~~~
+ctororder.cpp:32:10: warning:   'Part Derived::alpha' [-Wreorder]</pre>
+<p>The complete rule, and its mirror image:</p>
+<table class="trace">
+  <tr><th>Construction</th><th>Destruction</th></tr>
+  <tr><td>1. base sub-object (recursively, from the root of the chain)</td><td>1. derived destructor body</td></tr>
+  <tr><td>2. the class's own members, in <strong>declaration</strong> order</td><td>2. its own members, in <strong>reverse</strong> declaration order</td></tr>
+  <tr><td>3. the constructor body</td><td>3. the base destructor, automatically</td></tr>
+</table>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.7</div>
+  <div class="bd">
+    <p><code>Library</code> inherits from <code>BookShelf</code>, which owns a dynamic array. The exam asks only for a
+    non-default constructor, a destructor and a <code>print</code> method &mdash; no copy constructor and no
+    <code>operator=</code> for <code>Library</code>. Is the derived class therefore leaky or unsafe?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>No &mdash; and that is worth understanding rather than memorizing.</strong>
+      <code>Library</code> adds one member, a <code>string name</code>. A <code>string</code> manages its own memory: its own
+      destructor, copy constructor and assignment operator do the right thing. <code>Library</code> itself owns
+      no raw pointer, so it needs no Big Three of its own.</p>
+      <p>What about the array in the base? The compiler-generated <code>Library</code> copy constructor calls
+      <strong><code>BookShelf</code>'s</strong> copy constructor for the base sub-object, and you wrote that one
+      to deep-copy. So the deep copy still happens. The same argument covers assignment.</p>
+      <p>The rule from Class 20 in one line: <strong>a derived class needs its own Big Three only if
+      the derived class itself acquires a resource.</strong> If you do write them, the base part is
+      your responsibility to forward:</p>
+<pre><code class="language-cpp">Library(const Library &amp;orig) : BookShelf(orig) {   // forward to the base copy ctor
+    name = orig.name;
+}
+
+Library&amp; operator=(const Library &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    BookShelf::operator=(rhs);                     // forward to the base operator=
+    name = rhs.name;
+    return *this;
+}</code></pre>
+      <p><code>BookShelf(orig)</code> works because a base reference binds to the base sub-object of a derived
+      object &mdash; that is IS-A doing its job.</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write a derived class to specification</h3>
+
+<p>A different flavor of the same question: this derived class adds <em>no</em> data at all, and the
+work is entirely in the constructors. Given the <code>Box</code> class below, write <code>SquareBox</code> with a default
+constructor and a one-argument constructor that uses its argument for all three dimensions. This is
+a past exam problem word for word.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; write the derived class</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Box {
+public:
+    Box(): length(1), width(1), height(1) {
+        cout &lt;&lt; &quot;Box: default constructor&quot; &lt;&lt; endl;
+    }
+    Box(int a, int b, int c): length(a), width(b), height(c) {
+        cout &lt;&lt; &quot;Box: non-default constructor&quot; &lt;&lt; endl;
+    }
+    ~Box() { cout &lt;&lt; &quot;Box: destructor&quot; &lt;&lt; endl; }
+    void print() {
+        cout &lt;&lt; &quot;Box: &quot;;
+        cout &lt;&lt; &quot;(&quot; &lt;&lt; length &lt;&lt; &quot;,&quot; &lt;&lt; width &lt;&lt; &quot;,&quot; &lt;&lt; height &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+    }
+protected:
+    int length, width, height;
+};
+
+// SquareBox: no additional variable.
+// A default constructor, and a one-argument constructor taking the edge size.
+
+
+int main () {
+    SquareBox a, b(5);
+    a.print();      // Box: (1,1,1)
+    b.print();      // Box: (5,5,5)
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Box {
+public:
+    Box(): length(1), width(1), height(1) {
+        cout &lt;&lt; "Box: default constructor" &lt;&lt; endl;
+    }
+    Box(int a, int b, int c): length(a), width(b), height(c) {
+        cout &lt;&lt; "Box: non-default constructor" &lt;&lt; endl;
+    }
+    ~Box() { cout &lt;&lt; "Box: destructor" &lt;&lt; endl; }
+    void print() {
+        cout &lt;&lt; "Box: ";
+        cout &lt;&lt; "(" &lt;&lt; length &lt;&lt; "," &lt;&lt; width &lt;&lt; "," &lt;&lt; height &lt;&lt; ")" &lt;&lt; endl;
+    }
+protected:
+    int length, width, height;
+};
+
+// SquareBox: no additional variable.
+// A default constructor, and a one-argument constructor taking the edge size.
+
+
+int main () {
+    SquareBox a, b(5);
+    a.print();      // Box: (1,1,1)
+    b.print();      // Box: (5,5,5)
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.8</div>
+  <div class="bd">
+    <p>Check your <code>SquareBox</code> against the model answer, and note where the marks are.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">squarebox.cpp</div><pre><code class="language-cpp">class SquareBox : public Box {
+public:
+    SquareBox(): Box() {}
+    SquareBox(int size): Box(size, size, size) {}
+};</code></pre></div>
+<pre class="out">Box: default constructor
+Box: non-default constructor
+Box: (1,1,1)
+Box: (5,5,5)
+Box: destructor
+Box: destructor</pre>
+      <p>Five lines of code, ten points. The published split was <strong>2 points</strong> for the
+      class title line, <strong>4 points</strong> for the default constructor and
+      <strong>4 points</strong> for the non-default constructor.</p>
+      <p>Things worth noticing:</p>
+      <ul>
+        <li>Both bodies are <strong>empty</strong>. All the work happens in the base initializer.
+        <code>SquareBox(int size)</code> does not set <code>length</code>, <code>width</code> and <code>height</code> itself &mdash; it hands the
+        job to the constructor that already knows how, which is the whole point of inheritance.</li>
+        <li><code>SquareBox(): Box() {}</code> could have been written <code>SquareBox() {}</code>: name no base and the
+        compiler inserts the base's default constructor for you. Writing it out is clearer and
+        costs nothing.</li>
+        <li>The output shows only <strong>two</strong> constructor lines and two destructor lines
+        for two objects &mdash; <code>SquareBox</code> announces nothing of its own, so all the messages come
+        from <code>Box</code>.</li>
+        <li><code>print()</code> is not overridden, so <code>b.print()</code> prints "Box: (5,5,5)" &mdash; the base
+        version, with the base's label. If the specification had asked for "SquareBox: (5,5,5)" you
+        would have had to override it.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Slicing, base pointers, and what each one loses</h2>
+
+<p>Class 21's two big results turn up on every final and are fair game on Exam 2. They are easy to
+state and easy to confuse, so here they are side by side.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; object slicing</span></div>
+  <div class="bd">
+    <p>Assigning or copy-constructing a <strong>derived object into a base-typed variable</strong>
+    copies the base part and silently discards the derived part. It compiles clean, produces a
+    perfectly valid base object, and never touches the source. The operator that runs is chosen from
+    the <strong>declared type of the destination</strong>, so <code>shelf = mainLib;</code> runs
+    <code>BookShelf::operator=</code> and prints one line, not two.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; static binding</span></div>
+  <div class="bd">
+    <p>The compiler decides which function a call refers to at <strong>compile time</strong>, from
+    the <strong>declared type</strong> of the object or handle &mdash; not from what the object
+    actually is at run time. Through a <code>BookShelf *</code> you get <code>BookShelf</code>'s interface and
+    <code>BookShelf</code>'s method bodies, even when the pointer holds the address of a <code>Library</code>. Its
+    opposite, dynamic binding, arrives with <code>virtual</code> in Class 24 &mdash; which is after this exam.</p>
+  </div>
+</div>
+
+<p>Look again at the trace in Section 5. The line <code>shelf = mainLib;</code> is a slice, and the output
+proves it: one line, "BookShelf: assignment operation", and then <code>shelf.display()</code> prints the four
+titles but nothing about "Downtown". The books survived because they live in the base part; the name
+did not, because it lives in the derived part. This exact pattern &mdash;
+<code>baseObject = derivedObject;</code> in the middle of a trace &mdash; appears on three of the
+four past finals.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same object through two handles</span></div>
+  <div class="bd">
+    <p>No slicing here at all: a pointer is taken, nothing is copied. Predict every line,
+    the two labelled ones in particular.</p>
+<div class="codewrap"><div class="cap">baseptr.cpp</div><pre><code class="language-cpp">int main() {
+    string genres[4] = {"sci-fi", "romance", "thriller", "comedy"};
+    Library mainLib("Downtown", genres, 4);
+
+    BookShelf *p = &amp;mainLib;   // IS-A: a Library is a BookShelf
+    cout &lt;&lt; "--- through the Library object ---" &lt;&lt; endl;
+    mainLib.print();
+    cout &lt;&lt; "--- through a BookShelf* ---" &lt;&lt; endl;
+    p-&gt;display();              // the base interface is all you get
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">BookShelf: non-default constructor
+Downtown: non-default constructor
+--- through the Library object ---
+Downtown (4 books): sci-fi, romance, thriller, comedy, 
+--- through a BookShelf* ---
+BookShelf (4 books): sci-fi, romance, thriller, comedy, 
+Downtown: destructor
+BookShelf: destructor</pre>
+<p>One object, two views of it. Through the <code>Library</code> name you can call <code>print()</code>; through the
+<code>BookShelf *</code> you cannot &mdash; <code>p-&gt;print()</code> does not compile, because <code>BookShelf</code> has no member
+called <code>print</code>. The data was never sliced: <code>p</code> points at the whole <code>Library</code>, and both lines show
+the same four titles. What the base pointer loses is <strong>reach</strong>, not data.</p>
+<p>So the pair of results is:</p>
+<table class="trace">
+  <tr><th></th><th>What survives</th><th>What is lost</th></tr>
+  <tr><td><code>BookShelf shelf = mainLib;</code> (slicing)</td><td>the base data</td><td>the derived data &mdash; permanently, it was never copied</td></tr>
+  <tr><td><code>BookShelf *p = &amp;mainLib;</code> (base pointer)</td><td>all the data, untouched</td><td>access to the derived interface, and derived overrides &mdash; static binding picks the base version</td></tr>
+</table>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; <code>delete</code> through a base pointer</span></div>
+  <div class="bd">
+    <p>If you <code>new</code> a derived object, hold it in a base pointer and <code>delete</code> it, the derived
+    destructor <strong>never runs</strong>. Here <code>p</code> points at a <code>Library</code> whose name is long enough
+    that the <code>string</code> puts its characters on the heap:</p>
+<div class="codewrap"><div class="cap">baseptr_leak.cpp</div><pre><code class="language-cpp">int main() {
+    string genres[4] = {"sci-fi", "romance", "thriller", "comedy"};
+    BookShelf *p = new Library("Downtown Public Library Annex", genres, 4);
+    p-&gt;display();
+    delete p;                  // non-virtual destructor: only ~BookShelf runs
+    return 0;
+}</code></pre></div>
+<pre class="out">BookShelf: non-default constructor
+Downtown Public Library Annex: non-default constructor
+BookShelf (4 books): sci-fi, romance, thriller, comedy, 
+BookShelf: destructor</pre>
+    <p>There is no "Downtown Public Library Annex: destructor" line, and <code>valgrind</code> puts a number on
+    what that cost:</p>
+<pre class="shell">LEAK SUMMARY:
+   definitely lost: 31 bytes in 1 blocks</pre>
+    <p>Thirty-one bytes is the name string. Until <code>virtual</code> destructors arrive in Class 24, the rule
+    is simply: <strong>delete through a pointer of the object's own type.</strong></p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.9</div>
+  <div class="bd">
+    <p>Both of these are attempts to go the <em>other</em> way &mdash; base into derived. What
+    happens?</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>BookShelf shelf; Library lib("Downtown"); lib = shelf;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It does not compile, and it never can.</p>
+<pre class="err">baseToDerived_err.cpp: In function 'int main()':
+baseToDerived_err.cpp:25:11: error: no match for 'operator=' (operand types are 'Library' and 'BookShelf')
+   25 |     lib = shelf;               // base into derived
+      |           ^~~~~
+baseToDerived_err.cpp:15:7: note:   no known conversion for argument 1 from 'BookShelf' to 'const Library&amp;'</pre>
+        <p>Derived-to-base is automatic (and lossy); base-to-derived is impossible. A <code>BookShelf</code>
+        has no <code>name</code> member, so there is nothing to build a <code>Library</code> out of.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A function declared <code>void show(BookShelf s)</code> &mdash; note, by value &mdash; called as <code>show(mainLib);</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It compiles, and it <strong>slices</strong>. The parameter <code>s</code> is a <code>BookShelf</code>, so
+        <code>BookShelf</code>'s copy constructor runs on the base sub-object of <code>mainLib</code> and the <code>Library</code>
+        part is dropped. Inside <code>show</code>, the name is gone.</p>
+        <p>Slicing has three habitats, and they are all the same mistake wearing different clothes:</p>
+        <ul>
+          <li>assignment to a base object &mdash; <code>shelf = mainLib;</code></li>
+          <li>copy-construction of a base object &mdash; <code>BookShelf s = mainLib;</code></li>
+          <li>passing or returning <strong>by value</strong> where the type is the base &mdash; this
+          part; a <code>vector&lt;BookShelf&gt;</code> holding <code>Library</code> objects is the same case in
+          disguise</li>
+        </ul>
+        <p>The fix in all three cases is the same: take a base <em>reference</em> or a base
+        <em>pointer</em>. <code>void show(const BookShelf &amp;s)</code> copies nothing and slices nothing.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Loose ends: namespaces, <code>const</code>, access</h2>
+
+<p>Three smaller topics that have shown up on this exam, and one honest list of things that have
+never shown up at all &mdash; which is just as useful when you are deciding what to revise at
+midnight.</p>
+
+<h3>Namespaces</h3>
+
+<p>Class 16's namespaces have appeared on an Exam 2 before, as the output-prediction question. The
+shape is always the same: two namespaces each defining a class with the <em>same name</em> plus a
+same-named free function, then a global function taking one of each, then five lines to trace &mdash;
+one of which deliberately does not compile.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a namespace trace, line by line</span></div>
+  <div class="bd">
+    <p>This is a past Exam 2 question, verbatim. Work out all five lines. The instruction on the
+    paper was: <em>"If the line causes a compiler/runtime error, explain why the error occurs, then
+    comment out the line and move on to the next one."</em></p>
+<div class="codewrap"><div class="cap">nsdemo.cpp</div><pre><code class="language-cpp">namespace Alpha {
+    class Number {
+      public:
+        Number() : x(2023) {}
+        int value() const { return x; }
+        void print() const { cout &lt;&lt; "Alpha Number: " &lt;&lt; x &lt;&lt; endl; }
+      private:
+        int x;
+    };
+
+    int function(const Number &amp;n, const Number &amp;m) {
+        cout &lt;&lt; "Alpha:: function" &lt;&lt; endl;
+        return n.value() + m.value();
+    }
+}
+
+namespace Beta {
+    class Number {
+      public:
+        Number() : x(3.14) {}
+        double value() const { return x; }
+        void print() const { cout &lt;&lt; "Beta Number: " &lt;&lt; x &lt;&lt; endl; }
+      protected:
+        double x;
+    };
+
+    double function(const Number &amp;n, const Number &amp;m) {
+        cout &lt;&lt; "Beta:: function" &lt;&lt; endl;
+        return n.value() + m.value();
+    }
+}
+
+double function(const Alpha::Number &amp;n, const Beta::Number &amp;m) {
+    cout &lt;&lt; "Mix function" &lt;&lt; endl;
+    return n.value() + m.value();
+}
+
+int main() {
+    Alpha::Number a1, a2;
+    Beta::Number b1, b2;
+    a1.print();                                 // line (a)
+    cout &lt;&lt; b1.x &lt;&lt; endl;                       // line (b)
+    cout &lt;&lt; Alpha::function(a1, a2) &lt;&lt; endl;    // line (c)
+    cout &lt;&lt; Beta::function(b1, b2) &lt;&lt; endl;     // line (d)
+    cout &lt;&lt; function(a1, b2) &lt;&lt; endl;           // line (e)
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>Line (b) is the one that does not compile:</p>
+<pre class="err">error: 'double Beta::Number::x' is protected within this context
+   47 |     cout &lt;&lt; b1.x &lt;&lt; endl;
+      |                ^
+note: declared protected here
+   29 |         double x;
+      |                ^</pre>
+<p>With line (b) commented out, the program prints:</p>
+<pre class="out">Alpha Number: 2023
+Alpha:: function
+4046
+Beta:: function
+6.28
+Mix function
+2026.14</pre>
+<table class="trace">
+  <tr><th>Line</th><th>Answer</th><th>Reasoning</th></tr>
+  <tr><td>(a)</td><td><code>Alpha Number: 2023</code></td><td><code>Alpha::Number</code>'s default constructor set <code>x</code> to 2023</td></tr>
+  <tr><td>(b)</td><td>compile error</td><td><code>x</code> is <code>protected</code> in <code>Beta::Number</code>; <code>main</code> is not a member and not a derived class, so it is locked out exactly like <code>private</code> would lock it out</td></tr>
+  <tr><td>(c)</td><td><code>Alpha:: function</code> then <code>4046</code></td><td><code>Alpha::function</code> is explicitly qualified; <code>2023 + 2023</code>, and <code>int + int</code> is an <code>int</code></td></tr>
+  <tr><td>(d)</td><td><code>Beta:: function</code> then <code>6.28</code></td><td><code>3.14 + 3.14</code>; <code>cout</code> prints a <code>double</code> with six significant digits by default</td></tr>
+  <tr><td>(e)</td><td><code>Mix function</code> then <code>2026.14</code></td><td>neither namespace's <code>function</code> accepts one <code>Alpha::Number</code> and one <code>Beta::Number</code>, so the global overload is the only match; <code>2023 + 3.14</code></td></tr>
+</table>
+<p>Two traps to note. The strings really do contain two colons and a space &mdash;
+<code>Alpha:: function</code>, not <code>Alpha function</code>. A published answer key for this
+question drops the colons, and on a "reproduce the output exactly" problem that costs the mark; the
+output above is what the program actually prints. And the printed value on line (c) is <code>4046</code>, not
+<code>4046.0</code> &mdash; both operands are <code>int</code>.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.10</div>
+  <div class="bd">
+    <p>In the program above, what would <code>cout &lt;&lt; function(b1, a2) &lt;&lt; endl;</code> do, with the
+    arguments in that order?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>It does not compile. There are three candidates named <code>function</code> visible without
+      qualification &mdash; the two inside the namespaces are <em>not</em> visible unqualified
+      (there is no <code>using namespace Alpha;</code> anywhere), so only the global
+      <code>double function(const Alpha::Number &amp;, const Beta::Number &amp;)</code> is a
+      candidate, and its first parameter is an <code>Alpha::Number</code> while <code>b1</code> is a <code>Beta::Number</code>. There
+      is no conversion between them &mdash; they are unrelated classes that merely share a name.</p>
+      <p>The general lesson: a namespace is not a base class and not a type. <code>Alpha::Number</code> and
+      <code>Beta::Number</code> have nothing to do with each other beyond the spelling.</p>
+    </div></details>
+  </div>
+</div>
+
+<h3><code>const</code>, and access specifiers</h3>
+
+<p><code>const</code> is never the subject of a question on this exam, and it is in almost every answer. Two
+places it earns or loses you points:</p>
+
+<ul>
+  <li><strong>In every signature you write.</strong> <code>const BookShelf &amp;rhs</code>, <code>const string arr[]</code>.
+  The rubric pays for the title line, and the title line the professor wrote has <code>const</code> in it.</li>
+  <li><strong>When you override a <code>const</code> method.</strong> If the base declares
+  <code>void display() const;</code> and your override says <code>void print()</code> without the <code>const</code>, the two are
+  different functions. Copy the stem's signature exactly, <code>const</code> included.</li>
+</ul>
+
+<p>And the access rule that decides half the inheritance questions:</p>
+
+<table class="trace">
+  <tr><th>In the base class</th><th>The outside world</th><th>A derived class</th></tr>
+  <tr><td><code>public</code></td><td>yes</td><td>yes</td></tr>
+  <tr><td><code>protected</code></td><td><strong>no</strong></td><td><strong>yes</strong></td></tr>
+  <tr><td><code>private</code></td><td>no</td><td><strong>no</strong> &mdash; an absolute lock-out</td></tr>
+</table>
+
+<p>That is why the exam classes declare their data <code>protected:</code> rather than <code>private:</code> &mdash; so
+that the derived class you are asked to write can reach <code>count</code> and <code>titles</code> directly. If a question
+ever shows you a <code>private:</code> base, your derived class must go through the public accessors instead.</p>
+
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.11</div>
+  <div class="bd">
+    <p>A stem gives you this base class, and asks you to write <code>Library : public BookShelf</code> with a
+    <code>print</code> method that lists the titles.</p>
+<pre><code class="language-cpp">class BookShelf {
+public:
+    BookShelf(const string arr[], int n);
+    void display() const;
+    int size() const { return count; }
+private:
+    string *titles; int count;
+};</code></pre>
+    <p>What is different about this version, and what does your <code>print</code> have to do?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>The data is <strong><code>private</code></strong>, not <code>protected</code>. <code>private</code> is an absolute lock-out:
+      a derived class is shut out exactly like the rest of the program. <code>Library::print</code> cannot
+      write <code>titles[i]</code> or <code>count</code> at all:</p>
+<pre class="err">privbase_err.cpp: In member function 'void Library::print() const':
+privbase_err.cpp:21:33: error: 'int BookShelf::count' is private within this context
+   21 |         cout &lt;&lt; name &lt;&lt; " (" &lt;&lt; count &lt;&lt; " books): ";
+      |                                 ^~~~~
+privbase_err.cpp:14:25: note: declared private here
+   14 |     string *titles; int count;
+      |                         ^~~~~</pre>
+      <p>So <code>print</code> has to go through whatever public interface the base offers. Here that is
+      <code>size()</code> for the count &mdash; and nothing at all for the titles, so as printed the question
+      cannot be answered: there is no public way to read a title. Your options on an exam are to use
+      the accessors that exist, or to say in one line that the requested method is impossible
+      without one and write it as if <code>titles</code> were <code>protected</code>.</p>
+      <p>This is exactly why every exam class in the bank declares its data <code>protected:</code>. When you
+      write your own derived class, check the access label in the stem <em>before</em> you start
+      reaching for members.</p>
+    </div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; what has never been examined</span></div>
+  <div class="bd">
+    <p>Across every past paper in this course, the following have <strong>never</strong> appeared on
+    an exam: <code>static</code> data members and <code>static</code> member functions; the <code>friend</code> keyword;
+    <code>operator&lt;&lt;</code> and <code>operator&gt;&gt;</code>; file streams; recursion; <code>struct</code>. They are all real
+    C++ and you were taught them for a reason &mdash; but if you have three hours left and a choice,
+    spend them on the Big Five instead. Namespaces are the borderline case: examined exactly once,
+    in the format above, so make sure you can read a qualified trace even if you never need to write
+    a namespace.</p>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>The night-before checklist</h2>
+
+<p>One page. If you can answer every line of this from memory, you are ready.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the self-test</span></div>
+  <div class="bd">
+    <table class="trace">
+      <tr><th>#</th><th>Can you&hellip;</th><th>Where it was taught</th></tr>
+      <tr><td>1</td><td>Write the four title lines &mdash; destructor, copy constructor, <code>operator=</code>, <code>operator+</code> &mdash; for a class you have never seen, in under a minute?</td><td>Classes 14, 15, 17</td></tr>
+      <tr><td>2</td><td>Say the four steps of a deep copy: <em>announce, size, allocate, copy</em>?</td><td>Class 14</td></tr>
+      <tr><td>3</td><td>Say the three lines <code>operator=</code> has that the copy constructor does not: <em>guard, release, <code>return *this;</code></em>?</td><td>Class 15</td></tr>
+      <tr><td>4</td><td>Explain what <code>s = s;</code> does to an object when the guard is missing?</td><td>Class 15</td></tr>
+      <tr><td>5</td><td>Pair <code>new</code> with <code>delete</code> and <code>new[]</code> with <code>delete []</code> without thinking?</td><td>Class 8</td></tr>
+      <tr><td>6</td><td>Say why <code>X b = a;</code> is the copy constructor but <code>b = a;</code> is <code>operator=</code>?</td><td>Class 15</td></tr>
+      <tr><td>7</td><td>Predict the two extra lines a trace gets from <code>operator+</code> &mdash; the result's constructor, and the temporary's destructor when the result is assigned?</td><td>Classes 17, 20</td></tr>
+      <tr><td>8</td><td>Count destructor lines correctly &mdash; one per object ever constructed and still alive at the closing brace?</td><td>Class 14</td></tr>
+      <tr><td>9</td><td>Write <code>class Derived : public Base {</code> with the base initializer, the <code>protected:</code>/<code>public:</code> labels and the closing <code>};</code>?</td><td>Classes 19, 20</td></tr>
+      <tr><td>10</td><td>State the construction order &mdash; base, then members in declaration order, then the body &mdash; and its exact reverse for destruction?</td><td>Class 20</td></tr>
+      <tr><td>11</td><td>Recognize <code>baseObject = derivedObject;</code> as slicing, and say what it keeps and what it drops?</td><td>Class 21</td></tr>
+      <tr><td>12</td><td>Say what a base pointer to a derived object can and cannot reach?</td><td>Class 21</td></tr>
+      <tr><td>13</td><td>Decide member vs free for an operator in one question &mdash; "is the left operand my class?"</td><td>Class 17</td></tr>
+      <tr><td>14</td><td>Read a <code>Namespace::name</code> trace and spot the line that touches a non-public member?</td><td>Classes 16, 19</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 22.12</div>
+  <div class="bd">
+    <p>Rapid recall, no code. Answer all four out loud before opening anything.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A class has <code>double *data; int n;</code> and a constructor that does <code>data = new double[n];</code>. Which functions must you write, and why exactly those?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The <strong>Big Three</strong>: destructor, copy constructor, <code>operator=</code>. The class
+        <em>owns</em> heap memory, and the compiler's generated versions get all three wrong &mdash;
+        the generated destructor does nothing for a raw pointer, and the generated copy and
+        assignment copy the pointer rather than the array. One missing destructor is a leak; one
+        missing copy constructor or <code>operator=</code> is a double free.</p>
+        <p>On this exam, add the non-default constructor and <code>operator+</code> and you have the whole
+        question.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Why must the copy constructor's parameter be a reference?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because passing by value <em>is</em> copying, so a by-value copy constructor would have to
+        call itself to build its own parameter &mdash; infinitely. The language forbids it outright,
+        and g++ says so in as many words:</p>
+<pre class="err">copyval_err.cpp:13:5: error: invalid constructor; you probably meant 'BookShelf (const BookShelf&amp;)'
+   13 |     BookShelf(const BookShelf orig) {          // missing the &amp;
+      |     ^~~~~~~~~</pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Why does <code>operator=</code> return a reference rather than <code>void</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>So that assignment can be chained. <code>a = b = c;</code> groups right to left: <code>b = c</code> runs first
+        and its result becomes the right operand of <code>a = ...</code>. If <code>operator=</code> returns <code>void</code> there
+        is nothing to hand over:</p>
+<pre class="err">chain_err.cpp: In function 'int main()':
+chain_err.cpp:24:13: error: no match for 'operator=' (operand types are 'BookShelf' and 'void')
+   24 |     a = b = c;
+      |             ^</pre>
+        <p>A <em>reference</em> rather than a value, because the object assigned into already exists
+        and outlives the call &mdash; so returning a reference is both safe and free.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> You are two minutes from the end of the exam and have not started the <code>operator+</code> part. What do you write?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The title line, and then whatever body you can manage:</p>
+<pre><code class="language-cpp">BookShelf operator+(const BookShelf &amp;other) {
+    cout &lt;&lt; "BookShelf: operator+" &lt;&lt; endl;</code></pre>
+        <p>Every rubric in the bank pays 1&ndash;2 points for the title line by itself, and the
+        announcement line is separately required by the question. That is a meaningful fraction of
+        the part's marks for fifteen seconds of writing. A blank page scores zero; a signature never
+        does.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; a full practice exam</span></div>
+  <div class="bd">
+    <p>Problems 1&ndash;3 are the whole of the last Exam 2 given in this course, in its original
+    order and with its original point values: 40 points, 50 minutes. Problems 4&ndash;6 are a second
+    rehearsal on a different data layout &mdash; Problems 4 and 5 are the paired
+    implement-then-trace questions from a later midterm, and Problem 6 was written for these notes.
+    Every problem carries its point value and a suggested time.</p>
+    <p><strong>Work Problems 1&ndash;3 in one sitting, on paper, with a timer and nothing open.</strong>
+    That is the only way to find out whether you can actually produce the Big Five under pressure,
+    which is the entire question this exam asks. Reading the solutions first feels like studying and
+    is not.</p>
+    <p>Problems 3, 5 and 6 include output prediction, the format that carries no partial credit on
+    this professor's exams. Commit to a complete answer in writing &mdash; and count your destructor
+    lines &mdash; before you open anything.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; The Big Four on a dynamic-array class <span class="muted small">(from the Fall 2023 Exam 2, Problems 1 &amp; 2)</span></h3>
+
+<p><strong>[20 points &middot; suggested 25 minutes]</strong> Given the following program with a
+<code>Polynomial</code> class:</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Polynomial {
+public:
+    Polynomial(double c[], int d) {
+        degree = d;
+        coefficients = new double[degree+1];
+        for (int i = degree; i &gt;= 0; i--) { coefficients[i] = c[i]; }
+    }
+    void print() {
+        for (int i = degree; i &gt;= 1; i--) {
+            cout &lt;&lt; coefficients[i] &lt;&lt; "*x^" &lt;&lt; i &lt;&lt; " + ";
+        }
+        cout &lt;&lt; coefficients[0] &lt;&lt; endl;
+    }
+
+    // destructor, copy constructor, assignment operation, and
+    // operator+ overloading omitted here
+
+protected:
+    double *coefficients; int degree;
+};
+
+int main () {
+    double a1[3] = {1.1, 2.2, 3.3}, a2[2] = {2, 1};
+    Polynomial p1(a1, 2), p2(a2, 1);
+    p1.print();
+    p2.print();
+    Polynomial p3 = p1 + p2;
+    p3.print();
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Give an implementation for the destructor. <strong>[3 points]</strong></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> The class allocates with <code>new double[degree+1]</code>, so the destructor
+    releases with <code>delete []</code>. Nothing else: <code>degree</code> is a plain <code>int</code> and needs no cleanup.</p>
+<pre><code class="language-cpp">~Polynomial() {
+    delete [] coefficients;
+}</code></pre>
+    <p><strong>Things to notice.</strong> The published point split was <strong>1 point for the
+    title line</strong> and <strong>2 points for deleting the dynamic array</strong>. The title line
+    is <code>~Polynomial()</code> &mdash; a tilde, the class name, empty parentheses, and no return type. A
+    destructor takes no parameters, ever, which is why a class has exactly one.</p>
+    <p><code>delete []</code>, not <code>delete</code>. The array came from <code>new[]</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Give an implementation for the copy constructor to do the deep copy. <strong>[4 points]</strong></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Four steps: take the size from <code>orig</code>, allocate a fresh array of that
+    size, copy the elements one at a time, and never touch <code>orig</code>.</p>
+<pre><code class="language-cpp">Polynomial(const Polynomial &amp;orig) {
+    degree = orig.degree;
+    coefficients = new double[degree+1];
+    for (int i = 0; i &lt;= degree; i++) {
+        coefficients[i] = orig.coefficients[i];
+    }
+}</code></pre>
+    <p><strong>Things to notice.</strong> The split was 1 point for the title line, 1 point for
+    allocating, 2 points for copying the data.</p>
+    <ul>
+      <li>The parameter is <code>const Polynomial &amp;orig</code> &mdash; a <code>const</code> <em>reference</em>. Drop the
+      <code>&amp;</code> and the code does not compile at all.</li>
+      <li>The loop bound is <code>i &lt;= degree</code>, not <code>i &lt; degree</code>. A polynomial of degree <code>d</code> has
+      <code>d+1</code> coefficients, which is why the constructor allocates <code>degree+1</code>. Off-by-one here loses
+      the constant term.</li>
+      <li>No <code>delete</code> anywhere. This object is being <em>created</em>; there is no old array to
+      release. That is the one structural difference between the copy constructor and
+      <code>operator=</code>.</li>
+    </ul>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Give an implementation for the assignment operation. <strong>[6 points]</strong></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> The copy constructor, plus the three things assignment needs and
+    construction does not: guard against self-assignment, release the array this object already
+    owns, and return <code>*this</code>.</p>
+<pre><code class="language-cpp">Polynomial&amp; operator=(const Polynomial &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    delete [] coefficients;
+    degree = rhs.degree;
+    coefficients = new double[degree+1];
+    for (int i = 0; i &lt;= degree; i++) {
+        coefficients[i] = rhs.coefficients[i];
+    }
+    return *this;
+}</code></pre>
+    <p><strong>Things to notice.</strong> This is the most explicitly itemized rubric in the whole
+    bank: 1 point title line, 1 point checking self-assignment, 1 point deleting the dynamic array,
+    2 points assigning the data, 1 point <code>return *this;</code>. Four of those six points are single lines
+    you can write from memory before you have thought about the class at all.</p>
+    <p>Order matters. The guard has to come before the <code>delete []</code>, because when <code>rhs</code> <em>is</em>
+    <code>*this</code> the delete destroys the very data the copy loop is about to read.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Give an implementation for <code>operator+</code> overloading. <strong>[7 points]</strong></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> The sum of two polynomials has the degree of the larger one. Build a
+    scratch array of that size, add whichever coefficients exist at each index, hand the scratch
+    array to the constructor, free the scratch, return the result by value.</p>
+<div class="codewrap"><div class="cap">polynomial_exam2.cpp</div><pre><code class="language-cpp">Polynomial operator+(const Polynomial &amp;p) {
+    int maxDegree = degree;
+    if (maxDegree &lt; p.degree) maxDegree = p.degree;
+
+    double *newCoefficients = new double[maxDegree+1];
+    for (int i = 0; i &lt;= maxDegree; i++) {
+        double coefficient = 0;
+        if (i &lt;= degree) {
+            coefficient += coefficients[i];
+        }
+        if (i &lt;= p.degree) {
+            coefficient += p.coefficients[i];
+        }
+        newCoefficients[i] = coefficient;
+    }
+
+    Polynomial result(newCoefficients, maxDegree);
+    delete [] newCoefficients;
+    return result;
+}</code></pre></div>
+    <p>With all four members in place, the program in the stem compiles, runs and is leak-free:</p>
+<pre class="out">3.3*x^2 + 2.2*x^1 + 1.1
+1*x^1 + 2
+3.3*x^2 + 3.2*x^1 + 3.1</pre>
+    <p><strong>Things to notice.</strong> Seven points, one each for: the title line, finding the
+    larger degree, allocating the new array, computing the coefficients, constructing the result,
+    deleting the scratch array, returning the result. Every one of those is a separate line you can
+    tick off as you write.</p>
+    <ul>
+      <li>The two <code>if</code> statements exist because the shorter polynomial has no coefficient at the
+      high indices. Adding <code>p.coefficients[i]</code> unconditionally would read off the end of its
+      array.</li>
+      <li><code>delete [] newCoefficients;</code> before the <code>return</code>. The constructor <em>copied</em> the
+      scratch array into <code>result</code>, so the scratch is nobody's data afterwards. Forget this line and
+      every addition leaks &mdash; and it is a listed point.</li>
+      <li>Return type is <code>Polynomial</code> <strong>by value</strong>. Returning <code>Polynomial&amp;</code> here would
+      hand back a reference to <code>result</code>, which is destroyed the instant the function returns.</li>
+      <li><code>operator+</code> can reach <code>p.coefficients</code> even though it is <code>protected</code>, because a member
+      function of a class may touch the private and protected members of <em>any</em> object of that
+      same class, not just its own.</li>
+    </ul>
+  </div></details>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; three defects in the published version of this question</span></div>
+  <div class="bd">
+    <ul>
+      <li><strong>The answer key does not compile.</strong> Its <code>operator=</code> opens with
+      <code>if (this == &amp;other) return *this;</code> and its <code>operator+</code> tests <code>if (i &lt;= other.degree)</code>, but the
+      parameters are named <code>rhs</code> and <code>p</code>. There is no <code>other</code> anywhere. Written as printed, g++ says
+      <em>"'other' was not declared in this scope"</em>. Use the parameter names from your own
+      signature &mdash; the corrected answers above are what compiles.</li>
+      <li><strong>The class in the stem is missing its semicolon.</strong> It ends <code>}</code> and not <code>};</code>,
+      immediately before <code>int main</code>. Your own answers must end <code>};</code>, and on the derived-class
+      question that semicolon is separately worth a point.</li>
+      <li><strong>The stem's comments do not match its own code.</strong> They claim
+      <code>p1.print()</code> shows <code>1.1*x^2 + 2.2*x^1 + 3.3</code>, but the constructor copies <code>a1</code> straight across,
+      so <code>coefficients[2]</code> is <code>3.3</code> and the real output is <code>3.3*x^2 + 2.2*x^1 + 1.1</code> &mdash; as
+      verified above, and as we saw in Classes 14 and 17. When an exam comment and the exam's code
+      disagree, <strong>trust the code</strong>. Nothing in this question depends on which reading
+      you take, so do not spend exam time on it.</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Problem 2 &mdash; A derived class with an extra member <span class="muted small">(from the Fall 2023 Exam 2, Problem 3)</span></h3>
+
+<p><strong>[10 points &middot; suggested 12 minutes]</strong> Implement a <code>Pfunction</code> class that
+inherits from the <code>Polynomial</code> class of Problem 1, with the following requirements:</p>
+<ul>
+  <li><code>Pfunction</code> has an additional <code>double</code> variable <code>x</code>.</li>
+  <li>Implement a non-default constructor with 3 arguments: the coefficients array, the degree, and
+  the <code>x</code> value.</li>
+  <li>Override the <code>print</code> method to replace the variable with the actual value.</li>
+</ul>
+
+<pre><code class="language-cpp">int main () {
+    double a[3] = {1.1, 2.2, 3.3};
+    Pfunction pf(a, 2, 1.5);
+    pf.print();     // prints the polynomial with 1.5 substituted for x
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Three requirements, three pieces of code: a class header that names the
+  base, one extra data member, one constructor that forwards the first two arguments to the base and
+  stores the third, and a <code>print</code> that is the base's <code>print</code> with the letter replaced by the value.
+  <code>Polynomial</code> has no default constructor, so the base initializer is mandatory.</p>
+<div class="codewrap"><div class="cap">pfunction.cpp</div><pre><code class="language-cpp">class Pfunction : public Polynomial {
+public:
+    Pfunction(double c[], int d, double xVal) : Polynomial(c, d), x(xVal) {}
+
+    void print() {
+        for (int i = degree; i &gt;= 1; i--) {
+            cout &lt;&lt; coefficients[i] &lt;&lt; "*(" &lt;&lt; x &lt;&lt; ")^" &lt;&lt; i &lt;&lt; " + ";
+        }
+        cout &lt;&lt; coefficients[0] &lt;&lt; endl;
+    }
+private:
+    double x;
+};</code></pre></div>
+<pre class="out">3.3*(1.5)^2 + 2.2*(1.5)^1 + 1.1</pre>
+  <p><strong>Things to notice.</strong> The published split: 2 points for the class title line,
+  2 points for declaring <code>double x</code> under <code>private</code> or <code>protected</code>, 3 points for the non-default
+  constructor, 3 points for overriding <code>print</code>. Half the marks are for two lines that require no
+  insight at all &mdash; write them first.</p>
+  <ul>
+    <li>Either constructor form scores: <code>: Polynomial(c, d), x(xVal) {}</code> or
+    <code>: Polynomial(c, d) { x = xVal; }</code>. What is <em>not</em> optional is naming <code>Polynomial(c, d)</code>.
+    Omit it and the compiler goes looking for <code>Polynomial::Polynomial()</code>, which does not exist.</li>
+    <li><code>print</code> reads <code>coefficients</code> and <code>degree</code> directly. That works because they are
+    <code>protected:</code> in the base. Change one word in the stem to <code>private:</code> and this method becomes
+    impossible to write.</li>
+    <li><code>Pfunction</code> needs no destructor. The array belongs to <code>Polynomial</code>, and <code>~Polynomial()</code>
+    runs automatically after the derived destructor &mdash; you never call it yourself.</li>
+    <li>The overriding <code>print</code> must have the same name and the same (empty) parameter list as the
+    base version. A different parameter list would <em>hide</em> the base method rather than
+    override it (Class 19).</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Output trace across two namespaces <span class="muted small">(from the Fall 2023 Exam 2, Problem 4)</span></h3>
+
+<p><strong>[10 points, 2 per line &middot; suggested 13 minutes]</strong> This is the program worked
+through in Section 7. Give the output for each of the five lettered lines. If a line causes a
+compiler or runtime error, explain why the error occurs, then comment out the line and move on to
+the next one.</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> <code>a1.print();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Alpha Number: 2023</pre>
+    <p><code>Alpha::Number</code>'s default constructor sets <code>x</code> to 2023 through a member initializer list, and
+    <code>print</code> writes the label followed by <code>x</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> <code>cout &lt;&lt; b1.x &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>Compile-time error. <code>x</code> is declared under <code>protected:</code> in <code>Beta::Number</code>, and <code>main</code> is
+    neither a member of that class nor a derived class of it, so it is locked out exactly as if <code>x</code>
+    were <code>private</code>.</p>
+<pre class="err">error: 'double Beta::Number::x' is protected within this context
+   47 |     cout &lt;&lt; b1.x &lt;&lt; endl;
+      |                ^</pre>
+    <p>The published answer for this part is a sentence, not an output &mdash; this is the one place
+    in the whole exam bank where you are asked to write prose. Say <em>which</em> access specifier
+    and <em>why</em> the context is not allowed: "<code>x</code> is protected in <code>Beta::Number</code>, and <code>main</code> is
+    not a member function or a derived class, so it cannot be accessed directly." Then say you
+    commented the line out.</p>
+    <p>The legal way to get the same value is the public accessor: <code>cout &lt;&lt; b1.value()</code>, which
+    prints <code>3.14</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> <code>cout &lt;&lt; Alpha::function(a1, a2) &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Alpha:: function
+4046</pre>
+    <p>Two lines: the function announces itself, then <code>main</code> prints its return value. <code>2023 + 2023</code>
+    is <code>4046</code>, and both operands are <code>int</code> so the result is an <code>int</code>.</p>
+    <p>The <code>::</code> really is part of the string, and there is a space after it. The published key
+    writes <code>Alpha function</code> &mdash; one word, no colons. On a question whose instruction is to
+    reproduce the output, copy the string from the <code>cout</code> in the code, not from memory.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> <code>cout &lt;&lt; Beta::function(b1, b2) &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Beta:: function
+6.28</pre>
+    <p><code>3.14 + 3.14</code> is <code>6.28</code>. <code>cout</code> prints a <code>double</code> to six significant digits by default, and
+    <code>6.28</code> needs only three, so nothing is rounded or padded. The same key that drops the <code>::</code> on
+    part (c) drops it here too.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> <code>cout &lt;&lt; function(a1, b2) &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Mix function
+2026.14</pre>
+    <p><strong>Things to notice.</strong> Unqualified <code>function</code> finds only the one declared at
+    global scope, because neither namespace has been opened with a <code>using</code> directive. That global
+    overload is also the only one whose parameters accept an <code>Alpha::Number</code> and a <code>Beta::Number</code>
+    together &mdash; the two namespaces' own <code>function</code>s each take two <code>Number</code>s of their own
+    namespace, and <code>Alpha::Number</code> and <code>Beta::Number</code> are unrelated types that merely share a
+    name.</p>
+    <p><code>2023 + 3.14</code> is <code>2026.14</code>: the <code>int</code> is converted to <code>double</code>, and six significant digits is
+    exactly enough to show it.</p>
+    <p>Across all five parts, the marking is <strong>2 points each with no partial credit</strong>,
+    and the published key allows 1 point for an answer that is "almost correct". Write both lines
+    for parts (c), (d) and (e) &mdash; the announcement and the value. Giving only the number is
+    half an answer.</p>
+  </div></details>
+</div>
+
+<h3>Problem 4 &mdash; Five special members on a raw-pointer class <span class="muted small">(from the Winter 2025 Midterm, Problem 4)</span></h3>
+
+<p><strong>[25 points &middot; suggested 25 minutes]</strong> Given the following program with a
+<code>Complex</code> class. Each member must print its message as its <em>first</em> instruction.</p>
+
+<pre><code class="language-cpp">class Complex {
+public:
+    Complex() {
+        cout &lt;&lt; "default constructor" &lt;&lt; endl;
+        real = new double;
+        imag = new double;
+    }
+    void set(double x, double y) { *real = x; *imag = y; }
+    void print() { cout &lt;&lt; *real &lt;&lt; " + " &lt;&lt; *imag &lt;&lt; "i" &lt;&lt; endl; }
+
+    // non-default constructor, destructor, copy constructor,
+    // assignment operation, and operator+ overloading omitted here
+
+private:
+    double *real, *imag;
+};</code></pre>
+
+<p>Write (a) the non-default constructor, printing "non-default constructor"; (b) the destructor,
+printing "destructor"; (c) the deep copy constructor, printing "copy constructor"; (d) the
+assignment operation, printing "assignment operation"; (e) <code>operator+</code>, where
+<code>(a1 + b1 i) + (a2 + b2 i) = (a1+a2) + (b1+b2) i</code>, printing "operator+".</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Exactly the shape from Section 2, with one adjustment: this class does
+  one <code>new</code> per scalar instead of one <code>new[]</code> for an array. So allocation is
+  <code>real = new double; imag = new double;</code>, release is <code>delete real; delete imag;</code>, and copying the
+  data means dereferencing on both sides &mdash; <code>*real = *(orig.real);</code>. Everything else is
+  unchanged.</p>
+<div class="codewrap"><div class="cap">complex_full.cpp</div><pre><code class="language-cpp">Complex(double x, double y) {
+    cout &lt;&lt; "non-default constructor" &lt;&lt; endl;
+    real = new double; imag = new double;
+    *real = x; *imag = y;
+}
+
+~Complex() {
+    cout &lt;&lt; "destructor" &lt;&lt; endl;
+    delete real; delete imag;
+}
+
+Complex(const Complex &amp;orig) {
+    cout &lt;&lt; "copy constructor" &lt;&lt; endl;
+    real = new double; imag = new double;
+    *real = *(orig.real); *imag = *(orig.imag);
+}
+
+Complex&amp; operator=(const Complex &amp;rhs) {
+    cout &lt;&lt; "assignment operation" &lt;&lt; endl;
+    if (this == &amp;rhs) return *this;
+    delete real; delete imag;
+    real = new double; imag = new double;
+    *real = *(rhs.real); *imag = *(rhs.imag);
+    return *this;
+}
+
+Complex operator+(const Complex &amp;other) {
+    cout &lt;&lt; "operator+" &lt;&lt; endl;
+    double x = *real + *(other.real);
+    double y = *imag + *(other.imag);
+    Complex result(x, y);
+    return result;
+}</code></pre></div>
+  <p><strong>Things to notice.</strong> The point split was <strong>2 points for each title line</strong>
+  and 2, 2, 3, 4 and 4 points respectively for the five bodies. Ten of the twenty-five points are
+  signatures.</p>
+  <ul>
+    <li><strong><code>delete</code>, not <code>delete []</code>.</strong> <code>new double</code> pairs with <code>delete</code>; only
+    <code>new double[n]</code> would need the brackets. Mixing them is undefined behavior.</li>
+    <li><strong><code>*real = *(orig.real);</code>, not <code>real = orig.real;</code>.</strong> The second version copies
+    the address &mdash; the shallow copy this whole question exists to catch.</li>
+    <li>In <code>operator=</code>, the delete/reallocate pair is technically unnecessary here (the block is
+    always one <code>double</code>, so you could just overwrite <code>*real</code>), but writing it costs nothing and it
+    is what the rubric expects. Keep one habit for both data layouts.</li>
+    <li><code>operator+</code> may equally well build its result with the <em>default</em> constructor and then
+    fill it in:
+<pre><code class="language-cpp">Complex operator+(const Complex &amp;other) {
+    cout &lt;&lt; "operator+" &lt;&lt; endl;
+    Complex result;
+    *(result.real) = *real + *(other.real);
+    *(result.imag) = *imag + *(other.imag);
+    return result;
+}</code></pre>
+    Both are accepted &mdash; but they print different second lines, so whichever you choose, your
+    answer to the trace question that follows must match it.</li>
+  </ul>
+  <div class="box warn">
+    <div class="hd">Warning<span class="tag">&mdash; the published key truncates</span></div>
+    <div class="bd">
+      <p>The answer key for this question computes the sums into <code>int</code> variables:
+      <code>int x = *real + *(other.real);</code>. That silently truncates. With the trace <code>main</code> of Problem 5,
+      the correct implementation prints <code>4.1 + 6.2i</code> and the key's version prints:</p>
+<pre class="out">4 + 6i</pre>
+      <p>The members are <code>double *</code>, so the sums are <code>double</code>. The same key also misspells <code>result</code>
+      as <code>reselt</code> in its alternative version, which would not compile. Use <code>double</code>.</p>
+    </div>
+  </div>
+</div></details>
+
+<h3>Problem 5 &mdash; Trace the constructor and destructor calls <span class="muted small">(from the Winter 2025 Midterm, Problem 5)</span></h3>
+
+<p><strong>[15 points, roughly 1 per printed line &middot; suggested 15 minutes]</strong> Assuming
+your <code>Complex</code> class from Problem 4 is correctly implemented and prints the corresponding messages,
+what will be the output of the following <code>main</code>?</p>
+
+<pre><code class="language-cpp">int main () {
+    Complex x(1.1,2.2), y;
+    y.set(3, 4);
+    Complex z = y;
+    z.print();
+    y = x + z;
+    y.print();
+    Complex w = x + z;
+    w.print();
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Walk the statements one at a time. For each, ask: is an object being
+  <em>created</em> (constructor), or does it already exist (assignment)? Does the statement call an
+  operator whose body constructs something? Does a temporary die at the semicolon? Then add one
+  destructor line per surviving object at the closing brace.</p>
+<div class="codewrap"><div class="cap">complex_full.cpp</div><pre><code class="language-cpp">int main () {
+    Complex x(1.1,2.2), y;
+    y.set(3, 4);
+    Complex z = y;
+    z.print();
+    y = x + z;
+    y.print();
+    Complex w = x + z;
+    w.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">non-default constructor
+default constructor
+copy constructor
+3 + 4i
+operator+
+non-default constructor
+assignment operation
+destructor
+4.1 + 6.2i
+operator+
+non-default constructor
+4.1 + 6.2i
+destructor
+destructor
+destructor
+destructor</pre>
+  <p><strong>Things to notice.</strong> Sixteen lines &mdash; the published key says so explicitly
+  ("there supposed to be 16 lines"), which is a useful check on your own answer.</p>
+  <table class="trace">
+    <tr><th>Statement</th><th>Lines it contributes</th></tr>
+    <tr><td><code>Complex x(1.1,2.2), y;</code></td><td>"non-default constructor", then "default constructor" &mdash; one declaration, two objects</td></tr>
+    <tr><td><code>y.set(3, 4);</code></td><td>nothing &mdash; <code>set</code> has no message</td></tr>
+    <tr><td><code>Complex z = y;</code></td><td>"copy constructor" &mdash; <code>z</code> is being created, so this is <em>not</em> assignment</td></tr>
+    <tr><td><code>z.print();</code></td><td><code>3 + 4i</code></td></tr>
+    <tr><td><code>y = x + z;</code></td><td>"operator+", then "non-default constructor" from its body, then "assignment operation", then "destructor" for the temporary</td></tr>
+    <tr><td><code>y.print();</code></td><td><code>4.1 + 6.2i</code></td></tr>
+    <tr><td><code>Complex w = x + z;</code></td><td>"operator+" and "non-default constructor" &mdash; but <strong>no</strong> assignment line and <strong>no</strong> destructor, because the result initializes <code>w</code> directly</td></tr>
+    <tr><td><code>w.print();</code></td><td><code>4.1 + 6.2i</code></td></tr>
+    <tr><td>closing brace</td><td>four "destructor" lines, for <code>w</code>, <code>z</code>, <code>y</code>, <code>x</code></td></tr>
+  </table>
+  <ul>
+    <li>The eighth line &mdash; the temporary's "destructor" &mdash; is the one students omit. Compare
+    the <code>y = x + z;</code> group (four lines) with the <code>Complex w = x + z;</code> group (two lines). Same
+    arithmetic, different lifetime.</li>
+    <li>Five objects were constructed in total but only four destructors appear at the end, because
+    one of the five (the temporary) was already destroyed at line 8.</li>
+    <li>The stem as printed on the exam is missing the semicolon after <code>y.set(3, 4)</code>. Add it and
+    move on; the question is about the trace, not the typo.</li>
+    <li><code>4.1</code> and <code>6.2</code> are <code>1.1 + 3</code> and <code>2.2 + 4</code>. If you wrote <code>4 + 6i</code> you either used the
+    truncating version of <code>operator+</code> from the published key, or you forgot that <code>real</code> and <code>imag</code>
+    are <code>double *</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Find the four defects <span class="muted small">(added)</span></h3>
+
+<p><strong>[10 points &middot; suggested 10 minutes]</strong> A student submits the following as
+their answer to a special-members question. It compiles. Find every defect a rubric would deduct
+for, say what each one costs at run time, and write the corrected class.</p>
+
+<pre><code class="language-cpp">class BookShelf {
+public:
+    BookShelf(const string arr[], int n) {
+        cout &lt;&lt; "BookShelf: non-default constructor" &lt;&lt; endl;
+        count = n;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = arr[i];
+    }
+    ~BookShelf() {
+        cout &lt;&lt; "BookShelf: destructor" &lt;&lt; endl;
+        delete titles;
+    }
+    BookShelf(const BookShelf &amp;orig) {
+        cout &lt;&lt; "BookShelf: copy constructor" &lt;&lt; endl;
+        count = orig.count;
+        titles = orig.titles;
+    }
+    BookShelf&amp; operator=(const BookShelf &amp;rhs) {
+        cout &lt;&lt; "BookShelf: assignment operation" &lt;&lt; endl;
+        count = rhs.count;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = rhs.titles[i];
+    }
+    void display() const {
+        cout &lt;&lt; "BookShelf (" &lt;&lt; count &lt;&lt; " books): ";
+        for (int i = 0; i &lt; count; i++) cout &lt;&lt; titles[i] &lt;&lt; ", ";
+        cout &lt;&lt; endl;
+    }
+protected:
+    string *titles;
+    int count;
+};</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Go through the four special members in the order of the Procedure in
+  Section 2 and check each against its checklist: does the destructor pair its <code>delete</code> with the
+  right <code>new</code>? Does the copy constructor allocate? Does <code>operator=</code> guard, release and return?</p>
+  <table class="trace">
+    <tr><th>#</th><th>Defect</th><th>What it costs at run time</th></tr>
+    <tr><td>1</td><td>Destructor says <code>delete titles;</code> &mdash; the array came from <code>new string[count]</code></td><td>Undefined behavior. Only the first element is destroyed properly, and the allocator is handed a size it does not expect.</td></tr>
+    <tr><td>2</td><td>Copy constructor says <code>titles = orig.titles;</code> &mdash; a shallow copy</td><td>Two objects share one array: writes through one are visible through the other, and both destructors free the same block.</td></tr>
+    <tr><td>3</td><td><code>operator=</code> has no self-assignment guard and no <code>delete []</code> before reallocating</td><td>Every assignment leaks the old array; <code>s = s;</code> would read from data it had just released.</td></tr>
+    <tr><td>4</td><td><code>operator=</code> never says <code>return *this;</code></td><td>The function claims to return a <code>BookShelf&amp;</code> and returns nothing. This is undefined behavior, and <code>a = b = c;</code> cannot work.</td></tr>
+  </table>
+  <p>g++ catches only the last one, and only because <code>-Wall</code> is on:</p>
+<pre class="err">bugs_bad.cpp: In member function 'BookShelf&amp; BookShelf::operator=(const BookShelf&amp;)':
+bugs_bad.cpp:28:5: warning: control reaches end of non-void function [-Wreturn-type]
+   28 |     }
+      |     ^</pre>
+  <p>Run it and the program dies before its destructors finish:</p>
+<pre class="out">BookShelf: non-default constructor
+BookShelf: copy constructor
+BookShelf (2 books): Dune, Solaris, 
+BookShelf: assignment operation</pre>
+  <p>and the shell reports an abort. The corrected class:</p>
+<div class="codewrap"><div class="cap">bugs_fixed.cpp</div><pre><code class="language-cpp">    ~BookShelf() {
+        cout &lt;&lt; "BookShelf: destructor" &lt;&lt; endl;
+        delete [] titles;
+    }
+    BookShelf(const BookShelf &amp;orig) {
+        cout &lt;&lt; "BookShelf: copy constructor" &lt;&lt; endl;
+        count = orig.count;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = orig.titles[i];
+    }
+    BookShelf&amp; operator=(const BookShelf &amp;rhs) {
+        cout &lt;&lt; "BookShelf: assignment operation" &lt;&lt; endl;
+        if (this == &amp;rhs) return *this;
+        delete [] titles;
+        count = rhs.count;
+        titles = new string[count];
+        for (int i = 0; i &lt; count; i++) titles[i] = rhs.titles[i];
+        return *this;
+    }</code></pre></div>
+<pre class="out">BookShelf: non-default constructor
+BookShelf: copy constructor
+BookShelf (2 books): Dune, Solaris, 
+BookShelf: assignment operation
+BookShelf: destructor
+BookShelf: destructor</pre>
+  <p><strong>Things to notice.</strong> Three of these four defects are lines that a rubric lists
+  individually &mdash; the guard, the release, the <code>return *this;</code>. Reading someone else's broken
+  answer is the fastest way to find out whether your own checklist is actually memorized, because
+  you cannot spot a missing line unless you know it should be there.</p>
+  <p>Notice also what the compiler did <em>not</em> catch. The shallow copy, the missing guard and
+  the mismatched <code>delete</code> all compile silently with <code>-Wall</code>. On this exam nobody runs your code
+  &mdash; but on this exam, the marker is looking for exactly those lines.</p>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li><strong>Exam 2 is 50 minutes and 40 points, entirely code.</strong> You either write C++ or
+      say exactly what C++ prints. There is no true/false, no multiple choice and no definition to
+      recite.</li>
+      <li><strong>Half the paper is one question:</strong> implement the special members of a class
+      that owns heap memory. Its companion &mdash; trace a <code>main</code> that exercises them &mdash; is the
+      next largest. Rehearse those two until they are automatic and everything else is a bonus.</li>
+      <li><strong>The Big Five, in order:</strong> non-default constructor (announce, size, allocate,
+      copy); destructor (announce, release); copy constructor (the non-default constructor sourced
+      from <code>orig</code>); <code>operator=</code> (the copy constructor plus guard, release and <code>return *this;</code>);
+      <code>operator+</code> (build the combined data, hand it to a constructor, free the scratch, return by
+      value).</li>
+      <li><strong>Write every title line first.</strong> Rubrics pay 1&ndash;4 points for a signature
+      with no body. The guard <code>if (this == &amp;rhs) return *this;</code>, the <code>delete []</code> before
+      reallocating, and <code>return *this;</code> are each separately worth a point.</li>
+      <li><strong><code>X b = a;</code> is the copy constructor; <code>b = a;</code> is <code>operator=</code>.</strong> The
+      difference is whether the object on the left is being created. It changes the trace by a
+      whole line.</li>
+      <li><strong>Traces have two hidden lines:</strong> the constructor that runs inside
+      <code>operator+</code>, and the destructor of the temporary when the operator's result is
+      <em>assigned</em> rather than used to initialize.</li>
+      <li><strong>Count destructor lines.</strong> One per object still alive at the closing brace,
+      plus one for every temporary destroyed on the way. Output prediction carries no partial
+      credit.</li>
+      <li><strong>Derived classes:</strong> <code>class D : public B {</code>, a base initializer in the member
+      initializer list, <code>protected</code> data in the base so the derived class can reach it, an override
+      with an identical signature, and the closing <code>};</code> &mdash; all of which are individually worth
+      points.</li>
+      <li><strong>Construction goes base, then members in declaration order, then the body;
+      destruction is exactly the reverse.</strong></li>
+      <li><strong>Slicing loses the data; a base pointer loses the reach.</strong>
+      <code>base = derived;</code> copies only the base part and runs the base's <code>operator=</code>. A base pointer
+      keeps all the data but sees only the base interface, and <code>delete</code> through one skips the
+      derived destructor.</li>
+      <li><code>static</code> members, <code>friend</code>, <code>operator&lt;&lt;</code> and file I/O have never been examined in
+      this course. Namespaces have been, exactly once, as an output trace &mdash; be able to read
+      one.</li>
+    </ul>
+    <p><strong>Coming up in Class 23:</strong> Exam 2 &mdash; bring nothing but a pen, and write
+    every title line before you write a single body.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 21 &middot; Inheritance III</div><div class="pending">posts Thu Nov 12</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 24 &middot; Polymorphism</div><div class="pending">posts Tue Nov 24</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

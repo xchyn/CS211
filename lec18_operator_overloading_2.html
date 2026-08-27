@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 18 — Operators II | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 18 &middot; Operators II</span><span class="sep">|</span><span class="where">Tue Nov 3</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 18 &middot; CSCI 211</div>
+  <h1>Operator Overloading II &mdash; Streams and Friends</h1>
+  <p class="sub">Why <code>cout &lt;&lt; obj</code> needs a function that is not a method &mdash; and the <code>friend</code> keyword that lets an outside function reach past <code>private</code> anyway.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain why <code>operator&lt;&lt;</code> and <code>operator&gt;&gt;</code> for a class you write must be free functions, not methods &mdash; using the left-operand argument.</li>
+      <li>Write the required signature <code>ostream &amp;operator&lt;&lt;(ostream &amp;os, const T &amp;t)</code>, and say why it returns <code>ostream&amp;</code> instead of <code>void</code>.</li>
+      <li>Write the required signature <code>istream &amp;operator&gt;&gt;(istream &amp;is, T &amp;t)</code>, and explain why its second parameter is not <code>const</code>.</li>
+      <li>Chain several <code>&lt;&lt;</code> or <code>&gt;&gt;</code> calls in one statement and explain, mechanically, why that only works because each call returns the stream by reference.</li>
+      <li>Declare a <code>friend</code> function or a <code>friend</code> class, and state precisely what access it grants.</li>
+      <li>Grant friendship to a single method of another class rather than the whole class, including the forward declaration it requires.</li>
+      <li>Demonstrate, with a real compiler error, that friendship is not symmetric and not transitive &mdash; and state (it will matter starting Class 19) that it is not inherited either.</li>
+      <li>Decide, for a given design, whether <code>friend</code> or a public accessor is the better tool.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Why <code>cout &lt;&lt; obj</code> won't just work</a></li>
+    <li><a href="#s2"><code>operator&lt;&lt;</code> as a free function</a></li>
+    <li><a href="#s3"><code>operator&gt;&gt;</code> and chained input</a></li>
+    <li><a href="#s4">The wall: free functions and private data</a></li>
+    <li><a href="#s5">The <code>friend</code> keyword</a></li>
+    <li><a href="#s6">Friend classes</a></li>
+    <li><a href="#s7">Granting friendship to one method</a></li>
+    <li><a href="#s8">What friendship does not do</a></li>
+    <li><a href="#s9"><code>friend</code> vs. a public accessor</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Why <code>cout &lt;&lt; obj</code> won't just work</h2>
+
+<p>In Class 17 you overloaded <code>operator+</code>, <code>operator-</code> and <code>operator*</code> as class methods, and the rule
+for a binary operator written that way was simple: <em>the left operand is always <code>this</code> object.</em>
+<code>p1 + p2</code> compiled down to <code>p1.operator+(p2)</code>, and the operator syntax just let you write <code>p1 + p2</code>
+instead of that ugly dot-call.</p>
+
+<p>Now think about the single most common line of output code you have written since Class 1:</p>
+<pre><code class="language-cpp">cout &lt;&lt; p1 &lt;&lt; endl;</code></pre>
+<p>You would like that to work for your own classes the same way it works for <code>int</code> and <code>double</code>.
+Try the same trick you used for <code>operator+</code>: write <code>operator&lt;&lt;</code> as a method of <code>Point1</code>, and see what
+actually happens.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>operator&lt;&lt;</code> as a member, in the wrong order</span></div>
+  <div class="bd">
+    <p>Here is <code>operator&lt;&lt;</code> written as a <code>Point1</code> method, exactly the way you wrote <code>operator+</code> in
+    Class 17. Predict what the call in <code>main</code> actually does before you open the answer &mdash; read it
+    as "ask the object on the left to run its method."</p>
+<div class="codewrap"><div class="cap">memberorder_works.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() : x(0.0), y(0.0) {}
+    void set(double a, double b) { x = a; y = b; }
+    void operator&lt;&lt;(ostream &amp;os) const { os &lt;&lt; "(" &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ")"; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point1 p;
+    p.set(3.0, 4.0);
+    p &lt;&lt; cout;               // legal: p really is the left operand of this member
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">(3, 4)</pre>
+<p>It compiles and runs, because as a member function <code>operator&lt;&lt;</code> really does belong to <code>Point1</code>,
+and <code>Point1</code> really is the left operand of <code>&lt;&lt;</code> here. <code>p &lt;&lt; cout;</code> means exactly what <code>p.set(...)</code>
+meant: "ask <code>p</code> to run its <code>operator&lt;&lt;</code> method, handing it <code>cout</code>." It just reads backwards from
+every <code>cout &lt;&lt; x;</code> you have ever typed &mdash; and backwards is not what you want.</p>
+
+</div></details>
+
+<p>Now try the order you actually want:</p>
+<div class="codewrap"><div class="cap">memberorder_fails.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() : x(0.0), y(0.0) {}
+    void set(double a, double b) { x = a; y = b; }
+    void operator&lt;&lt;(ostream &amp;os) const { os &lt;&lt; "(" &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ")"; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point1 p;
+    p.set(3.0, 4.0);
+    cout &lt;&lt; p;                // the natural order -- does not compile
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">memberorder_fails.cpp: In function 'int main()':
+memberorder_fails.cpp:16:10: error: no match for 'operator&lt;&lt;' (operand types are 'std::ostream' {aka 'std::basic_ostream&lt;char&gt;'} and 'Point1')
+   16 |     cout &lt;&lt; p;                // the natural order -- does not compile
+      |     ~~~~ ^~ ~
+      |     |       |
+      |     |       Point1
+      |     std::ostream {aka std::basic_ostream&lt;char&gt;}</pre>
+<p><code>cout</code> has type <code>ostream</code>, and <code>ostream</code> is a class from the standard library &mdash; you did not
+write it, and you cannot add a member to it. When the compiler sees <code>cout &lt;&lt; p</code>, it looks for a
+method <code>operator&lt;&lt;</code> belonging to <code>ostream</code>'s class that accepts a <code>Point1</code>, and there is no such
+method. Writing <code>operator&lt;&lt;</code> inside <code>Point1</code> can never fix this, no matter how you write it, because
+a method-form operator always belongs to whichever operand sits on the <strong>left</strong>, and
+the operand on the left here is <code>cout</code>, not your object.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A binary operator written as a class method always takes its <strong>left</strong> operand as
+    <code>this</code>. For <code>cout &lt;&lt; p1</code> to call a method, that method would have to belong to <code>ostream</code>. You
+    cannot edit <code>ostream</code> &mdash; it lives in the standard library, outside your control. So
+    <code>operator&lt;&lt;</code> (and, for the identical reason, <code>operator&gt;&gt;</code>) for your own class
+    <strong>cannot</strong> be a method. It has to be a free function, taking both operands as
+    ordinary parameters: the stream on the left, your object on the right.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; insertion and extraction operators</span></div>
+  <div class="bd">
+    <p><code>operator&lt;&lt;</code> used with a stream is called the <strong>insertion operator</strong> &mdash; you
+    are inserting a value into the stream. <code>operator&gt;&gt;</code> is the <strong>extraction operator</strong>
+    &mdash; you are extracting a value out of it. The names describe direction, not the arithmetic
+    meaning <code>&lt;&lt;</code>/<code>&gt;&gt;</code> have as bit-shift operators on integers; overloading, as you saw in Class 17,
+    lets the same symbol mean something entirely different depending on the types on either side of
+    it.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a class with no constructor</span></div>
+  <div class="bd">
+    <p>The <code>Point1</code> class you built operators for in Class 17 has no constructor: a plain declaration
+    <code>Point1 p1, p2, p3;</code> leaves <code>x</code> and <code>y</code> holding whatever bytes happened to already be there, until
+    <code>set</code> is called. That is exactly the danger Class 13 warned you about. Every <code>Point1</code> on this page
+    adds a small, deliberate fix, a default constructor:</p>
+<pre><code class="language-cpp">Point1() : x(0.0), y(0.0) {}</code></pre>
+    <p>so that a <code>Point1</code> is well-defined the instant it is created. That matters even more today,
+    because in &sect;3 <code>operator&gt;&gt;</code> is about to read a value from the keyboard straight into an
+    object that might never have been through <code>set</code> at all.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.1</div>
+  <div class="bd">
+    <p>A <code>Circle</code> class defines <code>void operator&lt;&lt;(ostream &amp;os) const;</code> as a member, exactly like the
+    <code>Point1</code> example above.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Given <code>Circle c;</code>, which of these two lines compiles:
+      <code>cout &lt;&lt; c;</code> or <code>c &lt;&lt; cout;</code>? For the one that compiles, describe in words what it actually does.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Only <code>c &lt;&lt; cout;</code> compiles. As a member function, <code>operator&lt;&lt;</code> belongs to <code>Circle</code>, so
+        <code>Circle</code> must be the left operand for the call to resolve. <code>c &lt;&lt; cout;</code> is really
+        <code>c.operator&lt;&lt;(cout);</code> &mdash; "ask <code>c</code> to print itself, handing it <code>cout</code> to print into."
+        <code>cout &lt;&lt; c;</code> fails for the same reason <code>cout &lt;&lt; p;</code> failed above: the compiler looks for a
+        member <code>operator&lt;&lt;</code> on <code>ostream</code> that takes a <code>Circle</code>, and there is none.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Rewrite the declaration so that <code>cout &lt;&lt; c;</code> compiles
+      instead.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Move it out of the class entirely and make it a free function that takes both operands as
+        parameters, with <code>ostream</code> first:</p>
+<pre><code class="language-cpp">ostream &amp;operator&lt;&lt;(ostream &amp;os, const Circle &amp;c) {
+    // print c into os
+    return os;
+}</code></pre>
+        <p>This is the whole point of &sect;1: there is no member-function spelling of <code>operator&lt;&lt;</code>
+        that makes <code>cout &lt;&lt; c;</code> legal. The fix is always to step outside the class.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span><code>operator&lt;&lt;</code> as a free function</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the <code>operator&lt;&lt;</code> signature</span></div>
+  <div class="bd">
+    <p>For a class <code>T</code>, the insertion operator is always written this way:</p>
+<pre><code class="language-cpp">ostream &amp;operator&lt;&lt;(ostream &amp;os, const T &amp;t);</code></pre>
+    <ul>
+      <li>The first parameter, <code>os</code>, is the stream, taken by reference (not <code>const</code>) because
+      inserting into it changes its internal state &mdash; and, as you will see in Quick Check 18.2,
+      it could not be taken by value even if you wanted to.</li>
+      <li>The second parameter, <code>t</code>, is your object, taken by <code>const</code> reference: <code>operator&lt;&lt;</code> only
+      reads it, and passing by reference avoids copying the whole object just to print it.</li>
+      <li>The return type is <code>ostream&amp;</code> &mdash; a reference to the very stream you were handed.
+      Returning it is what lets <code>cout &lt;&lt; p1 &lt;&lt; p2;</code> chain, which the next Worked Example proves two
+      ways: once by showing it work, once by showing exactly how it breaks without that return
+      value.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a free <code>operator&lt;&lt;</code>, and why it chains</span></div>
+  <div class="bd">
+    <p>Same <code>Point1</code>, now with public accessors and a free <code>operator&lt;&lt;</code>. Predict the output, and
+    notice that <code>main</code> chains two insertions and an <code>endl</code> into one statement.</p>
+<div class="codewrap"><div class="cap">freeinsert.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() : x(0.0), y(0.0) {}
+    void set(double a, double b) { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+private:
+    double x, y;
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p) {
+    os &lt;&lt; "(" &lt;&lt; p.getx() &lt;&lt; ", " &lt;&lt; p.gety() &lt;&lt; ")";
+    return os;
+}
+
+int main() {
+    Point1 p1, p2;
+    p1.set(3.0, 4.0);
+    p2.set(-1.5, 2.0);
+    cout &lt;&lt; "p1 = " &lt;&lt; p1 &lt;&lt; ", p2 = " &lt;&lt; p2 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">p1 = (3, 4), p2 = (-1.5, 2)</pre>
+<p>The whole statement is a chain of ordinary binary calls, evaluated left to right, because <code>&lt;&lt;</code>
+is left-associative: <code>cout &lt;&lt; "p1 = "</code> returns <code>cout</code>; that result becomes the left operand of the
+next <code>&lt;&lt;</code>, giving <code>operator&lt;&lt;(cout, p1)</code>, which again returns <code>cout</code>; and so on through <code>p2</code> and
+<code>endl</code>. There is nothing magic about a "multi-argument <code>cout</code>" &mdash; there is exactly one binary
+operator, applied repeatedly.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>This course's own lecture notes ask, about operators in general: <em>"Can the return type be
+void? Yes. (Try it.)"</em> Let's try it for <code>operator&lt;&lt;</code> specifically &mdash; the answer turns out to
+be more interesting here than it looks.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; returning <code>void</code> instead of <code>ostream&amp;</code></span></div>
+  <div class="bd">
+    <p>This version compiles: nothing in the language stops you from returning <code>void</code>. Predict
+    whether it still runs correctly used by itself.</p>
+<div class="codewrap"><div class="cap">voidinsert_works.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() : x(0.0), y(0.0) {}
+    void set(double a, double b) { x = a; y = b; }
+    friend void operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p);   // returns void, not ostream&amp;
+private:
+    double x, y;
+};
+
+void operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p) {
+    os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ", " &lt;&lt; p.y &lt;&lt; ")";
+}
+
+int main() {
+    Point1 p1;
+    p1.set(1.0, 2.0);
+    cout &lt;&lt; p1;               // legal by itself: one call, nothing chains after it
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">(1, 2)</pre>
+<p>Used alone, <code>cout &lt;&lt; p1;</code> prints fine. <code>operator&lt;&lt;</code> does not need to return anything in order to
+run &mdash; the return value only matters to whoever wants to do something with the result of the
+whole expression.</p>
+
+</div></details>
+
+<p>Now chain two of them, the way &sect;2's first example did.</p>
+<div class="codewrap"><div class="cap">voidinsert.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() : x(0.0), y(0.0) {}
+    void set(double a, double b) { x = a; y = b; }
+    friend void operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p);   // returns void, not ostream&amp;
+private:
+    double x, y;
+};
+
+void operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p) {
+    os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ", " &lt;&lt; p.y &lt;&lt; ")";
+}
+
+int main() {
+    Point1 p1, p2;
+    p1.set(1.0, 2.0);
+    p2.set(3.0, 4.0);
+    cout &lt;&lt; p1;              // fine on its own -- this call returns void, but nothing chains after it
+    cout &lt;&lt; endl;
+    cout &lt;&lt; p1 &lt;&lt; p2;        // does NOT compile: cout &lt;&lt; p1 is void, and void has no operator&lt;&lt;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">voidinsert.cpp: In function 'int main()':
+voidinsert.cpp:23:16: error: no match for 'operator&lt;&lt;' (operand types are 'void' and 'Point1')
+   23 |     cout &lt;&lt; p1 &lt;&lt; p2;        // does NOT compile: cout &lt;&lt; p1 is void, and void has no operator&lt;&lt;
+      |     ~~~~~~~~~~ ^~ ~~
+      |          |        |
+      |          void     Point1
+voidinsert.cpp:13:6: note: candidate: 'void operator&lt;&lt;(std::ostream&amp;, const Point1&amp;)'
+   13 | void operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p) {
+      |      ^~~~~~~~
+voidinsert.cpp:13:26: note:   no known conversion for argument 1 from 'void' to 'std::ostream&amp;' {aka 'std::basic_ostream&lt;char&gt;&amp;'}</pre>
+<p><code>cout &lt;&lt; p1</code> now evaluates to <code>void</code> &mdash; there is no value to hand to the next <code>&lt;&lt;</code> in the
+chain, and <code>void</code> has no <code>operator&lt;&lt;</code> of its own (<code>void</code> is not a type you can do anything with at
+all). That is the real, mechanical reason the signature always returns <code>ostream&amp;</code>: not convention,
+but the only way <code>&lt;&lt;</code> can ever be chained.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.2</div>
+  <div class="bd">
+    <p>For each proposed signature of <code>operator&lt;&lt;</code> for a class <code>Fraction</code>, say whether it compiles as
+    a free function and, if it does, whether <code>cout &lt;&lt; f1 &lt;&lt; f2;</code> still works.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>void operator&lt;&lt;(ostream os, const Fraction &amp;f)</code>
+      &mdash; note <code>os</code> is taken <em>by value</em>, not by reference.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>This does not compile, and not for the reason you might guess first. <code>ostream</code> has no
+        accessible copy constructor &mdash; streams represent a real, singular resource (the
+        console, a file), so the standard library deletes their ability to be copied. Trying to pass
+        <code>cout</code> by value produces:</p>
+<pre class="err">error: use of deleted function 'std::basic_ostream&lt;_CharT, _Traits&gt;::basic_ostream(const std::basic_ostream&lt;_CharT, _Traits&gt;&amp;) [with _CharT = char; _Traits = std::char_traits&lt;char&gt;]'
+   17 |     cout &lt;&lt; f;
+      |             ^
+note: declared here
+  438 |       basic_ostream(const basic_ostream&amp;) = delete;
+      |       ^~~~~~~~~~~~~</pre>
+        <p>This is the deeper reason <code>os</code> is always a reference: it is not just an efficiency choice,
+        it is the only option the language gives you.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>ostream &amp;operator&lt;&lt;(ostream &amp;os, Fraction f)</code>
+      &mdash; note <code>f</code> is taken <em>by value</em>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>This compiles, and chaining still works, because <code>Fraction</code> (unlike <code>ostream</code>) is an
+        ordinary, copyable class. Every call now makes a full copy of the <code>Fraction</code> argument, which
+        is wasted work for no benefit &mdash; <code>operator&lt;&lt;</code> never needs to modify its object. It is a
+        real program, verified below, but it is a style mistake, not an error.</p>
+<div class="codewrap"><div class="cap">qc_by_value_arg.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Fraction {
+public:
+    Fraction() : numerator(0), denominator(1) {}
+    void set(int n, int d) { numerator = n; denominator = d; }
+    friend ostream &amp;operator&lt;&lt;(ostream &amp;os, Fraction f);   // f taken by value
+private:
+    int numerator, denominator;
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, Fraction f) {   // a full copy of f is made on every call
+    os &lt;&lt; f.numerator &lt;&lt; "/" &lt;&lt; f.denominator;
+    return os;
+}
+
+int main() {
+    Fraction f1, f2;
+    f1.set(1, 2);
+    f2.set(3, 4);
+    cout &lt;&lt; f1 &lt;&lt; " and " &lt;&lt; f2 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">1/2 and 3/4</pre>
+        <p>Always take the object by <code>const&amp;</code> unless you have a specific reason not to.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>ostream operator&lt;&lt;(ostream &amp;os, const Fraction &amp;f)</code>
+      &mdash; note the return type is <code>ostream</code>, not <code>ostream&amp;</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Same failure as part (a), on the <code>return os;</code> line this time: returning <code>ostream</code> by value
+        requires copying it, and copying an <code>ostream</code> is deleted.</p>
+<pre class="err">error: use of deleted function 'std::basic_ostream&lt;_CharT, _Traits&gt;::basic_ostream(const std::basic_ostream&lt;_CharT, _Traits&gt;&amp;) [with _CharT = char; _Traits = std::char_traits&lt;char&gt;]'
+   13 |     return os;
+      |            ^~
+note: declared here
+  438 |       basic_ostream(const basic_ostream&amp;) = delete;
+      |       ^~~~~~~~~~~~~</pre>
+        <p><strong>Things to notice.</strong> Parts (a) and (c) fail for the same underlying reason:
+        streams cannot be copied, so every <code>ostream</code>/<code>istream</code> you touch in this operator must stay a
+        reference, in the parameter list and in the return type both.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write <code>operator&lt;&lt;</code> for <code>Rectangle</code></h3>
+
+<p>Give <code>Rectangle</code> a free <code>operator&lt;&lt;</code> that prints <code>width x height (area N)</code>. You will need to
+grant it access to the private data &mdash; use <code>friend</code>, which &sect;5 covers properly, but for now
+just add the line <code>friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Rectangle &amp;r);</code> inside the class.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="26" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() : width(0.0), height(0.0) {}
+    void set(double w, double h) { width = w; height = h; }
+
+    // TODO: declare operator&lt;&lt; as a friend here so it can see width/height directly
+
+private:
+    double width, height;
+};
+
+// TODO: define ostream &amp;operator&lt;&lt;(ostream &amp;os, const Rectangle &amp;r) here
+
+int main() {
+    Rectangle r1, r2;
+    r1.set(3.0, 4.0);
+    r2.set(2.5, 6.0);
+    cout &lt;&lt; &quot;r1 = &quot; &lt;&lt; r1 &lt;&lt; endl;
+    cout &lt;&lt; &quot;r2 = &quot; &lt;&lt; r2 &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() : width(0.0), height(0.0) {}
+    void set(double w, double h) { width = w; height = h; }
+
+    // TODO: declare operator&lt;&lt; as a friend here so it can see width/height directly
+
+private:
+    double width, height;
+};
+
+// TODO: define ostream &amp;operator&lt;&lt;(ostream &amp;os, const Rectangle &amp;r) here
+
+int main() {
+    Rectangle r1, r2;
+    r1.set(3.0, 4.0);
+    r2.set(2.5, 6.0);
+    cout &lt;&lt; "r1 = " &lt;&lt; r1 &lt;&lt; endl;
+    cout &lt;&lt; "r2 = " &lt;&lt; r2 &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.3</div>
+  <div class="bd">
+    <p>Complete the exercise above. Give the exact output and the full <code>operator&lt;&lt;</code> definition.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Follow the signature from &sect;2's definition box:
+      <code>ostream&amp;</code>, first parameter <code>ostream&amp;</code>, second parameter <code>const Rectangle&amp;</code>. Grant it friendship
+      so it can reach <code>width</code> and <code>height</code> directly, without writing getters just for this one
+      caller.</p>
+<div class="codewrap"><div class="cap">rectangle_insert.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    Rectangle() : width(0.0), height(0.0) {}
+    void set(double w, double h) { width = w; height = h; }
+
+    friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Rectangle &amp;r);
+
+private:
+    double width, height;
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Rectangle &amp;r) {
+    os &lt;&lt; r.width &lt;&lt; " x " &lt;&lt; r.height &lt;&lt; " (area " &lt;&lt; r.width * r.height &lt;&lt; ")";
+    return os;
+}
+
+int main() {
+    Rectangle r1, r2;
+    r1.set(3.0, 4.0);
+    r2.set(2.5, 6.0);
+    cout &lt;&lt; "r1 = " &lt;&lt; r1 &lt;&lt; endl;
+    cout &lt;&lt; "r2 = " &lt;&lt; r2 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">r1 = 3 x 4 (area 12)
+r2 = 2.5 x 6 (area 15)</pre>
+      <p><strong>Things to notice.</strong> <code>area</code> is computed inside <code>operator&lt;&lt;</code>, not stored. There
+      is nothing wrong with an operator doing a small computation; it just has to end up as text sent
+      to <code>os</code>.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span><code>operator&gt;&gt;</code> and chained input</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the <code>operator&gt;&gt;</code> signature</span></div>
+  <div class="bd">
+    <p>The extraction operator is <code>operator&lt;&lt;</code>'s mirror image:</p>
+<pre><code class="language-cpp">istream &amp;operator&gt;&gt;(istream &amp;is, T &amp;t);</code></pre>
+    <p>Two differences from <code>operator&lt;&lt;</code>, both for the same reason &mdash; extraction <em>writes
+    into</em> your object instead of reading it. The stream parameter is <code>istream&amp;</code> instead of
+    <code>ostream&amp;</code>. And the object parameter is a plain reference, <code>T&amp;</code>, <strong>not</strong> <code>const T&amp;</code>
+    &mdash; <code>is &gt;&gt; t.x;</code> assigns into <code>t.x</code>, and you cannot assign into a member of a <code>const</code>
+    reference. The return type is still <code>istream&amp;</code>, for exactly the reason <code>operator&lt;&lt;</code> returns
+    <code>ostream&amp;</code>: so <code>cin &gt;&gt; a &gt;&gt; b;</code> can chain.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>operator&lt;&lt;</code> and <code>operator&gt;&gt;</code> together</span></div>
+  <div class="bd">
+    <p>A complete <code>Point1</code> with both stream operators. Predict what prints, keeping in mind that this
+    run's input was piped in rather than typed, so you will not see the digits echoed after the
+    prompt.</p>
+<div class="codewrap"><div class="cap">point1_streams.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    // Erratum fix: the classic Point1 has no constructor, so x and y are
+    // indeterminate until set() is called. Added here (see the box warn in &amp;sect;1).
+    Point1() : x(0.0), y(0.0) {}
+
+    void set(double a, double b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+
+    friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p);
+    friend istream &amp;operator&gt;&gt;(istream &amp;is, Point1 &amp;p);
+
+private:
+    double x, y;
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p) {
+    os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ", " &lt;&lt; p.y &lt;&lt; ")";
+    return os;
+}
+
+istream &amp;operator&gt;&gt;(istream &amp;is, Point1 &amp;p) {
+    is &gt;&gt; p.x &gt;&gt; p.y;
+    return is;
+}
+
+int main() {
+    Point1 a, b;
+    a.set(1.5, 2.5);
+
+    cout &lt;&lt; "a = " &lt;&lt; a &lt;&lt; endl;
+
+    cout &lt;&lt; "enter a point (x y): ";
+    cin &gt;&gt; b;
+    cout &lt;&lt; "you entered b = " &lt;&lt; b &lt;&lt; endl;
+
+    cout &lt;&lt; "a and b together: " &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">a = (1.5, 2.5)
+enter a point (x y): you entered b = (9, -3.25)
+a and b together: (1.5, 2.5) (9, -3.25)</pre>
+<p>The input for this run was <code>9.0 -3.25</code>. <code>is &gt;&gt; p.x &gt;&gt; p.y;</code> chains the same way <code>cout &lt;&lt;</code>
+chains: <code>is &gt;&gt; p.x</code> reads one number and returns <code>is</code>, which becomes the left operand for
+<code>&gt;&gt; p.y</code>. Notice too that <code>operator&gt;&gt;</code> writes straight into the private members <code>p.x</code> and <code>p.y</code>
+&mdash; legal because it is declared <code>friend</code>, which &sect;5 covers next.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.4</div>
+  <div class="bd">
+    <p>Suppose someone "fixes" <code>operator&gt;&gt;</code> by making its second parameter <code>const</code>, reasoning that
+    <code>const</code> is always safer:</p>
+<pre><code class="language-cpp">istream &amp;operator&gt;&gt;(istream &amp;is, const Point1 &amp;p) {
+    is &gt;&gt; p.x &gt;&gt; p.y;
+    return is;
+}</code></pre>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Does this compile? If not, say exactly what goes
+      wrong.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It does not compile. <code>is &gt;&gt; p.x</code> needs to assign the value it reads into <code>p.x</code>, but <code>p</code> is
+        a reference to a <code>const Point1</code>, so <code>p.x</code> is itself <code>const double</code> &mdash; a value that
+        cannot be written to. Compiling it for real gives:</p>
+<pre class="err">constextract.cpp: In function 'std::istream&amp; operator&gt;&gt;(std::istream&amp;, const Point1&amp;)':
+constextract.cpp:13:8: error: no match for 'operator&gt;&gt;' (operand types are 'std::istream' {aka 'std::basic_istream&lt;char&gt;'} and 'const double')
+   13 |     is &gt;&gt; p.x &gt;&gt; p.y;   // ERROR: cannot write into a member of a const object
+      |     ~~ ^~ ~~~
+      |     |       |
+      |     |       const double
+      |     std::istream {aka std::basic_istream&lt;char&gt;}</pre>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Why is it correct for <code>operator&lt;&lt;</code>'s object parameter
+      to be <code>const T&amp;</code>, but wrong for <code>operator&gt;&gt;</code>'s?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>const</code> on a parameter is a promise: <em>"this function will not modify what you handed
+        it."</em> <code>operator&lt;&lt;</code> keeps that promise &mdash; it only reads the object to build text.
+        <code>operator&gt;&gt;</code> cannot keep it: its entire job is to overwrite the object with whatever was just
+        read. Marking that parameter <code>const</code> would be lying to the compiler about what the function
+        does, and the compiler catches the lie the moment the body tries to assign.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write <code>operator&gt;&gt;</code> for <code>Fraction</code></h3>
+
+<p>Give <code>Fraction</code> a free <code>operator&gt;&gt;</code> that reads input in the form <code>n/d</code> &mdash; an integer, a
+literal <code>/</code> character, then another integer. Reading a single stray character with
+<code>char slash; is &gt;&gt; slash;</code> is the standard trick for consuming a separator that is not itself part
+of any number.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="25" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Fraction {
+public:
+    Fraction() : numerator(0), denominator(1) {}
+
+    // TODO: declare operator&gt;&gt; (and operator&lt;&lt;) as friends here
+
+private:
+    int numerator, denominator;
+};
+
+// TODO: define istream &amp;operator&gt;&gt;(istream &amp;is, Fraction &amp;f) here
+// it should read &quot;n/d&quot; -- an int, a &#39;/&#39; character, then another int
+
+int main() {
+    Fraction f1, f2;
+    cout &lt;&lt; &quot;enter two fractions as n/d: &quot;;
+    cin &gt;&gt; f1 &gt;&gt; f2;
+    // cout &lt;&lt; &quot;you entered &quot; &lt;&lt; f1 &lt;&lt; &quot; and &quot; &lt;&lt; f2 &lt;&lt; endl;   // needs operator&lt;&lt; too
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Fraction {
+public:
+    Fraction() : numerator(0), denominator(1) {}
+
+    // TODO: declare operator&gt;&gt; (and operator&lt;&lt;) as friends here
+
+private:
+    int numerator, denominator;
+};
+
+// TODO: define istream &amp;operator&gt;&gt;(istream &amp;is, Fraction &amp;f) here
+// it should read "n/d" -- an int, a '/' character, then another int
+
+int main() {
+    Fraction f1, f2;
+    cout &lt;&lt; "enter two fractions as n/d: ";
+    cin &gt;&gt; f1 &gt;&gt; f2;
+    // cout &lt;&lt; "you entered " &lt;&lt; f1 &lt;&lt; " and " &lt;&lt; f2 &lt;&lt; endl;   // needs operator&lt;&lt; too
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.5</div>
+  <div class="bd">
+    <p>Complete the exercise above, adding <code>operator&lt;&lt;</code> too so the result can be printed back. Show
+    the run for input <code>3/4 5/8</code>.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> <code>operator&gt;&gt;</code> needs a throwaway <code>char</code> to absorb the <code>/</code>; it is never
+      used again, so its name (<code>slash</code>) just documents intent. Both operators need <code>friend</code> access to
+      <code>numerator</code> and <code>denominator</code>.</p>
+<div class="codewrap"><div class="cap">fraction_extract.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Fraction {
+public:
+    Fraction() : numerator(0), denominator(1) {}
+
+    friend istream &amp;operator&gt;&gt;(istream &amp;is, Fraction &amp;f);
+    friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Fraction &amp;f);
+
+private:
+    int numerator, denominator;
+};
+
+istream &amp;operator&gt;&gt;(istream &amp;is, Fraction &amp;f) {
+    char slash;                       // to consume the "/" between numerator and denominator
+    is &gt;&gt; f.numerator &gt;&gt; slash &gt;&gt; f.denominator;
+    return is;
+}
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Fraction &amp;f) {
+    os &lt;&lt; f.numerator &lt;&lt; "/" &lt;&lt; f.denominator;
+    return os;
+}
+
+int main() {
+    Fraction f1, f2;
+    cout &lt;&lt; "enter two fractions as n/d: ";
+    cin &gt;&gt; f1 &gt;&gt; f2;
+    cout &lt;&lt; "you entered " &lt;&lt; f1 &lt;&lt; " and " &lt;&lt; f2 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">enter two fractions as n/d: you entered 3/4 and 5/8</pre>
+      <p><strong>Things to notice.</strong> <code>is &gt;&gt; f.numerator &gt;&gt; slash &gt;&gt; f.denominator;</code> is one
+      chained statement reading three tokens: an <code>int</code>, then whatever single non-whitespace character
+      comes next (the <code>/</code>), then another <code>int</code>. <code>cin</code>'s default behavior of skipping whitespace before
+      each extraction is what lets <code>3/4 5/8</code> (space-separated, no space around the slashes) parse
+      cleanly into two <code>Fraction</code>s.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>The wall: free functions and private data</h2>
+
+<p>Section 3's <code>operator&gt;&gt;</code> wrote directly into <code>p.x</code> and <code>p.y</code>. Try that without asking permission
+first, the way you would have to if <code>Point1</code>'s data were private and <code>operator&lt;&lt;</code> were just an
+ordinary free function with no special standing.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a free function hits the private wall</span></div>
+  <div class="bd">
+    <p>Same idea as &sect;2's <code>freeinsert.cpp</code>, except this time <code>operator&lt;&lt;</code> reaches for <code>p.x</code> and
+    <code>p.y</code> directly instead of going through accessors. Predict whether this compiles.</p>
+<div class="codewrap"><div class="cap">noaccess.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() : x(0.0), y(0.0) {}
+    void set(double a, double b) { x = a; y = b; }
+private:
+    double x, y;
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p) {
+    os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ", " &lt;&lt; p.y &lt;&lt; ")";   // p.x, p.y are private
+    return os;
+}
+
+int main() {
+    Point1 p;
+    p.set(3.0, 4.0);
+    cout &lt;&lt; p &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">noaccess.cpp: In function 'std::ostream&amp; operator&lt;&lt;(std::ostream&amp;, const Point1&amp;)':
+noaccess.cpp:13:20: error: 'double Point1::x' is private within this context
+   13 |     os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ", " &lt;&lt; p.y &lt;&lt; ")";   // p.x, p.y are private
+      |                    ^
+noaccess.cpp:9:12: note: declared private here
+    9 |     double x, y;
+      |            ^
+noaccess.cpp:13:35: error: 'double Point1::y' is private within this context
+   13 |     os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ", " &lt;&lt; p.y &lt;&lt; ")";   // p.x, p.y are private
+      |                                   ^
+noaccess.cpp:9:15: note: declared private here
+    9 |     double x, y;
+      |               ^</pre>
+<p><code>private</code> means "reachable only from a member function of this class." A free function &mdash;
+even one whose entire purpose is to print a <code>Point1</code> &mdash; is not a member of <code>Point1</code>. It is just
+an ordinary function that happens to take a <code>Point1</code> as a parameter, exactly as far outside the class
+as <code>main</code> is. <code>operator&lt;&lt;</code>'s free-function requirement (&sect;1) and encapsulation (Class 1, &sect;6)
+have collided: the only kind of function that can be <code>cout &lt;&lt; p</code>'s left-hand operator cannot see
+the data it needs to print.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>You already know one way out: give the class public accessors, as &sect;2's <code>freeinsert.cpp</code> did.
+That works, and for a class that already has <code>getx()</code>/<code>gety()</code> for other reasons, it is often the
+simplest choice. But writing accessors <em>just so that one printing function can use them</em> is
+exactly the situation this course's lecture notes call out about <code>operator+</code>: <em>"the accessor
+functions <code>getx()</code> and <code>gety()</code> simply return the values&hellip; it would be nice if the code for
+<code>operator+</code> did not have to use the accessor functions."</em> C&#43;&#43; has a mechanism built
+specifically for this.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.6</div>
+  <div class="bd">
+    <p>Two ways exist to fix <code>noaccess.cpp</code>: add <code>getx()</code>/<code>gety()</code> accessors, or grant <code>operator&lt;&lt;</code>
+    friendship.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> If <code>Point1</code> already has public <code>getx()</code> and <code>gety()</code>
+      for other reasons (say, other code needs to read a point's coordinates), which fix has less
+      code to write?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The accessor fix: <code>operator&lt;&lt;</code> just calls the getters that already exist, and nothing about
+        the class declaration has to change.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> If <code>Point1</code> has <em>no</em> other reason to expose
+      <code>x</code>/<code>y</code> &mdash; nothing else in the program ever needs to read them &mdash; which fix adds less
+      to the class's public interface?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The <code>friend</code> fix. Adding <code>getx()</code>/<code>gety()</code> widens <code>Point1</code>'s public interface permanently,
+        for every future piece of code that includes the header &mdash; even though the only reason
+        you added them was to satisfy one printing function. <code>friend</code> grants access to exactly that
+        one function and nobody else; the class's public interface stays exactly as small as it was.
+        This is the design question &sect;9 returns to at the end of the class.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>The <code>friend</code> keyword</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>friend</code></span></div>
+  <div class="bd">
+    <p>A <strong><code>friend</code> declaration</strong> inside a class grants one specific outside function (or
+    every member function of one specific outside class) access to <strong>all</strong> of this
+    class's private and protected members &mdash; data and methods both &mdash; exactly as if the
+    friend were a member itself. The friend is still not a member: it has no implicit <code>this</code> for
+    this class, and it is not part of the class's public interface.</p>
+    <p>Friendship is granted, never taken. Only the class whose data is being protected can write the
+    <code>friend</code> line; a function cannot declare itself a friend of a class it does not belong to.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; fixing <code>noaccess.cpp</code> with <code>friend</code></span></div>
+  <div class="bd">
+    <p>One line added inside the class is the entire fix. Predict the output.</p>
+<div class="codewrap"><div class="cap">friendfix.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() : x(0.0), y(0.0) {}
+    void set(double a, double b) { x = a; y = b; }
+
+    friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p);
+
+private:
+    double x, y;
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p) {
+    os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ", " &lt;&lt; p.y &lt;&lt; ")";   // legal now: operator&lt;&lt; is a friend
+    return os;
+}
+
+int main() {
+    Point1 p;
+    p.set(3.0, 4.0);
+    cout &lt;&lt; p &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">(3, 4)</pre>
+<p><code>friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p);</code> inside <code>Point1</code> looks exactly like
+the function's own declaration, with the word <code>friend</code> in front. That single line is what turned the
+private-access error in &sect;4 into working code, without touching <code>operator&lt;&lt;</code>'s body at all.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>One quirk worth knowing before you get burned by it: the <code>friend</code> line can go <strong>anywhere</strong>
+inside the class &mdash; the public section, the private section, the very top, the very bottom.
+Access is identical either way, because a friend declaration is not itself a member; it is a grant of
+permission that happens to be written inside the class body.</p>
+
+<div class="codewrap"><div class="cap">friend_anywhere.cpp</div><pre><code class="language-cpp">class Point1 {
+    // friend declared in the PRIVATE section, in the MIDDLE of the class --
+    // both are perfectly legal. Access is identical either way.
+    friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Point1 &amp;p);
+
+private:
+    double x = 1.0, y = 2.0;
+
+public:
+    void set(double a, double b) { x = a; y = b; }
+};</code></pre></div>
+<p>This compiles and prints <code>(7, 8)</code> for <code>p.set(7.0, 8.0);</code> exactly the same as the more
+conventionally laid-out version above &mdash; there is no rule that <code>friend</code> lines belong at the end,
+or in <code>public:</code>, or anywhere in particular.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; what friendship costs</span></div>
+  <div class="bd">
+    <p>Friendship is not free. Granting it means the friend function's correctness is now tied to
+    this class's internal representation: if you later change <code>Point1</code> from two <code>double</code>s to, say, a
+    <code>std::array&lt;double,2&gt;</code>, every friend that reaches directly into <code>x</code> and <code>y</code> breaks along with the
+    class's own methods. A public accessor insulates outside code from that change; <code>friend</code> does not
+    &mdash; it deliberately punches a hole through the insulation. Grant it where the coupling is
+    already tight and permanent (streams are the textbook case: <code>operator&lt;&lt;</code> is called constantly and
+    is logically part of the class's own printing behavior), not as a shortcut to avoid writing a
+    getter.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.7</div>
+  <div class="bd">
+    <p>A class <code>BankAccount</code> has a private <code>double balance;</code> and a private helper method
+    <code>void logTransaction(double amt);</code> that appends to an internal history. <code>BankAccount</code> grants
+    <code>friend void printReceipt(const BankAccount &amp;a);</code>.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Can <code>printReceipt</code> call <code>logTransaction</code> on the account
+      it is given?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes. <code>friend</code> grants access to <strong>all</strong> private members, methods included, not
+        just data. <code>printReceipt</code> can call <code>a.logTransaction(...)</code> exactly as if it were a member of
+        <code>BankAccount</code>.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A second free function,
+      <code>void printStatement(const BankAccount &amp;a);</code>, is written right next to <code>printReceipt</code> and
+      also touches <code>a.balance</code> directly. Does it compile?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. Friendship is granted to one named function at a time (or, as &sect;6 covers next, to
+        an entire class at once) &mdash; never automatically to "whatever is nearby" or "whatever
+        looks similar." <code>printStatement</code> would need its own <code>friend</code> line inside <code>BankAccount</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Friend classes</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; friend class</span></div>
+  <div class="bd">
+    <p><code>friend class Other;</code> written inside class <code>T</code> grants <strong>every</strong> member function of
+    <code>Other</code> the same private access to <code>T</code> that an individual friend function would get. It is the
+    bulk version of &sect;5 &mdash; useful when two classes are so tightly coupled that most or all of
+    one's methods legitimately need to reach into the other, and writing a separate <code>friend</code> line for
+    each one would be pure repetition.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>Dashboard</code> as a friend of <code>Engine</code></span></div>
+  <div class="bd">
+    <p><code>Engine</code> keeps <code>rpm</code> private &mdash; nothing outside the car should be able to set it directly
+    &mdash; but the <code>Dashboard</code> needs to read it every frame to drive a tachometer needle. Predict the
+    output.</p>
+<div class="codewrap"><div class="cap">friendclass.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Engine {
+public:
+    Engine() : rpm(0) {}
+    void setRpm(int r) { rpm = r; }
+
+    friend class Dashboard;   // grants Dashboard access to ALL of Engine's private members
+
+private:
+    int rpm;
+};
+
+class Dashboard {
+public:
+    void report(const Engine &amp;e) const {
+        // Dashboard reaches directly into Engine's private data -- legal because
+        // Engine declared "friend class Dashboard;"
+        cout &lt;&lt; "tachometer reads " &lt;&lt; e.rpm &lt;&lt; " rpm" &lt;&lt; endl;
+    }
+};
+
+int main() {
+    Engine e;
+    e.setRpm(3200);
+
+    Dashboard d;
+    d.report(e);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">tachometer reads 3200 rpm</pre>
+<p><code>Dashboard::report</code> reads <code>e.rpm</code> directly, with no <code>getRpm()</code> anywhere in sight. Only <code>Engine</code>
+decided to grant this; <code>Dashboard</code> did nothing special to ask for it, and could not have declared
+itself a friend on its own.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.8</div>
+  <div class="bd">
+    <p>Suppose <code>Dashboard</code> later grows a second method, <code>void warnIfRedline(const Engine &amp;e) const</code>,
+    that also reads <code>e.rpm</code> directly.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Does <code>Engine</code> need to change at all to let the new
+      method compile?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. <code>friend class Dashboard;</code> already covers every member function <code>Dashboard</code> has now or
+        ever will have. That is the difference from Quick Check 18.7(b): a friend <em>class</em>
+        grant is not tied to one function's name.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A completely unrelated class, <code>Logger</code>, also wants to
+      read <code>e.rpm</code> for a debug printout. Does <code>Logger</code> get access automatically because <code>Dashboard</code>
+      already does?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. Friendship is never transferred to a third party just because it was granted to someone
+        else &mdash; that is the non-transitivity property &sect;8 proves with a real compile error.
+        <code>Logger</code> would need its own <code>friend class Logger;</code> line inside <code>Engine</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Granting friendship to one method</h2>
+
+<p>A full friend class hands over access to <em>every</em> method of the other class. Sometimes that
+is more than you want to grant: one particular method needs to write into your private data, and the
+rest of that class's methods have no business there at all. C&#43;&#43; lets you name a single method
+as the friend, leaving the rest of its class exactly as locked out as anything else.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a friend-method example that doesn't compile as printed</span></div>
+  <div class="bd">
+    <p>A version of this example that circulates in this course's materials has three small
+    inconsistencies that keep it from compiling as printed: the method meant to demonstrate the
+    access failure is named one thing in the code (<code>printB</code>) and something else in its own output
+    label (<code>"readB: "</code>); the line meant to demonstrate the compile error is not actually commented
+    out, so the whole file fails to build; and the class receiving direct writes has no constructor.
+    The corrected version below fixes all three: the method is renamed <code>readB</code> to match the label it
+    prints, the private-access line is commented out so the file compiles cleanly, and <code>BFriend</code> gets
+    a default constructor.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; friendship for one method only</span></div>
+  <div class="bd">
+    <p><code>AFriend::writeB</code> will be a friend of <code>BFriend</code>; <code>AFriend::readB</code> will not be. Notice the
+    forward declaration of <code>BFriend</code> at the top &mdash; <code>AFriend</code>'s methods mention <code>BFriend</code> in their
+    parameter lists before <code>BFriend</code> has been defined, so the compiler needs to know at least that the
+    name refers to a class. Predict the output.</p>
+<div class="codewrap"><div class="cap">afriend_bfriend.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class BFriend;   // forward declaration -- AFriend's methods mention BFriend before it exists
+
+class AFriend {
+public:
+    void writeB(BFriend &amp;bf, int i, int j);   // will be granted friendship
+    void readB(const BFriend &amp;bf);             // will NOT be granted friendship
+};
+
+class BFriend {
+public:
+    // Erratum fix: the classic BFriend had no constructor, leaving a and b
+    // indeterminate until writeB() ran. Added here.
+    BFriend() : a(0), b(0) {}
+
+    friend void AFriend::writeB(BFriend &amp;bf, int i, int j);   // ONLY writeB, not the whole class
+
+    int get_a() const { return a; }
+    int get_b() const { return b; }
+
+private:
+    int a, b;
+};
+
+void AFriend::writeB(BFriend &amp;bf, int i, int j) {
+    bf.a = i;    // legal: writeB is a friend of BFriend
+    bf.b = j;
+}
+
+void AFriend::readB(const BFriend &amp;bf) {
+    cout &lt;&lt; "readB: " &lt;&lt; bf.get_a() &lt;&lt; " " &lt;&lt; bf.get_b() &lt;&lt; endl;   // fine: public accessors
+    // cout &lt;&lt; "readB: " &lt;&lt; bf.a &lt;&lt; " " &lt;&lt; bf.b &lt;&lt; endl;   // ERROR: readB is NOT a friend of BFriend
+}
+
+int main() {
+    int i = 3;
+    int j = -4;
+    AFriend af;
+    BFriend bf;
+    af.writeB(bf, i, j);
+    af.readB(bf);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">readB: 3 -4</pre>
+<p><code>writeB</code> writes <code>bf.a</code> and <code>bf.b</code> directly &mdash; legal, because <code>BFriend</code> named exactly
+<code>AFriend::writeB</code> as its friend. <code>readB</code> gets the same values back only by going through the public
+accessors <code>get_a()</code>/<code>get_b()</code>, because it was never granted anything.</p>
+
+</div></details>
+
+    <p>Uncomment the marked line inside <code>readB</code> and recompile:</p>
+<pre class="err">afriend_bfriend_broken.cpp: In member function 'void AFriend::readB(const BFriend&amp;)':
+afriend_bfriend_broken.cpp:34:29: error: 'int BFriend::a' is private within this context
+   34 |     cout &lt;&lt; "readB: " &lt;&lt; bf.a &lt;&lt; " " &lt;&lt; bf.b &lt;&lt; endl;   // ERROR: readB is NOT a friend of BFriend
+      |                             ^
+afriend_bfriend_broken.cpp:24:9: note: declared private here
+   24 |     int a, b;
+      |         ^
+afriend_bfriend_broken.cpp:34:29: note: field 'int BFriend::a' can be accessed via 'int BFriend::get_a() const'
+   34 |     cout &lt;&lt; "readB: " &lt;&lt; bf.a &lt;&lt; " " &lt;&lt; bf.b &lt;&lt; endl;   // ERROR: readB is NOT a friend of BFriend
+      |                             ^
+      |                             get_a()</pre>
+    <p><code>AFriend::writeB</code> and <code>AFriend::readB</code> are two entirely different functions, and <code>BFriend</code>
+    named only one of them as a friend. Being a method of a friended class's owner does not spread
+    to your siblings &mdash; friendship in C&#43;&#43; is always exactly as narrow as the line that
+    grants it. (Notice, too, the compiler's own suggestion in the second <code>note:</code> &mdash; it points
+    straight at the accessor <code>readB</code> should have used.)</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.9</div>
+  <div class="bd">
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Why does <code>class BFriend;</code> have to appear before
+      <code>class AFriend { ... };</code>, when <code>BFriend</code> is not fully defined until afterward?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>AFriend::writeB</code> takes a <code>BFriend&amp;</code> parameter. A reference (or pointer) to a class only
+        needs the compiler to know that the name is a class &mdash; it does not need to know the
+        class's size or members, because a reference is just an address under the hood. The forward
+        declaration <code>class BFriend;</code> supplies exactly that much, which is enough to declare (but not
+        yet define) <code>writeB</code>.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Why must <code>AFriend</code> be <strong>completely</strong>
+      defined before <code>BFriend</code>'s <code>friend void AFriend::writeB(...)</code> line, when the reverse ordering
+      (forward-declare, then define later) was fine for <code>BFriend</code> itself?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>BFriend</code>'s friend line does not just need to know that <code>AFriend</code> exists &mdash; it needs
+        to know that <code>AFriend</code> <em>has a member called <code>writeB</code> with exactly that signature</em>, so
+        the compiler can match the friend declaration to the real function. That information only
+        exists once <code>AFriend</code>'s full body, including <code>writeB</code>'s declaration, has been compiled. A
+        forward declaration alone is not enough for this particular kind of friend grant, which is why
+        the file's order is fixed: forward-declare <code>BFriend</code>, fully define <code>AFriend</code>, then define
+        <code>BFriend</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; grant friendship to one method</h3>
+
+<p><code>Auditor::checkBalance</code> should be a friend of <code>Account</code> and read <code>balance</code> directly.
+<code>Auditor::printSummary</code> should <strong>not</strong> be a friend, and must go through the public
+<code>getBalance()</code> instead.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Account;   // forward declaration
+
+class Auditor {
+public:
+    void checkBalance(const Account &amp;acc);   // grant THIS one friendship
+    void printSummary(const Account &amp;acc);    // this one stays locked out
+};
+
+class Account {
+public:
+    Account(double startingBalance) : balance(startingBalance) {}
+
+    // TODO: grant friendship to Auditor::checkBalance only, not the whole class
+
+    double getBalance() const { return balance; }
+
+private:
+    double balance;
+};
+
+// TODO: define Auditor::checkBalance so it reads acc.balance directly
+// TODO: define Auditor::printSummary so it uses acc.getBalance() instead
+
+int main() {
+    Account a(1250.75);
+    Auditor auditor;
+    auditor.checkBalance(a);
+    auditor.printSummary(a);
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Account;   // forward declaration
+
+class Auditor {
+public:
+    void checkBalance(const Account &amp;acc);   // grant THIS one friendship
+    void printSummary(const Account &amp;acc);    // this one stays locked out
+};
+
+class Account {
+public:
+    Account(double startingBalance) : balance(startingBalance) {}
+
+    // TODO: grant friendship to Auditor::checkBalance only, not the whole class
+
+    double getBalance() const { return balance; }
+
+private:
+    double balance;
+};
+
+// TODO: define Auditor::checkBalance so it reads acc.balance directly
+// TODO: define Auditor::printSummary so it uses acc.getBalance() instead
+
+int main() {
+    Account a(1250.75);
+    Auditor auditor;
+    auditor.checkBalance(a);
+    auditor.printSummary(a);
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.10</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Same shape as <code>AFriend</code>/<code>BFriend</code>: <code>Account</code> names exactly
+      <code>Auditor::checkBalance</code> as its friend. <code>printSummary</code> is written as an ordinary member of
+      <code>Auditor</code> with no special access, so it must call <code>getBalance()</code>.</p>
+<div class="codewrap"><div class="cap">auditor_account.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Account;   // forward declaration -- Auditor's methods mention Account before it exists
+
+class Auditor {
+public:
+    void checkBalance(const Account &amp;acc);   // will be granted friendship
+    void printSummary(const Account &amp;acc);    // will NOT be granted friendship
+};
+
+class Account {
+public:
+    Account(double startingBalance) : balance(startingBalance) {}
+
+    friend void Auditor::checkBalance(const Account &amp;acc);   // ONLY checkBalance, not the whole class
+
+    double getBalance() const { return balance; }
+
+private:
+    double balance;
+};
+
+void Auditor::checkBalance(const Account &amp;acc) {
+    cout &lt;&lt; "audit: balance is " &lt;&lt; acc.balance &lt;&lt; endl;   // legal: checkBalance is a friend
+}
+
+void Auditor::printSummary(const Account &amp;acc) {
+    cout &lt;&lt; "summary: balance is " &lt;&lt; acc.getBalance() &lt;&lt; endl;   // fine: public accessor
+    // cout &lt;&lt; "summary: balance is " &lt;&lt; acc.balance &lt;&lt; endl;   // ERROR: printSummary is not a friend
+}
+
+int main() {
+    Account a(1250.75);
+    Auditor auditor;
+    auditor.checkBalance(a);
+    auditor.printSummary(a);
+    return 0;
+}</code></pre></div>
+<pre class="out">audit: balance is 1250.75
+summary: balance is 1250.75</pre>
+      <p><strong>Things to notice.</strong> Both lines print the same balance, by two different
+      routes &mdash; one direct, one through a getter &mdash; which is exactly the point: friendship
+      does not change <em>what</em> data a well-behaved function can reach, only <em>how directly</em>
+      it can reach it.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>What friendship does not do</h2>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; assuming friendship works like other permissions</span></div>
+  <div class="bd">
+    <p>Three properties of <code>friend</code> are easy to assume and all three are wrong. Friendship is
+    <strong>not symmetric</strong>: <code>A</code> declaring <code>friend class B;</code> gives <code>B</code> access into <code>A</code>, and says
+    nothing at all about whether <code>A</code> can reach into <code>B</code>. Friendship is <strong>not transitive</strong>:
+    if <code>B</code> is a friend of <code>A</code>, and <code>C</code> is a friend of <code>B</code>, <code>C</code> gets no access to <code>A</code> &mdash; friendship
+    never chains through a middle class. And, looking ahead to Class 19: friendship is
+    <strong>not inherited</strong>. If a class <code>D</code> derives from <code>B</code>, <code>D</code> does not automatically inherit
+    whatever friendships <code>B</code> was granted; the friend declaration named <code>B</code> specifically, not "<code>B</code> and
+    anything that ever derives from it."</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; friendship is not symmetric</span></div>
+  <div class="bd">
+    <p><code>B</code> declares <code>friend class A;</code>, so <code>A</code> can read <code>B</code>'s private data. Predict whether <code>B</code> can
+    read <code>A</code>'s private data back.</p>
+<div class="codewrap"><div class="cap">asymmetric_works.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class B;   // forward declaration
+
+class A {
+public:
+    void showB(const B &amp;b) const;   // needs friend access into B
+private:
+    int secretA = 99;
+};
+
+class B {
+    friend class A;   // A can read B's private data -- one direction only
+private:
+    int secretB = 42;
+};
+
+void A::showB(const B &amp;b) const {
+    cout &lt;&lt; "secretB = " &lt;&lt; b.secretB &lt;&lt; endl;   // legal: A is a friend of B
+}
+
+int main() {
+    A a;
+    B b;
+    a.showB(b);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">secretB = 42</pre>
+<p>This direction works exactly as declared. Now add a <code>B::showA</code> that tries to read <code>a.secretA</code>
+the same way.</p>
+
+</div></details>
+<pre><code class="language-cpp">class B {
+    friend class A;
+public:
+    void showA(const A &amp;a) const {
+        cout &lt;&lt; "secretA = " &lt;&lt; a.secretA &lt;&lt; endl;   // NOT legal: B is not a friend of A
+    }
+private:
+    int secretB = 42;
+};</code></pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">asymmetric.cpp: In member function 'void B::showA(const A&amp;) const':
+asymmetric.cpp:17:35: error: 'int A::secretA' is private within this context
+   17 |         cout &lt;&lt; "secretA = " &lt;&lt; a.secretA &lt;&lt; endl;   // NOT legal: B is not a friend of A
+      |                                   ^~~~~~~
+asymmetric.cpp:10:9: note: declared private here
+   10 |     int secretA = 99;
+      |         ^~~~~~~</pre>
+<p><code>A</code> never declared <code>friend class B;</code>, so the grant only ever ran one way. If you want two classes
+to see into each other, you have to write <strong>two</strong> <code>friend</code> lines, one in each class
+&mdash; exactly the mutual-friendship pattern this course's lecture notes sketch as
+<code>class A { friend class B; };</code> paired with <code>class B { friend class A; };</code>.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; friendship is not transitive</span></div>
+  <div class="bd">
+    <p><code>B</code> is a friend of <code>A</code>. <code>C</code> is a friend of <code>B</code>. Predict whether <code>C</code> can read <code>A</code>'s private data.</p>
+<div class="codewrap"><div class="cap">transitive_works.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class A;
+
+class A {
+    friend class B;   // B is a friend of A
+private:
+    int secretA = 10;
+};
+
+class B {
+public:
+    void peekA(const A &amp;a) const {
+        cout &lt;&lt; "B sees secretA = " &lt;&lt; a.secretA &lt;&lt; endl;   // legal: B is a friend of A
+    }
+private:
+    int secretB = 20;
+};
+
+int main() {
+    A a;
+    B b;
+    b.peekA(a);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">B sees secretA = 10</pre>
+<p>Confirmed &mdash; <code>B</code> really can see <code>A</code>'s private data, directly, because <code>A</code> named it a friend.
+Now add class <code>C</code>, a friend of <code>B</code>, and have <code>C</code> try the same trick on <code>A</code>.</p>
+
+</div></details>
+<pre><code class="language-cpp">class B {
+    friend class C;   // C is a friend of B
+public:
+    void peekA(const A &amp;a) const { /* as before */ }
+private:
+    int secretB = 20;
+};
+
+class C {
+public:
+    void peekA(const A &amp;a) const {
+        // C is a friend of B, and B is a friend of A -- but friendship does not
+        // chain. C is NOT a friend of A, so this does not compile.
+        cout &lt;&lt; "C sees secretA = " &lt;&lt; a.secretA &lt;&lt; endl;
+    }
+};</code></pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">transitive.cpp: In member function 'void C::peekA(const A&amp;) const':
+transitive.cpp:28:42: error: 'int A::secretA' is private within this context
+   28 |         cout &lt;&lt; "C sees secretA = " &lt;&lt; a.secretA &lt;&lt; endl;
+      |                                          ^~~~~~~
+transitive.cpp:10:9: note: declared private here
+   10 |     int secretA = 10;
+      |         ^~~~~~~</pre>
+<p><code>A</code>'s <code>friend</code> line names <code>B</code>, and only <code>B</code>. It says nothing about anyone <code>B</code> itself chooses to
+trust. If <code>A</code> wants <code>C</code> to have access too, <code>A</code> has to say so directly &mdash; <code>friend class C;</code>
+&mdash; inside its own body. Trust in C&#43;&#43; friendship never passes through a middleman.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.11</div>
+  <div class="bd">
+    <p>Three classes are declared:</p>
+<pre><code class="language-cpp">class X {
+    friend class Y;
+    int secretX;
+};
+class Y {
+    friend class Z;
+    int secretY;
+};
+class Z {
+    // (methods that try to read secretX and secretY, shown below)
+};</code></pre>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Can a method of <code>Y</code> read <code>x.secretX</code> for some <code>X x</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes. <code>X</code> explicitly named <code>Y</code> as a friend.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Can a method of <code>Z</code> read <code>y.secretY</code> for some <code>Y y</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes. <code>Y</code> explicitly named <code>Z</code> as a friend.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Can a method of <code>Z</code> read <code>x.secretX</code> for some <code>X x</code>?
+      Justify your answer using the property demonstrated above.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. <code>X</code> never mentions <code>Z</code> anywhere &mdash; only <code>Y</code>. <code>Z</code> being a friend of <code>Y</code>, and <code>Y</code>
+        being a friend of <code>X</code>, does not chain into "<code>Z</code> is a friend of <code>X</code>." This is exactly the
+        non-transitivity <code>transitive.cpp</code> proved above; the shape of the chain here (<code>X</code>&rarr;<code>Y</code>
+        &rarr;<code>Z</code>) is identical.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s9"><span class="num">9.</span><code>friend</code> vs. a public accessor</h2>
+
+<p>You now have two legitimate tools for letting outside code touch private data: a public accessor
+method, and a <code>friend</code> declaration. Neither one is "the right answer" in general &mdash; each costs
+something different, and a good design picks based on the shape of the problem, not habit.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; <code>friend</code> is a scalpel, not a foundation</span></div>
+  <div class="bd">
+    <table class="trace">
+      <tr><th>Favor a public accessor when&hellip;</th><th>Favor <code>friend</code> when&hellip;</th></tr>
+      <tr><td>many unrelated pieces of code need read access, now or later</td><td>exactly one function or one tightly related class needs access</td></tr>
+      <tr><td>you want the freedom to change the internal representation without hunting down every caller</td><td>the caller <em>is</em>, conceptually, part of the class's own machinery (<code>operator&lt;&lt;</code>/<code>operator&gt;&gt;</code> are the textbook case)</td></tr>
+      <tr><td>the access pattern is simple (just read a value)</td><td>the caller needs to touch several private members together, and going through several getters would be clumsy or lose atomicity</td></tr>
+    </table>
+    <p>When in doubt, start with a public accessor. Reach for <code>friend</code> only when you can name the
+    <em>one</em> specific function or class that needs the exception &mdash; if you find yourself
+    friending several unrelated things, that is usually a sign the data should have been public (or
+    the design should be rethought) rather than a sign you need more <code>friend</code> lines.</p>
+  </div>
+</div>
+
+<p>This course's own exam bank makes the trade-off concrete. One of its questions gives you a
+<code>Rational</code> class with private <code>numerator</code>/<code>denominator</code> and a <code>set</code> method, and asks you to write a
+free function <code>product</code> that multiplies two <code>Rational</code>s &mdash; using only the public getters
+<code>getn()</code>/<code>getd()</code>, because the class was never given a <code>friend</code> declaration to work with:</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the exam's own answer: accessors, not <code>friend</code></span></div>
+  <div class="bd">
+    <p>Predict the three printed lines. <code>add1()</code> adds 1 to a rational by adding its denominator to
+    its numerator &mdash; <code>p/q + 1 = (p+q)/q</code>.</p>
+<div class="codewrap"><div class="cap">rational_product.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+public:
+    void set(int a, int b) { numerator = a; denominator = b; }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void add1() { numerator = numerator + denominator; }
+    void print() const { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+private:
+    int numerator, denominator;
+};
+
+Rational product(Rational x, Rational y) {
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();
+    r1.print();
+    r2.print();
+    Rational p = product(r1, r2);
+    p.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">5/3
+4/5
+20/15</pre>
+<p><code>product</code> never touches <code>x.numerator</code> or <code>x.denominator</code> &mdash; it goes through <code>getn()</code>/<code>getd()</code>
+every time. That is a real design decision, not an oversight: the professor's own graded exams never
+test <code>friend</code> at all (see the note at the end of this page), so every free function in this course's
+exam bank that needs another object's data goes through a public getter instead. That does not mean
+<code>friend</code> is wrong &mdash; it means this particular exam question was built to test accessors, not
+friendship.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Compare that with a version of the same idea written to reach into the private data directly,
+which is exactly the situation &sect;5 introduced <code>friend</code> to solve:</p>
+
+<div class="codewrap"><div class="cap">combine_noaccess.cpp</div><pre><code class="language-cpp">Rational combine(const Rational &amp;x, const Rational &amp;y) {
+    Rational answer;
+    answer.set(x.numerator * y.numerator, x.denominator * y.denominator);   // private access
+    return answer;
+}</code></pre></div>
+<p>Without a <code>friend</code> declaration this fails exactly the way &sect;4's example did &mdash; four
+separate <em>"is private within this context"</em> errors, one for each of <code>x.numerator</code>,
+<code>y.numerator</code>, <code>x.denominator</code>, <code>y.denominator</code>. Granting <code>combine</code> friendship fixes it the same way
+it fixed <code>operator&lt;&lt;</code>:</p>
+
+<div class="codewrap"><div class="cap">combine_friend.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+public:
+    void set(int n, int d) { numerator = n; denominator = d; }
+    void print() const { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+
+    friend Rational combine(const Rational &amp;x, const Rational &amp;y);
+
+private:
+    int numerator, denominator;
+};
+
+Rational combine(const Rational &amp;x, const Rational &amp;y) {
+    Rational answer;
+    answer.set(x.numerator * y.numerator, x.denominator * y.denominator);   // legal: friend
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    Rational r3 = combine(r1, r2);
+    r3.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">8/15</pre>
+<p>Same job, two legitimate designs. <code>product</code> costs nothing structurally &mdash; <code>Rational</code> keeps
+its accessors, useful to anyone. <code>combine</code> costs a permanent coupling between <code>Rational</code>'s internal
+layout and one specific free function &mdash; and in exchange, that function never has to route
+through a getter for something it is, in every practical sense, part of the class's own arithmetic.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 18.12</div>
+  <div class="bd">
+    <p>For each scenario, say whether a public accessor or <code>friend</code> is the better fit, and why.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A <code>Logger</code> class that many unrelated classes across a
+      large codebase will want to report values to.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Public accessor (or, more precisely, a public logging method). "Many unrelated callers" is
+        exactly the case where <code>friend</code> does not scale &mdash; you would need a new <code>friend</code> line for
+        every caller, forever, and every one of those callers becomes permanently coupled to
+        <code>Logger</code>'s internals.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>operator==</code> for a <code>Matrix</code> class, which needs to
+      compare every element of two matrices for equality.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>friend</code>. Like <code>operator&lt;&lt;</code>, <code>operator==</code> must be a free function for the same left-operand
+        reason as &sect;1 (consider <code>m1 == m2</code> where a conversion makes <code>m1</code> not literally a <code>Matrix</code>
+        &mdash; the general argument is identical to <code>&lt;&lt;</code>), it is called constantly, and it is
+        conceptually part of <code>Matrix</code>'s own behavior, not an outside consumer of it.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 18</span></div>
+  <div class="bd">
+    <p>Problem 1 is adapted from the professor's own Fall 2023 Exam 1 &mdash; it is the one place in
+    his exam bank where a free function needs another object's data and has to go through public
+    accessors to get it, which is precisely the situation <code>friend</code> exists to simplify. Problems 2
+    through 5 were written for these notes to exercise streams and friendship directly, since
+    <strong>neither <code>operator&lt;&lt;</code>/<code>operator&gt;&gt;</code> nor <code>friend</code> has ever appeared on any of the professor's
+    ten graded exams</strong> &mdash; see the note at the end of this page before you decide how much
+    time to spend drilling them.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; <code>Rational</code>: <code>set</code>, <code>add1</code>, <code>product</code> <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+
+<p>Given a <code>Rational</code> class with private <code>int numerator, denominator;</code>, public accessors <code>getn()</code>
+and <code>getd()</code>, and a <code>print()</code> that outputs <code>numerator/denominator</code>, implement:</p>
+<ul>
+  <li><span class="pl">(a)</span> <code>void set(int a, int b)</code> that sets the values for
+  <code>numerator</code> and <code>denominator</code> respectively.</li>
+  <li><span class="pl">(b)</span> <code>void add1()</code> that adds 1 to the rational number
+  (<code>p/q + 1 = (p+q)/q</code>).</li>
+  <li><span class="pl">(c)</span> A free function <code>Rational product(Rational x, Rational y)</code>
+  that returns the product of two rational numbers (<code>(x/y)&amp;middot;(w/z) = (xw)/(yz)</code>), using only the
+  public accessors &mdash; you do not need to simplify the result.</li>
+</ul>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> (a) and (b) are direct member functions writing to <code>numerator</code> and
+  <code>denominator</code>, which they may do freely since they belong to the class. (c) is a free function, so
+  it has no special access at all &mdash; every read of <code>x</code> or <code>y</code>'s fields has to go through <code>getn()</code>
+  and <code>getd()</code>, and the result is built in a fresh local <code>Rational</code> via <code>set</code>.</p>
+<div class="codewrap"><div class="cap">rational_product.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+public:
+    void set(int a, int b) { numerator = a; denominator = b; }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void add1() { numerator = numerator + denominator; }
+    void print() const { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+private:
+    int numerator, denominator;
+};
+
+Rational product(Rational x, Rational y) {
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();
+    r1.print();
+    r2.print();
+    Rational p = product(r1, r2);
+    p.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">5/3
+4/5
+20/15</pre>
+  <p><strong>Things to notice.</strong> The exam's own grading rubric pays partial credit here in
+  three pieces: declaring a <code>Rational</code> for the answer, correctly computing the numerator and
+  denominator using <code>.get</code> methods, and setting them on the created object &mdash; which tells you the
+  professor cares as much about the shape (declare, compute via accessors, <code>set</code>, <code>return</code>) as about
+  the final numbers. Note also that <code>product</code> takes <code>x</code> and <code>y</code> <em>by value</em>, not <code>const&amp;</code>; either
+  works here since <code>Rational</code> is small and the function does not modify its parameters, but <code>const&amp;</code>
+  would be the more disciplined choice for a larger class.</p>
+</div></details>
+
+<h3>Problem 2 &mdash; <code>combine</code>: the same idea with <code>friend</code> <span class="muted small">(added)</span></h3>
+
+<p>Rewrite Problem 1's idea as a free function
+<code>Rational combine(const Rational &amp;x, const Rational &amp;y)</code> that computes the same product, but this
+time by reaching directly into <code>x.numerator</code>, <code>x.denominator</code>, <code>y.numerator</code>, <code>y.denominator</code>
+&mdash; no accessors. Make whatever change to <code>Rational</code> is necessary for this to compile.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> As written, <code>combine</code> is an ordinary free function with no special
+  standing, so <code>x.numerator</code> fails exactly like &sect;4's <code>noaccess.cpp</code> did &mdash; four separate
+  <em>"is private within this context"</em> errors, one per field access. The fix from &sect;5 is a
+  single line inside <code>Rational</code>: <code>friend Rational combine(const Rational &amp;x, const Rational &amp;y);</code>.</p>
+<div class="codewrap"><div class="cap">combine_friend.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+public:
+    void set(int n, int d) { numerator = n; denominator = d; }
+    void print() const { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
+
+    friend Rational combine(const Rational &amp;x, const Rational &amp;y);
+
+private:
+    int numerator, denominator;
+};
+
+Rational combine(const Rational &amp;x, const Rational &amp;y) {
+    Rational answer;
+    answer.set(x.numerator * y.numerator, x.denominator * y.denominator);   // legal: friend
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    Rational r3 = combine(r1, r2);
+    r3.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">8/15</pre>
+  <p><strong>Things to notice.</strong> <code>combine</code> and <code>product</code> (Problem 1) compute the identical
+  answer for the identical inputs &mdash; <code>20/15</code> reduces to the same value as <code>8/15</code> would for a
+  different pair, but run them on the same <code>r1</code>/<code>r2</code> and you get <code>20/15</code> either way. The difference
+  between the two problems is never about correctness; it is entirely about how each function is
+  allowed to reach the data, which is exactly &sect;9's design question.</p>
+</div></details>
+
+<h3>Problem 3 &mdash; stream operators for <code>Time</code> <span class="muted small">(added)</span></h3>
+
+<p>Give an implementation for <code>operator&lt;&lt;</code> and <code>operator&gt;&gt;</code> for a <code>Time</code> class holding private
+<code>int hours, minutes;</code>. <code>operator&lt;&lt;</code> should print as <code>H:MM</code> (minutes zero-padded to two digits:
+<code>9:05</code>, not <code>9:5</code>). <code>operator&gt;&gt;</code> should read two integers, hours then minutes.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Both operators must be free functions (&sect;1), both need <code>friend</code> access
+  to <code>hours</code>/<code>minutes</code> (&sect;5), and the padding in <code>operator&lt;&lt;</code> is a single conditional: print a
+  leading <code>"0"</code> only when <code>minutes &lt; 10</code>.</p>
+<div class="codewrap"><div class="cap">time_streams.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Time {
+public:
+    Time() : hours(0), minutes(0) {}
+
+    friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Time &amp;t);
+    friend istream &amp;operator&gt;&gt;(istream &amp;is, Time &amp;t);
+
+private:
+    int hours, minutes;
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Time &amp;t) {
+    os &lt;&lt; t.hours &lt;&lt; ":" &lt;&lt; (t.minutes &lt; 10 ? "0" : "") &lt;&lt; t.minutes;
+    return os;
+}
+
+istream &amp;operator&gt;&gt;(istream &amp;is, Time &amp;t) {
+    is &gt;&gt; t.hours &gt;&gt; t.minutes;
+    return is;
+}
+
+int main() {
+    Time wake, meeting;
+    cout &lt;&lt; "enter wake time (H M): ";
+    cin &gt;&gt; wake;
+    cout &lt;&lt; "enter meeting time (H M): ";
+    cin &gt;&gt; meeting;
+    cout &lt;&lt; "wake = " &lt;&lt; wake &lt;&lt; ", meeting = " &lt;&lt; meeting &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">enter wake time (H M): enter meeting time (H M): wake = 7:05, meeting = 9:30</pre>
+  <p><strong>Things to notice.</strong> This run's input was <code>7 5</code> then <code>9 30</code>, piped in rather than
+  typed, which is why no digits appear after either prompt. <code>7:05</code> proves the zero-padding branch
+  actually ran; without it, <code>minutes == 5</code> would print as the misleading <code>7:5</code>.</p>
+</div></details>
+
+<h3>Problem 4 &mdash; <code>Gradebook</code> as a friend class of <code>Student</code> <span class="muted small">(added)</span></h3>
+
+<p><code>Student</code> holds a private <code>string name;</code> and a private <code>double score;</code>. Give <code>Gradebook</code> friend
+access to <code>Student</code> so that <code>Gradebook::report(const Student &amp;a, const Student &amp;b)</code> can compute and
+print the average of two students' scores by reading <code>a.score</code> and <code>b.score</code> directly, without
+adding any getter to <code>Student</code>.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> <code>Gradebook</code>'s whole job is to read <code>Student</code> internals, and it will
+  plausibly grow more such methods later, so &sect;6's full friend-class grant
+  (<code>friend class Gradebook;</code>) fits better than naming one method at a time.</p>
+<div class="codewrap"><div class="cap">gradebook.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Student {
+public:
+    Student(string n, double s) : name(n), score(s) {}
+
+    friend class Gradebook;   // Gradebook may read every Student's private data
+
+private:
+    string name;
+    double score;
+};
+
+class Gradebook {
+public:
+    void report(const Student &amp;a, const Student &amp;b) const {
+        double avg = (a.score + b.score) / 2.0;   // reaches directly into both objects
+        cout &lt;&lt; a.name &lt;&lt; " and " &lt;&lt; b.name &lt;&lt; " average " &lt;&lt; avg &lt;&lt; endl;
+    }
+};
+
+int main() {
+    Student s1("Amir", 88.0);
+    Student s2("Priya", 94.0);
+    Gradebook gb;
+    gb.report(s1, s2);
+    return 0;
+}</code></pre></div>
+<pre class="out">Amir and Priya average 91</pre>
+  <p><strong>Things to notice.</strong> <code>91.0</code> prints as <code>91</code> &mdash; the same trailing-zero rule
+  from Class 1. And <code>Student</code> itself is never given any public way to read <code>score</code>; the only route in
+  is through <code>Gradebook</code>, which is exactly the point of choosing <code>friend</code> over an accessor here.</p>
+</div></details>
+
+<h3>Problem 5 &mdash; predict the output, or explain the error <span class="muted small">(added, in the style of the Fall 2023 Exam 2 namespace question)</span></h3>
+
+<p>Given these declarations:</p>
+<pre><code class="language-cpp">class Locker;
+
+class Owner {
+public:
+    void open(const Locker &amp;l) const;
+};
+
+class Janitor {
+public:
+    void peek(const Locker &amp;l) const;
+};
+
+class Locker {
+    friend class Owner;
+public:
+    Locker(int c) : code(c) {}
+private:
+    int code;
+};
+
+void Owner::open(const Locker &amp;l) const {
+    cout &lt;&lt; "code is " &lt;&lt; l.code &lt;&lt; endl;
+}
+
+void Janitor::peek(const Locker &amp;l) const {
+    cout &lt;&lt; "code is " &lt;&lt; l.code &lt;&lt; endl;
+}</code></pre>
+<p>and this <code>main</code>, executed one line at a time:</p>
+<pre><code class="language-cpp">Locker locker(1234);
+Owner owner;
+owner.open(locker);      // line (a)
+Janitor j;
+j.peek(locker);           // line (b)</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Does line (a) compile? If so, what does it print?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">code is 1234</pre>
+    <p><code>Locker</code> declared <code>friend class Owner;</code>, so <code>Owner::open</code> may read <code>l.code</code> directly.</p>
+  </div></details>
+</div>
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Does line (b) compile? If not, explain exactly why the
+  error occurs, quoting the specific rule from this class that applies.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>It does not compile. <code>Locker</code> never granted friendship to <code>Janitor</code> &mdash; only to <code>Owner</code>.
+    That <code>Owner</code> can read <code>Locker</code>'s private data has no bearing on whether <code>Janitor</code> can; each
+    <code>friend</code> line names one specific grantee, and access is never extended to anyone else by
+    resemblance or proximity. Compiling for real confirms it:</p>
+<pre class="err">locker_b.cpp: In member function 'void Janitor::peek(const Locker&amp;) const':
+locker_b.cpp:29:29: error: 'int Locker::code' is private within this context
+   29 |     cout &lt;&lt; "code is " &lt;&lt; l.code &lt;&lt; endl;
+      |                             ^~~~
+locker_b.cpp:21:9: note: declared private here
+   21 |     int code;
+      |         ^~~~</pre>
+    <p><strong>Things to notice.</strong> This is the same shape as this course's own Fall 2023
+    namespace question &mdash; predict a line, and where the code will not compile, explain the
+    error in words instead of guessing at output. On an exam, "comment out the line and move on"
+    is the professor's own stated instruction for exactly this situation.</p>
+  </div></details>
+</div>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>A binary operator written as a class method always takes its <strong>left</strong> operand
+      as <code>this</code>. Since <code>cout &lt;&lt; p1</code> needs <code>cout</code> (an <code>ostream</code>) on the left, and you cannot add a
+      member to the standard library's <code>ostream</code>, <code>operator&lt;&lt;</code> (and <code>operator&gt;&gt;</code>) for your own class
+      <strong>must</strong> be a free function.</li>
+      <li>The required signatures: <code>ostream &amp;operator&lt;&lt;(ostream &amp;os, const T &amp;t)</code> and
+      <code>istream &amp;operator&gt;&gt;(istream &amp;is, T &amp;t)</code>. Both return their stream by reference &mdash; not
+      <code>void</code>, and not by value (streams cannot be copied) &mdash; so that <code>&lt;&lt;</code> and <code>&gt;&gt;</code> can be
+      chained: each call's return value becomes the left operand of the next <code>&lt;&lt;</code>/<code>&gt;&gt;</code> in the
+      statement.</li>
+      <li>Being a free function costs <code>operator&lt;&lt;</code>/<code>operator&gt;&gt;</code> their automatic access to private
+      data. A public accessor is one fix; <strong><code>friend</code></strong> is the other &mdash; a declaration,
+      written inside the class being protected, that grants one named function or one named class full
+      access to its private and protected members, data and methods alike.</li>
+      <li>A <code>friend</code> declaration can appear anywhere inside the class &mdash; public section, private
+      section, top, bottom &mdash; access is identical regardless of placement.</li>
+      <li><code>friend class Other;</code> grants every member of <code>Other</code> the same access an individual friend
+      function gets. Granting friendship to <strong>one method</strong> of another class (rather than
+      the whole class) requires a forward declaration of the method's own class first, then the
+      friending class fully defined, then the friend line.</li>
+      <li>Friendship is <strong>not symmetric</strong> (granting it one direction says nothing about
+      the reverse), <strong>not transitive</strong> (a friend of your friend is not your friend), and
+      &mdash; a preview for Class 19 &mdash; <strong>not inherited</strong> by a derived class.</li>
+      <li>Neither <code>friend</code> nor a public accessor is universally "correct." Favor an accessor when many
+      unrelated callers need access or the representation may change; favor <code>friend</code> when exactly one
+      function or class is tightly, permanently coupled to this one (streams are the textbook case).</li>
+      <li><strong>Exam note:</strong> <code>friend</code> has never appeared on any of this professor's ten graded
+      exams &mdash; not one question requires declaring or reasoning about it. <code>operator&lt;&lt;</code> itself is
+      likewise never the subject of a written-code question, though <code>cout &lt;&lt;</code> inside a class's own
+      <code>print()</code>/<code>display()</code> is everywhere. If your review time is limited, spend it on the
+      member-function operator overloading from Class 17 (tested on 9 of 10 exams) before drilling
+      friendship, which exists here mainly to make the streams material teachable, not to be tested
+      directly.</li>
+    </ul>
+    <p><strong>Coming up in Class 19:</strong> inheritance &mdash; how one class can be built as a
+    specialization of another with <code>class Derived : public Base</code>, what <code>protected</code> unlocks that
+    <code>private</code> does not, and the very first place the "not inherited" rule from &sect;8 will actually
+    matter.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 17 &middot; Operators I</div><div class="pending">posts Thu Oct 29</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 19 &middot; Inheritance I</div><div class="pending">posts Thu Nov 5</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

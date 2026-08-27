@@ -1,0 +1,3241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 27 — The STL | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 27 &middot; The STL</span><span class="sep">|</span><span class="where">Tue Dec 8</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 27 &middot; CSCI 211</div>
+  <h1>The Standard Template Library</h1>
+  <p class="sub">Everything you learned about class templates in Class 26, already written for you &mdash; containers, iterators and algorithms.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Say what the STL is, and name its three parts &mdash; containers, iterators and algorithms.</li>
+      <li>Declare and populate a <code>set</code>, and explain why its elements come out sorted and unique.</li>
+      <li>Declare and populate a <code>map</code>, and use <code>operator[]</code>, <code>insert</code>, <code>find</code> and <code>count</code> correctly.</li>
+      <li>Explain the surprise in <code>m[k]</code> when <code>k</code> is not already a key, and say when to use <code>find</code> instead.</li>
+      <li>Write a forward-iterator loop over a <code>vector</code>, a <code>set</code> and a <code>map</code>, and reach a map entry's key and value through <code>-&gt;first</code> and <code>-&gt;second</code>.</li>
+      <li>Explain why <code>end()</code> points one place <em>past</em> the last element, and why that makes the loop condition <code>!=</code> rather than <code>&lt;</code>.</li>
+      <li>Choose between forward, reverse and <code>const</code> iterators, and traverse a container backwards with <code>rbegin()</code> and <code>rend()</code>.</li>
+      <li>Overload <code>operator&lt;</code> for a class of your own so its objects can be stored in a <code>set</code>, used as a <code>map</code> key, or sorted with <code>sort</code> from <code>&lt;algorithm&gt;</code>.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">The payoff for class templates</a></li>
+    <li><a href="#s2"><code>set</code>: the index is the value</a></li>
+    <li><a href="#s3"><code>map</code>: keys that need not be integers</a></li>
+    <li><a href="#s4">Vector, set and map side by side</a></li>
+    <li><a href="#s5">Iterators</a></li>
+    <li><a href="#s6">Going backwards: reverse iterators</a></li>
+    <li><a href="#s7"><code>const</code> iterators</a></li>
+    <li><a href="#s8">Your own class in a <code>set</code>: <code>operator&lt;</code></a></li>
+    <li><a href="#s9">Algorithms: <code>sort</code></a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>The payoff for class templates</h2>
+
+<p>In Class 26 you wrote a class template. You took a class that worked for one type, put
+<code>template &lt;typename T&gt;</code> in front of it, replaced the concrete type with <code>T</code>, and got a class that
+works for every type at once. That was a lot of machinery for one small container, and the honest
+question at the end of that class was: <em>was it worth it?</em></p>
+
+<p>Today is the answer. The C++ standard library ships with a whole collection of class templates
+that other people have already written, debugged and optimized for you. It is called the
+<strong>Standard Template Library</strong>, and you have been using it since Class 5 without being
+told its name.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the Standard Template Library</span></div>
+  <div class="bd">
+    <p>The <strong>Standard Template Library (STL)</strong> is a library that comes with every C++
+    compiler. As its name says, it is implemented <strong>entirely using templated classes</strong>.
+    It has three parts:</p>
+    <ul>
+      <li><strong>Container classes</strong> &mdash; classes that hold data values. <code>vector</code>, <code>set</code>
+        and <code>map</code> are containers. So is <code>string</code>.</li>
+      <li><strong>Iterators</strong> &mdash; objects used to <em>traverse</em> a container and reach
+        its elements. An iterator is a generalization of a pointer.</li>
+      <li><strong>Algorithms</strong> &mdash; general-purpose functions, such as <code>sort</code>, that work on
+        any container through its iterators.</li>
+    </ul>
+    <p><strong>Both <code>string</code> and <code>vector</code> are part of the STL.</strong> You already know two STL
+    containers; today adds two more and the machinery that ties them all together.</p>
+  </div>
+</div>
+
+<p>Here is the thing worth pausing on. There is exactly <em>one</em> <code>set</code> class written in the
+library. It is a class template, so <code>set&lt;int&gt;</code>, <code>set&lt;string&gt;</code> and <code>set&lt;double&gt;</code> are
+three different classes that the compiler generates from the same source, at compile time, exactly
+the way your own class template worked last class.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one class template, three containers</span></div>
+  <div class="bd">
+    <p>Don't worry about what a <code>set</code> is yet &mdash; that's the next section. Look only at the
+    <em>shape</em> of this program. Three declarations, three types, one library class. Predict the
+    order in which the values print.</p>
+<div class="codewrap"><div class="cap">oneclass.cpp</div><pre><code class="language-cpp">// oneclass.cpp -- one class template, three completely different containers
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    set&lt;int&gt; a;
+    a.insert(30); a.insert(10); a.insert(20);
+
+    set&lt;string&gt; b;
+    b.insert("pear"); b.insert("apple"); b.insert("fig");
+
+    set&lt;double&gt; c;
+    c.insert(2.5); c.insert(-1.25); c.insert(0.0);
+
+    for (set&lt;int&gt;::const_iterator it = a.cbegin(); it != a.cend(); ++it) cout &lt;&lt; *it &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    for (set&lt;string&gt;::const_iterator it = b.cbegin(); it != b.cend(); ++it) cout &lt;&lt; *it &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    for (set&lt;double&gt;::const_iterator it = c.cbegin(); it != c.cend(); ++it) cout &lt;&lt; *it &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">10 20 30
+apple fig pear
+-1.25 0 2.5</pre>
+    <p>Every line came out sorted, even though nothing in the program says "sort". That is what a
+    <code>set</code> does. Notice also that the three loops are <em>identical apart from the type name</em>.
+    That is the whole promise of templates delivered: learn the interface once, use it for every
+    element type you will ever have.</p>
+    <p>The <code>-1.25 0 2.5</code> line is worth a second look. <code>0.0</code> printed as <code>0</code>, because <code>cout</code> drops
+    trailing zeros on a <code>double</code> &mdash; the same default formatting rule from Class 3.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>You will almost never write a container class from scratch in real code. You wrote one in
+    Class 26 so you would understand what the library is doing on your behalf &mdash; and so that
+    when a template error message runs to forty lines, you know what it is talking about.</p>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span><code>set</code>: the index is the value</h2>
+
+<p>Start from what you know. In a <code>vector</code>, the data elements are ordered in a <strong>linear
+sequence</strong>, and you reach an element by its position: for a vector <code>v</code>, you write <code>v[i]</code>,
+where <code>i</code> is a whole number from <code>0</code> up to <code>v.size()-1</code>. Position is everything. The value at
+position 3 got there because you put it there.</p>
+
+<p>A <code>set</code> throws position away.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; set</span></div>
+  <div class="bd">
+    <p>A <strong>set</strong> is a container class in the STL in which <strong>the "index" is the
+    value itself</strong>. To use one, include the header <code>#include &lt;set&gt;</code>.</p>
+    <ul>
+      <li>You <strong>insert</strong> elements into a set, and they are <strong>automatically
+        sorted</strong>. Elements are therefore <em>not</em> pushed back onto the end of a set &mdash;
+        there is no <code>push_back</code>, because there is no "end" you control.</li>
+      <li><strong>The elements of a set are unique.</strong> If the same value is inserted several
+        times, only one copy is kept.</li>
+      <li>The elements of a set <strong>cannot</strong> be reached with <code>operator[]</code>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; inserting into a set</span></div>
+  <div class="bd">
+    <p>This is the course notes' set example, with the headers and the printing loop filled in so
+    that it actually runs. Five calls to <code>insert</code>, one of them a repeat. Before you reveal: what is
+    <code>s.size()</code>, and in what order do the strings appear?</p>
+<div class="codewrap"><div class="cap">setdemo.cpp</div><pre><code class="language-cpp">// setdemo.cpp -- inserting into a set of strings
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    set&lt;string&gt; s;                  // set
+    s.insert("cx");                 // "insert"
+    s.insert("dyz");
+
+    s.insert("aqt");                // elements are automatically sorted
+
+    s.insert("aqt");                // elements are unique: this insert is IGNORED
+
+    s.insert("bkmn");               // automatically sorted
+
+    cout &lt;&lt; "size = " &lt;&lt; s.size() &lt;&lt; endl;
+    for (set&lt;string&gt;::iterator it = s.begin(); it != s.end(); ++it)
+        cout &lt;&lt; *it &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">size = 4
+aqt
+bkmn
+cx
+dyz</pre>
+    <p>Five inserts, four elements. The second <code>s.insert("aqt")</code> changed nothing at all.</p>
+    <p>And the order is alphabetical, which is not the order they were inserted in. A <code>set</code> keeps
+    its contents sorted at all times; that is not a service it performs when you ask, it is an
+    invariant it maintains on every insert.</p>
+    <p>The traversal loop is the topic of &sect;5. For now read it as "start at the beginning, stop
+    at the end, step forward, print what the iterator points at."</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; "inserting a duplicate replaces the old one"</span></div>
+  <div class="bd">
+    <p>The comment printed next to the repeated insert in the course notes says the second
+    <code>s.insert("aqt")</code> <em>replaces the previous entry</em>. It does not. <code>set::insert</code>
+    <strong>never overwrites</strong>. If the value is already there, the insertion is
+    <strong>ignored</strong> and the element that was already in the set stays exactly as it was.</p>
+    <p>For a <code>set&lt;string&gt;</code> you cannot tell the difference, because the two strings are equal.
+    You <em>can</em> tell for a class where two objects compare equal without being identical &mdash;
+    and you will meet exactly that case in &sect;8. Get the rule right now: <strong>insert into a
+    full slot does nothing.</strong></p>
+  </div>
+</div>
+
+<p>How do you find out whether the insert did anything? <code>insert</code> tells you. It returns a
+<code>pair&lt;iterator, bool&gt;</code> &mdash; an iterator to the element that is now in the set, and a <code>bool</code>
+that is <code>true</code> only if a new element was actually created.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what <code>insert</code> returns</span></div>
+  <div class="bd">
+    <p>A <code>pair</code> is another STL class template: two values glued together, reachable as <code>.first</code> and
+    <code>.second</code>. You will see it again in the next section, because that is exactly what a <code>map</code>
+    stores.</p>
+<div class="codewrap"><div class="cap">setinsert_return.cpp</div><pre><code class="language-cpp">// setinsert_return.cpp -- what insert actually returns
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    set&lt;string&gt; s;
+    pair&lt;set&lt;string&gt;::iterator, bool&gt; r1 = s.insert("aqt");
+    cout &lt;&lt; "first insert  of aqt: inserted = " &lt;&lt; r1.second
+         &lt;&lt; ", element now = " &lt;&lt; *r1.first &lt;&lt; endl;
+
+    pair&lt;set&lt;string&gt;::iterator, bool&gt; r2 = s.insert("aqt");
+    cout &lt;&lt; "second insert of aqt: inserted = " &lt;&lt; r2.second
+         &lt;&lt; ", element now = " &lt;&lt; *r2.first &lt;&lt; endl;
+
+    cout &lt;&lt; "size = " &lt;&lt; s.size() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">first insert  of aqt: inserted = 1, element now = aqt
+second insert of aqt: inserted = 0, element now = aqt
+size = 1</pre>
+    <p><code>r1.second</code> is <code>1</code> &mdash; a new element was made. <code>r2.second</code> is <code>0</code> &mdash; nothing was
+    made. A <code>bool</code> prints as <code>1</code> or <code>0</code> unless you ask for <code>boolalpha</code>, which is worth remembering
+    on an output-prediction question.</p>
+    <p>The type name <code>pair&lt;set&lt;string&gt;::iterator, bool&gt;</code> is a mouthful, and it is a fair
+    illustration of why the library's names get long. Read it inside out: an iterator into a set of
+    strings, paired with a bool.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Asking a set questions: <code>count</code>, <code>find</code>, <code>erase</code></h3>
+
+<p>Because a set has no positions, everything you do to it is phrased in terms of a
+<em>value</em>.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the four set operations you need today</span></div>
+  <div class="bd">
+    <ol>
+      <li><code>s.insert(x)</code> &mdash; put <code>x</code> in, unless it is already there.</li>
+      <li><code>s.count(x)</code> &mdash; returns <code>1</code> if <code>x</code> is in the set and <code>0</code> if it is not. (Never anything
+        else: the elements are unique.) This is the simplest membership test.</li>
+      <li><code>s.find(x)</code> &mdash; returns an <em>iterator</em> to <code>x</code>, or <code>s.end()</code> if <code>x</code> is absent. Use
+        it when you want the element and not just a yes/no.</li>
+      <li><code>s.erase(x)</code> &mdash; removes <code>x</code> and returns how many elements it removed: <code>1</code> or <code>0</code>.</li>
+    </ol>
+    <p><code>s.size()</code> and <code>s.empty()</code> behave exactly as they do for a <code>vector</code>.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; count, find and erase</span></div>
+  <div class="bd">
+    <p>Four values go in; two lookups hit, two miss; two erases, one of which has nothing to erase.
+    Predict all seven lines.</p>
+<div class="codewrap"><div class="cap">setops.cpp</div><pre><code class="language-cpp">// setops.cpp -- find, count, erase, size on a set
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    set&lt;string&gt; s;
+    s.insert("cx");
+    s.insert("dyz");
+    s.insert("aqt");
+    s.insert("bkmn");
+
+    cout &lt;&lt; "count(\"aqt\")  = " &lt;&lt; s.count("aqt")  &lt;&lt; endl;
+    cout &lt;&lt; "count(\"zzz\")  = " &lt;&lt; s.count("zzz")  &lt;&lt; endl;
+
+    set&lt;string&gt;::iterator it = s.find("cx");
+    if (it != s.end())
+        cout &lt;&lt; "find(\"cx\") found " &lt;&lt; *it &lt;&lt; endl;
+    else
+        cout &lt;&lt; "find(\"cx\") found nothing" &lt;&lt; endl;
+
+    if (s.find("zzz") == s.end())
+        cout &lt;&lt; "find(\"zzz\") returned end()" &lt;&lt; endl;
+
+    cout &lt;&lt; "erase(\"dyz\") removed " &lt;&lt; s.erase("dyz") &lt;&lt; " element" &lt;&lt; endl;
+    cout &lt;&lt; "erase(\"zzz\") removed " &lt;&lt; s.erase("zzz") &lt;&lt; " elements" &lt;&lt; endl;
+
+    cout &lt;&lt; "size = " &lt;&lt; s.size() &lt;&lt; " : ";
+    for (set&lt;string&gt;::iterator p = s.begin(); p != s.end(); ++p)
+        cout &lt;&lt; *p &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">count("aqt")  = 1
+count("zzz")  = 0
+find("cx") found cx
+find("zzz") returned end()
+erase("dyz") removed 1 element
+erase("zzz") removed 0 elements
+size = 3 : aqt bkmn cx</pre>
+    <p>The pattern to memorize is the <code>find</code> idiom: <strong>compare the result against
+    <code>s.end()</code></strong>. <code>end()</code> is the library's way of saying "no such element", and testing
+    against it is the only correct way to ask whether <code>find</code> succeeded. Never dereference the
+    result before you have made that test &mdash; <code>*s.find("zzz")</code> is undefined behavior, exactly
+    like dereferencing a dangling pointer from Class 8.</p>
+    <p>Erasing a value that is not present is not an error. It simply removes nothing and returns
+    <code>0</code>.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.1</div>
+  <div class="bd">
+    <p>Consider <code>set&lt;int&gt; s;</code> followed by <code>s.insert(7); s.insert(3); s.insert(7); s.insert(5);</code></p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What is <code>s.size()</code>, and what does a traversal print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>s.size()</code> is <strong>3</strong>. The second <code>insert(7)</code> is ignored because <code>7</code> is
+        already an element.</p>
+        <p>A traversal prints the values in sorted order: <strong>3 5 7</strong>. The insertion
+        order (7, 3, 5) is not recorded anywhere &mdash; a set has no memory of it.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What are <code>s.count(7)</code> and <code>s.count(4)</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>s.count(7)</code> is <code>1</code> and <code>s.count(4)</code> is <code>0</code>. For a set these are the only two answers
+        <code>count</code> can ever give, which is why it reads so naturally as a membership test:
+        <code>if (s.count(x)) { ... }</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Rewrite <code>s.count(7)</code> using <code>find</code> instead.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    if (s.find(7) != s.end())
+        cout &lt;&lt; "7 is in the set" &lt;&lt; endl;</code></pre>
+        <p><code>find</code> gives you more than <code>count</code> does: on success you also hold an iterator to the
+        element, which you can dereference or pass to <code>erase</code>. When all you need is yes/no, <code>count</code>
+        is shorter and reads better.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>The one thing a set will not let you do</h3>
+
+<p>A vector element is reached by position, so <code>v[0]</code> makes sense. A set element has no position,
+so <code>s[0]</code> means nothing &mdash; and the compiler says so.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; subscripting a set</span></div>
+  <div class="bd">
+    <p>Every C++ programmer tries this once. Here is what happens.</p>
+<div class="codewrap"><div class="cap">setsub.cpp</div><pre><code class="language-cpp">// setsub.cpp -- BROKEN ON PURPOSE: a set has no operator[]
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    set&lt;string&gt; s;
+    s.insert("cx");
+    cout &lt;&lt; s[0] &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">setsub.cpp: In function 'int main()':
+setsub.cpp:10:14: error: no match for 'operator[]' (operand types are 'std::set&lt;std::__cxx11::basic_string&lt;char&gt; &gt;' and 'int')
+   10 |     cout &lt;&lt; s[0] &lt;&lt; endl;
+      |              ^</pre>
+    <p>Writing <code>s["cx"]</code> instead does not help either &mdash; the message is the same, with
+    <code>const char [3]</code> in place of <code>int</code>. The <code>set</code> class template simply has no <code>operator[]</code> member,
+    so there is nothing for the call to match.</p>
+    <p>This is why iterators exist. You reach the elements of a set with an iterator, and only with
+    an iterator.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; count the distinct values</h3>
+
+<p>Given the eight integers in the starter array, report how many <em>distinct</em> values there
+are, print them in increasing order, and answer two membership questions. Write no sorting code and
+no duplicate-checking code &mdash; let the set do both.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; distinct values</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="16" data-starter="#include &lt;iostream&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    int data[8] = {4, 9, 4, 1, 9, 9, 7, 1};
+
+    // 1. declare a set&lt;int&gt; and insert every element of data
+    // 2. print how many values were read, and how many are distinct
+    // 3. print the distinct values in increasing order
+    // 4. report whether 7 is present, and whether 5 is present
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    int data[8] = {4, 9, 4, 1, 9, 9, 7, 1};
+
+    // 1. declare a set&lt;int&gt; and insert every element of data
+    // 2. print how many values were read, and how many are distinct
+    // 3. print the distinct values in increasing order
+    // 4. report whether 7 is present, and whether 5 is present
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.2</div>
+  <div class="bd">
+    <p>Write the program from the exercise above, and explain why no <code>if</code> statement is needed to
+    avoid storing a duplicate.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">ex1_distinct.cpp</div><pre><code class="language-cpp">// ex1_distinct.cpp -- in-class exercise: how many distinct values?
+#include &lt;iostream&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    int data[8] = {4, 9, 4, 1, 9, 9, 7, 1};
+
+    set&lt;int&gt; distinct;
+    for (int i = 0; i &lt; 8; ++i)
+        distinct.insert(data[i]);
+
+    cout &lt;&lt; "read     " &lt;&lt; 8 &lt;&lt; " values" &lt;&lt; endl;
+    cout &lt;&lt; "distinct " &lt;&lt; distinct.size() &lt;&lt; " values:";
+    for (set&lt;int&gt;::const_iterator it = distinct.cbegin(); it != distinct.cend(); ++it)
+        cout &lt;&lt; " " &lt;&lt; *it;
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; "is 7 present? " &lt;&lt; (distinct.count(7) == 1 ? "yes" : "no") &lt;&lt; endl;
+    cout &lt;&lt; "is 5 present? " &lt;&lt; (distinct.count(5) == 1 ? "yes" : "no") &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">read     8 values
+distinct 4 values: 1 4 7 9
+is 7 present? yes
+is 5 present? no</pre>
+      <p><strong>Why no <code>if</code>.</strong> Uniqueness is not something the program enforces; it is
+      something the container guarantees. Inserting <code>9</code> for the third time is a call that quietly
+      does nothing. Written with a <code>vector</code> this same task needs a nested search loop before every
+      <code>push_back</code>, and then a sort at the end. Here it is one line.</p>
+      <p>Note the eight-element loop uses <code>int i</code> against the literal <code>8</code> rather than
+      <code>distinct.size()</code>, so there is no signed/unsigned warning. When you do compare an index
+      against <code>.size()</code>, use <code>size_t i</code> &mdash; <code>.size()</code> is unsigned, and <code>-Wall</code> will tell you
+      about the mismatch.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span><code>map</code>: keys that need not be integers</h2>
+
+<p>Look again at what a <code>vector</code> really is. For a vector <code>v</code>, the element <code>v[i]</code> is found by the
+key <code>i</code>, and that key is an integer in the interval from <code>0</code> to <code>v.size()-1</code>. The key is forced on
+you: it must be a whole number, and the whole numbers must be consecutive starting at zero.</p>
+
+<p>A <code>map</code> lifts that restriction.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; map</span></div>
+  <div class="bd">
+    <p>A <strong>map</strong> is a container class in the STL holding <strong>(key, value)</strong>
+    pairs, where the key is <strong>not necessarily an integer</strong>. To use one, include
+    <code>#include &lt;map&gt;</code>.</p>
+    <ul>
+      <li>You insert elements by specifying a key <em>and</em> a value. There are two template
+        arguments: <code>map&lt;KeyType, ValueType&gt;</code>.</li>
+      <li>The elements are <strong>automatically sorted by key</strong>. As with a set, nothing is
+        pushed back onto an end.</li>
+      <li><strong>The keys of a map are unique.</strong> One key, one value.</li>
+      <li>The elements of a map <strong>can</strong> be reached with <code>operator[]</code> &mdash; but the
+        subscript is the <em>key</em>, which need not be an integer.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a <code>map&lt;string,double&gt;</code></span></div>
+  <div class="bd">
+    <p>The course notes' map example, with the headers and the printing loop supplied. Five
+    assignments through <code>operator[]</code>, one of which repeats a key. Predict the size and the order.</p>
+<div class="codewrap"><div class="cap">mapdemo.cpp</div><pre><code class="language-cpp">// mapdemo.cpp -- a map from string to double
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    map&lt;string,double&gt; m;       // map, two template types for (key,value)
+    m["cde"]   = 1.2;           // key, value
+    m["xyz"]   = 3.4;           // key, value
+    m["abcd"]  = 5.6;           // key, value, automatically sorted by key
+
+    m["abcd"]  = 7.8;           // same key: this REPLACES the previous value
+    m["bmnsy"] = 9.9;           // key, value, automatically sorted by key
+
+    cout &lt;&lt; "size = " &lt;&lt; m.size() &lt;&lt; endl;
+    for (map&lt;string,double&gt;::iterator it = m.begin(); it != m.end(); ++it)
+        cout &lt;&lt; it-&gt;first &lt;&lt; " -&gt; " &lt;&lt; it-&gt;second &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">size = 4
+abcd -&gt; 7.8
+bmnsy -&gt; 9.9
+cde -&gt; 1.2
+xyz -&gt; 3.4</pre>
+    <p>Four keys, sorted alphabetically, and <code>abcd</code> carries <code>7.8</code> &mdash; the second assignment won.
+    The first value, <code>5.6</code>, is gone.</p>
+    <p>The loop body uses <code>it-&gt;first</code> and <code>it-&gt;second</code>. A map element is a
+    <code>pair&lt;const Key, Value&gt;</code>: <code>first</code> is the key, <code>second</code> is the value. The arrow operator is
+    the same one you met with pointers in Class 8 &mdash; &sect;5 explains why it is the right one
+    here.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; <code>m[k] = v</code> and <code>m.insert(...)</code> are not the same</span></div>
+  <div class="bd">
+    <p>The course notes describe putting a value into a map with the word "insert" throughout, and
+    state that if you insert a <code>(key, value)</code> pair and then insert another pair with the same key,
+    the first entry is erased. That is true of the code shown, which uses <code>operator[]</code> &mdash; but it
+    is <strong>not</strong> true of the member function called <code>insert</code>:</p>
+    <ul>
+      <li><code>m[k] = v;</code> <strong>overwrites</strong>. If <code>k</code> is new the entry is created; if <code>k</code> is
+        already there its value is replaced.</li>
+      <li><code>m.insert(make_pair(k, v));</code> <strong>does nothing at all</strong> if <code>k</code> is already
+        present. Exactly like <code>set::insert</code>, it refuses to overwrite and silently keeps the old
+        value.</li>
+      <li><code>m.insert_or_assign(k, v);</code> (C++17) does what its name says, and returns whether it
+        inserted.</li>
+    </ul>
+    <p>This is the single most common bug students write with maps: a loop that "updates" entries
+    with <code>insert</code> and then cannot work out why nothing changed.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; overwrite versus refuse</span></div>
+  <div class="bd">
+    <p>One key, four attempts to set it. Work out what <code>abcd</code> maps to after each line.</p>
+<div class="codewrap"><div class="cap">mapinsert.cpp</div><pre><code class="language-cpp">// mapinsert.cpp -- operator[] overwrites; insert does not
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+void show(const string &amp;label, map&lt;string,double&gt; &amp;m) {
+    cout &lt;&lt; label;
+    for (map&lt;string,double&gt;::iterator it = m.begin(); it != m.end(); ++it)
+        cout &lt;&lt; " " &lt;&lt; it-&gt;first &lt;&lt; "=" &lt;&lt; it-&gt;second;
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    map&lt;string,double&gt; m;
+
+    m["abcd"] = 5.6;
+    show("after m[\"abcd\"] = 5.6 :", m);
+
+    m["abcd"] = 7.8;                       // overwrites
+    show("after m[\"abcd\"] = 7.8 :", m);
+
+    m.insert(make_pair("abcd", 1.1));      // key already present: DOES NOTHING
+    show("after insert(abcd,1.1)  :", m);
+
+    m.insert_or_assign("abcd", 1.1);       // C++17: overwrites
+    show("after insert_or_assign  :", m);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">after m["abcd"] = 5.6 : abcd=5.6
+after m["abcd"] = 7.8 : abcd=7.8
+after insert(abcd,1.1)  : abcd=7.8
+after insert_or_assign  : abcd=1.1</pre>
+    <p>Line 3 is the whole point. <code>insert</code> was called, it returned without complaint, and the map
+    is unchanged. No warning, no error, no exception. If you want the assignment semantics, write
+    <code>m[k] = v;</code>.</p>
+    <p><code>show</code> takes the map by reference rather than by value because copying a container to print
+    it would be wasteful &mdash; the habit from Class 5's <code>const vector&amp;</code> parameters carries
+    straight over. (It cannot be a <code>const</code> reference yet, because <code>m.begin()</code> on a <code>const</code> map
+    returns a <code>const_iterator</code>; &sect;7 fixes that.)</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>The surprise in <code>m[k]</code></h3>
+
+<p>Here is the behavior that catches everyone, and it is worth ten minutes on its own.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong><code>m[k]</code> inserts.</strong> If the key <code>k</code> is not already in the map, <code>m[k]</code> creates an
+    entry for <code>k</code>, value-initializes it (<code>0</code> for <code>int</code> and <code>double</code>, the empty string for <code>string</code>),
+    and hands you back a reference to it. It does this <em>even when you are only reading</em>.</p>
+    <p>So <code>cout &lt;&lt; m["Carol"];</code> on a map that has never heard of Carol does not fail, does not
+    warn, and does not print garbage. It prints <code>0</code> &mdash; and quietly makes the map one element
+    bigger.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a lookup that changes the map</span></div>
+  <div class="bd">
+    <p>Two students go in. Then we ask about a third who was never enrolled. Watch <code>size()</code>.</p>
+<div class="codewrap"><div class="cap">mapbracket.cpp</div><pre><code class="language-cpp">// mapbracket.cpp -- operator[] inserts even when you are only reading
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    map&lt;string,int&gt; ages;
+    ages["Alice"] = 20;
+    ages["Bob"]   = 22;
+
+    cout &lt;&lt; "size before the lookup = " &lt;&lt; ages.size() &lt;&lt; endl;
+    cout &lt;&lt; "ages[\"Carol\"] = " &lt;&lt; ages["Carol"] &lt;&lt; endl;   // Carol was never inserted!
+    cout &lt;&lt; "size after  the lookup = " &lt;&lt; ages.size() &lt;&lt; endl;
+
+    cout &lt;&lt; "contents:";
+    for (map&lt;string,int&gt;::iterator it = ages.begin(); it != ages.end(); ++it)
+        cout &lt;&lt; " " &lt;&lt; it-&gt;first &lt;&lt; "=" &lt;&lt; it-&gt;second;
+    cout &lt;&lt; endl;
+
+    // the safe way to ask "is this key present?"
+    cout &lt;&lt; "count(\"Dave\") = " &lt;&lt; ages.count("Dave") &lt;&lt; endl;
+    if (ages.find("Dave") == ages.end())
+        cout &lt;&lt; "find(\"Dave\") returned end(), and nothing was inserted" &lt;&lt; endl;
+    cout &lt;&lt; "size still = " &lt;&lt; ages.size() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">size before the lookup = 2
+ages["Carol"] = 0
+size after  the lookup = 3
+contents: Alice=20 Bob=22 Carol=0
+count("Dave") = 0
+find("Dave") returned end(), and nothing was inserted
+size still = 3</pre>
+    <p>Printing <code>ages["Carol"]</code> grew the map from 2 to 3. Carol is now a real entry with age 0, and
+    she will show up in every subsequent traversal, in every count, in every total. Nothing in the
+    program said "insert".</p>
+    <p>Why is <code>operator[]</code> built this way? Because it returns a <em>reference</em> to the value, and
+    a reference has to refer to something. <code>m[k] = v</code> and <code>++m[k]</code> both depend on that reference
+    existing. The insert-on-read behavior is the price of making assignment work.</p>
+    <p>The lesson is a rule you should apply mechanically:</p>
+    <table class="trace">
+      <tr><th>What you want</th><th>What to write</th></tr>
+      <tr><td>Set or update a value</td><td><code>m[k] = v;</code></td></tr>
+      <tr><td>Count occurrences</td><td><code>++m[k];</code> &mdash; the auto-insert with value <code>0</code> is exactly what you want</td></tr>
+      <tr><td>Ask whether a key exists</td><td><code>m.count(k)</code> or <code>m.find(k) != m.end()</code> &mdash; <strong>never</strong> <code>m[k]</code></td></tr>
+      <tr><td>Read a value you believe is there</td><td><code>m.find(k)</code>, test against <code>m.end()</code>, then <code>it-&gt;second</code></td></tr>
+    </table>
+    <p><code>++m[k];</code> deserves the second row all to itself. On a brand-new key it creates the entry with
+    value <code>0</code> and then increments it to <code>1</code>; on an existing key it just increments. That one line is
+    a complete word-frequency counter, as Practice Problem 1 shows.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.3</div>
+  <div class="bd">
+    <p>Given <code>map&lt;string,int&gt; m;</code> and then <code>m["a"] = 1; m["b"] = 2;</code></p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> After <code>if (m["c"] == 0) cout &lt;&lt; "absent";</code> runs, what is <code>m.size()</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>3.</strong> The condition looks like a pure test, but <code>m["c"]</code> inserted the pair
+        <code>("c", 0)</code> before the comparison happened. It then compared <code>0 == 0</code>, so <code>absent</code> is
+        printed &mdash; and the map now permanently contains a <code>"c"</code> that nobody meant to add.</p>
+        <p>This is why "check whether a key is present" must never be written with <code>operator[]</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write the correct membership test.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    if (m.count("c") == 0)
+        cout &lt;&lt; "absent";</code></pre>
+        <p>or, equivalently:</p>
+<pre><code class="language-cpp">    if (m.find("c") == m.end())
+        cout &lt;&lt; "absent";</code></pre>
+        <p>Neither one modifies the map. <code>count</code> returns <code>0</code> or <code>1</code> for a map, just as for a set,
+        because the keys are unique.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>m.insert(make_pair("a", 99));</code> &mdash; what is <code>m["a"]</code> afterwards?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Still <strong>1</strong>. The key <code>"a"</code> is already present, so <code>insert</code> does nothing and
+        keeps the existing value. To make it <code>99</code> you must write <code>m["a"] = 99;</code> or
+        <code>m.insert_or_assign("a", 99);</code>.</p>
+        <p><strong>Wrap-up.</strong> Three lines of code, three different behaviors: <code>operator[]</code>
+        always writes, <code>insert</code> only writes into an empty slot, and <code>find</code>/<code>count</code> never write. Pick
+        the one whose behavior you actually want; do not pick the shortest one.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; letter frequencies</h3>
+
+<p>Count how many times each letter appears in the word <code>mississippi</code>, and print the counts in
+alphabetical order. Use one <code>map&lt;char,int&gt;</code> and one loop; do not write an array of 26
+counters and do not write any sorting code.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; letter frequencies</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="17" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    string word = &quot;mississippi&quot;;
+
+    // 1. declare a map&lt;char,int&gt;
+    // 2. loop over the characters of word and count each one
+    // 3. print each letter and its count, one per line
+    // 4. print how many distinct letters there were
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    string word = "mississippi";
+
+    // 1. declare a map&lt;char,int&gt;
+    // 2. loop over the characters of word and count each one
+    // 3. print each letter and its count, one per line
+    // 4. print how many distinct letters there were
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.4</div>
+  <div class="bd">
+    <p>Write the letter-frequency program, and say what the counting line would have to look like if
+    <code>operator[]</code> did <em>not</em> insert on a missing key.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">ex2_letters.cpp</div><pre><code class="language-cpp">// ex2_letters.cpp -- in-class exercise: how many times does each letter appear?
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    string word = "mississippi";
+
+    map&lt;char,int&gt; count;
+    for (size_t i = 0; i &lt; word.size(); ++i)
+        ++count[word[i]];
+
+    for (map&lt;char,int&gt;::const_iterator it = count.cbegin(); it != count.cend(); ++it)
+        cout &lt;&lt; it-&gt;first &lt;&lt; " " &lt;&lt; it-&gt;second &lt;&lt; endl;
+
+    cout &lt;&lt; "distinct letters = " &lt;&lt; count.size() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">i 4
+m 1
+p 2
+s 4
+distinct letters = 4</pre>
+      <p><strong>The counting line.</strong> <code>++count[word[i]];</code> is doing two jobs. The first time a
+      character is seen, <code>operator[]</code> creates the entry with value <code>0</code> and <code>++</code> makes it <code>1</code>. Every
+      later time, it just increments. Without the auto-insert you would have to write the awkward
+      version:</p>
+<pre><code class="language-cpp">    if (count.find(word[i]) == count.end())
+        count[word[i]] = 1;
+    else
+        count[word[i]] = count[word[i]] + 1;</code></pre>
+      <p><strong>Things to notice.</strong> The output is in alphabetical order because a
+      <code>map&lt;char,int&gt;</code> sorts by key, and <code>char</code> keys sort by character code. Nothing in the
+      program sorted anything. Also <code>count.size()</code> answers "how many distinct letters" for free
+      &mdash; one entry per distinct key.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Vector, set and map side by side</h2>
+
+<p>Vectors, sets and maps are all container classes. They all hold data, but in different ways, and
+there is one framing that makes the differences fall into place: think of every container as storing
+<strong>(key, value)</strong> elements.</p>
+
+<table class="trace">
+  <tr><th>Container</th><th>What the key is</th><th>What the value is</th><th>Key type</th></tr>
+  <tr><td><code>vector&lt;T&gt;</code></td><td>the position <code>i</code></td><td>the element <code>v[i]</code></td><td>forced: consecutive integers <code>0</code> &hellip; <code>size()-1</code></td></tr>
+  <tr><td><code>map&lt;K,V&gt;</code></td><td>whatever you chose for <code>K</code></td><td>the <code>V</code> you stored with it</td><td>anything with an <code>operator&lt;</code></td></tr>
+  <tr><td><code>set&lt;T&gt;</code></td><td colspan="2">the key <em>is</em> the value &mdash; one thing, playing both roles</td><td>anything with an <code>operator&lt;</code></td></tr>
+</table>
+
+<p>Read the vector row carefully, because it is the row people gloss over. For a vector <code>v</code>, the key
+of the element <code>v[i]</code> is the integer <code>i</code>, and the set of keys is not up to you: it is exactly
+<code>0, 1, 2, ...</code> up to <code>v.size()-1</code>, with no gaps. You <strong>cannot</strong> build a two-element
+vector whose only elements are <code>v[3]</code> and <code>v[7]</code>; a vector with two elements necessarily has
+elements <code>v[0]</code> and <code>v[1]</code>. If you want the numbers 3 and 7 to be the keys, you need a map.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what a key is allowed to be</span></div>
+  <div class="bd">
+    <p>Five two-element containers. In each case the program prints the keys. Predict them &mdash;
+    especially the first line.</p>
+<div class="codewrap"><div class="cap">keys.cpp</div><pre><code class="language-cpp">// keys.cpp -- what a "key" can be in a vector, a map and a set
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;map&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    // A vector of two elements. The keys are FORCED to be 0 and 1.
+    vector&lt;string&gt; v;
+    v.push_back("first");
+    v.push_back("second");
+    cout &lt;&lt; "vector keys:";
+    for (size_t i = 0; i &lt; v.size(); ++i)
+        cout &lt;&lt; " " &lt;&lt; i;
+    cout &lt;&lt; "   (size = " &lt;&lt; v.size() &lt;&lt; ")" &lt;&lt; endl;
+
+    // A map of two elements with integer keys 3 and 7 -- and nothing else.
+    map&lt;int,string&gt; mi;
+    mi[3] = "three";
+    mi[7] = "seven";
+    cout &lt;&lt; "map&lt;int,string&gt; keys:";
+    for (map&lt;int,string&gt;::iterator it = mi.begin(); it != mi.end(); ++it)
+        cout &lt;&lt; " " &lt;&lt; it-&gt;first;
+    cout &lt;&lt; "   (size = " &lt;&lt; mi.size() &lt;&lt; ")" &lt;&lt; endl;
+
+    // A map of two elements with string keys.
+    map&lt;string,double&gt; ms;
+    ms["xyz"] = 1.5;
+    ms["abc"] = 2.5;
+    cout &lt;&lt; "map&lt;string,double&gt; keys:";
+    for (map&lt;string,double&gt;::iterator it = ms.begin(); it != ms.end(); ++it)
+        cout &lt;&lt; " " &lt;&lt; it-&gt;first;
+    cout &lt;&lt; "   (size = " &lt;&lt; ms.size() &lt;&lt; ")" &lt;&lt; endl;
+
+    // A map of two elements with double keys.
+    map&lt;double,string&gt; md;
+    md[-5.2] = "cold";
+    md[1000] = "hot";
+    cout &lt;&lt; "map&lt;double,string&gt; keys:";
+    for (map&lt;double,string&gt;::iterator it = md.begin(); it != md.end(); ++it)
+        cout &lt;&lt; " " &lt;&lt; it-&gt;first;
+    cout &lt;&lt; "   (size = " &lt;&lt; md.size() &lt;&lt; ")" &lt;&lt; endl;
+
+    // A set: the key and the value are the same thing.
+    set&lt;string&gt; s;
+    s.insert("pear");
+    s.insert("apple");
+    cout &lt;&lt; "set&lt;string&gt; keys/values:";
+    for (set&lt;string&gt;::iterator it = s.begin(); it != s.end(); ++it)
+        cout &lt;&lt; " " &lt;&lt; *it;
+    cout &lt;&lt; "   (size = " &lt;&lt; s.size() &lt;&lt; ")" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">vector keys: 0 1   (size = 2)
+map&lt;int,string&gt; keys: 3 7   (size = 2)
+map&lt;string,double&gt; keys: abc xyz   (size = 2)
+map&lt;double,string&gt; keys: -5.2 1000   (size = 2)
+set&lt;string&gt; keys/values: apple pear   (size = 2)</pre>
+    <p>Line 1: a two-element vector has keys <code>0</code> and <code>1</code>. Not 3 and 7, not "abc" and "xyz". Ever.</p>
+    <p>Line 2: a two-element <code>map&lt;int,string&gt;</code> has exactly the keys you gave it, <code>3</code> and <code>7</code>,
+    and <em>size 2</em>. It did not create entries 0 through 6 to fill the gap. That is the
+    difference that matters: a map's keys are sparse, a vector's are dense.</p>
+    <p>Lines 3 and 4: the key type can be <code>string</code>, or <code>double</code>, or any class with an
+    <code>operator&lt;</code>. Note <code>1000</code> printing as <code>1000</code> even though the key type is <code>double</code> &mdash; the
+    six-significant-digit rule again.</p>
+    <p>Line 5: for a set there is only one thing per element, and it is both the key and the value.
+    Since keys are unique, the values in a set are unique &mdash; those are the same statement.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Choose the container by asking what your key is.</p>
+    <ul>
+      <li>Key is a position, and you care about order of insertion &rarr; <strong><code>vector</code></strong>.</li>
+      <li>Key is a meaningful value of its own (a name, an ID, a date) &rarr; <strong><code>map</code></strong>.</li>
+      <li>There is no separate value, you only care whether a thing is in the collection &rarr;
+        <strong><code>set</code></strong>.</li>
+    </ul>
+    <p>The value type of any of them can be anything at all, including a class you wrote. The
+    <em>key</em> type of a <code>map</code>, and the element type of a <code>set</code>, are the ones with a requirement
+    attached &mdash; &sect;8.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.5</div>
+  <div class="bd">
+    <p>For each task, name the container you would use and the template arguments, in one line.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Store the scores of a five-question quiz, in question order.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>vector&lt;int&gt;</code> &mdash; the key really is the position, questions are numbered
+        consecutively from the start, and order matters.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Store each enrolled student's final average, looked up by name.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>map&lt;string,double&gt;</code> &mdash; the key is a name, so it is not an integer and the keys
+        are sparse. You get alphabetical order thrown in.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Record which of the 900-series course codes have already been used, so you can reject a repeat.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>set&lt;int&gt;</code> &mdash; there is no value to store, only membership, and the codes are
+        sparse (901, 947, 983 &hellip;) so a vector indexed by code would be mostly empty.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> Store, for each student name, the list of courses they are taking.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>map&lt;string, vector&lt;string&gt; &gt;</code> &mdash; key a name, value a whole vector. The
+        value type of a container may itself be a container, exactly as with the vector-of-vectors
+        from Class 6.</p>
+        <p><strong>Wrap-up.</strong> Nothing here is a matter of taste. In each case one container
+        matches the shape of the key and the others force you to write code that fights the data.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Iterators</h2>
+
+<p>For a vector, you already know how to visit every element:</p>
+
+<pre><code class="language-cpp">    for (size_t i = 0; i &lt; v.size(); ++i)
+        cout &lt;&lt; v[i] &lt;&lt; endl;</code></pre>
+
+<p>That loop does not work for a set or a map. There is no <code>s[0]</code>, and <code>m[0]</code> on a
+<code>map&lt;string,double&gt;</code> would not even compile. So the library provides one mechanism that
+traverses <em>every</em> container in the STL, uniformly: the iterator.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; iterator</span></div>
+  <div class="bd">
+    <p>An <strong>iterator</strong> is an object that marks a position in a container and can be
+    moved along it. It is a <strong>generalization of a pointer</strong>: you dereference it with
+    <code>*</code> to get the element it refers to, you advance it with <code>++</code>, and you compare two of them with
+    <code>==</code> and <code>!=</code>.</p>
+    <p>An iterator's type is specific to the container it walks, exactly as a pointer's type is
+    specific to what it points at. For a <code>vector&lt;string&gt;</code> the type is
+    <code>vector&lt;string&gt;::iterator</code>; for a <code>vector&lt;int&gt;</code> it is
+    <code>vector&lt;int&gt;::iterator</code>; for a <code>set&lt;string&gt;</code> it is <code>set&lt;string&gt;::iterator</code>.</p>
+  </div>
+</div>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the six parts of every iterator loop</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong>Declare</strong> an iterator of the container's own iterator type:
+        <code>vector&lt;string&gt;::iterator v_it;</code></li>
+      <li><strong>Initialize</strong> it to the start: <code>v_it = v.begin();</code>. Note that <code>v.begin()</code> is
+        itself an iterator.</li>
+      <li><strong>Test</strong> with <code>v_it != v.end()</code>. <code>v.end()</code> is an iterator pointing
+        <strong>one place beyond</strong> the last element.</li>
+      <li>That test is the analogue of <code>i &lt; v.size()</code>, because the last valid key is
+        <code>v.size()-1</code>.</li>
+      <li><strong>Advance</strong> with <code>++v_it</code> (the postfix form <code>v_it++</code> also works).</li>
+      <li><strong>Dereference</strong> with <code>*v_it</code> to reach the element &mdash; the same notation as
+        dereferencing a pointer.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a forward iterator over a vector</span></div>
+  <div class="bd">
+    <p>The same traversal you would write with an index, and then the same loop used to
+    <em>change</em> every element. You can assign through an iterator by writing <code>*v_it = value;</code>.</p>
+<div class="codewrap"><div class="cap">iterdemo.cpp</div><pre><code class="language-cpp">// iterdemo.cpp -- a forward iterator over a vector, and assignment through it
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; v;                   // vector of data type string
+    v.push_back("alpha");               // populate the vector
+    v.push_back("beta");
+    v.push_back("gamma");
+
+    vector&lt;string&gt;::iterator v_it;      // iterator
+    for (v_it = v.begin(); v_it != v.end(); ++v_it)   // end-of-loop test, increment
+        cout &lt;&lt; *v_it &lt;&lt; endl;                        // dereference of iterator
+
+    cout &lt;&lt; "--- now change every element through the iterator ---" &lt;&lt; endl;
+    for (v_it = v.begin(); v_it != v.end(); ++v_it)
+        *v_it = *v_it + "!";            // assignment through the iterator
+
+    for (v_it = v.begin(); v_it != v.end(); ++v_it)
+        cout &lt;&lt; *v_it &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">alpha
+beta
+gamma
+--- now change every element through the iterator ---
+alpha!
+beta!
+gamma!</pre>
+    <p><code>*v_it</code> is not a copy of the element &mdash; it is the element, the way <code>*p</code> is the thing <code>p</code>
+    points at. Assigning to it changes the vector.</p>
+    <p>One habit to build: the loop condition is <code>!=</code>, not <code>&lt;</code>. For a vector you could get away
+    with <code>&lt;</code>, but a <code>set</code> or <code>map</code> iterator does not support <code>&lt;</code> at all. Writing <code>!=</code>
+    everywhere means the loop shape you learn here transfers to every container without change.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Why <code>end()</code> is one <em>past</em> the last element</h3>
+
+<p>This looks like an off-by-one error waiting to happen, and it is the single most asked question
+about iterators. It is deliberate, and the reason is that it makes the empty container work.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the half-open range</span></div>
+  <div class="bd">
+    <p>A three-element vector, and an empty one. Look at what <code>end() - begin()</code> comes to, and at the
+    last line.</p>
+<div class="codewrap"><div class="cap">endrange.cpp</div><pre><code class="language-cpp">// endrange.cpp -- why end() is one past the last element
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; v;
+    v.push_back("A");
+    v.push_back("B");
+    v.push_back("C");
+
+    cout &lt;&lt; "v.size()          = " &lt;&lt; v.size() &lt;&lt; endl;
+    cout &lt;&lt; "v.end() - v.begin() = " &lt;&lt; v.end() - v.begin() &lt;&lt; endl;
+    cout &lt;&lt; "*v.begin()        = " &lt;&lt; *v.begin() &lt;&lt; endl;
+    cout &lt;&lt; "*(v.end() - 1)    = " &lt;&lt; *(v.end() - 1) &lt;&lt; endl;
+
+    vector&lt;string&gt; empty;
+    cout &lt;&lt; "empty: begin() == end() ? " &lt;&lt; (empty.begin() == empty.end()) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">v.size()          = 3
+v.end() - v.begin() = 3
+*v.begin()        = A
+*(v.end() - 1)    = C
+empty: begin() == end() ? 1</pre>
+    <p>Because <code>end()</code> sits one past the last element, the distance from <code>begin()</code> to <code>end()</code> is
+    exactly the size. The range is <strong>half-open</strong>: <code>begin()</code> is included, <code>end()</code> is not.
+    It is the same convention as <code>for (i = 0; i &lt; n; ++i)</code>, where <code>i</code> reaches <code>n-1</code> and the loop
+    stops when <code>i</code> equals <code>n</code>.</p>
+    <p>The payoff is the last line. For an empty container <code>begin()</code> and <code>end()</code> are equal, so the
+    standard loop runs zero times and no special case is needed. Had <code>end()</code> meant "the last
+    element", an empty container would have had nothing sensible to return.</p>
+    <p><strong><code>end()</code> must never be dereferenced.</strong> <code>*v.end()</code> does not point at an element;
+    it is undefined behavior, just like reading <code>v[v.size()]</code>. <code>*(v.end() - 1)</code> is the last element,
+    and that is legal &mdash; but the neater way to say it is <code>v.back()</code>.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.6</div>
+  <div class="bd">
+    <p>A student writes this loop over a <code>vector&lt;int&gt; v</code> and reports that it prints one extra
+    garbage number at the end.</p>
+<pre><code class="language-cpp">    vector&lt;int&gt;::iterator it;
+    for (it = v.begin(); it &lt;= v.end(); ++it)
+        cout &lt;&lt; *it &lt;&lt; endl;</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What is wrong, and what is the fix?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The condition is <code>&lt;=</code> where it must be <code>!=</code> (or <code>&lt;</code>). With <code>&lt;=</code> the loop body
+        runs one final time with <code>it == v.end()</code>, and <code>*v.end()</code> dereferences a position that holds
+        no element. The "garbage number" is whatever memory happens to sit there; on another run it
+        might crash instead.</p>
+<pre><code class="language-cpp">    for (it = v.begin(); it != v.end(); ++it)
+        cout &lt;&lt; *it &lt;&lt; endl;</code></pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Why is <code>!=</code> the better habit than <code>&lt;</code>, even though both work for a vector?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because <code>&lt;</code> is not defined for <code>set</code> and <code>map</code> iterators. Those containers are trees,
+        not blocks of contiguous memory, so "this position comes before that one" is not a cheap
+        question and the library does not offer it. <code>!=</code> is defined for every iterator in the STL, so
+        the loop you learn with <code>!=</code> is the loop you can use everywhere.</p>
+        <p>This is also the reason <code>sort</code> works on a <code>vector</code> but not on a <code>set</code> &mdash; see
+        &sect;9.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>Iterators for a set</h3>
+
+<p>The declaration is exactly analogous: <code>set&lt;string&gt;::iterator s_it;</code>, then <code>s.begin()</code>,
+<code>s.end()</code>, <code>++s_it</code>, <code>*s_it</code>. There is one technicality.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; traversing a set, and the one thing you may not do</span></div>
+  <div class="bd">
+    <p>The traversal first.</p>
+<div class="codewrap"><div class="cap">setiter.cpp</div><pre><code class="language-cpp">// setiter.cpp -- a forward iterator over a set
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    set&lt;string&gt; s;                      // populate the set
+    s.insert("cx");
+    s.insert("dyz");
+    s.insert("aqt");
+    s.insert("bkmn");
+
+    set&lt;string&gt;::iterator s_it;         // iterator for set
+    for (s_it = s.begin(); s_it != s.end(); ++s_it)   // end-of-loop test, increment
+        cout &lt;&lt; *s_it &lt;&lt; endl;                        // dereference of iterator
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">aqt
+bkmn
+cx
+dyz</pre>
+    <p>Identical in shape to the vector loop. Only the two type names changed.</p>
+
+</div></details>
+    <p>Now the technicality. For a vector you could write <code>*v_it = value;</code>. For a set you
+    <strong>cannot</strong> write <code>*s_it = value;</code>. Try to predict the compiler's complaint before
+    you look.</p>
+<div class="codewrap"><div class="cap">setiterbad.cpp</div><pre><code class="language-cpp">// setiterbad.cpp -- BROKEN ON PURPOSE: you cannot assign through a set iterator
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    set&lt;string&gt; s;
+    s.insert("aqt");
+    set&lt;string&gt;::iterator s_it = s.begin();
+    *s_it = "zzz";
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">setiterbad.cpp: In function 'int main()':
+setiterbad.cpp:11:13: error: no match for 'operator=' (operand types are 'const std::__cxx11::basic_string&lt;char&gt;' and 'const char [4]')
+   11 |     *s_it = "zzz";
+      |             ^~~~~</pre>
+    <p>Read the left operand type: <code>const std::string</code>. Dereferencing a set iterator gives you a
+    <code>const</code> element, so there is no assignment operator to call.</p>
+    <p>The reason is the definition of a set. The key and the value are the same thing. Changing the
+    value would change the key, so the element would belong somewhere else in the sorted order
+    &mdash; and the iterator would be pointing at a position where the object no longer is. That
+    <strong>invalidates the iterator</strong>, and the library refuses to let it happen. If you need
+    a different value, <code>erase</code> the old one and <code>insert</code> the new one.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Iterators for a map: <code>first</code> and <code>second</code></h3>
+
+<p>A map iterator has one extra wrinkle, because a map element is not one thing but two.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; what a map iterator refers to</span></div>
+  <div class="bd">
+    <p>A <code>map&lt;K,V&gt;</code> iterator refers to a <code>pair&lt;const K, V&gt;</code>. That <em>pair</em> has two
+    public data members:</p>
+    <ul>
+      <li><code>first</code> &mdash; the <strong>key</strong>. It is <code>const</code>, so you cannot change it.</li>
+      <li><code>second</code> &mdash; the <strong>value</strong>. You may assign to it.</li>
+    </ul>
+    <p>You reach them with the arrow operator: <code>m_it-&gt;first</code> and <code>m_it-&gt;second</code>. Since the
+    iterator behaves like a pointer to the pair, <code>m_it-&gt;first</code> is shorthand for
+    <code>(*m_it).first</code> &mdash; exactly the equivalence you learned for pointers in Class 8.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the iterator does not have <code>first</code> and <code>second</code></span></div>
+  <div class="bd">
+    <p>You will see it said that "the map iterator contains two public data members <code>first</code> and
+    <code>second</code>." That is a useful shorthand but it is not literally true, and the imprecision is
+    exactly what makes students write <code>m_it.first</code> and then not understand the error.</p>
+    <p>The iterator <em>points at</em> a pair. The <em>pair</em> has <code>first</code> and <code>second</code>. That is
+    why you need the arrow. Write <code>m_it-&gt;first</code>, or <code>(*m_it).first</code> &mdash; never
+    <code>m_it.first</code>.</p>
+    <p>And note the variable name in the assignment: it is <code>m_it-&gt;second = ...</code>, using the
+    iterator. <code>m</code> is the map itself; a map has no <code>second</code>.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; walking a map and changing its values</span></div>
+  <div class="bd">
+    <p>Every value gets <code>2.468</code> added to it as we pass. Four entries; work out both the order and the
+    arithmetic.</p>
+<div class="codewrap"><div class="cap">mapiter.cpp</div><pre><code class="language-cpp">// mapiter.cpp -- a forward iterator over a map: -&gt;first and -&gt;second
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    map&lt;string, double&gt; m;              // populate the map
+    m["cde"]   = 1.2;
+    m["xyz"]   = 3.4;
+    m["abcd"]  = 7.8;
+    m["bmnsy"] = 9.9;
+
+    map&lt;string, double&gt;::iterator m_it;               // iterator for map
+    for (m_it = m.begin(); m_it != m.end(); ++m_it) { // end-of-loop test, increment
+        m_it-&gt;second = m_it-&gt;second + 2.468;          // assignment of value
+        cout &lt;&lt; m_it-&gt;first &lt;&lt; " " &lt;&lt; m_it-&gt;second &lt;&lt; endl;   // arrow operator
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">abcd 10.268
+bmnsy 12.368
+cde 3.668
+xyz 5.868</pre>
+    <p>Alphabetical by key, not insertion order. <code>abcd</code> was inserted third and comes out first.</p>
+    <p>The values are <code>7.8 + 2.468 = 10.268</code>, <code>9.9 + 2.468 = 12.368</code>, <code>1.2 + 2.468 = 3.668</code>,
+    <code>3.4 + 2.468 = 5.868</code>. All five digits show because five significant digits is under <code>cout</code>'s
+    default of six.</p>
+    <p>Assigning to <code>m_it-&gt;second</code> is legal &mdash; the value is not part of the sort order, so
+    changing it cannot displace the element. Assigning to <code>m_it-&gt;first</code> is not legal, for exactly
+    the reason a set element is <code>const</code>: it would move the element and invalidate the iterator.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.7</div>
+  <div class="bd">
+    <p>You have <code>map&lt;string,int&gt; m;</code> holding <code>{"ann", 3}</code> and <code>{"bob", 5}</code>, and an iterator
+    <code>map&lt;string,int&gt;::iterator it = m.begin();</code></p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does <code>cout &lt;&lt; it-&gt;first;</code> print, and what does <code>cout &lt;&lt; it-&gt;second;</code> print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>ann</code> and <code>3</code>. <code>begin()</code> is the element with the smallest key, and <code>"ann"</code> sorts before
+        <code>"bob"</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Which of <code>it-&gt;second = 9;</code> and <code>it-&gt;first = "zoe";</code> compiles?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Only <code>it-&gt;second = 9;</code>. The pair's <code>first</code> member is declared <code>const</code>, so assigning to
+        it is a compile error of the same shape as the set one: <em>no match for 'operator='</em>
+        with a <code>const</code> left operand.</p>
+        <p>To "change a key" you erase the old entry and insert a new one. There is no in-place
+        rename.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Rewrite <code>it-&gt;second</code> without using the arrow operator.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>(*it).second</code>. The parentheses are compulsory: <code>*it.second</code> would be parsed as
+        <code>*(it.second)</code>, because <code>.</code> binds tighter than <code>*</code>, and an iterator has no member called
+        <code>second</code>.</p>
+        <p><strong>Wrap-up.</strong> The arrow exists precisely so you never have to write those
+        parentheses. This is the same <code>p-&gt;x</code> shorthand from Class 8, and it is available here
+        because an iterator is deliberately built to behave like a pointer.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Going backwards: reverse iterators</h2>
+
+<p>For a vector, running backwards with an index is easy enough:</p>
+
+<pre><code class="language-cpp">    for (int i = v.size()-1; i &gt;= 0; --i)
+        cout &lt;&lt; v[i] &lt;&lt; endl;</code></pre>
+
+<p>Doing it with the iterators we have so far is a mess, and it is worth seeing the mess once so
+that the tool that removes it feels earned.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; reverse traversal, the hard way</span></div>
+  <div class="bd">
+    <p>The obvious attempt is to start at <code>end()</code> and decrement until you hit <code>begin()</code>. Two things
+    go wrong: <code>end()</code> is not a real element so you must not print it, and the loop stops
+    <em>at</em> <code>begin()</code> &mdash; whose element you do want to print. The fix is a temporary
+    iterator. Trace this on <code>{A, B, C}</code> before revealing.</p>
+<div class="codewrap"><div class="cap">backwards.cpp</div><pre><code class="language-cpp">// backwards.cpp -- reverse traversal, the hard way
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; v;
+    v.push_back("A");
+    v.push_back("B");
+    v.push_back("C");
+
+    cout &lt;&lt; "--- index loop ---" &lt;&lt; endl;
+    for (int i = (int)v.size() - 1; i &gt;= 0; --i)
+        cout &lt;&lt; v[i] &lt;&lt; endl;
+
+    cout &lt;&lt; "--- forward iterator, run backwards ---" &lt;&lt; endl;
+    vector&lt;string&gt;::iterator v_it;
+    for (v_it = v.end(); v_it != v.begin(); --v_it) {   // decrement the iterator
+        vector&lt;string&gt;::iterator tmp = v_it;
+        if (tmp != v.begin()) --tmp;
+        cout &lt;&lt; *tmp &lt;&lt; endl;
+    }
+
+    cout &lt;&lt; "--- the same loop on an empty vector ---" &lt;&lt; endl;
+    vector&lt;string&gt; e;
+    for (v_it = e.end(); v_it != e.begin(); --v_it) {
+        vector&lt;string&gt;::iterator tmp = v_it;
+        if (tmp != e.begin()) --tmp;
+        cout &lt;&lt; *tmp &lt;&lt; endl;
+    }
+    cout &lt;&lt; "(nothing printed, as it should be)" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">--- index loop ---
+C
+B
+A
+--- forward iterator, run backwards ---
+C
+B
+A
+--- the same loop on an empty vector ---
+(nothing printed, as it should be)</pre>
+    <table class="trace">
+      <tr><th>Iteration</th><th><code>v_it</code> points at</th><th><code>tmp</code> after <code>--tmp</code></th><th>printed</th></tr>
+      <tr><td>1</td><td><code>end()</code> (past C)</td><td>C</td><td>C</td></tr>
+      <tr><td>2</td><td>C</td><td>B</td><td>B</td></tr>
+      <tr><td>3</td><td>B</td><td>A</td><td>A</td></tr>
+      <tr><td>&mdash;</td><td>A, which is <code>begin()</code></td><td colspan="2">loop condition fails, stop</td></tr>
+    </table>
+    <p>It works, and it works on the empty vector too, because <code>e.end() != e.begin()</code> is false
+    immediately. But look at the cost: a second iterator declared inside the loop body, a guard, and
+    a decrement that has nothing to do with the problem. The professor's own verdict on this code is
+    the right one &mdash; <strong>"this solution works, but it is terrible."</strong></p>
+    <p>Two details for the careful reader. The cast in <code>(int)v.size() - 1</code> is there because
+    <code>size()</code> is unsigned: on an empty vector, <code>v.size() - 1</code> is not <code>-1</code> but a colossal positive
+    number, and the index loop would run away. And the guard <code>if (tmp != v.begin())</code> is in fact
+    always true, because the loop condition already guarantees <code>v_it != v.begin()</code> &mdash; so the
+    line could just be <code>--tmp;</code>. Neither observation makes the code any less terrible.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; reverse iterator</span></div>
+  <div class="bd">
+    <p>The iterators of &sect;5 are all <strong>forward</strong> iterators. A <strong>reverse
+    iterator</strong> is a different type that traverses a container from the last element to the
+    first. The types are <code>vector&lt;string&gt;::reverse_iterator</code>,
+    <code>set&lt;string&gt;::reverse_iterator</code>, <code>map&lt;string,double&gt;::reverse_iterator</code>, and it
+    traverses from <code>rbegin()</code> ("reverse begin") to <code>rend()</code> ("reverse end").</p>
+    <p>Four things to fix in your head:</p>
+    <ol>
+      <li>The range is <code>rbegin()</code> to <code>rend()</code>, half-open exactly like the forward one.</li>
+      <li>You <strong>increment</strong> with <code>++</code>, not <code>--</code>. The word "reverse" describes the
+        <em>direction of traversal</em>, not the operator. Don't be too clever here.</li>
+      <li>Forward and reverse iterators are <strong>different classes</strong>. You cannot assign one
+        to the other or compare them, any more than you can mix pointers of different types.</li>
+      <li><code>rbegin()</code> is not the same <em>thing</em> as <code>end()-1</code>, and <code>rend()</code> is not the same thing
+        as <code>begin()-1</code> &mdash; they are different types, and <code>begin()-1</code> is undefined behavior
+        anyway. They do refer to the same <em>elements</em>: <code>*rbegin()</code> is the last element.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same three traversals, backwards</span></div>
+  <div class="bd">
+    <p>Vector, set and map, each walked in reverse. Note that the map loop also modifies the values
+    as it goes.</p>
+<div class="codewrap"><div class="cap">reviter.cpp</div><pre><code class="language-cpp">// reviter.cpp -- reverse iterators for vector, set and map
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;set&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; v;
+    v.push_back("alpha");               // populate the vector
+    v.push_back("beta");
+    v.push_back("gamma");
+    vector&lt;string&gt;::reverse_iterator v_rit;
+    for (v_rit = v.rbegin(); v_rit != v.rend(); ++v_rit)
+        cout &lt;&lt; *v_rit &lt;&lt; endl;
+
+    cout &lt;&lt; "---" &lt;&lt; endl;
+    set&lt;string&gt; s;                      // populate the set
+    s.insert("cx");
+    s.insert("aqt");
+    s.insert("bkmn");
+    set&lt;string&gt;::reverse_iterator s_rit;
+    for (s_rit = s.rbegin(); s_rit != s.rend(); ++s_rit)
+        cout &lt;&lt; *s_rit &lt;&lt; endl;
+
+    cout &lt;&lt; "---" &lt;&lt; endl;
+    map&lt;string, double&gt; m;              // populate the map
+    m["cde"]  = 1.2;
+    m["xyz"]  = 3.4;
+    m["abcd"] = 7.8;
+    map&lt;string, double&gt;::reverse_iterator m_rit;
+    for (m_rit = m.rbegin(); m_rit != m.rend(); ++m_rit) {
+        m_rit-&gt;second = m_rit-&gt;second + 3.456;
+        cout &lt;&lt; m_rit-&gt;first &lt;&lt; " " &lt;&lt; m_rit-&gt;second &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">gamma
+beta
+alpha
+---
+cx
+bkmn
+aqt
+---
+xyz 6.856
+cde 4.656
+abcd 11.256</pre>
+    <p>Three loops, all with <code>++</code>, all reading top-to-bottom like an ordinary loop. Compare that
+    with the temporary-iterator version above; this is what "there is a better way" means.</p>
+    <p>The set comes out <code>cx bkmn aqt</code> &mdash; reverse alphabetical. The map comes out
+    <code>xyz cde abcd</code>, and the arrow operator works on a reverse iterator exactly as it does on a
+    forward one.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; how <code>rbegin()</code> really relates to <code>end()</code></span></div>
+  <div class="bd">
+    <p>"<code>rbegin()</code> is not <code>end()-1</code>" is a statement about <em>types</em>, and it can leave the
+    impression that there is no relationship at all. There is one, and every reverse iterator carries
+    it: <code>.base()</code> hands back the corresponding forward iterator.</p>
+<div class="codewrap"><div class="cap">rbase.cpp</div><pre><code class="language-cpp">// rbase.cpp -- how rbegin() relates to end()
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; v;
+    v.push_back("A");
+    v.push_back("B");
+    v.push_back("C");
+
+    cout &lt;&lt; "*(v.end() - 1) = " &lt;&lt; *(v.end() - 1) &lt;&lt; endl;
+    cout &lt;&lt; "*v.rbegin()    = " &lt;&lt; *v.rbegin() &lt;&lt; endl;
+    cout &lt;&lt; "v.rbegin().base() == v.end() ? " &lt;&lt; (v.rbegin().base() == v.end()) &lt;&lt; endl;
+    cout &lt;&lt; "v.rend().base()   == v.begin() ? " &lt;&lt; (v.rend().base() == v.begin()) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">*(v.end() - 1) = C
+*v.rbegin()    = C
+v.rbegin().base() == v.end() ? 1
+v.rend().base()   == v.begin() ? 1</pre>
+    <p>So <code>rbegin()</code> and <code>end()-1</code> refer to the same <em>element</em>, <code>C</code>, while being different
+    types that you may not compare directly. The reverse iterator stores the forward position one to
+    the right of the element it shows you, which is exactly why <code>rend()</code> can exist at all: its
+    <code>.base()</code> is <code>begin()</code>, a legal position, whereas <code>begin()-1</code> would not be.</p>
+    <p>You will not be asked to use <code>.base()</code> in this course. It is here so that "they are not the
+    same" does not calcify into "they have nothing to do with each other."</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.8</div>
+  <div class="bd">
+    <p>A student wants to print a <code>set&lt;int&gt; s</code> from largest to smallest and writes:</p>
+<pre><code class="language-cpp">    set&lt;int&gt;::iterator it;
+    for (it = s.rbegin(); it != s.rend(); ++it)
+        cout &lt;&lt; *it &lt;&lt; endl;</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Why does this not compile?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>s.rbegin()</code> returns a <code>set&lt;int&gt;::reverse_iterator</code>, and <code>it</code> is declared as a
+        <code>set&lt;int&gt;::iterator</code>. They are two different classes, and there is no conversion
+        between them &mdash; the compiler reports no matching <code>operator=</code>.</p>
+        <p>The fix is one word in the declaration:</p>
+<pre><code class="language-cpp">    set&lt;int&gt;::reverse_iterator it;
+    for (it = s.rbegin(); it != s.rend(); ++it)
+        cout &lt;&lt; *it &lt;&lt; endl;</code></pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Once the declaration is fixed, should the <code>++it</code> become <code>--it</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. Reverse iterators are advanced with <code>++</code>. The "reverse" is baked into the type: <code>++</code>
+        on a reverse iterator moves it toward <code>rend()</code>, which is toward the front of the container.
+        Writing <code>--it</code> would immediately walk off the wrong end.</p>
+        <p>This trips people up because it feels backwards. Read <code>++</code> as "advance to the next element
+        of this traversal", not as "move right".</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span><code>const</code> iterators</h2>
+
+<p>Yes, there are <code>const</code> iterators. And there are <code>const</code> reverse iterators.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; const iterators</span></div>
+  <div class="bd">
+    <p>A <strong><code>const</code> iterator</strong> traverses a container but cannot be used to change the
+    elements. Dereferencing one gives a <code>const</code> reference, so <code>*it = value;</code> is a compile error.</p>
+    <table class="trace">
+      <tr><th>Direction</th><th>Type</th><th>Range</th></tr>
+      <tr><td>forward, may write</td><td><code>vector&lt;string&gt;::iterator</code></td><td><code>begin()</code> &hellip; <code>end()</code></td></tr>
+      <tr><td>forward, read only</td><td><code>vector&lt;string&gt;::const_iterator</code></td><td><code>cbegin()</code> &hellip; <code>cend()</code></td></tr>
+      <tr><td>reverse, may write</td><td><code>vector&lt;string&gt;::reverse_iterator</code></td><td><code>rbegin()</code> &hellip; <code>rend()</code></td></tr>
+      <tr><td>reverse, read only</td><td><code>vector&lt;string&gt;::const_reverse_iterator</code></td><td><code>crbegin()</code> &hellip; <code>crend()</code></td></tr>
+    </table>
+    <p>The <code>c</code> prefix stands for <code>const</code>; <code>cr</code> is "const reverse". These four member functions were
+    added in C++11, so make sure you are compiling with at least <code>-std=c++11</code>. This course uses
+    <code>-std=c++17</code>, so they are always available.</p>
+  </div>
+</div>
+
+<p>Use one whenever the loop only <em>reads</em>. It costs nothing, it documents your intent, and it
+turns "I accidentally wrote <code>=</code> instead of <code>==</code>" into a compile error instead of a corrupted
+container. It is the same argument as marking a member function <code>const</code> back in Class 10.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; const forward and const reverse, all three containers</span></div>
+  <div class="bd">
+    <p>Six loops, none of which modifies anything.</p>
+<div class="codewrap"><div class="cap">constiter.cpp</div><pre><code class="language-cpp">// constiter.cpp -- const forward and const reverse iterators
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;set&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; v;
+    v.push_back("alpha");
+    v.push_back("beta");
+    set&lt;string&gt; s;
+    s.insert("cx");
+    s.insert("aqt");
+    map&lt;string,double&gt; m;
+    m["cde"]  = 1.2;
+    m["abcd"] = 7.8;
+
+    cout &lt;&lt; "const forward:" &lt;&lt; endl;
+    vector&lt;string&gt;::const_iterator v_cit;
+    for (v_cit = v.cbegin(); v_cit != v.cend(); ++v_cit)
+        cout &lt;&lt; *v_cit &lt;&lt; endl;
+
+    set&lt;string&gt;::const_iterator s_cit;
+    for (s_cit = s.cbegin(); s_cit != s.cend(); ++s_cit)
+        cout &lt;&lt; *s_cit &lt;&lt; endl;
+
+    map&lt;string,double&gt;::const_iterator m_cit;
+    for (m_cit = m.cbegin(); m_cit != m.cend(); ++m_cit)
+        cout &lt;&lt; m_cit-&gt;first &lt;&lt; " " &lt;&lt; m_cit-&gt;second &lt;&lt; endl;
+
+    cout &lt;&lt; "const reverse:" &lt;&lt; endl;
+    vector&lt;string&gt;::const_reverse_iterator v_crit;
+    for (v_crit = v.crbegin(); v_crit != v.crend(); ++v_crit)
+        cout &lt;&lt; *v_crit &lt;&lt; endl;
+
+    set&lt;string&gt;::const_reverse_iterator s_crit;
+    for (s_crit = s.crbegin(); s_crit != s.crend(); ++s_crit)
+        cout &lt;&lt; *s_crit &lt;&lt; endl;
+
+    map&lt;string, double&gt;::const_reverse_iterator m_crit;
+    for (m_crit = m.crbegin(); m_crit != m.crend(); ++m_crit)
+        cout &lt;&lt; m_crit-&gt;first &lt;&lt; " " &lt;&lt; m_crit-&gt;second &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">const forward:
+alpha
+beta
+aqt
+cx
+abcd 7.8
+cde 1.2
+const reverse:
+beta
+alpha
+cx
+aqt
+cde 1.2
+abcd 7.8</pre>
+    <p>The loop bodies are unchanged from the mutable versions. Only the type names and the
+    <code>begin</code>/<code>end</code> spellings differ.</p>
+    <p>There is one practical reason this matters beyond good manners. If a function takes its
+    container by <code>const</code> reference &mdash; and it should, when it only prints &mdash; then inside
+    that function <code>v.begin()</code> already returns a <code>const_iterator</code>, and a plain
+    <code>vector&lt;string&gt;::iterator</code> will not compile. <code>const</code> iterators are what make
+    <code>const</code>-correct interfaces possible.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the error a <code>const_iterator</code> gives you</span></div>
+  <div class="bd">
+    <p>What happens if you try to write through one.</p>
+<div class="codewrap"><div class="cap">constiterbad.cpp</div><pre><code class="language-cpp">// constiterbad.cpp -- BROKEN ON PURPOSE: a const_iterator cannot write
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; v;
+    v.push_back("alpha");
+    vector&lt;string&gt;::const_iterator v_cit = v.cbegin();
+    *v_cit = "beta";
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constiterbad.cpp: In function 'int main()':
+constiterbad.cpp:11:14: error: no match for 'operator=' (operand types are 'const std::__cxx11::basic_string&lt;char&gt;' and 'const char [5]')
+   11 |     *v_cit = "beta";
+      |              ^~~~~~</pre>
+    <p>Exactly the same message shape as the set one in &sect;5, and for the same reason:
+    dereferencing gave a <code>const std::string</code>, which has no assignment operator you may call.</p>
+    <p>Learn to recognize this message. <em>"no match for 'operator=' &hellip; operand types are
+    'const ...'"</em> means "you promised not to change this and then tried to change it."</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.9</div>
+  <div class="bd">
+    <p>For each loop, say which of the four iterator types you would declare.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Print every element of a <code>set&lt;int&gt;</code> from smallest to largest.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>set&lt;int&gt;::const_iterator</code>, from <code>cbegin()</code> to <code>cend()</code>. You are only reading, so
+        say so. (A plain <code>iterator</code> would compile, but a set's elements are <code>const</code> anyway &mdash;
+        the <code>const_iterator</code> just makes the intent explicit and works on a <code>const set</code>.)</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Add 10 to every value of a <code>map&lt;string,int&gt;</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>map&lt;string,int&gt;::iterator</code>, from <code>begin()</code> to <code>end()</code>, with
+        <code>it-&gt;second = it-&gt;second + 10;</code> in the body. You are writing, so a <code>const</code> iterator
+        will not do.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Print a <code>vector&lt;string&gt;</code> from the last element to the first, without changing it.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>vector&lt;string&gt;::const_reverse_iterator</code>, from <code>crbegin()</code> to <code>crend()</code>, advanced
+        with <code>++</code>.</p>
+        <p><strong>Wrap-up.</strong> Two independent questions decide the type every time: <em>which
+        direction?</em> and <em>am I writing?</em> Four combinations, four type names, four pairs of
+        <code>begin</code>/<code>end</code> functions. Nothing else to memorize.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Your own class in a <code>set</code>: <code>operator&lt;</code></h2>
+
+<p>Everything so far used <code>int</code>, <code>double</code> and <code>string</code> &mdash; types the compiler already knows how
+to order. Now put a class of your own into a set, and something has to give.</p>
+
+<p>Take a minimal wrapper class:</p>
+
+<pre><code class="language-cpp">class MyString {
+public:
+    MyString() {}
+    MyString(const string &amp;a) { str = a; }
+    string str;
+};</code></pre>
+
+<p>It is just a wrapper around a <code>string</code>. But it is missing something significant: there is no
+<strong>comparison <code>operator&lt;</code></strong> for <code>MyString</code>, so <code>MyString</code> objects cannot be sorted.
+And that one absence decides which containers you may build.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <table class="trace">
+      <tr><th>Container</th><th>Allowed without <code>operator&lt;</code>?</th><th>Why</th></tr>
+      <tr><td><code>vector&lt;MyString&gt;</code></td><td><strong>Yes</strong></td><td>A vector never sorts its elements; position is the key.</td></tr>
+      <tr><td><code>map&lt;string, MyString&gt;</code></td><td><strong>Yes</strong></td><td><code>MyString</code> is the <em>value</em>. Only keys are sorted.</td></tr>
+      <tr><td><code>set&lt;MyString&gt;</code></td><td><strong>No</strong></td><td>A set is a sorted collection; the compiler does not know how to order two <code>MyString</code> objects.</td></tr>
+      <tr><td><code>map&lt;MyString, int&gt;</code></td><td><strong>No</strong></td><td><code>MyString</code> is the <em>key</em>, and keys are sorted.</td></tr>
+    </table>
+    <p><strong>The rule.</strong> You can build a <code>set</code> of a user-defined class, or use one as a
+    <code>map</code> key, <strong>only if <code>operator&lt;</code> is overloaded for that class.</strong></p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what the compiler says when <code>operator&lt;</code> is missing</span></div>
+  <div class="bd">
+    <p>This is a message you will meet for real, and it is long. The trick is knowing which line to
+    read.</p>
+<div class="codewrap"><div class="cap">mystringbad.cpp</div><pre><code class="language-cpp">// mystringbad.cpp -- BROKEN ON PURPOSE: MyString has no operator&lt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+class MyString {
+public:
+    MyString() {}
+    MyString(const string &amp;a) { str = a; }
+    string str;
+};
+
+int main() {
+    set&lt;MyString&gt; s;
+    s.insert(MyString("Charlie"));
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">/usr/include/c++/13/bits/stl_function.h: In instantiation of 'constexpr bool std::less&lt;_Tp&gt;::operator()(const _Tp&amp;, const _Tp&amp;) const [with _Tp = MyString]':
+mystringbad.cpp:16:13:   required from here
+/usr/include/c++/13/bits/stl_function.h:408:20: error: no match for 'operator&lt;' (operand types are 'const MyString' and 'const MyString')
+  408 |       { return __x &lt; __y; }
+      |                ~~~~^~~~~</pre>
+    <p>The real message runs to about a hundred lines, most of it a list of every <code>operator&lt;</code> in
+    the standard library that the compiler considered and rejected. Ignore all of that. Two lines
+    carry the information:</p>
+    <ul>
+      <li><em>required from here</em> &mdash; and then <strong>your</strong> file and line number.
+        That is the line that started the avalanche: <code>s.insert(...)</code> on line 16.</li>
+      <li><em>no match for</em> <code>operator&lt;</code> <em>(operand types are</em> <code>const MyString</code>
+        <em>and</em> <code>const MyString</code><em>)</em> &mdash; the actual complaint, in plain
+        language.</li>
+    </ul>
+    <p>The class named <code>std::less&lt;MyString&gt;</code> in the first line is the set's default
+    comparison. Its entire body is <code>return __x &lt; __y;</code>, and that is why a missing <code>operator&lt;</code>
+    surfaces here rather than at the declaration of the set. <strong>When a template error is a wall
+    of text, search it for the name of your own file.</strong></p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Supplying <code>operator&lt;</code></h3>
+
+<p>This is Class 17 material, arriving with a purpose. Back then you overloaded <code>operator+</code> and
+<code>operator*</code> as free functions taking two <code>const</code> references. <code>operator&lt;</code> is the same job: a free
+function of two <code>const</code> references that returns <code>bool</code>.</p>
+
+<pre><code class="language-cpp">bool operator&lt; (const MyString &amp;u, const MyString &amp;v) {
+    return (u.str &lt; v.str);
+}</code></pre>
+
+<p>Read the body carefully: the <code>&lt;</code> inside is <code>string</code>'s <code>operator&lt;</code>, which already exists.
+You are not writing a comparison from scratch, you are delegating to one the library already has.
+That is the usual shape.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; with <code>operator&lt;</code>, both containers work</span></div>
+  <div class="bd">
+    <p>Now <code>set&lt;MyString&gt;</code> compiles, and so does <code>map&lt;MyString,int&gt;</code>. Four inserts into
+    the set, one of them a repeat. Predict the size.</p>
+<div class="codewrap"><div class="cap">sortmystring_set.cpp</div><pre><code class="language-cpp">// sortmystring_set.cpp -- with operator&lt; in place, MyString can live in a set
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+#include &lt;map&gt;
+using namespace std;
+
+class MyString {
+public:
+    MyString() {}
+    MyString(const string &amp;a) { str = a; }
+    string str;
+};
+
+bool operator&lt; (const MyString &amp;u, const MyString &amp;v) {
+    return (u.str &lt; v.str);
+}
+
+int main() {
+    set&lt;MyString&gt; s;
+    s.insert(MyString("Charlie"));
+    s.insert(MyString("Alice"));
+    s.insert(MyString("Bob"));
+    s.insert(MyString("Alice"));            // duplicate: ignored
+
+    cout &lt;&lt; "set size = " &lt;&lt; s.size() &lt;&lt; endl;
+    for (set&lt;MyString&gt;::iterator it = s.begin(); it != s.end(); ++it)
+        cout &lt;&lt; it-&gt;str &lt;&lt; endl;
+
+    map&lt;MyString,int&gt; grades;               // MyString as the KEY
+    grades[MyString("Charlie")] = 88;
+    grades[MyString("Alice")]   = 95;
+    for (map&lt;MyString,int&gt;::iterator it = grades.begin(); it != grades.end(); ++it)
+        cout &lt;&lt; it-&gt;first.str &lt;&lt; " " &lt;&lt; it-&gt;second &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">set size = 3
+Alice
+Bob
+Charlie
+Alice 95
+Charlie 88</pre>
+    <p>Three elements from four inserts, in alphabetical order. The set decided that the second
+    <code>Alice</code> was a duplicate using nothing but your <code>operator&lt;</code> &mdash; it never called
+    <code>operator==</code>, which <code>MyString</code> does not even have.</p>
+    <p>That is worth understanding, because it explains a subtlety. The library defines "these two
+    are the same element" as <strong>neither one is less than the other</strong>: if <code>!(a &lt; b)</code>
+    and <code>!(b &lt; a)</code>, then <code>a</code> and <code>b</code> are equivalent and the set keeps only one of them. So the
+    comparison you write does not just choose the order; it decides what counts as a duplicate.</p>
+    <p>Notice <code>it-&gt;str</code> on the set iterator and <code>it-&gt;first.str</code> on the map iterator. The set
+    iterator points at a <code>MyString</code>, so the arrow reaches <code>str</code> directly. The map iterator points at
+    a pair, so you go <code>-&gt;first</code> to get the <code>MyString</code> and then <code>.str</code> to get inside it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; comparing only one field</span></div>
+  <div class="bd">
+    <p>Suppose you write <code>operator&lt;</code> for a <code>Point</code> that compares <code>x</code> only:</p>
+<pre><code class="language-cpp">bool operator&lt; (const Point1 &amp;u, const Point1 &amp;v) {
+    return u.getx() &lt; v.getx();          // WRONG for a set
+}</code></pre>
+    <p>Now <code>(1,5)</code> and <code>(1,2)</code> are equivalent &mdash; neither is less than the other &mdash; so a
+    <code>set&lt;Point1&gt;</code> will keep only one of them and silently throw the other away. The
+    comparison must use every field that distinguishes two objects. The standard shape is
+    <strong>lexicographic</strong>: compare the first field, and only if it ties, move on to the
+    next.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; Class 17's <code>Point1</code>, now sortable</span></div>
+  <div class="bd">
+    <p>Here is the <code>Point1</code> class you have been carrying since Class 17, given a lexicographic
+    <code>operator&lt;</code> and dropped into a set. Notice the operator uses the public accessors <code>getx()</code>
+    and <code>gety()</code>, because the data is <code>private</code> &mdash; the same reason a free operator needed them
+    in Class 17.</p>
+<div class="codewrap"><div class="cap">pointset.cpp</div><pre><code class="language-cpp">// pointset.cpp -- Class 17's Point1, given an operator&lt; so it can go in a set
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+class Point1 {
+public:
+    Point1() { x = 0.0; y = 0.0; }
+    Point1(double a, double b) { x = a; y = b; }
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void print() const { cout &lt;&lt; "(" &lt;&lt; x &lt;&lt; "," &lt;&lt; y &lt;&lt; ")"; }
+private:
+    double x, y;
+};
+
+// lexicographic: compare x first, and only if the x values tie, compare y
+bool operator&lt; (const Point1 &amp;u, const Point1 &amp;v) {
+    if (u.getx() != v.getx()) return u.getx() &lt; v.getx();
+    return u.gety() &lt; v.gety();
+}
+
+int main() {
+    set&lt;Point1&gt; s;
+    s.insert(Point1(3.0, 1.0));
+    s.insert(Point1(1.0, 5.0));
+    s.insert(Point1(1.0, 2.0));
+    s.insert(Point1(3.0, 1.0));          // duplicate: ignored
+
+    cout &lt;&lt; "set size = " &lt;&lt; s.size() &lt;&lt; endl;
+    for (set&lt;Point1&gt;::const_iterator it = s.cbegin(); it != s.cend(); ++it) {
+        it-&gt;print();
+        cout &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    vector&lt;Point1&gt; v;
+    v.push_back(Point1(3.0, 1.0));
+    v.push_back(Point1(1.0, 5.0));
+    v.push_back(Point1(1.0, 2.0));
+    sort(v.begin(), v.end());            // same operator&lt; does the work
+    for (size_t i = 0; i &lt; v.size(); ++i) { v[i].print(); cout &lt;&lt; " "; }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">set size = 3
+(1,2) (1,5) (3,1)
+(1,2) (1,5) (3,1)</pre>
+    <p>Both <code>(1,5)</code> and <code>(1,2)</code> survived, because the tie on <code>x</code> was broken by <code>y</code>. Had the operator
+    compared only <code>x</code>, the set would hold two points, not three.</p>
+    <p>The two lines of output are identical, and that is the headline: <strong>one</strong>
+    <code>operator&lt;</code> gave <code>Point1</code> a place in a sorted set <em>and</em> made <code>sort</code> work on a vector of
+    them. The last three lines of <code>main</code> are &sect;9's topic, arriving early because the same
+    overload powers both.</p>
+    <p>One caution carried over from Class 3: <code>u.getx() != v.getx()</code> compares two <code>double</code> values
+    for exact equality. Here the coordinates are exact literals so it is fine, but comparing computed
+    floating-point values with <code>==</code> or <code>!=</code> is a habit to avoid.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; make a class sortable</h3>
+
+<p>Give the <code>Reading</code> class below an <code>operator&lt;</code> that orders readings by temperature, breaking
+ties by city name, then store five readings (one a genuine duplicate) in a <code>set&lt;Reading&gt;</code> and
+print them coldest first. Finish by printing the coldest and the warmest.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; making a class sortable</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+class Reading {
+public:
+    Reading() { celsius = 0.0; }
+    Reading(const string &amp;c, double t) { city = c; celsius = t; }
+    string getcity() const { return city; }
+    double getcelsius() const { return celsius; }
+    void print() const { cout &lt;&lt; city &lt;&lt; &quot; &quot; &lt;&lt; celsius; }
+private:
+    string city;
+    double celsius;
+};
+
+// TODO: bool operator&lt; (const Reading &amp;u, const Reading &amp;v) { ... }
+
+int main() {
+    set&lt;Reading&gt; readings;
+    // insert: Queens 21.5, Oslo -3.0, Cairo 34.0, Lima 21.5, Queens 21.5
+
+    // print the size, then every reading, coldest first
+    // then print the coldest and the warmest
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+class Reading {
+public:
+    Reading() { celsius = 0.0; }
+    Reading(const string &amp;c, double t) { city = c; celsius = t; }
+    string getcity() const { return city; }
+    double getcelsius() const { return celsius; }
+    void print() const { cout &lt;&lt; city &lt;&lt; " " &lt;&lt; celsius; }
+private:
+    string city;
+    double celsius;
+};
+
+// TODO: bool operator&lt; (const Reading &amp;u, const Reading &amp;v) { ... }
+
+int main() {
+    set&lt;Reading&gt; readings;
+    // insert: Queens 21.5, Oslo -3.0, Cairo 34.0, Lima 21.5, Queens 21.5
+
+    // print the size, then every reading, coldest first
+    // then print the coldest and the warmest
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.10</div>
+  <div class="bd">
+    <p>Write the program. Then explain what would go wrong if <code>operator&lt;</code> compared only the
+    temperature.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">ex3_temp.cpp</div><pre><code class="language-cpp">// ex3_temp.cpp -- in-class exercise: give a class operator&lt; and put it in a set
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+using namespace std;
+
+class Reading {
+public:
+    Reading() { celsius = 0.0; }
+    Reading(const string &amp;c, double t) { city = c; celsius = t; }
+    string getcity() const { return city; }
+    double getcelsius() const { return celsius; }
+    void print() const { cout &lt;&lt; city &lt;&lt; " " &lt;&lt; celsius; }
+private:
+    string city;
+    double celsius;
+};
+
+// order by temperature; break ties by city name so that two different cities
+// at the same temperature are NOT treated as the same element
+bool operator&lt; (const Reading &amp;u, const Reading &amp;v) {
+    if (u.getcelsius() != v.getcelsius()) return u.getcelsius() &lt; v.getcelsius();
+    return u.getcity() &lt; v.getcity();
+}
+
+int main() {
+    set&lt;Reading&gt; readings;
+    readings.insert(Reading("Queens", 21.5));
+    readings.insert(Reading("Oslo", -3.0));
+    readings.insert(Reading("Cairo", 34.0));
+    readings.insert(Reading("Lima", 21.5));
+    readings.insert(Reading("Queens", 21.5));      // duplicate: ignored
+
+    cout &lt;&lt; "size = " &lt;&lt; readings.size() &lt;&lt; endl;
+    for (set&lt;Reading&gt;::const_iterator it = readings.cbegin(); it != readings.cend(); ++it) {
+        it-&gt;print();
+        cout &lt;&lt; endl;
+    }
+    cout &lt;&lt; "coldest: ";
+    readings.begin()-&gt;print();
+    cout &lt;&lt; endl;
+    cout &lt;&lt; "warmest: ";
+    readings.rbegin()-&gt;print();
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">size = 4
+Oslo -3
+Lima 21.5
+Queens 21.5
+Cairo 34
+coldest: Oslo -3
+warmest: Cairo 34</pre>
+      <p><strong>If only the temperature were compared.</strong> Lima and Queens are both at 21.5.
+      Neither would be less than the other, so the set would treat them as the same element and
+      keep only Lima &mdash; the reading inserted first. Size 3, one city silently gone. Nothing
+      warns you.</p>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>readings.begin()</code> is the smallest element and <code>readings.rbegin()</code> is the largest, so a
+          sorted container gives you min and max for free, with no loop. Both must be dereferenced,
+          hence <code>readings.begin()-&gt;print()</code>.</li>
+        <li><code>-3</code> prints without a decimal point, and <code>21.5</code> keeps its <code>.5</code> &mdash; <code>cout</code>'s default
+          formatting again.</li>
+        <li>The operator is a <strong>free function</strong>, not a member. It could be a member
+          (<code>bool operator&lt; (const Reading &amp;v) const</code>), and the set would accept that too; the
+          free form is what the course notes use and it reads symmetrically.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s9"><span class="num">9.</span>Algorithms: <code>sort</code></h2>
+
+<p>The third part of the STL is a collection of general-purpose <strong>algorithms</strong> &mdash;
+free functions that work on any container through its iterators. Include <code>#include &lt;algorithm&gt;</code>
+to use them. We will study exactly one: <code>sort</code>.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>sort</code></span></div>
+  <div class="bd">
+    <p><code>sort</code> takes <strong>three</strong> parameters:</p>
+    <ol>
+      <li>An iterator to the <strong>start</strong> of the collection to be sorted.</li>
+      <li>An iterator to <strong>one place beyond the end</strong> of the collection to be sorted.
+        (The same half-open range as every loop you have written today.)</li>
+      <li>A <strong>comparison function</strong>.</li>
+    </ol>
+    <p>The third parameter is <strong>optional</strong>. Leave it off and <code>sort</code> uses
+    <code>operator&lt;</code>, which is already defined for <code>int</code>, <code>double</code> and <code>string</code> &mdash; and for your
+    own class too, once you have overloaded it.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; <code>sort</code> does not work on a <code>set</code> or a <code>map</code></span></div>
+  <div class="bd">
+    <p><code>sort</code> needs to jump around inside the collection, so it requires <strong>random-access</strong>
+    iterators. A <code>vector</code> has those; a <code>set</code> and a <code>map</code> do not. <code>sort(s.begin(), s.end())</code> on a set
+    fails to compile with a message about <code>operator-</code> not existing for the iterator type.</p>
+    <p>This is not a limitation you will ever feel, because <strong>a set and a map are already
+    sorted.</strong> Sorting them would be asking for something you already have. Reach for <code>sort</code>
+    when your data is in a <code>vector</code>.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; sorting a <code>vector</code> of a user-defined class</span></div>
+  <div class="bd">
+    <p>The capstone program of the whole templates arc: a class of your own, an overloaded
+    <code>operator&lt;</code>, and one library call that puts three objects in order.</p>
+<div class="codewrap"><div class="cap">sortfixed.cpp</div><pre><code class="language-cpp">// sortfixed.cpp -- sorting a vector of MyString
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+class MyString {                                    // user defined class
+public:
+    MyString() {}
+    MyString(const string &amp;a) { str = a; }
+    string str;
+};
+
+bool operator&lt; (const MyString &amp;u, const MyString &amp;v) {   // comparison operator
+    return (u.str &lt; v.str);
+}
+
+int main() {
+    vector&lt;MyString&gt; v;
+    v.push_back(MyString("Charlie"));
+    v.push_back(MyString("Alice"));
+    v.push_back(MyString("Bob"));
+
+    sort(v.begin(), v.end());                       // STL sort function
+
+    for (size_t i = 0; i &lt; v.size(); ++i)
+        cout &lt;&lt; v[i].str &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Alice
+Bob
+Charlie</pre>
+    <p><code>sort</code> was given two iterators and nothing else, so it used <code>operator&lt;</code> &mdash; and the
+    one it found is the one you wrote, because the arguments are <code>MyString</code> objects. The vector is
+    rearranged in place; <code>sort</code> returns nothing.</p>
+    <p>Two details in the printing loop are worth stating out loud. <code>size_t i</code> rather than <code>int i</code>,
+    because <code>v.size()</code> is unsigned and <code>-Wall</code> warns about the mismatch. And <code>v[i].str</code> rather than
+    <code>v[i]</code>, because <code>MyString</code> has no <code>operator&lt;&lt;</code> &mdash; <code>cout</code> has no idea how to print
+    one. If you wanted <code>cout &lt;&lt; v[i]</code> to work, you would overload the stream operator as in
+    Class 18.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; passing <code>operator&lt;</code> as the third argument</span></div>
+  <div class="bd">
+    <p>A very natural-looking version of that call appears in the course notes:</p>
+<pre><code class="language-cpp">    sort(v.begin(), v.end(), operator&lt;);        // does NOT compile</code></pre>
+    <p>It does not compile. Writing the bare name <code>operator&lt;</code> in an expression names an
+    <strong>overload set</strong>, not a function &mdash; and with <code>&lt;string&gt;</code>, <code>&lt;vector&gt;</code>
+    and <code>using namespace std;</code> in scope, there are dozens of candidates. The compiler cannot tell
+    which one you mean, and reports:</p>
+<pre class="err">sortorig.cpp:24:9: error: no matching function for call to 'sort(std::vector&lt;MyString&gt;::iterator, std::vector&lt;MyString&gt;::iterator, &lt;unresolved overloaded function type&gt;)'</pre>
+    <p><em>unresolved overloaded function type</em> is the phrase to recognize. There are two
+    repairs:</p>
+    <ul>
+      <li><strong>Drop the third argument.</strong> <code>sort(v.begin(), v.end());</code> &mdash; <code>sort</code>
+        already uses <code>operator&lt;</code> by default and finds yours. This is what the corrected program
+        above does, and it is the right answer.</li>
+      <li><strong>Pass a named function of your own</strong>, as in the next example. Give it a
+        normal name, not <code>operator&lt;</code>.</li>
+    </ul>
+    <p>The same listing has a second error: its output loop writes <code>cout &lt;&lt; v[i]</code> for a
+    <code>MyString</code>, which has no <code>operator&lt;&lt;</code>. Both are fixed in <code>sortfixed.cpp</code>.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; using the optional third parameter</span></div>
+  <div class="bd">
+    <p>When you want an order <em>other</em> than <code>operator&lt;</code>, write a <code>bool</code> function of two
+    <code>const</code> references and pass its name. Here: longest string first.</p>
+<div class="codewrap"><div class="cap">sortcmp.cpp</div><pre><code class="language-cpp">// sortcmp.cpp -- sort with an explicit third argument (a comparison function)
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+bool longerFirst(const string &amp;a, const string &amp;b) {
+    return a.size() &gt; b.size();
+}
+
+int main() {
+    vector&lt;string&gt; v;
+    v.push_back("Charlie");
+    v.push_back("Al");
+    v.push_back("Bobby");
+
+    sort(v.begin(), v.end());               // default: operator&lt; on string
+    for (size_t i = 0; i &lt; v.size(); ++i) cout &lt;&lt; v[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    sort(v.begin(), v.end(), longerFirst);  // explicit comparison function
+    for (size_t i = 0; i &lt; v.size(); ++i) cout &lt;&lt; v[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Al Bobby Charlie
+Charlie Bobby Al</pre>
+    <p>First alphabetical, then by decreasing length. Same vector, same <code>sort</code>, different third
+    argument.</p>
+    <p>The comparison function must answer one question: <em>does <code>a</code> come strictly before <code>b</code>?</em>
+    It returns <code>bool</code>, takes two <code>const</code> references, and must be consistent &mdash; if it says <code>a</code>
+    comes before <code>b</code> it must not also say <code>b</code> comes before <code>a</code>. A comparison that returns <code>true</code> for
+    two equal elements (for instance <code>a.size() &gt;= b.size()</code>) breaks <code>sort</code> in ways that range from
+    a wrong answer to a crash.</p>
+    <p>Note that <code>longerFirst</code> is passed <strong>without parentheses</strong>. You are handing
+    <code>sort</code> the function itself, not calling it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.11</div>
+  <div class="bd">
+    <p>You have <code>vector&lt;int&gt; v</code> holding <code>{5, 2, 9, 1}</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write one statement that sorts it into increasing order, and one that sorts it into decreasing order using a named comparison function.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    sort(v.begin(), v.end());               // 1 2 5 9</code></pre>
+        <p>and, with</p>
+<pre><code class="language-cpp">bool descending(const int &amp;a, const int &amp;b) {
+    return a &gt; b;
+}</code></pre>
+<pre><code class="language-cpp">    sort(v.begin(), v.end(), descending);   // 9 5 2 1</code></pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write one statement that sorts only the first three elements.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>sort(v.begin(), v.begin() + 3);</code> &mdash; giving <code>{2, 5, 9, 1}</code>.</p>
+        <p>The two iterators do not have to be <code>begin()</code> and <code>end()</code>; they delimit any half-open
+        range you like. <code>v.begin() + 3</code> is legal for a vector because its iterators are
+        random-access. It would not compile for a set.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> What happens if you write <code>sort(v.begin(), v.end() - 1);</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The <em>last</em> element is excluded from the sort, giving <code>{2, 5, 9, 1}</code> again for this
+        data. The range is half-open, so <code>v.end() - 1</code> means "stop before the last element."</p>
+        <p><strong>Wrap-up.</strong> Every algorithm in the STL takes its range this way. Once you
+        have internalized "first, one-past-last", you can read the signature of any of them.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 27.12</div>
+  <div class="bd">
+    <p>Bringing the class together. You have a class <code>Book</code> with private members <code>title</code> and
+    <code>year</code>, and public accessors <code>gettitle()</code> and <code>getyear()</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write the <code>operator&lt;</code> that makes <code>set&lt;Book&gt;</code> compile, ordering by title and then by year.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">bool operator&lt; (const Book &amp;u, const Book &amp;v) {
+    if (u.gettitle() != v.gettitle()) return u.gettitle() &lt; v.gettitle();
+    return u.getyear() &lt; v.getyear();
+}</code></pre>
+        <p>A free function of two <code>const</code> references returning <code>bool</code>, using the accessors because
+        the data is private. Lexicographic: title first, year only as a tiebreaker.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> With that operator in place, which of these four declarations compile? <code>vector&lt;Book&gt;</code>, <code>set&lt;Book&gt;</code>, <code>map&lt;string,Book&gt;</code>, <code>map&lt;Book,int&gt;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>All four.</strong> The first and third never needed <code>operator&lt;</code> at all &mdash;
+        a vector does not sort, and in <code>map&lt;string,Book&gt;</code> the <code>Book</code> is the value. The second
+        and fourth needed it and now have it.</p>
+        <p>Delete the operator and only the first and third still compile.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Write a loop that prints every <code>Book</code> in a <code>set&lt;Book&gt; library</code> from the last title to the first, without modifying anything.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    set&lt;Book&gt;::const_reverse_iterator it;
+    for (it = library.crbegin(); it != library.crend(); ++it)
+        cout &lt;&lt; it-&gt;gettitle() &lt;&lt; " " &lt;&lt; it-&gt;getyear() &lt;&lt; endl;</code></pre>
+        <p><strong>Wrap-up.</strong> Every piece of today's class is in those three lines: the
+        container that sorts itself using the <code>operator&lt;</code> you supplied, the <code>const</code> reverse
+        iterator chosen because you are reading and going backwards, the half-open <code>crbegin()</code> to
+        <code>crend()</code> range, and <code>-&gt;</code> to reach a member of the element the iterator refers to.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems</div>
+  <div class="bd">
+    <p><strong>Be clear about what this section is.</strong> The STL reading is the one piece of
+    course material that poses no exercises of its own &mdash; it is purely expository, with no
+    questions, no problems and no exercises anywhere in it. Every problem below was therefore written
+    for these notes and is marked <code>(added)</code>. Problem 5 is built on the sort program the reading ends
+    with, but the question is ours.</p>
+    <p><strong>And be clear about the exam.</strong> On this professor's papers, the STL is never
+    examined beyond <code>vector</code> and <code>string</code>. Not one exam question uses a <code>set</code>, a <code>map</code>, an iterator,
+    or anything from <code>&lt;algorithm&gt;</code>. Treat this class as enrichment &mdash; material that will
+    make you a far more effective C++ programmer, and that every later course and every job
+    interview assumes you know, but that is not what you will be graded on. If you are short of
+    time before an exam, revise pointers, the Big Three, inheritance and polymorphism first, and
+    come back here afterwards.</p>
+    <p>Work each problem on paper before opening the solution.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Word frequency <span class="muted small">(added)</span></h3>
+
+<p>Write a complete C++ program that counts how many times each word appears in the sentence
+<code>the cat sat on the mat the cat purred</code>, and prints each word with its count, in
+alphabetical order, one per line. Read the words out of the string with an
+<code>istringstream</code> and the ordinary <code>&gt;&gt;</code> operator. Use one <code>map</code> and one
+loop.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The key is a word, so the container is <code>map&lt;string,int&gt;</code>. The
+  counting is one line: <code>++freq[word];</code>. On a word never seen before, <code>operator[]</code> creates the entry
+  with value <code>0</code> and then <code>++</code> makes it <code>1</code>; on a repeat it just increments. Alphabetical order comes
+  free from the map. <code>istringstream</code> behaves exactly like <code>cin</code> but reads from a string &mdash; the
+  same <code>while (in &gt;&gt; word)</code> idiom you used with files in Class 4.</p>
+<div class="codewrap"><div class="cap">p1_wordcount.cpp</div><pre><code class="language-cpp">// p1_wordcount.cpp -- count how often each word appears
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;sstream&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    string text = "the cat sat on the mat the cat purred";
+    istringstream in(text);
+
+    map&lt;string,int&gt; freq;
+    string word;
+    while (in &gt;&gt; word)
+        ++freq[word];                    // operator[] creates the entry with 0 if new
+
+    for (map&lt;string,int&gt;::const_iterator it = freq.cbegin(); it != freq.cend(); ++it)
+        cout &lt;&lt; it-&gt;first &lt;&lt; " " &lt;&lt; it-&gt;second &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">cat 2
+mat 1
+on 1
+purred 1
+sat 1
+the 3</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>This is the one place where <code>operator[]</code>'s insert-on-read behavior is exactly what you want.
+      Everywhere else it is a hazard; here it removes an <code>if</code>.</li>
+    <li>The output is sorted with no sorting code, because a map is sorted by key at all times.</li>
+    <li>The traversal uses a <code>const_iterator</code> because it only prints. Get in that habit now.</li>
+    <li>Doing this with two parallel <code>vector</code>s &mdash; one of words, one of counts &mdash; needs a
+      linear search per word and a sort at the end. The map version is shorter and faster.</li>
+    <li><code>freq.size()</code> would tell you how many distinct words there were, for free.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Unique words, and the repeats <span class="muted small">(added)</span></h3>
+
+<p>Using the same sentence, write a program that reports how many words were read in total, how many
+are distinct, prints the distinct words in alphabetical order, and prints the words that appeared
+more than once. Use two <code>set</code>s and no <code>map</code>.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> One set collects everything seen. Before inserting a word, ask whether
+  it is already there with <code>count</code>; if it is, this is at least its second appearance, so it also
+  goes into a second set of repeats. The order of those two statements matters: test first, insert
+  second. Both sets sort themselves, and both discard duplicates, so the second set naturally holds
+  each repeated word once.</p>
+<div class="codewrap"><div class="cap">p2_uniquewords.cpp</div><pre><code class="language-cpp">// p2_uniquewords.cpp -- unique words, sorted, plus the repeats
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;sstream&gt;
+#include &lt;set&gt;
+using namespace std;
+
+int main() {
+    string text = "the cat sat on the mat the cat purred";
+    istringstream in(text);
+
+    set&lt;string&gt; seen;
+    set&lt;string&gt; repeated;
+    string word;
+    int total = 0;
+    while (in &gt;&gt; word) {
+        ++total;
+        if (seen.count(word) == 1)       // already there?
+            repeated.insert(word);
+        seen.insert(word);               // duplicates are simply ignored
+    }
+
+    cout &lt;&lt; "words read   = " &lt;&lt; total &lt;&lt; endl;
+    cout &lt;&lt; "unique words = " &lt;&lt; seen.size() &lt;&lt; endl;
+    cout &lt;&lt; "sorted:";
+    for (set&lt;string&gt;::const_iterator it = seen.cbegin(); it != seen.cend(); ++it)
+        cout &lt;&lt; " " &lt;&lt; *it;
+    cout &lt;&lt; endl;
+    cout &lt;&lt; "repeated:";
+    for (set&lt;string&gt;::const_iterator it = repeated.cbegin(); it != repeated.cend(); ++it)
+        cout &lt;&lt; " " &lt;&lt; *it;
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">words read   = 9
+unique words = 6
+sorted: cat mat on purred sat the
+repeated: cat the</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>the</code> appears three times but shows up once in <code>repeated</code>, because <code>repeated</code> is a set too.
+      Uniqueness is doing double duty.</li>
+    <li>Swap the two statements in the loop and the program breaks: insert first and every word
+      appears to be a repeat.</li>
+    <li><code>total</code> has to be counted by hand &mdash; a set cannot tell you how many insertions were
+      attempted, only how many elements it holds.</li>
+    <li>The <code>map</code> version of this from Problem 1 also answers it: every key whose value exceeds 1 is
+      a repeat. Two containers, two routes, same information &mdash; choose the one whose shape
+      matches the question.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; What is the output? <span class="muted small">(added)</span></h3>
+
+<p>State the exact output of this program, line by line. Every line is tagged with a letter so you
+can check them one at a time. No partial credit &mdash; get every line.</p>
+
+<div class="codewrap"><div class="cap">p3_predict.cpp</div><pre><code class="language-cpp">// p3_predict.cpp -- predict every line
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;set&gt;
+#include &lt;map&gt;
+using namespace std;
+
+int main() {
+    set&lt;int&gt; s;
+    s.insert(50);
+    s.insert(10);
+    s.insert(50);
+    s.insert(30);
+    cout &lt;&lt; "A " &lt;&lt; s.size() &lt;&lt; endl;
+    for (set&lt;int&gt;::iterator it = s.begin(); it != s.end(); ++it)
+        cout &lt;&lt; "B " &lt;&lt; *it &lt;&lt; endl;
+
+    map&lt;string,int&gt; m;
+    m["pear"] = 1;
+    m["apple"] = 2;
+    m.insert(make_pair("pear", 9));
+    m["apple"] = 7;
+    cout &lt;&lt; "C " &lt;&lt; m.size() &lt;&lt; endl;
+    cout &lt;&lt; "D " &lt;&lt; m["pear"] &lt;&lt; " " &lt;&lt; m["apple"] &lt;&lt; endl;
+    cout &lt;&lt; "E " &lt;&lt; m["kiwi"] &lt;&lt; endl;
+    cout &lt;&lt; "F " &lt;&lt; m.size() &lt;&lt; endl;
+    for (map&lt;string,int&gt;::reverse_iterator it = m.rbegin(); it != m.rend(); ++it)
+        cout &lt;&lt; "G " &lt;&lt; it-&gt;first &lt;&lt; " " &lt;&lt; it-&gt;second &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Work through it in four blocks, and at each <code>cout</code> write down the
+  container's full contents in the margin. The three traps are: the duplicate <code>insert(50)</code>, the
+  <code>insert</code> on an existing key, and the read of <code>m["kiwi"]</code>.</p>
+<pre class="out">A 3
+B 10
+B 30
+B 50
+C 2
+D 1 7
+E 0
+F 3
+G pear 1
+G kiwi 0
+G apple 7</pre>
+  <table class="trace">
+    <tr><th>Line</th><th>Why</th></tr>
+    <tr><td>A</td><td>Four inserts, but <code>50</code> appears twice, so the set holds <code>{10, 30, 50}</code> &mdash; size 3.</td></tr>
+    <tr><td>B</td><td>Sorted ascending: 10, 30, 50. Not insertion order.</td></tr>
+    <tr><td>C</td><td>The map has <code>pear</code> and <code>apple</code> only. <code>insert(make_pair("pear", 9))</code> found <code>pear</code> already present and did nothing.</td></tr>
+    <tr><td>D</td><td><code>pear</code> is still <code>1</code> &mdash; the <code>insert</code> was refused. <code>apple</code> is <code>7</code>, because <code>m["apple"] = 7;</code> <em>did</em> overwrite.</td></tr>
+    <tr><td>E</td><td><code>kiwi</code> was never inserted, so <code>m["kiwi"]</code> creates it with the value-initialized <code>int</code> <code>0</code> and prints <code>0</code>.</td></tr>
+    <tr><td>F</td><td>Size is now <strong>3</strong>. Line E changed the map just by reading it.</td></tr>
+    <tr><td>G</td><td>Reverse iterator: keys descending. <code>pear</code>, <code>kiwi</code>, <code>apple</code> &mdash; and <code>kiwi</code> is there because of line E.</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Lines E, F and G are one trap with three consequences. If you missed the insert-on-read you
+      got four lines wrong, not one.</li>
+    <li>Line D is the <code>insert</code>-does-not-overwrite trap. Students who read <code>insert</code> as "assign" write
+      <code>9 7</code>.</li>
+    <li>The <code>G</code> block is in reverse alphabetical order: <code>pear</code> comes after <code>kiwi</code>, which comes
+      after <code>apple</code>.</li>
+    <li>On an exam, output-prediction questions like this carry no partial credit. Write the
+      container's contents down after every statement rather than trying to hold them in your
+      head.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; A gradebook, three ways <span class="muted small">(added)</span></h3>
+
+<p>Write a complete program that stores three students' averages in a <code>map&lt;string,double&gt;</code> and
+provides three functions:</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> <code>printForward</code> &mdash; prints every student in increasing key order.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>Take the map by <code>const</code> reference, and therefore use a <code>const_iterator</code>:</p>
+<pre><code class="language-cpp">void printForward(const map&lt;string,double&gt; &amp;g) {
+    for (map&lt;string,double&gt;::const_iterator it = g.cbegin(); it != g.cend(); ++it)
+        cout &lt;&lt; it-&gt;first &lt;&lt; " " &lt;&lt; it-&gt;second &lt;&lt; endl;
+}</code></pre>
+    <p>A plain <code>iterator</code> would not compile here. On a <code>const</code> map, <code>begin()</code> itself returns a
+    <code>const_iterator</code>, so this is the case where <code>const</code> iterators stop being optional politeness.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> <code>printBackward</code> &mdash; the same list in decreasing key order.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">void printBackward(const map&lt;string,double&gt; &amp;g) {
+    for (map&lt;string,double&gt;::const_reverse_iterator it = g.crbegin(); it != g.crend(); ++it)
+        cout &lt;&lt; it-&gt;first &lt;&lt; " " &lt;&lt; it-&gt;second &lt;&lt; endl;
+}</code></pre>
+    <p>Identical body; only the iterator type and the two range functions changed. And still
+    <code>++it</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> <code>lookup(g, name)</code> &mdash; prints the student's average, or "not enrolled", <em>without</em> adding anything to the map. Then assemble the whole program and verify that <code>size()</code> is unchanged after a failed lookup.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> The whole point of part (c) is that <code>g[name]</code> is forbidden: it would
+    insert the missing student. Use <code>find</code>, compare against <code>end()</code>, and read <code>it-&gt;second</code> only on
+    the success branch. Taking the map by <code>const</code> reference makes the mistake impossible &mdash;
+    <code>operator[]</code> is not even available on a <code>const</code> map, so the compiler enforces the rule for
+    you.</p>
+<div class="codewrap"><div class="cap">p4_gradebook.cpp</div><pre><code class="language-cpp">// p4_gradebook.cpp -- walk a map forwards and backwards, and look keys up safely
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+// print "name score" for every student, highest key last
+void printForward(const map&lt;string,double&gt; &amp;g) {
+    for (map&lt;string,double&gt;::const_iterator it = g.cbegin(); it != g.cend(); ++it)
+        cout &lt;&lt; it-&gt;first &lt;&lt; " " &lt;&lt; it-&gt;second &lt;&lt; endl;
+}
+
+// same list, in reverse key order
+void printBackward(const map&lt;string,double&gt; &amp;g) {
+    for (map&lt;string,double&gt;::const_reverse_iterator it = g.crbegin(); it != g.crend(); ++it)
+        cout &lt;&lt; it-&gt;first &lt;&lt; " " &lt;&lt; it-&gt;second &lt;&lt; endl;
+}
+
+// look up a name WITHOUT inserting it
+void lookup(const map&lt;string,double&gt; &amp;g, const string &amp;name) {
+    map&lt;string,double&gt;::const_iterator it = g.find(name);
+    if (it == g.end())
+        cout &lt;&lt; name &lt;&lt; ": not enrolled" &lt;&lt; endl;
+    else
+        cout &lt;&lt; name &lt;&lt; ": " &lt;&lt; it-&gt;second &lt;&lt; endl;
+}
+
+int main() {
+    map&lt;string,double&gt; grades;
+    grades["Carol"] = 91.5;
+    grades["Alice"] = 88.0;
+    grades["Bob"]   = 74.25;
+
+    cout &lt;&lt; "--- forward ---" &lt;&lt; endl;
+    printForward(grades);
+    cout &lt;&lt; "--- backward ---" &lt;&lt; endl;
+    printBackward(grades);
+    cout &lt;&lt; "--- lookups ---" &lt;&lt; endl;
+    lookup(grades, "Bob");
+    lookup(grades, "Dave");
+    cout &lt;&lt; "size is still " &lt;&lt; grades.size() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">--- forward ---
+Alice 88
+Bob 74.25
+Carol 91.5
+--- backward ---
+Carol 91.5
+Bob 74.25
+Alice 88
+--- lookups ---
+Bob: 74.25
+Dave: not enrolled
+size is still 3</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li><code>Alice 88</code> prints without a decimal point even though it was stored as <code>88.0</code>. The
+        six-significant-digit default drops trailing zeros &mdash; a favorite exam trap.</li>
+      <li><code>size is still 3</code> is the assertion the whole problem is built around. Rewrite <code>lookup</code>
+        with <code>g[name]</code> and it becomes 4.</li>
+      <li>Passing by <code>const</code> reference does three jobs at once: it avoids copying the map, it
+        documents that the function does not modify it, and it makes the <code>operator[]</code> mistake a
+        compile error.</li>
+      <li><code>it-&gt;second</code> is only read inside the <code>else</code>. Reading it after a failed <code>find</code> would be
+        dereferencing <code>end()</code>.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; A sortable <code>Course</code> class <span class="muted small">(added)</span></h3>
+
+<p>Write a class <code>Course</code> with private members <code>dept</code> (a <code>string</code>) and <code>number</code> (an <code>int</code>), a default
+constructor, a two-argument constructor, <code>const</code> accessors, and a <code>const print()</code>. Overload
+<code>operator&lt;</code> so that courses order by department and then by number. Then, in <code>main</code>, put four
+courses into a <code>set&lt;Course&gt;</code> &mdash; one of them a duplicate &mdash; and print them; and
+separately <code>sort</code> a <code>vector&lt;Course&gt;</code> of the same courses.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Three pieces. (1) The class, written the way every class in this course
+  is written: private data, public accessors marked <code>const</code>, a default constructor and a
+  value constructor. (2) The free <code>operator&lt;</code>, lexicographic on <code>dept</code> then <code>number</code>, using the
+  accessors because the data is private &mdash; the same constraint that shaped the free operators
+  in Class 17. (3) A <code>main</code> that exercises the two containers. Nothing about the <code>sort</code> call needs a
+  comparison function, because <code>operator&lt;</code> is already there.</p>
+<div class="codewrap"><div class="cap">p5_course.cpp</div><pre><code class="language-cpp">// p5_course.cpp -- a user-defined class with operator&lt;, in a set and sorted in a vector
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;set&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+class Course {
+public:
+    Course() { number = 0; }
+    Course(const string &amp;d, int n) { dept = d; number = n; }
+    string getdept() const { return dept; }
+    int getnumber() const { return number; }
+    void print() const { cout &lt;&lt; dept &lt;&lt; " " &lt;&lt; number; }
+private:
+    string dept;
+    int number;
+};
+
+bool operator&lt; (const Course &amp;u, const Course &amp;v) {
+    if (u.getdept() != v.getdept()) return u.getdept() &lt; v.getdept();
+    return u.getnumber() &lt; v.getnumber();
+}
+
+int main() {
+    set&lt;Course&gt; catalog;
+    catalog.insert(Course("CSCI", 211));
+    catalog.insert(Course("MATH", 141));
+    catalog.insert(Course("CSCI", 111));
+    catalog.insert(Course("CSCI", 211));      // duplicate: ignored
+
+    cout &lt;&lt; "catalog size = " &lt;&lt; catalog.size() &lt;&lt; endl;
+    for (set&lt;Course&gt;::const_iterator it = catalog.cbegin(); it != catalog.cend(); ++it) {
+        it-&gt;print();
+        cout &lt;&lt; endl;
+    }
+
+    vector&lt;Course&gt; schedule;
+    schedule.push_back(Course("MATH", 141));
+    schedule.push_back(Course("CSCI", 211));
+    schedule.push_back(Course("CSCI", 111));
+    sort(schedule.begin(), schedule.end());
+    cout &lt;&lt; "--- sorted vector ---" &lt;&lt; endl;
+    for (size_t i = 0; i &lt; schedule.size(); ++i) {
+        schedule[i].print();
+        cout &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<pre class="out">catalog size = 3
+CSCI 111
+CSCI 211
+MATH 141
+--- sorted vector ---
+CSCI 111
+CSCI 211
+MATH 141</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><strong>One operator, two payoffs.</strong> The same <code>operator&lt;</code> made <code>set&lt;Course&gt;</code>
+      legal and made <code>sort</code> work on the vector. It would also make <code>map&lt;Course, string&gt;</code>
+      legal. Write it once.</li>
+    <li>Delete the operator and the program fails to compile in two places, with the
+      <code>std::less&lt;Course&gt;</code> error from &sect;8 for the set and a similar one from inside <code>sort</code>.</li>
+    <li>Comparing <code>dept</code> before <code>number</code> matters. Ordering by <code>number</code> first would interleave the
+      departments &mdash; <code>CSCI 111</code>, <code>MATH 141</code>, <code>CSCI 211</code>.</li>
+    <li>The duplicate <code>CSCI 211</code> was dropped. Equality was decided entirely by <code>operator&lt;</code>:
+      neither of the two is less than the other, so the set treats them as one element. <code>Course</code> has
+      no <code>operator==</code> at all.</li>
+    <li><code>it-&gt;print()</code> calls a member function through the iterator, and it compiles only because
+      <code>print()</code> is marked <code>const</code> &mdash; a set's elements are always <code>const</code>. This is the payoff for
+      the <code>const</code>-correctness habit from Class 10; skip the <code>const</code> on <code>print()</code> and this loop will
+      not build.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>The <strong>STL</strong> is built entirely from class templates and has three parts:
+        <strong>containers</strong> (<code>string</code>, <code>vector</code>, <code>set</code>, <code>map</code>), <strong>iterators</strong>,
+        and <strong>algorithms</strong> (<code>sort</code>).</li>
+      <li>A <strong><code>set</code></strong> (<code>#include &lt;set&gt;</code>) keeps its elements <strong>sorted</strong>
+        and <strong>unique</strong>; the index <em>is</em> the value. Use <code>insert</code>, <code>count</code>, <code>find</code>,
+        <code>erase</code>. There is no <code>operator[]</code> and no <code>push_back</code>.</li>
+      <li>A <strong><code>map</code></strong> (<code>#include &lt;map&gt;</code>) holds <strong>(key, value)</strong> pairs
+        sorted by key, and the key need not be an integer. Keys are unique.</li>
+      <li><strong><code>m[k] = v</code> overwrites; <code>m.insert({k,v})</code> does nothing if <code>k</code> already exists.</strong>
+        And <code>m[k]</code> <strong>inserts even when you only read it</strong> &mdash; use <code>count</code> or <code>find</code>
+        to test for a key, never <code>operator[]</code>.</li>
+      <li>An <strong>iterator</strong> is a generalization of a pointer: <code>*it</code> to read the element,
+        <code>++it</code> to advance, <code>it != c.end()</code> to stop. Its type is the container's own, such as
+        <code>set&lt;int&gt;::iterator</code>.</li>
+      <li><code>end()</code> points <strong>one place past</strong> the last element, so the range is half-open
+        and an empty container works with no special case. Never dereference <code>end()</code>.</li>
+      <li>A map iterator refers to a <code>pair&lt;const Key, Value&gt;</code>: reach the key with
+        <code>it-&gt;first</code> and the value with <code>it-&gt;second</code>. The key is <code>const</code>; the value is not.</li>
+      <li>Four flavors of iterator: forward (<code>begin</code>/<code>end</code>), reverse (<code>rbegin</code>/<code>rend</code>), <code>const</code>
+        forward (<code>cbegin</code>/<code>cend</code>) and <code>const</code> reverse (<code>crbegin</code>/<code>crend</code>). <strong>All four advance
+        with <code>++</code>.</strong></li>
+      <li>To put a class of your own in a <code>set</code>, or to use it as a <code>map</code> key, you must overload
+        <strong><code>operator&lt;</code></strong> &mdash; the Class 17 skill, now load-bearing. Compare every
+        distinguishing field, lexicographically, or the container will treat different objects as
+        duplicates.</li>
+      <li><code>sort</code> from <code>#include &lt;algorithm&gt;</code> takes a start iterator, a one-past-the-end
+        iterator, and an <em>optional</em> comparison function. It works on a <code>vector</code>, not on a
+        <code>set</code> or <code>map</code> &mdash; which are sorted already.</li>
+    </ul>
+    <p><strong>Coming up in Class 28:</strong> the final review &mdash; we put the whole semester back
+    together, from pointers and the Big Three through inheritance, polymorphism and templates, and
+    work the exam formats end to end.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 26 &middot; Class Templates</div><div class="pending">posts Thu Dec 3</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 28 &middot; Final Review</div><div class="pending">posts Thu Dec 10</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

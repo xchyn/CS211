@@ -1,0 +1,3130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 10 — Classes II | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 10 &middot; Classes II</span><span class="sep">|</span><span class="where">Thu Oct 1</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 10 &middot; CSCI 211</div>
+  <h1>Classes II &mdash; Encapsulation and Member Functions</h1>
+  <p class="sub">The class you built last time held data. Today it grows behavior, and then it locks its data away behind that behavior &mdash; which is the point the whole course has been building to since Class 1.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Write a class method (member function) inside a class body, and call it with the dot operator.</li>
+      <li>Tag a method <code>const</code>, say exactly what that promises, and predict the compiler error you get when the promise is broken.</li>
+      <li>Write accessor ("get") and mutator ("set") methods, and say which of the two can be <code>const</code>.</li>
+      <li>Move data members behind the <code>private</code> keyword and recognize the g++ error that outside code now gets.</li>
+      <li>Explain what encapsulation buys you in terms an employer would care about, not just as a slogan.</li>
+      <li>Declare a pointer to an object, allocate one with <code>new</code>, reach its members with the arrow operator, and release it with <code>delete</code>.</li>
+      <li>Say precisely when to write <code>.</code> and when to write <code>-&gt;</code>, and read the two g++ errors that come from getting it backwards.</li>
+      <li>Define a method outside its class body using the scope-resolution operator <code>::</code>, and split a class into a header file and an implementation file.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">A class can contain functions too</a></li>
+    <li><a href="#s2"><code>const</code> member functions</a></li>
+    <li><a href="#s3">Accessor and mutator methods</a></li>
+    <li><a href="#s4"><code>private</code>: encapsulation becomes syntax</a></li>
+    <li><a href="#s5">Working through the interface</a></li>
+    <li><a href="#s6">Pointers to objects and the arrow operator</a></li>
+    <li><a href="#s7">Defining methods outside the class</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>A class can contain functions too</h2>
+
+<p>In Class 9 a class was a container of data. You wrote <code>class Point { public: double x, y; };</code>, you
+declared an object with <code>Point apt;</code>, and you reached into it with the dot operator: <code>apt.x = 2.5;</code>.
+Useful, but so far a class is only a way to keep related variables side by side. It has no behavior
+of its own.</p>
+
+<p>Today it gets some. Here is the whole idea, in the course notes' own words:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; from the course notes</span></div>
+  <div class="bd">
+    <ul>
+      <li>A class can contain more than just data.</li>
+      <li>A class can also contain <em>functions</em>.</li>
+      <li>Functions which belong to a class are called <strong>class methods</strong>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; class method / member function</span></div>
+  <div class="bd">
+    <p>A <strong>class method</strong> &mdash; also called a <strong>member function</strong> &mdash;
+    is a function declared inside a class. It is an ordinary C++ function in every respect except
+    one: it belongs to the class, so when you call it, it is always called <em>on some object</em>,
+    and inside the body the data member names refer to <em>that</em> object's data.</p>
+    <p>The two names mean exactly the same thing. The course notes say "method"; the C++ standard
+    says "member function"; exam questions in this course use both. Get comfortable with each.</p>
+  </div>
+</div>
+
+<p>Three mechanical facts to notice before the example, all straight from the notes:</p>
+
+<ul>
+  <li>The dot operator applies to class methods using exactly the same syntax as for class data.
+    You wrote <code>apt.x</code>; you now write <code>bpt.print()</code>.</li>
+  <li>A class method must have a return type. In these first examples it is <code>void</code>, but it is
+    written out just like any function's return type.</li>
+  <li>A method is a function just like any other C++ function. The only difference is that it
+    belongs to a class.</li>
+</ul>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the first class with methods</span></div>
+  <div class="bd">
+    <p>This is the course notes' program. The class now has a <em>data</em> section and a
+    <em>methods</em> section. Read <code>set</code> and <code>print</code> carefully &mdash; notice that neither of them
+    mentions any object at all, and neither of them declares <code>x</code> or <code>y</code>. Predict the output.</p>
+<div class="codewrap"><div class="cap">methods.cpp</div><pre><code class="language-cpp">// methods.cpp -- a class that contains functions as well as data
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    // data
+    double x, y;
+
+    // methods
+    void set(double a, double b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+};
+
+int main() {
+    Point bpt;
+    bpt.set(1.23, 4.56);    // dot operator for class methods
+    bpt.print();            // dot operator for class methods
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56</pre>
+<p>The interesting part is what is <em>not</em> written. Inside <code>set</code>, the bare names <code>x</code> and <code>y</code>
+are not local variables and not globals &mdash; they are the data members of whichever object the
+method was called on. Because <code>main</code> wrote <code>bpt.set(...)</code>, the assignment <code>x = a;</code> lands in
+<code>bpt</code>'s <code>x</code>. If <code>main</code> had two points and called <code>apt.set(...)</code> instead, the identical
+line of code would land in <code>apt</code>'s <code>x</code>.</p>
+<table class="trace">
+  <tr><th>Statement in <code>main</code></th><th>What actually happens</th></tr>
+  <tr><td><code>Point bpt;</code></td><td>Memory for one <code>Point</code> is set aside: two <code>double</code>s. No method runs.</td></tr>
+  <tr><td><code>bpt.set(1.23, 4.56);</code></td><td>The shared function <code>set</code> runs <em>with <code>bpt</code> as its object</em>. <code>a</code> becomes 1.23, <code>b</code> becomes 4.56, and the two assignments write into <code>bpt</code>.</td></tr>
+  <tr><td><code>bpt.print();</code></td><td>The shared function <code>print</code> runs with <code>bpt</code> as its object, reads <code>bpt</code>'s <code>x</code> and <code>y</code>, and sends them to <code>cout</code>.</td></tr>
+</table>
+<p>And the formatting detail that costs points on exams: <code>4.56</code> prints as <code>4.56</code>, but if you had
+called <code>bpt.set(1.0, 2.0)</code> the output would be <code>print x,y 1 2</code>. <code>cout</code> drops trailing
+zeros by default. Write it that way in an exam answer.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; naming a parameter after a data member</span></div>
+  <div class="bd">
+    <p>The professor named the parameters <code>a</code> and <code>b</code>, not <code>x</code> and <code>y</code>, and that is deliberate. If
+    you write</p>
+<pre><code class="language-cpp">    void set(double x, double y) {
+        x = x;          // does nothing useful
+        y = y;
+    }</code></pre>
+    <p>then inside the method the name <code>x</code> means the <em>parameter</em>, not the data member &mdash;
+    the closer declaration wins. The line <code>x = x;</code> assigns the parameter to itself and the object is
+    never touched. It compiles, it runs, and it silently does nothing. There is a fix using the
+    <code>this</code> pointer, which we meet in Class 15; until then just give the parameters different
+    names.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.1</div>
+  <div class="bd">
+    <p>Using the <code>Point</code> class from the worked example above.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many copies of the function <code>set</code> exist in the compiled program if <code>main</code> creates five <code>Point</code> objects? How many copies of <code>x</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>One</strong> copy of <code>set</code>, and <strong>five</strong> copies of <code>x</code>.</p>
+        <p>Methods are compiled once and shared by every object of the class &mdash; there is only
+        one set of machine instructions for <code>set</code> in the whole executable. Data members are
+        per-object; that is the entire reason objects exist. What varies from call to call is
+        <em>which</em> object the method operates on, and that is decided by whatever sits to the
+        left of the dot.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Inside <code>print</code>, would it be legal to write <code>bpt.x</code> instead of <code>x</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. The class knows nothing about a variable named <code>bpt</code>; that name exists only
+        inside <code>main</code>. The class is a blueprint, written once, and it has to work for every object
+        ever made from it &mdash; including objects that have not been given a name at all.</p>
+        <p>Inside a method, an unqualified data-member name already means "this object's copy". That
+        is precisely what makes one shared function able to serve every object.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Add a method <code>void reset()</code> that sets both coordinates to zero, written in terms of the existing <code>set</code> method. Can one method call another?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes, and with no dot in front of it:</p>
+<pre><code class="language-cpp">    void reset() {
+        set(0.0, 0.0);
+    }</code></pre>
+        <p>Inside a method, calling <code>set(0.0, 0.0)</code> means "call <code>set</code> on the same object I was called
+        on." This is the same rule as (b), applied to methods instead of data. It is also why
+        <code>print</code> in a class can call <code>area()</code> or <code>getx()</code> directly, which we lean on constantly from
+        here on.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span><code>const</code> member functions</h2>
+
+<p>You have already met <code>const</code> twice in this course: on a variable in Class 1
+(<code>const int DAYS_IN_WEEK = 7;</code>) and on a reference parameter in Class 2
+(<code>void show(const string &amp;s)</code>). This is the third use, and syntactically it is the odd one,
+because the keyword goes in a place you have not seen before &mdash; <em>after</em> the parameter
+list.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>const</code> member function</span></div>
+  <div class="bd">
+    <p>A method written as</p>
+<pre><code class="language-cpp">    void print() const {  ...  }</code></pre>
+    <p>is a <strong><code>const</code> member function</strong>. Tagging a class method <code>const</code> is a promise to
+    the compiler that <strong>the method will not change the values of the internal data in the
+    class.</strong></p>
+    <p>The <code>const</code> goes after the parameter list and before the opening brace. It is part of the
+    method's signature, so if you later define the body outside the class it must appear in
+    <em>both</em> places (&sect;7).</p>
+  </div>
+</div>
+
+<p>The course notes state the rule for our two methods directly:</p>
+
+<ul>
+  <li>Obviously <code>print()</code> does not change the values of <code>x</code> and <code>y</code>. Hence <code>print()</code> can be tagged
+    as <code>const</code>.</li>
+  <li>However <code>set(...)</code> changes the values of <code>x</code> and <code>y</code>. Hence <code>set(...)</code> cannot be tagged as
+    <code>const</code>.</li>
+</ul>
+
+<p>So what does the promise actually buy? Two things, and the second one is the one that matters.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; breaking the promise inside the method</span></div>
+  <div class="bd">
+    <p>The first thing <code>const</code> buys you is that the compiler checks the method's own body. Here
+    someone has tagged the mutator <code>const</code> &mdash; perhaps out of a vague sense that <code>const</code> is
+    always good. What does g++ say?</p>
+<div class="codewrap"><div class="cap">constbad.cpp</div><pre><code class="language-cpp">// constbad.cpp -- tagging a mutator const: the promise is broken
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+    void set(double a, double b) const {   // WRONG: set changes the object
+        x = a;
+        y = b;
+    }
+};
+
+int main() {
+    Point p;
+    p.set(1.0, 2.0);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constbad.cpp: In member function 'void Point::set(double, double) const':
+constbad.cpp:9:11: error: assignment of member 'Point::x' in read-only object
+    9 |         x = a;
+      |         ~~^~~
+constbad.cpp:10:11: error: assignment of member 'Point::y' in read-only object
+   10 |         y = b;
+      |         ~~^~~</pre>
+<p><em>"assignment of member ... in read-only object"</em> is the phrasing to memorize. Inside a
+<code>const</code> method, every data member of the object is treated as read-only, so the two assignments are
+rejected. Note that the error points at the <em>body</em>, not at the <code>const</code> keyword &mdash; g++
+believes your promise and blames the code that breaks it. The fix is to delete the <code>const</code>, because
+a mutator genuinely does change the object.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the promise as seen from outside</span></div>
+  <div class="bd">
+    <p>The second and far more important payoff: once an object is <code>const</code>, or is reached through a
+    <code>const</code> reference, <strong>only its <code>const</code> methods may be called.</strong> Here <code>show</code> takes a
+    <code>const Point &amp;</code> &mdash; the Class 2 idiom for "pass a big thing cheaply, and promise not to
+    change it." It calls one method that is <code>const</code> and one that is not.</p>
+<div class="codewrap"><div class="cap">constobj.cpp</div><pre><code class="language-cpp">// constobj.cpp -- a const object may only call const methods
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+    void set(double a, double b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+};
+
+void show(const Point &amp;p) {
+    p.print();               // fine: print is const
+    p.set(0.0, 0.0);         // error: set is not const
+}
+
+int main() {
+    Point bpt;
+    bpt.set(1.23, 4.56);
+    show(bpt);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constobj.cpp: In function 'void show(const Point&amp;)':
+constobj.cpp:19:10: error: passing 'const Point' as 'this' argument discards qualifiers [-fpermissive]
+   19 |     p.set(0.0, 0.0);         // error: set is not const
+      |     ~~~~~^~~~~~~~~~
+constobj.cpp:8:10: note:   in call to 'void Point::set(double, double)'
+    8 |     void set(double a, double b) {
+      |          ^~~~</pre>
+<p><em>"discards qualifiers"</em> is g++'s way of saying: <em>you have a read-only handle on this
+object and you tried to call a method that reserves the right to write to it.</em> The line
+<code>p.print();</code> is accepted without complaint, because <code>print</code> is <code>const</code> and therefore safe.</p>
+<p>The word <code>this</code> in the message is a forward reference &mdash; every method receives a hidden
+pointer to the object it was called on, and that pointer is what carries the <code>const</code>. We take
+<code>this</code> apart properly in Class 15. For now, read "discards qualifiers" as "non-<code>const</code> method,
+<code>const</code> object."</p>
+<p>Here is why this matters more than the first example. The moment anyone in your program writes a
+function taking <code>const YourClass &amp;</code>, every method they need must already be <code>const</code>. If you
+forgot the keyword when you wrote the class, <em>their</em> code will not compile, and the fix has
+to happen in <em>your</em> file. So the rule is not "add <code>const</code> when it seems tidy." It is:</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>If a method does not change the object, mark it <code>const</code>.</strong> Do it when you write
+    the method, not later. It costs one word, it is checked by the compiler, and leaving it off
+    quietly makes your class unusable through <code>const</code> references &mdash; which is how objects are
+    passed to functions for the rest of this course.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.2</div>
+  <div class="bd">
+    <p>For each method of a hypothetical <code>BankAccount</code> class, say whether it should be tagged
+    <code>const</code>, and why.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>double getBalance()</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Yes</strong> &mdash; <code>double getBalance() const</code>. It reads a data member and hands
+        the value back; nothing in the object changes. Every accessor in this course should be
+        <code>const</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>void deposit(double amount)</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> <code>deposit</code> writes to the balance. Tagging it <code>const</code> produces exactly
+        the <em>"assignment of member ... in read-only object"</em> error from the worked example
+        above.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>void print()</code>, which sends the balance to <code>cout</code> but does not touch a data member</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Yes</strong> &mdash; <code>void print() const</code>. Printing changes the screen, not the
+        object, and it is the object that <code>const</code> is about. This is the case people most often get
+        wrong, and the professor's own <code>print()</code> is <code>const</code> in every version of <code>Point</code> in the
+        notes.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>double applyInterest()</code>, which grows the balance and returns the interest earned</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> Do not be fooled by the return value &mdash; the question is never
+        "does this method return something", it is "does this method change the object." This one
+        changes the balance, so it cannot be <code>const</code>.</p>
+        <p><strong>The test to apply every time:</strong> read the method body and ask whether any
+        data member appears on the left of an assignment, is passed somewhere by non-<code>const</code>
+        reference, or is modified by <code>++</code>/<code>--</code>. If the answer is no anywhere in the body, write
+        <code>const</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Accessor and mutator methods</h2>
+
+<p>Once a class has methods, a naming convention appears that you will see in every C++ codebase you
+ever touch. The course notes introduce it exactly here.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; accessor and mutator</span></div>
+  <div class="bd">
+    <p><strong>Accessor</strong> methods return the values of data members in a class. That is why
+    accessor methods are also called <strong>"get" methods</strong>. Accessor methods can be tagged
+    as <code>const</code>, because they do not change the values of the data members in a class.</p>
+    <p><strong>Mutator</strong> methods set (or "mutate") the values of data members in a class.
+    Mutator methods are called <strong>"set"</strong> or <strong>"put"</strong> methods.</p>
+    <p>So <code>getx()</code> and <code>gety()</code> are accessors; <code>set(a, b)</code> is a mutator. Accessors are <code>const</code>;
+    mutators are not.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the professor's <code>getx</code>/<code>gety</code>/<code>set</code></span></div>
+  <div class="bd">
+    <p>This is the course notes' class with accessors added, plus two extra lines at the end of
+    <code>main</code> that were not in the notes. Those two lines are the point of the example: predict what
+    the <em>third</em> line of output is, and think about whether you like the answer.</p>
+<div class="codewrap"><div class="cap">accessors.cpp</div><pre><code class="language-cpp">// accessors.cpp -- accessor (get) and mutator (set) methods
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double getx() const { return x; }     // accessor method
+    double gety() const { return y; }     // accessor method
+
+    void set(double a, double b) {        // mutator method
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+
+    // data
+    double x, y;
+};
+
+int main() {
+    Point bpt;
+    bpt.set(1.23, 4.56);
+    bpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; bpt.getx() &lt;&lt; " " &lt;&lt; bpt.gety() &lt;&lt; endl;
+
+    bpt.x = -99.0;                        // still legal: x is public
+    bpt.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56
+print x,y -99 4.56</pre>
+<p>The first two lines are the notes' own output. The third line is the problem. We built a tidy
+little interface &mdash; <code>set</code> to write, <code>getx</code>/<code>gety</code> to read &mdash; and then <code>main</code> ignored all of
+it and assigned straight into <code>bpt.x</code>. Nothing stopped it, because <code>double x, y;</code> is sitting under
+<code>public:</code> in the same class.</p>
+<p>Notice also that a method body written on one line, <code>double getx() const { return x; }</code>, is
+completely ordinary C++. There is no special "one-line method" rule; it is just a function whose
+body happens to be short.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; accessors on public data are decoration</span></div>
+  <div class="bd">
+    <p>The class above is the version printed in the course notes, and taken on its own it is
+    <strong>self-defeating</strong>: it offers <code>getx()</code> and <code>gety()</code> as the controlled way to read
+    the coordinates while leaving <code>x</code> and <code>y</code> public, so <code>bpt.x = -99.0;</code> still compiles. Every
+    guarantee the accessors were supposed to provide is worth nothing.</p>
+    <p>The notes fix this a few slides later, and so do we, in &sect;4. But do not read this class as
+    a finished design. <strong>Accessors and mutators are only meaningful once the data they guard is
+    <code>private</code>.</strong> Writing getters and setters around public data is one of the most common
+    things beginners do that looks professional and accomplishes nothing.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.3</div>
+  <div class="bd">
+    <p>A <code>Rectangle</code> class stores <code>width</code> and <code>height</code>. A classmate proposes adding an accessor
+    <code>double getArea() const { return width * height; }</code> and objects that it is not a real accessor
+    because there is no data member called <code>area</code>.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Is <code>getArea()</code> a legitimate method for this class? Should it be <code>const</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Absolutely legitimate, and yes, <code>const</code>. A method that computes and returns a value
+        derived from the data members is one of the most useful things a class can offer, precisely
+        because the caller does not need to know whether the value is stored or computed.</p>
+        <p>That is encapsulation working in your favor: today <code>area</code> is computed on demand; if
+        profiling later showed it was worth caching in a data member, you could change the class and
+        no caller would notice.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Would you name it <code>getArea</code> or just <code>area</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Either is fine and both appear in real code. The <code>get</code> prefix is conventionally reserved
+        for "hand me back a stored data member", so many programmers write <code>area()</code> for a computed
+        value and <code>getWidth()</code> for a stored one. The course notes use the <code>get</code> prefix for the plain
+        accessors <code>getx</code>/<code>gety</code>, and Class 1's <code>Rectangle</code> used a bare <code>area()</code>. Pick a convention
+        and be consistent inside one class &mdash; that consistency is worth more than which
+        convention you picked.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span><code>private</code>: encapsulation becomes syntax</h2>
+
+<p>Class 1 defined <strong>encapsulation</strong> as keeping an object's data private and exposing it
+only through a controlled public interface, and then asked you to take it on faith that this was
+worth the trouble. Class 9 gave you <code>public:</code> and told you that <code>private</code> and <code>protected</code> existed
+but were "more complicated" and would come later. This is later. It is one keyword.</p>
+
+<p>The course notes open the topic by naming the flaw in everything we have written so far:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; from the course notes</span></div>
+  <div class="bd">
+    <p>An obvious weak feature of the <code>Point</code> class is that everything in the class is accessible to
+    outside calling applications (keyword <code>public</code>).</p>
+    <ol>
+      <li>The data members <code>x</code> and <code>y</code> become <strong>private</strong> data members of the class.</li>
+      <li>The keyword <code>private</code> means that outside applications cannot directly access the values of
+        <code>x</code> and <code>y</code>.</li>
+      <li>To access the class data, outside applications must go through a <strong>controlled
+        interface</strong> (the accessor and mutator methods).</li>
+      <li>We can therefore control outside access to the internal class data.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>public</code> and <code>private</code></span></div>
+  <div class="bd">
+    <p>Anything which is tagged <strong><code>public</code></strong> &mdash; data or methods &mdash; is
+    accessible to outside applications.</p>
+    <p>Anything which is tagged <strong><code>private</code></strong> &mdash; data or methods &mdash; is
+    accessible <strong>inside the class only</strong>.</p>
+    <p><code>public:</code> and <code>private:</code> are <em>labels</em>, not blocks: each one applies to every member
+    written after it, until the next label. A class may switch back and forth as many times as you
+    like, and the members do not have to be in any particular order.</p>
+  </div>
+</div>
+
+<p>Here is the professor's revised class. He renames it <code>Point1</code> so both versions can coexist in the
+notes. Structurally, exactly one thing changed: the word <code>public:</code> above <code>double x, y;</code> became
+<code>private:</code>.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same class, data moved behind the interface</span></div>
+  <div class="bd">
+    <p>The public section is identical to &sect;3's. Only the last two lines of the class differ.
+    Predict the output, then ask yourself what changed for the code in <code>main</code>.</p>
+<div class="codewrap"><div class="cap">private_point.cpp</div><pre><code class="language-cpp">// private_point.cpp -- the same Point, with its data moved behind the interface
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:                                   // keyword public
+    double getx() const { return x; }
+    double gety() const { return y; }
+
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+
+private:                                  // keyword private
+    double x, y;
+};
+
+int main() {
+    Point1 bpt;
+    bpt.set(1.23, 4.56);
+    bpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; bpt.getx() &lt;&lt; " " &lt;&lt; bpt.gety() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56</pre>
+<p>Byte for byte the same output as &sect;3. That is the whole point: <strong><code>private</code> changes
+nothing about what the program does and everything about what a future programmer is allowed to
+do.</strong> It is a compile-time restriction, not a run-time mechanism; it costs zero
+instructions.</p>
+<p>Two smaller changes the professor made in the same step, worth noticing because they will show up
+in his exam answers:</p>
+<ul>
+  <li><code>set</code> now takes <code>const double &amp;a, const double &amp;b</code> &mdash; <code>const</code> reference
+    parameters, from Class 2. For a <code>double</code> this is a wash (a reference is typically the same size
+    as the value), but it is the habit he wants: read-only parameters get <code>const &amp;</code>.</li>
+  <li>The methods are written <em>above</em> the data. That is a common style, because the interface
+    is what a reader of the class cares about and the data is an implementation detail. C++ does not
+    care about the order.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now the part that makes it real. Take that same class and add the line <code>main</code> used to be allowed
+to write.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what outside code gets now</span></div>
+  <div class="bd">
+    <p>Two lines have been added to <code>main</code>: one writes a private member, one reads one. Neither is
+    doing anything sinister &mdash; the first is the exact line that quietly worked in &sect;3.
+    Predict what g++ says about each.</p>
+<div class="codewrap"><div class="cap">private_err.cpp</div><pre><code class="language-cpp">// private_err.cpp -- outside code reaching for a private data member
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point1 bpt;
+    bpt.set(1.23, 4.56);
+    bpt.x = -99.0;                 // outside code writing a private member
+    cout &lt;&lt; bpt.y &lt;&lt; endl;         // outside code reading a private member
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">private_err.cpp: In function 'int main()':
+private_err.cpp:18:9: error: 'double Point1::x' is private within this context
+   18 |     bpt.x = -99.0;                 // outside code writing a private member
+      |         ^
+private_err.cpp:12:12: note: declared private here
+   12 |     double x, y;
+      |            ^
+private_err.cpp:18:9: note: field 'double Point1::x' can be accessed via 'double Point1::getx() const'
+   18 |     bpt.x = -99.0;                 // outside code writing a private member
+      |         ^
+      |         getx()
+private_err.cpp:19:17: error: 'double Point1::y' is private within this context
+   19 |     cout &lt;&lt; bpt.y &lt;&lt; endl;         // outside code reading a private member
+      |                 ^
+private_err.cpp:12:15: note: declared private here
+   12 |     double x, y;
+      |               ^
+private_err.cpp:19:17: note: field 'double Point1::y' can be accessed via 'double Point1::gety() const'
+   19 |     cout &lt;&lt; bpt.y &lt;&lt; endl;         // outside code reading a private member
+      |                 ^
+      |                 gety()</pre>
+<p>Learn the first line of that message by heart, because you will see it constantly for the rest of
+the semester:</p>
+<p><strong><code>error: 'double Point1::x' is private within this context</code></strong></p>
+<p>Three things to read out of it:</p>
+<ul>
+  <li>It is a <strong>compile-time</strong> error. No executable is produced. The mistake cannot
+    reach a user.</li>
+  <li>The <code>note: declared private here</code> line points at the exact declaration, so you never have to
+    guess which member it means &mdash; useful once classes have a dozen of them.</li>
+  <li>Modern g++ even suggests the accessor: <em>"field ... can be accessed via
+    <code>Point1::getx() const</code>"</em>. It has read your public section and found the intended
+    door. Do not skip past <code>note:</code> lines.</li>
+</ul>
+<p>Notice too that <em>reading</em> is blocked just as firmly as writing. <code>private</code> is not about
+protecting the data from corruption alone; it is about not letting anyone <em>depend</em> on the
+representation, in either direction.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Why this is worth the trouble</h3>
+
+<p>It is easy to hear "the compiler stops you writing <code>bpt.x</code>" and conclude that <code>private</code> is an
+annoyance invented to make simple things harder. Here is the argument in its concrete form.</p>
+
+<p>Suppose <code>Point1</code> had kept its data public and fifty files across a project read and wrote
+<code>p.x</code> and <code>p.y</code> directly. Now a requirement arrives: points must be stored in polar form, radius and
+angle, because that is what the graphics library wants. With public data, all fifty files are wrong,
+and worse, most of them still <em>compile</em> &mdash; they just silently mean something else now.
+With private data, you rewrite <code>getx()</code> as <code>return r * cos(theta);</code>, change <code>set</code>, and not one
+caller changes at all. That is the trade: <strong>a public data member is a promise about
+representation that you can never take back; a public method is a promise about behavior that you can
+keep while changing everything behind it.</strong></p>
+
+<p>The second payoff is enforcement. Once the only way in is a mutator, the mutator can refuse.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a mutator that says no</span></div>
+  <div class="bd">
+    <p>A circle's radius must not be negative. With a public data member there is nowhere to put that
+    rule. With a private one there is exactly one door, and the rule lives in it. Predict all four
+    lines.</p>
+<div class="codewrap"><div class="cap">circle.cpp</div><pre><code class="language-cpp">// circle.cpp -- private data lets the mutator enforce a rule
+#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r) {
+        if (r &lt; 0.0) {
+            cout &lt;&lt; "Circle: negative radius rejected" &lt;&lt; endl;
+            radius = 0.0;
+        } else {
+            radius = r;
+        }
+    }
+    double getRadius() const { return radius; }
+    double area() const { return 3.14159 * radius * radius; }
+    void print() const {
+        cout &lt;&lt; "Circle r = " &lt;&lt; radius &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double radius;
+};
+
+int main() {
+    Circle c;
+    c.setRadius(2.0);
+    c.print();
+
+    c.setRadius(-5.0);      // the class refuses
+    c.print();
+
+    cout &lt;&lt; "radius is " &lt;&lt; c.getRadius() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Circle r = 2, area = 12.5664
+Circle: negative radius rejected
+Circle r = 0, area = 0
+radius is 0</pre>
+<p>The rule "radius is never negative" is now a property of the <em>class</em>, not a discipline that
+every caller has to remember. A statement like this is called an <strong>invariant</strong>: a fact
+about the object that is true before and after every public method call. Invariants are the real
+reason for <code>private</code>, and a good exam answer about encapsulation names one instead of reciting the
+definition.</p>
+<p>Two details in the code: <code>print</code> calls <code>area()</code> with no dot, which is the &sect;1 rule again; and
+<code>area</code> is <code>const</code> while <code>setRadius</code> is not, which is the &sect;2 rule again. Every class you write
+from now on has this shape.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Private methods</h3>
+
+<p>The notes add one line that is easy to miss: <em>"It is also possible to write private class
+methods."</em> A private method is a helper &mdash; a piece of the implementation that the public
+methods use and that outside code has no business calling.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a helper that is not part of the interface</span></div>
+  <div class="bd">
+    <p><code>toF</code> is a conversion used by two public methods. It is nobody else's business.</p>
+<div class="codewrap"><div class="cap">privhelper.cpp</div><pre><code class="language-cpp">// privhelper.cpp -- a private method: a helper the outside world cannot call
+#include &lt;iostream&gt;
+using namespace std;
+
+class Temperature {
+public:
+    void setCelsius(double c) { celsius = c; }
+    double getFahrenheit() const { return toF(celsius); }
+    void report() const {
+        cout &lt;&lt; celsius &lt;&lt; "C = " &lt;&lt; toF(celsius) &lt;&lt; "F" &lt;&lt; endl;
+    }
+private:
+    double toF(double c) const { return c * 9.0 / 5.0 + 32.0; }   // private helper
+    double celsius;
+};
+
+int main() {
+    Temperature t;
+    t.setCelsius(100.0);
+    t.report();
+    cout &lt;&lt; "as F: " &lt;&lt; t.getFahrenheit() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">100C = 212F
+as F: 212</pre>
+<p>If <code>main</code> tried to call the helper directly with <code>t.toF(100.0);</code>, the error is the same shape as
+before, just about a method instead of a member:</p>
+<pre class="err">privhelper_err.cpp: In function 'int main()':
+privhelper_err.cpp:21:18: error: 'double Temperature::toF(double) const' is private within this context
+   21 |     cout &lt;&lt; t.toF(100.0) &lt;&lt; endl;
+      |             ~~~~~^~~~~~~
+privhelper_err.cpp:13:12: note: declared private here
+   13 |     double toF(double c) const { return c * 9.0 / 5.0 + 32.0; }   // private helper
+      |            ^~~</pre>
+<p>The value of this is that <code>toF</code> can be renamed, rewritten or deleted at any time without breaking
+a single line outside the class. Anything you put in <code>public:</code> you are stuck with; anything in
+<code>private:</code> stays yours.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; every <code>Point</code> so far is born uninitialized</span></div>
+  <div class="bd">
+    <p>None of the classes in Classes 9 and 10 has a <strong>constructor</strong>. So when you write
+    <code>Point1 bpt;</code>, memory is set aside for <code>x</code> and <code>y</code> and <em>nothing is written into it</em>. The
+    members hold whatever bytes happened to be there. Reading them before calling <code>set</code> is undefined
+    behavior, and compiling <code>bpt.print()</code> before <code>bpt.set(...)</code> gets you this from <code>-Wall</code>:</p>
+<pre class="err">uninit.cpp: In function 'int main()':
+uninit.cpp:15:14: warning: 'bpt' may be used uninitialized [-Wmaybe-uninitialized]
+   15 |     bpt.print();    // reading them is undefined behavior
+      |     ~~~~~~~~~^~</pre>
+    <p>and this at run time &mdash; the numbers are garbage from the stack and <strong>differ from
+    run to run</strong>, so treat them as representative only:</p>
+<pre class="out">print x,y 6.95335e-310 6.94338e-310
+print x,y 1.23 4.56</pre>
+    <p>Every example on this page calls <code>set</code> before reading, so all of them are safe. But note the
+    hole in the encapsulation story: we can stop outside code from writing nonsense into <code>x</code>, and we
+    still cannot stop an object from <em>starting out</em> as nonsense. Closing that hole is exactly
+    what a constructor is for, and it is the first thing we build in Class 13.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.4</div>
+  <div class="bd">
+    <p>Consider this class and the four lines of <code>main</code> beneath it.</p>
+<pre><code class="language-cpp">class Meter {
+public:
+    void setValue(int v) { value = v; }
+    int getValue() const { return value; }
+private:
+    int value;
+    void reset() { value = 0; }
+};
+
+int main() {
+    Meter m;
+    m.setValue(42);          // (i)
+    cout &lt;&lt; m.value &lt;&lt; endl; // (ii)
+    m.reset();               // (iii)
+    cout &lt;&lt; m.getValue();    // (iv)
+    return 0;
+}</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of the four lines compile?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Line</th><th>Verdict</th><th>Why</th></tr>
+          <tr><td>(i)</td><td>Compiles</td><td><code>setValue</code> is public.</td></tr>
+          <tr><td>(ii)</td><td><strong>Error</strong></td><td><code>'int Meter::value' is private within this context</code>.</td></tr>
+          <tr><td>(iii)</td><td><strong>Error</strong></td><td><code>'void Meter::reset()' is private within this context</code>. Methods obey the labels exactly as data does.</td></tr>
+          <tr><td>(iv)</td><td>Compiles</td><td><code>getValue</code> is public and <code>const</code>; calling a <code>const</code> method on a non-<code>const</code> object is always fine.</td></tr>
+        </table>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>reset</code> is unreachable from outside the class. Is it therefore useless?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. It is callable from any other method of <code>Meter</code> &mdash; <code>setValue</code> could call
+        <code>reset()</code> when handed a bad value, for instance. A private method is a piece of the
+        implementation, shared between the public methods, that the class reserves the right to
+        change or delete.</p>
+        <p>If it turned out that <em>nothing</em> in the class called it either, then yes, delete
+        it &mdash; but that is a dead-code problem, not a <code>private</code> problem.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A classmate "fixes" line (ii) by moving <code>int value;</code> up into the public section. Is that a fix?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It makes the error go away, which is not the same thing. It also throws away every
+        guarantee the class was offering: any line anywhere may now assign to <code>value</code>, and the class
+        can never change how the value is stored.</p>
+        <p>The real fix is the one g++ suggests in its <code>note:</code> line &mdash; call the accessor:</p>
+<pre><code class="language-cpp">    cout &lt;&lt; m.getValue() &lt;&lt; endl;   // (ii) fixed</code></pre>
+        <p>When the compiler tells you something is private, the answer is almost never "make it
+        public." It is "use the interface, or if the interface is genuinely missing something, add a
+        method to it."</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; put a class behind its interface</h3>
+
+<p>Take the <code>Circle</code> idea and write it yourself from scratch: private radius, a mutator that refuses
+a negative value, a <code>const</code> accessor, a <code>const</code> <code>area()</code>, and a <code>const</code> <code>print()</code>. Then have <code>main</code>
+prove that the guard works.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="28" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    // mutator: reject a negative radius
+
+
+    // accessor (const)
+
+
+    // area() and print(), both const
+
+
+private:
+    // the data, hidden
+
+};
+
+int main() {
+    Circle c;
+    // set a good radius, print it
+    // set a bad radius, print it again
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    // mutator: reject a negative radius
+
+
+    // accessor (const)
+
+
+    // area() and print(), both const
+
+
+private:
+    // the data, hidden
+
+};
+
+int main() {
+    Circle c;
+    // set a good radius, print it
+    // set a bad radius, print it again
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.5</div>
+  <div class="bd">
+    <p>Write the <code>Circle</code> class described above in full, with a <code>main</code> that demonstrates the guard,
+    and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> One data member, <code>double radius</code>, under <code>private:</code>. Four public
+      methods. Sort them by the &sect;2 test: <code>setRadius</code> writes, so it is not <code>const</code>;
+      <code>getRadius</code>, <code>area</code> and <code>print</code> only read, so all three are <code>const</code>. The guard goes inside
+      <code>setRadius</code> &mdash; that is the only place it <em>can</em> go now, which is the whole reason
+      this design is better than a public data member.</p>
+<div class="codewrap"><div class="cap">circle.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r) {
+        if (r &lt; 0.0) {
+            cout &lt;&lt; "Circle: negative radius rejected" &lt;&lt; endl;
+            radius = 0.0;
+        } else {
+            radius = r;
+        }
+    }
+    double getRadius() const { return radius; }
+    double area() const { return 3.14159 * radius * radius; }
+    void print() const {
+        cout &lt;&lt; "Circle r = " &lt;&lt; radius &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double radius;
+};
+
+int main() {
+    Circle c;
+    c.setRadius(2.0);
+    c.print();
+
+    c.setRadius(-5.0);      // the class refuses
+    c.print();
+
+    cout &lt;&lt; "radius is " &lt;&lt; c.getRadius() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Circle r = 2, area = 12.5664
+Circle: negative radius rejected
+Circle r = 0, area = 0
+radius is 0</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The semicolon after the closing brace of the class. Leave it off and the compiler
+          produces a cascade of errors starting at <code>int main</code>, several lines <em>below</em> the real
+          mistake.</li>
+        <li><code>print</code> calls <code>area()</code> unqualified. Writing <code>c.area()</code> inside the class would not
+          compile &mdash; the class has never heard of a variable called <code>c</code>.</li>
+        <li>Rejecting by clamping to <code>0.0</code> is one policy. Refusing to change the value at all, or
+          taking the absolute value, are equally defensible. The point is that <em>there is a
+          policy, in one place</em>. On an exam, say in a comment which policy you chose.</li>
+        <li><code>12.5664</code> is <code>3.14159 * 4</code> shown to six significant digits, <code>cout</code>'s default.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Working through the interface</h2>
+
+<p>Making the data private changes how <em>other</em> code has to be written. The course notes make
+this concrete with a free function &mdash; an ordinary, non-member function &mdash; that needs to
+look inside two objects.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a free function over private data</span></div>
+  <div class="bd">
+    <p><code>distance</code> computes the distance between two points. It is not a member of <code>Point1</code>, so it has
+    no special access to anything. Look at how it gets at the coordinates, and at the parameter
+    types. Predict the output &mdash; the numbers are chosen to make it come out exactly.</p>
+<div class="codewrap"><div class="cap">distance.cpp</div><pre><code class="language-cpp">// distance.cpp -- a free function that must go through the public interface
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+double distance(const Point1 &amp;a, const Point1 &amp;b) {
+    double dx = a.getx() - b.getx();
+    double dy = a.gety() - b.gety();
+    return sqrt(dx*dx + dy*dy);
+}
+
+int main() {
+    Point1 p1, p2;
+    p1.set(1.5, 2.5);
+    p2.set(4.5, -1.5);
+    double d = distance(p1, p2);
+    cout &lt;&lt; "distance = " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">distance = 5</pre>
+<p>The arithmetic: <code>dx</code> is <code>1.5 - 4.5 = -3</code> and <code>dy</code> is <code>2.5 - (-1.5) = 4</code>, so
+the distance is the hypotenuse of a 3-4-5 triangle. <code>sqrt</code> comes from <code>#include &lt;cmath&gt;</code>,
+which you need any time you use it.</p>
+<p>Now the two design points the notes emphasize.</p>
+<p><strong>First:</strong> because <code>x</code> and <code>y</code> are private, they cannot be accessed directly in the
+function <code>distance</code>. Their values must be obtained using the accessor methods <code>getx</code> and <code>gety</code>.
+Writing <code>a.x - b.x</code> would produce the <em>"is private within this context"</em> error from &sect;4.
+The class does not make an exception for code that has a good reason.</p>
+<p><strong>Second, and this is the subtle one:</strong> the parameters are tagged as <code>const</code>
+references. That is a promise to the compiler that the code inside <code>distance</code> will not change the
+data in <code>a</code> and <code>b</code>. <strong>That promise can only be satisfied because <code>getx</code> and <code>gety</code> are
+<code>const</code> methods.</strong> The two uses of <code>const</code> compose &mdash; a <code>const</code> reference is only useful
+if the class offers <code>const</code> methods to call through it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same function when the accessors forget <code>const</code></span></div>
+  <div class="bd">
+    <p>To see how tightly those two ideas are coupled, here is the identical <code>distance</code> function over
+    a class whose accessors are not <code>const</code>. Nothing else changed. Predict whether it compiles.</p>
+<div class="codewrap"><div class="cap">distance_nonconst.cpp</div><pre><code class="language-cpp">// distance_nonconst.cpp -- what happens if the accessors are not const
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() { return x; }        // NOT const
+    double gety() { return y; }        // NOT const
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+private:
+    double x, y;
+};
+
+double distance(const Point1 &amp;a, const Point1 &amp;b) {
+    double dx = a.getx() - b.getx();
+    double dy = a.gety() - b.gety();
+    return sqrt(dx*dx + dy*dy);
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">distance_nonconst.cpp: In function 'double distance(const Point1&amp;, const Point1&amp;)':
+distance_nonconst.cpp:16:23: error: passing 'const Point1' as 'this' argument discards qualifiers [-fpermissive]
+   16 |     double dx = a.getx() - b.getx();
+      |                 ~~~~~~^~
+distance_nonconst.cpp:8:12: note:   in call to 'double Point1::getx()'
+    8 |     double getx() { return x; }        // NOT const
+      |            ^~~~</pre>
+<p>Four errors, one per accessor call, and the class author has broken the client's code without
+touching the client's file. The compiler is right to complain: as far as it knows, <code>getx()</code> might
+modify the object, and <code>a</code> is a handle that promised not to.</p>
+<p>This is the practical reason the rule from &sect;2 is stated so bluntly. You cannot add <code>const</code> to
+your accessors "later" &mdash; by then, everyone who wanted to pass your objects by <code>const</code> reference
+has already worked around you.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; naming a function <code>distance</code></span></div>
+  <div class="bd">
+    <p>The standard library has a function template called <code>std::distance</code> (it lives in
+    <code>&lt;iterator&gt;</code>, which many headers pull in behind your back). With <code>using namespace std;</code> in
+    force, your <code>distance</code> and the library's are both visible under the same name.</p>
+    <p>The program above compiles because your version is a better match for two <code>Point1</code> arguments.
+    But this is the same hazard we hit with <code>swap</code> in Class 2, and it can bite in less lucky
+    circumstances. If you get a baffling error mentioning <code>std::distance</code>, rename yours &mdash;
+    <code>point_distance</code> is fine &mdash; or drop <code>using namespace std;</code>. We look at namespaces properly
+    in Class 16.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.6</div>
+  <div class="bd">
+    <p>Using the <code>Point1</code> class from the worked example above (private <code>x</code> and <code>y</code>, public <code>getx</code>,
+    <code>gety</code>, <code>set</code>, <code>print</code>, all as shown).</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write a free function <code>Point1 midpoint(const Point1 &amp;a, const Point1 &amp;b)</code> that returns the point halfway between <code>a</code> and <code>b</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It has to read through the accessors and write through the mutator &mdash; there is no
+        other way in:</p>
+<pre><code class="language-cpp">Point1 midpoint(const Point1 &amp;a, const Point1 &amp;b) {
+    Point1 m;
+    m.set((a.getx() + b.getx()) / 2.0,
+          (a.gety() + b.gety()) / 2.0);
+    return m;
+}</code></pre>
+        <p>Note the shape: declare a local object, <code>set</code> it, return it. That is exactly the shape of
+        the professor's <code>product</code> function in the Fall 2023 exam (Practice Problem 3), so it is worth
+        recognizing.</p>
+        <p><code>m</code> is <em>not</em> <code>const</code>, and must not be &mdash; we need to call <code>set</code> on it. Only the
+        parameters are <code>const</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Could <code>midpoint</code> have been written as a member function instead? What would change at the call site?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes. As a member it takes one parameter instead of two, because one of the two points is
+        the object it is called on:</p>
+<pre><code class="language-cpp">    Point1 midpoint(const Point1 &amp;b) const {
+        Point1 m;
+        m.set((x + b.getx()) / 2.0,
+              (y + b.gety()) / 2.0);
+        return m;
+    }</code></pre>
+        <p>Inside the class it uses <code>x</code> and <code>y</code> directly, with no accessor, because a method has full
+        access to its own object's private data. Less obviously, it could have written <code>b.x</code> and
+        <code>b.y</code> too: <strong>access control is per class, not per object</strong>, so a member function
+        of <code>Point1</code> can reach the private members of <em>any</em> <code>Point1</code> it can see. Both forms
+        compile; going through the accessors is a habit worth keeping anyway.</p>
+        <p>The call site changes from <code>midpoint(p1, p2)</code> to <code>p1.midpoint(p2)</code>. Neither is more
+        correct; free functions keep the class's interface small, members read more naturally when
+        the operation clearly belongs to one object.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Pointers to objects and the arrow operator</h2>
+
+<p>Classes 7 and 8 gave you pointers, <code>new</code> and <code>delete</code> over <code>int</code>s and arrays. None of that
+machinery cares what type it is pointing at, so it all works on objects unchanged. As the notes put
+it: the compiler automatically knows how to create pointers for a user-defined class, and it
+automatically sets up the operators <code>new</code> and <code>delete</code>.</p>
+
+<p>There is exactly one new piece of syntax, and it exists purely for convenience.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the arrow operator</span></div>
+  <div class="bd">
+    <p>The arrow operator <code>-&gt;</code> is the <strong>"pointer member of"</strong> operator. It is the
+    partner of the dot operator for objects. If <code>p</code> is a pointer to an object, the following two
+    statements are equivalent:</p>
+<pre><code class="language-cpp">    p-&gt;print();
+    (*p).print();</code></pre>
+    <p>It is simpler and more convenient to use the arrow operator for pointers. The arrow operator
+    <code>-&gt;</code> and the dot operator <code>.</code> have the same level of operator precedence.</p>
+    <p>Read <code>p-&gt;print()</code> out loud as <em>"follow the pointer <code>p</code>, then call <code>print</code> on what you
+    find."</em></p>
+  </div>
+</div>
+
+<p>Why the parentheses in <code>(*p).print()</code> are not optional is a direct consequence of Class 9's
+precedence rule: only <code>()</code> and <code>[]</code> bind more tightly than <code>.</code>, so <code>*</code> binds <em>less</em> tightly.
+That means <code>*p.print()</code> parses as <code>*(p.print())</code> &mdash; "call <code>print</code> on the pointer, then
+dereference the result" &mdash; which is nonsense. Here is what g++ says about it:</p>
+
+<pre class="err">starprec.cpp: In function 'int main()':
+starprec.cpp:16:8: error: request for member 'print' in 'p', which is of pointer type 'Point*' (maybe you meant to use '-&gt;' ?)
+   16 |     *p.print();         // missing parentheses
+      |        ^~~~~</pre>
+
+<p>The arrow operator exists so you never have to type those parentheses. Use it.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a pointer to an ordinary local object</span></div>
+  <div class="bd">
+    <p>Before any <code>new</code>, the simplest case: a pointer aimed at an object that already exists. Note
+    that <code>&amp;bpt</code> is the Class 7 address-of operator, doing exactly what it did for <code>int</code>s.
+    Predict all three lines.</p>
+<div class="codewrap"><div class="cap">arrowstack.cpp</div><pre><code class="language-cpp">// arrowstack.cpp -- a pointer to an ordinary local object (no new anywhere)
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    void set(double a, double b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point bpt;
+    bpt.set(1.23, 4.56);
+
+    Point *p = &amp;bpt;        // p points at an ordinary local object
+    p-&gt;print();             // arrow, because p is a pointer
+    bpt.print();            // dot, because bpt is an object
+
+    p-&gt;set(7.0, 8.0);       // changing it through the pointer...
+    bpt.print();            // ...changes bpt itself
+    return 0;               // no delete: nothing was allocated with new
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+print x,y 1.23 4.56
+print x,y 7 8</pre>
+<p>The first two lines are identical because <code>p</code> and <code>bpt</code> name the same object &mdash; one through
+an address, one directly. The third line is the proof: <code>p-&gt;set(7.0, 8.0)</code> reached through the
+pointer and changed <code>bpt</code> itself. There is no copy anywhere in this program.</p>
+<p>And no <code>delete</code>. <code>bpt</code> is an ordinary local object; it is destroyed automatically when <code>main</code>
+ends. <code>delete</code> is only ever for memory that came from <code>new</code>. Writing <code>delete p;</code> here would be a
+serious error &mdash; Class 8's rule, unchanged.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one object on the heap: <code>new</code>, <code>-&gt;</code>, <code>delete</code></span></div>
+  <div class="bd">
+    <p>This is the course notes' <code>new</code>/<code>delete</code> example, with the class filled in (see the warning
+    below). <code>new Point</code> allocates one <code>Point</code> and hands back its address &mdash; the singular form,
+    no <code>[]</code> anywhere, so the release is <code>delete p;</code> and not <code>delete [] p;</code>. Predict the three lines
+    of output.</p>
+<div class="codewrap"><div class="cap">arrowdemo.cpp</div><pre><code class="language-cpp">// arrowdemo.cpp -- a pointer to an object, new/delete, and the arrow operator
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(double a, double b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+int main() {
+    Point *p = new Point;              // one Point on the heap
+    p-&gt;set(1.23, 4.56);
+    p-&gt;print();
+    cout &lt;&lt; "get: " &lt;&lt; p-&gt;getx() &lt;&lt; " " &lt;&lt; p-&gt;gety() &lt;&lt; endl;
+
+    (*p).print();                      // exactly the same call, written out
+    delete p;                          // give the memory back
+    p = nullptr;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56
+print x,y 1.23 4.56</pre>
+<table class="trace">
+  <tr><th>Statement</th><th>What it does</th></tr>
+  <tr><td><code>Point *p = new Point;</code></td><td>Allocates enough memory for one <code>Point</code> on the heap and stores its address in <code>p</code>. <code>p</code> itself is an ordinary local pointer variable.</td></tr>
+  <tr><td><code>p-&gt;set(1.23, 4.56);</code></td><td>Follows the address, then calls <code>set</code> on the object there.</td></tr>
+  <tr><td><code>(*p).print();</code></td><td>Identical to <code>p-&gt;print()</code>. Shown once so you recognize it; never write it this way.</td></tr>
+  <tr><td><code>delete p;</code></td><td>Returns the heap memory. Singular <code>new</code>, singular <code>delete</code>.</td></tr>
+  <tr><td><code>p = nullptr;</code></td><td>Not required, but it turns a later accidental use of <code>p</code> from silent corruption into an immediate crash. Class 8's habit.</td></tr>
+</table>
+<p>Exams in this course ask for exactly this sequence &mdash; declare an object, <code>new</code> a second one,
+copy data across with <code>-&gt;</code>, call a method with <code>-&gt;</code>, <code>delete</code> &mdash; on four different midterms.
+Practice Problem 4 is one of them, essentially verbatim.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the class body in the original listing is incomplete</span></div>
+  <div class="bd">
+    <p>The <code>new</code>/<code>delete</code> program as printed in the course notes has its class body elided:</p>
+<pre><code class="language-cpp">class Point {
+// etc
+int main() {
+    Point * p = new Point;
+    p-&gt;set(1.23, 4.56);
+    ...</code></pre>
+    <p>There is no closing <code>};</code> &mdash; the <code>// etc</code> was meant as "the class from the previous slide
+    goes here", but as printed the file will not compile. It is worth seeing what g++ makes of it,
+    because the failure is instructive rather than obvious:</p>
+<pre class="err">code10c_asprinted.cpp:12:2: error: expected '}' at end of input
+   12 | }
+      |  ^
+code10c_asprinted.cpp:3:13: note: to match this '{'
+    3 | class Point {
+      |             ^
+code10c_asprinted.cpp: In member function 'int Point::main()':
+code10c_asprinted.cpp:7:8: error: 'class Point' has no member named 'set'
+    7 |     p-&gt;set(1.23, 4.56);
+      |        ^~~</pre>
+    <p>Look at the third line of that message: <strong><code>In member function 'int
+    Point::main()'</code></strong>. With no closing brace, the compiler kept reading and swallowed
+    <code>main</code> itself into the class. Everything after that is fallout &mdash; <code>Point</code> has no <code>set</code>
+    because we never finished telling the compiler what <code>Point</code> is.</p>
+    <p>The lesson generalizes well beyond this typo. <strong><code>-&gt;</code> is not magic punctuation; it is
+    a member lookup, and it needs a complete class definition in scope to look anything up in.</strong>
+    If <code>-&gt;</code> produces "has no member named ...", check the class definition before you check the
+    pointer. And when a brace is missing, believe the <em>first</em> error, not the twenty that
+    follow it.</p>
+    <p>The version compiled above restores the class the notes intended &mdash; the accessor/mutator
+    <code>Point</code> from &sect;3, with the data made private as in &sect;4.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.7</div>
+  <div class="bd">
+    <p>Two students each make one mistake. Given <code>Point bpt;</code> and <code>Point *p = new Point;</code>, one writes
+    <code>p.print();</code> and the other writes <code>bpt-&gt;print();</code>.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does g++ say about each, and which is easier to fix from the message alone?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both lines in one file give:</p>
+<pre class="err">dotarrow_err.cpp: In function 'int main()':
+dotarrow_err.cpp:17:7: error: request for member 'print' in 'p', which is of pointer type 'Point*' (maybe you meant to use '-&gt;' ?)
+   17 |     p.print();          // (1) dot on a pointer
+      |       ^~~~~
+dotarrow_err.cpp:18:8: error: base operand of '-&gt;' has non-pointer type 'Point'
+   18 |     bpt-&gt;print();       // (2) arrow on an object
+      |        ^~</pre>
+        <p>The first is easier: g++ literally asks <em>"maybe you meant to use <code>-&gt;</code>?"</em> The
+        second is blunter &mdash; <em>"base operand of <code>-&gt;</code> has non-pointer type"</em> &mdash; but
+        it tells you the same thing in reverse: you used the pointer operator on something that is
+        not a pointer.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> State a rule you can apply without thinking.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Look at the declaration of the thing on the left.</strong> If there is a <code>*</code> in
+        it, use <code>-&gt;</code>. If there is not, use <code>.</code></p>
+        <table class="trace">
+          <tr><th>Declaration</th><th>Reach a member with</th></tr>
+          <tr><td><code>Point bpt;</code></td><td><code>bpt.print()</code></td></tr>
+          <tr><td><code>Point *p = new Point;</code></td><td><code>p-&gt;print()</code></td></tr>
+          <tr><td><code>Point *p = &amp;bpt;</code></td><td><code>p-&gt;print()</code></td></tr>
+          <tr><td><code>Point &amp;r = bpt;</code></td><td><code>r.print()</code> &mdash; a reference is another name for the object, not a pointer</td></tr>
+        </table>
+        <p>The reference row is the one that catches people. <code>&amp;</code> in a declaration means
+        "another name for"; <code>*</code> means "the address of". Only the second one needs an arrow.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.8</div>
+  <div class="bd">
+    <p>Consider this fragment, using the <code>Point</code> class with private data and public <code>set</code>/<code>print</code>.</p>
+<pre><code class="language-cpp">    Point *p = new Point;
+    p-&gt;set(1.0, 2.0);
+    Point *q = p;
+    q-&gt;set(9.0, 9.0);
+    p-&gt;print();
+    delete p;</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does <code>p-&gt;print()</code> output?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">print x,y 9 9</pre>
+        <p><code>Point *q = p;</code> copies an <em>address</em>, not an object. There is still exactly one
+        <code>Point</code> on the heap and now two pointers aimed at it, so <code>q-&gt;set(9.0, 9.0)</code> and
+        <code>p-&gt;print()</code> are talking about the same object. This is Class 7's "copying an address vs.
+        copying a value" applied to a class.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> After <code>delete p;</code>, is it safe to write <code>q-&gt;print();</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. It is undefined behavior. <code>q</code> still holds the old address, but the object there has
+        been destroyed and the memory handed back &mdash; <code>q</code> is a <strong>dangling pointer</strong>.
+        It may print the old values, it may print garbage, it may crash, and which of those happens
+        can change between runs.</p>
+        <p>Setting <code>p = nullptr;</code> after the <code>delete</code> protects <code>p</code> and does nothing for <code>q</code>. That
+        asymmetry &mdash; one object, several pointers, one owner &mdash; is what makes manual memory
+        management hard, and it is the reason the copy constructor and destructor in Classes 13 and
+        14 matter so much.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> How would you get two independent <code>Point</code> objects instead?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Allocate twice, and release twice:</p>
+<pre><code class="language-cpp">    Point *p = new Point;
+    Point *q = new Point;      // a second, separate object
+    p-&gt;set(1.0, 2.0);
+    q-&gt;set(9.0, 9.0);
+    p-&gt;print();                // print x,y 1 2
+    q-&gt;print();                // print x,y 9 9
+    delete p;
+    delete q;</code></pre>
+        <p><strong>One <code>new</code>, one <code>delete</code>.</strong> Two <code>new</code>s and one <code>delete</code> is a leak; one <code>new</code>
+        and two <code>delete</code>s of the same address is a double free, which typically crashes. Count them
+        in every program you write.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; the same class, on the heap</h3>
+
+<p>Take your <code>Circle</code> from the earlier exercise and drive it entirely through a pointer: allocate one
+with <code>new</code>, set and print it with <code>-&gt;</code>, then release it. Write the long form <code>(*cp).area()</code> once,
+so you have seen it, and never again.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r);      // (paste your version from before)
+    double getRadius() const;
+    double area() const;
+    void print() const;
+private:
+    double radius;
+};
+
+int main() {
+    // allocate one Circle with new
+
+
+    // set its radius and print it, using -&gt;
+
+
+    // print the area once using the (*cp) form
+
+
+    // release it, and null the pointer
+
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r);      // (paste your version from before)
+    double getRadius() const;
+    double area() const;
+    void print() const;
+private:
+    double radius;
+};
+
+int main() {
+    // allocate one Circle with new
+
+
+    // set its radius and print it, using -&gt;
+
+
+    // print the area once using the (*cp) form
+
+
+    // release it, and null the pointer
+
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.9</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The class is unchanged &mdash; that is the point of the exercise.
+      Only <code>main</code> differs: <code>new Circle</code> instead of <code>Circle c;</code>, <code>-&gt;</code> instead of <code>.</code>, and a
+      matching <code>delete</code> at the end. Count one <code>new</code> and one <code>delete</code> before you compile.</p>
+<div class="codewrap"><div class="cap">circle_new.cpp</div><pre><code class="language-cpp">// circle_new.cpp -- one Circle on the heap, reached through the arrow operator
+#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r) {
+        if (r &lt; 0.0) {
+            cout &lt;&lt; "Circle: negative radius rejected" &lt;&lt; endl;
+            radius = 0.0;
+        } else {
+            radius = r;
+        }
+    }
+    double getRadius() const { return radius; }
+    double area() const { return 3.14159 * radius * radius; }
+    void print() const {
+        cout &lt;&lt; "Circle r = " &lt;&lt; radius &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double radius;
+};
+
+int main() {
+    Circle *cp = new Circle;        // allocate
+    cp-&gt;setRadius(3.0);             // arrow to reach the method
+    cp-&gt;print();
+    cout &lt;&lt; "area again = " &lt;&lt; (*cp).area() &lt;&lt; endl;   // the long form
+
+    delete cp;                      // release
+    cp = nullptr;                   // and do not leave the pointer dangling
+    return 0;
+}</code></pre></div>
+<pre class="out">Circle r = 3, area = 28.2743
+area again = 28.2743</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>Not one character of the class changed. A class does not know or care whether its objects
+          live on the stack or the heap; that is the caller's decision.</li>
+        <li><code>new Circle</code> with no parentheses and no arguments is the form to use until Class 13 gives
+          the class a constructor. <code>new Circle;</code> and <code>new Circle();</code> are not quite the same thing for
+          a class like this one &mdash; a detail we can safely leave alone for now.</li>
+        <li>Checking for leaks is not optional in a course whose exams award points for
+          <code>delete</code>. Running this under <code>valgrind</code> reports
+          <em>"All heap blocks were freed &mdash; no leaks are possible."</em> Forget the <code>delete</code>
+          and it reports a definite loss instead.</li>
+        <li><code>(*cp).area()</code> and <code>cp-&gt;area()</code> compile to identical code. The arrow exists because the
+          parentheses are easy to forget, and forgetting them gives the confusing
+          <em>"request for member ... which is of pointer type"</em> error.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Defining methods outside the class</h2>
+
+<p>Every method so far has had its body written inside the class body. That is called an
+<strong>inline definition</strong>, and for two-line methods it is perfect. For a class with real
+methods in it, the course notes point out the problem plainly: the declaration of the class becomes
+very long and is difficult to read and maintain.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; inline vs. non-inline definition</span></div>
+  <div class="bd">
+    <p>An <strong>inline method</strong> is one where the body of the function (class method) is
+    written inside the declaration of the class itself.</p>
+    <p>A <strong>non-inline</strong> method is <em>declared</em> in the class &mdash; return type,
+    name, parameters, semicolon &mdash; and <em>defined</em> elsewhere, with its name prefixed by the
+    class name and the <strong>scope-resolution operator</strong> <code>::</code>.</p>
+    <p>The prefix <code>Point2::</code> identifies the function as a method of the class <code>Point2</code>. Without it,
+    the compiler has no idea that the function you are defining is the one the class promised.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the class declaration, then the bodies</span></div>
+  <div class="bd">
+    <p>This is the course notes' <code>Point2</code>. The two short accessors stay inline; <code>set</code> and <code>print</code>
+    are declared with a semicolon and defined below. Read the four <code>::</code> prefixes carefully, and
+    predict the output &mdash; which should be extremely familiar by now.</p>
+<div class="codewrap"><div class="cap">point2_one.cpp</div><pre><code class="language-cpp">// point2_one.cpp -- the same class, methods defined outside the class body
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point2 {
+public:
+    const double&amp; getx() const { return x; }      // inline
+    const double&amp; gety() const { return y; }      // inline
+    void set(const double &amp;a, const double &amp;b);   // not inline
+    void print() const;                           // not inline
+private:
+    // data
+    double x, y;
+};
+
+void Point2::set(const double &amp;a, const double &amp;b) {
+    x = a;
+    y = b;
+}
+
+void Point2::print() const {
+    cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+}
+
+int main() {
+    Point2 cpt;
+    cpt.set(1.23, 4.56);
+    cpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; cpt.getx() &lt;&lt; " " &lt;&lt; cpt.gety() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56</pre>
+<p>Identical behavior again. Where a method's body lives has no effect on what it does &mdash; it is
+purely an organizational choice.</p>
+<p>Three syntax details that cost people marks:</p>
+<table class="trace">
+  <tr><th>Detail</th><th>Why it matters</th></tr>
+  <tr><td>The declaration inside the class ends with a <strong>semicolon</strong>, not a body.</td><td><code>void print() const;</code> &mdash; this is a promise that the definition exists somewhere.</td></tr>
+  <tr><td>The definition repeats the return type, then <code>ClassName::</code>, then the name and the full parameter list.</td><td><code>void Point2::print() const {</code>. The class name is not part of the return type; it prefixes the <em>function name</em>.</td></tr>
+  <tr><td><code>const</code> must appear in <strong>both</strong> the declaration and the definition.</td><td>It is part of the signature. Leave it off one of them and the two do not match.</td></tr>
+</table>
+<p>Inside the body, nothing changes: <code>x</code> and <code>y</code> are still the object's data members, still reachable
+by their bare names, and still private to everyone else. The <code>::</code> prefix is what puts the definition
+back inside the class's scope.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Both of those "cost people marks" details produce errors worth recognizing on sight. Drop the
+<code>Point2::</code> prefix and the compiler treats your definition as an unrelated free function, which knows
+nothing about <code>x</code>:</p>
+
+<pre class="err">noscope_err.cpp: In function 'void set(const double&amp;, const double&amp;)':
+noscope_err.cpp:14:5: error: 'x' was not declared in this scope
+   14 |     x = a;
+      |     ^</pre>
+
+<p>Declare a method <code>const</code> and then define it without the <code>const</code>, and the two signatures simply do
+not match &mdash; g++ says so, and helpfully prints the candidate it was expecting:</p>
+
+<pre class="err">constmissing_err.cpp:12:8: error: no declaration matches 'double Circle::area()'
+   12 | double Circle::area() {       // defined without const
+      |        ^~~~~~
+constmissing_err.cpp:7:12: note: candidate is: 'double Circle::area() const'
+    7 |     double area() const;      // declared const
+      |            ^~~~</pre>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; <code>Point2</code>'s accessors return a reference</span></div>
+  <div class="bd">
+    <p>Look closely at <code>const double&amp; getx() const { return x; }</code> in the professor's <code>Point2</code>.
+    Earlier versions returned <code>double</code> &mdash; a copy. This one returns a <code>const</code> reference to the
+    data member itself.</p>
+    <p>It is legal and it avoids a copy, but for a <code>double</code> there is nothing to save (a reference is
+    about the same size as the value it refers to), and it introduces a hazard the notes do not
+    mention: the reference is only valid while the object is. If the object is destroyed while
+    someone still holds the reference, that reference dangles &mdash; the same failure mode as the
+    dangling pointer in Quick Check 10.8.</p>
+    <p><strong>The safe default for a small type is to return by value:</strong>
+    <code>double getx() const { return x; }</code>, as in <code>Point1</code>. Returning <code>const&amp;</code> is a real technique,
+    but save it for members that are expensive to copy, like a <code>string</code> or a <code>vector</code>.</p>
+  </div>
+</div>
+
+<h3>Why you would bother: the header / implementation split</h3>
+
+<p>The real reason for non-inline definitions is the one Class 2 set up when we split a program into
+several files. The notes state it directly: it is possible to write the class declaration in a
+header file and to write the definitions of the method bodies in a separate <code>.cpp</code> file. There is
+also the nice feature that if the code in one <code>.cpp</code> file is edited, the rest of the project does not
+need to be recompiled &mdash; whereas if the code for an inline method is changed, all the code for
+the entire class must be recompiled.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; splitting a class into three files</span></div>
+  <div class="bd">
+    <ol>
+      <li><strong><code>point2.h</code></strong> &mdash; the class declaration only: data members and method
+        <em>declarations</em>, plus any tiny inline methods. Wrap it in an include guard.</li>
+      <li><strong><code>point2.cpp</code></strong> &mdash; <code>#include "point2.h"</code>, then the method bodies, each
+        prefixed with <code>Point2::</code>.</li>
+      <li><strong><code>main.cpp</code></strong> &mdash; any client of the class. It <code>#include</code>s the header and
+        nothing else about <code>Point2</code>; it never sees the bodies.</li>
+      <li>Compile each <code>.cpp</code> to an object file, then link them together.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the three files, built and run</span></div>
+  <div class="bd">
+    <p>The notes describe this split but never show the file pair, so here it is in full. Read the
+    header as the answer to the question <em>"what can I do with a <code>Point2</code>?"</em> and notice that it
+    answers that question without revealing a single method body.</p>
+<div class="codewrap"><div class="cap">point2.h</div><pre><code class="language-cpp">// point2.h -- the class declaration: the interface, and nothing else
+#ifndef POINT2_H
+#define POINT2_H
+
+class Point2 {
+public:
+    const double&amp; getx() const { return x; }      // inline
+    const double&amp; gety() const { return y; }      // inline
+    void set(const double &amp;a, const double &amp;b);   // not inline
+    void print() const;                           // not inline
+private:
+    // data
+    double x, y;
+};
+
+#endif</code></pre></div>
+<div class="codewrap"><div class="cap">point2.cpp</div><pre><code class="language-cpp">// point2.cpp -- the implementation: the method bodies
+#include &lt;iostream&gt;
+#include "point2.h"
+using namespace std;
+
+void Point2::set(const double &amp;a, const double &amp;b) {
+    x = a;
+    y = b;
+}
+
+void Point2::print() const {
+    cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+}</code></pre></div>
+<div class="codewrap"><div class="cap">main.cpp</div><pre><code class="language-cpp">// main.cpp -- a client of the class: includes only the header
+#include &lt;iostream&gt;
+#include "point2.h"
+using namespace std;
+
+int main() {
+    Point2 cpt;
+    cpt.set(1.23, 4.56);
+    cpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; cpt.getx() &lt;&lt; " " &lt;&lt; cpt.gety() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+    <p>Compile each source file separately, then link the two object files:</p>
+<pre class="shell">g++ -c point2.cpp
+g++ -c main.cpp
+g++ point2.o main.o -o pointprog
+./pointprog</pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56</pre>
+<p>Same output as the single-file version, of course. What changed is everything around it:</p>
+<ul>
+  <li><strong><code>main.cpp</code> never sees the bodies of <code>set</code> and <code>print</code>.</strong> It only needs to know
+    that they exist and what they take. That is the interface/implementation split from Class 1, now
+    enforced by the file system.</li>
+  <li><strong>Editing <code>point2.cpp</code> only requires recompiling <code>point2.cpp</code>.</strong> Rerun the last
+    two commands and you are done &mdash; <code>main.o</code> is untouched. On a project with hundreds of files
+    that is the difference between a two-second build and a two-minute one.</li>
+  <li><strong>Editing <code>point2.h</code> requires recompiling everything that includes it</strong>, which is
+    exactly why inline bodies are a cost: they live in the header, so changing one line of an inline
+    method rebuilds every client.</li>
+  <li>The include guard <code>#ifndef POINT2_H</code> / <code>#define POINT2_H</code> / <code>#endif</code> stops the class
+    declaration being read twice if two headers both include this one. C++ will not tolerate seeing
+    the same class defined twice. This is the Class 2 idiom, unchanged.</li>
+  <li><code>#include "point2.h"</code> uses quotes, not angle brackets. Quotes mean "look in my directory
+    first"; angle brackets mean "look in the system's library directories."</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.10</div>
+  <div class="bd">
+    <p>A class is declared in a header as follows.</p>
+<pre><code class="language-cpp">class Timer {
+public:
+    void start();
+    int  elapsed() const;
+    void reset() { count = 0; }
+private:
+    int count;
+};</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of these three methods is defined inline, and which need definitions in <code>timer.cpp</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>reset</code> is inline &mdash; its body is written in the class. <code>start</code> and <code>elapsed</code> are
+        declarations only (note the semicolons) and need definitions elsewhere:</p>
+<pre><code class="language-cpp">void Timer::start() {
+    count = 0;
+}
+
+int Timer::elapsed() const {
+    return count;
+}</code></pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A student writes <code>int Timer::elapsed() { return count; }</code> in the <code>.cpp</code> file. What happens?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The missing <code>const</code> means the definition does not match the declaration:</p>
+<pre class="err">timer_badconst.cpp:3:5: error: no declaration matches 'int Timer::elapsed()'
+    3 | int Timer::elapsed() { return count; }     // missing const
+      |     ^~~~~
+timer.h:6:10: note: candidate is: 'int Timer::elapsed() const'
+    6 |     int  elapsed() const;
+      |          ^~~~~~~</pre>
+        <p><code>const</code> is part of a member function's signature. Copy the whole declaration line when you
+        write the definition &mdash; that habit prevents this and the parameter-type version of the
+        same error.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Another student writes <code>void start() { count = 0; }</code> in the <code>.cpp</code> file, forgetting the prefix. What does the compiler say, and what would the linker have said?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The compiler complains first, because a free function called <code>start</code> has never heard of
+        <code>count</code>:</p>
+<pre class="err">timer_noprefix.cpp: In function 'void start()':
+timer_noprefix.cpp:2:16: error: 'count' was not declared in this scope
+    2 | void start() { count = 0; }                // missing Timer::
+      |                ^~~~~</pre>
+        <p>If the body had happened not to mention any data member, it would have compiled quite
+        happily as an unrelated free function &mdash; and then the <em>linker</em> would have failed
+        instead, when <code>main</code> tried to call the method that was declared but never defined:</p>
+<pre class="err">/usr/bin/ld: timer_main.o: in function `main':
+timer_main.cpp:(.text+0x23): undefined reference to `Timer::start()'
+collect2: error: ld returned 1 exit status</pre>
+        <p>That two-stage failure is worth understanding: <strong>the compiler checks one file at a
+        time; the linker checks that all the promises across files were kept.</strong></p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; move the bodies out</h3>
+
+<p>Take your <code>Circle</code> class one last time and rewrite it so that the class body contains only
+declarations, with all four method bodies defined below using <code>Circle::</code>. Keep it in one file &mdash;
+the file split is Practice Problem 2.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="26" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r);
+    double getRadius() const;
+    double area() const;
+    void print() const;
+private:
+    double radius;
+};
+
+// Define the four methods here, each prefixed with Circle::
+// Remember: const belongs in BOTH the declaration and the definition.
+
+
+int main() {
+    Circle c;
+    c.setRadius(2.5);
+    c.print();
+    cout &lt;&lt; &quot;radius is &quot; &lt;&lt; c.getRadius() &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r);
+    double getRadius() const;
+    double area() const;
+    void print() const;
+private:
+    double radius;
+};
+
+// Define the four methods here, each prefixed with Circle::
+// Remember: const belongs in BOTH the declaration and the definition.
+
+
+int main() {
+    Circle c;
+    c.setRadius(2.5);
+    c.print();
+    cout &lt;&lt; "radius is " &lt;&lt; c.getRadius() &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.11</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Copy each declaration line, delete the semicolon, insert
+      <code>Circle::</code> in front of the method name, and add the body. The <code>const</code> on <code>getRadius</code>,
+      <code>area</code> and <code>print</code> moves across with the rest of the line.</p>
+<div class="codewrap"><div class="cap">circle_split.cpp</div><pre><code class="language-cpp">// circle_split.cpp -- the same Circle, with every method defined outside the class
+#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r);
+    double getRadius() const;
+    double area() const;
+    void print() const;
+private:
+    double radius;
+};
+
+void Circle::setRadius(double r) {
+    if (r &lt; 0.0) {
+        cout &lt;&lt; "Circle: negative radius rejected" &lt;&lt; endl;
+        radius = 0.0;
+    } else {
+        radius = r;
+    }
+}
+
+double Circle::getRadius() const {
+    return radius;
+}
+
+double Circle::area() const {
+    return 3.14159 * radius * radius;
+}
+
+void Circle::print() const {
+    cout &lt;&lt; "Circle r = " &lt;&lt; radius &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+}
+
+int main() {
+    Circle c;
+    c.setRadius(2.5);
+    c.print();
+    cout &lt;&lt; "radius is " &lt;&lt; c.getRadius() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Circle r = 2.5, area = 19.6349
+radius is 2.5</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>Circle::print</code> calls <code>area()</code> with no prefix and no dot. Inside a method &mdash; even
+          one defined outside the class body &mdash; unqualified names are looked up in the class
+          first. The <code>Circle::</code> prefix on the definition is what makes that true.</li>
+        <li><code>radius</code> is still private, and <code>Circle::setRadius</code> still reaches it, because the
+          definition belongs to the class no matter where it sits in the file.</li>
+        <li>The class body is now a clean, readable summary of what a <code>Circle</code> can do &mdash; four
+          lines you could hand to another programmer as documentation. That is the payoff.</li>
+        <li><code>19.6349</code> is <code>3.14159 * 6.25</code> to six significant digits.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.12</div>
+  <div class="bd">
+    <p>Pulling the whole class together. You are handed this class and asked four questions about
+    it.</p>
+<pre><code class="language-cpp">class Account {
+public:
+    void   setBalance(double b) { balance = b; }
+    double getBalance() const   { return balance; }
+    void   deposit(double amt)  { balance = balance + amt; }
+    void   print() const { cout &lt;&lt; "balance = " &lt;&lt; balance &lt;&lt; endl; }
+private:
+    double balance;
+};</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write the statements that create one <code>Account</code> on the heap, deposit 50 into it, print it, and release it.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Account *ap = new Account;
+    ap-&gt;setBalance(0.0);        // no constructor yet: set it before using it
+    ap-&gt;deposit(50.0);
+    ap-&gt;print();
+    delete ap;
+    ap = nullptr;</code></pre>
+        <p>The second line is not optional. With no constructor, <code>balance</code> starts as garbage, and
+        <code>deposit</code> adds 50 to garbage. Class 13 removes the need for that line.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write a free function <code>bool richer(const Account &amp;a, const Account &amp;b)</code> that reports whether <code>a</code> has the larger balance.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">bool richer(const Account &amp;a, const Account &amp;b) {
+    return a.getBalance() &gt; b.getBalance();
+}</code></pre>
+        <p>It compiles only because <code>getBalance</code> is <code>const</code>. Delete that keyword from the class and
+        this function stops compiling with <em>"discards qualifiers"</em>, even though the function
+        itself is unchanged.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Rewrite the class so <code>deposit</code> and <code>print</code> are declared inline in the class but defined below it.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">class Account {
+public:
+    void   setBalance(double b) { balance = b; }
+    double getBalance() const   { return balance; }
+    void   deposit(double amt);
+    void   print() const;
+private:
+    double balance;
+};
+
+void Account::deposit(double amt) {
+    balance = balance + amt;
+}
+
+void Account::print() const {
+    cout &lt;&lt; "balance = " &lt;&lt; balance &lt;&lt; endl;
+}</code></pre>
+        <p>Semicolons in the class, <code>Account::</code> on the definitions, and the <code>const</code> carried across on
+        <code>print</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>setBalance</code> lets any caller assign any value, including a negative one. Is this class actually encapsulated?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Only in the weak sense. The data is private, so the <em>representation</em> is free to
+        change &mdash; that is real and worth having. But <code>setBalance</code> is a hole straight through the
+        interface: it enforces no rule, so the class cannot promise anything about <code>balance</code> at all.
+        You get the flexibility benefit of encapsulation without the invariant benefit.</p>
+        <p>A stronger design drops <code>setBalance</code> entirely and offers <code>deposit</code> and <code>withdraw</code>, each
+        of which checks its argument. This is exactly the point of Quick Check 1.3(c) back in Class 1,
+        now with the syntax to act on it: <strong>private data plus an unconditional setter for
+        everything is a getter/setter shell, not an interface.</strong> Ask what rule each mutator
+        enforces; if the answer is "none", ask whether the mutator should exist.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 10</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 are the two programs the course notes work through for this lecture &mdash;
+    the <code>distance</code> function over private data, and the split of a class into declaration and
+    definitions. Problems 3 and 4 are taken from this professor's own exams, essentially verbatim;
+    between them they are the single most predictable pair of questions on any first exam in this
+    course. Problems 5 and 6 were added for these notes in his exam styles: "write a complete
+    program" and "what is the output, or explain the error".</p>
+    <p>This is the last class before the Exam 1 review, so treat these as a rehearsal. Write each
+    answer out on paper first &mdash; especially Problem 4, where the exam allows
+    <strong>no partial credit</strong> per part and each part is worth three points.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Distance between two points <span class="muted small">(from the course notes)</span></h3>
+
+<p>Given a <code>Point1</code> class whose <code>x</code> and <code>y</code> are private, with public <code>set</code>, <code>print</code>, <code>getx</code> and
+<code>gety</code>, write a free function <code>double distance(const Point1 &amp;a, const Point1 &amp;b)</code> that
+returns the distance between the two points, and a <code>main</code> that tests it on the points
+<code>(1.5, 2.5)</code> and <code>(4.5, -1.5)</code>. Explain why the function cannot read <code>a.x</code>
+directly and why the <code>const</code> on the parameters is safe.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The mathematics is the Pythagorean theorem: the distance is
+  <code>sqrt(dx*dx + dy*dy)</code> where <code>dx</code> and <code>dy</code> are the coordinate differences. <code>sqrt</code> lives
+  in <code>&lt;cmath&gt;</code>. The design questions are the interesting part &mdash; the function is not a
+  member, so it has no access to private data and must go through the accessors, and it should take
+  its arguments by <code>const</code> reference so no <code>Point1</code> is copied.</p>
+<div class="codewrap"><div class="cap">distance.cpp</div><pre><code class="language-cpp">// distance.cpp -- a free function that must go through the public interface
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+double distance(const Point1 &amp;a, const Point1 &amp;b) {
+    double dx = a.getx() - b.getx();
+    double dy = a.gety() - b.gety();
+    return sqrt(dx*dx + dy*dy);
+}
+
+int main() {
+    Point1 p1, p2;
+    p1.set(1.5, 2.5);
+    p2.set(4.5, -1.5);
+    double d = distance(p1, p2);
+    cout &lt;&lt; "distance = " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">distance = 5</pre>
+  <table class="trace">
+    <tr><th>Step</th><th>Value</th></tr>
+    <tr><td><code>a.getx() - b.getx()</code></td><td><code>1.5 - 4.5 = -3</code></td></tr>
+    <tr><td><code>a.gety() - b.gety()</code></td><td><code>2.5 - (-1.5) = 4</code></td></tr>
+    <tr><td><code>dx*dx + dy*dy</code></td><td><code>9 + 16 = 25</code></td></tr>
+    <tr><td><code>sqrt(25)</code></td><td><code>5</code>, printed as <code>5</code> and not <code>5.0</code></td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><strong>Why not <code>a.x</code>?</strong> Because <code>x</code> is private and <code>distance</code> is not a member of the
+      class. The compiler rejects it with <code>'double Point1::x' is private within this
+      context</code>. Outside applications must employ the public methods to manipulate the class
+      data; that is what having an interface means.</li>
+    <li><strong>Why is <code>const</code> safe here?</strong> Because <code>getx</code> and <code>gety</code> are <code>const</code> methods and
+      so are callable through a <code>const</code> reference. If they were not <code>const</code>, this function would not
+      compile at all &mdash; the two uses of <code>const</code> have to line up.</li>
+    <li><code>dx</code> and <code>dy</code> are ordinary local <code>double</code>s. Squaring a negative gives a positive, so no
+      absolute value is needed anywhere.</li>
+    <li>Naming a free function <code>distance</code> while <code>using namespace std;</code> is in force risks a clash
+      with <code>std::distance</code>. It happens to work here; <code>point_distance</code> would be safer.</li>
+    <li>A neater alternative is <code>hypot(dx, dy)</code> from <code>&lt;cmath&gt;</code>, which avoids overflow for huge
+      values. Either is acceptable; <code>sqrt</code> is what the notes use.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Split a class into a header and an implementation file <span class="muted small">(from the course notes)</span></h3>
+
+<p>Take the <code>Point2</code> class &mdash; <code>getx</code>/<code>gety</code> inline, <code>set</code> and <code>print</code> non-inline, data private
+&mdash; and lay it out as three files: <code>point2.h</code>, <code>point2.cpp</code> and <code>main.cpp</code>. Give the commands
+that compile and link them, and say what has to be recompiled when only a method body changes.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The header answers "what can I do with a <code>Point2</code>?" and must be safe to
+  include more than once, so it needs an include guard. The implementation file includes the header
+  (so the compiler knows what <code>Point2</code> is) and defines the two non-inline methods with the
+  <code>Point2::</code> prefix. <code>main.cpp</code> includes only the header. Compile each <code>.cpp</code> separately with <code>-c</code>,
+  then link the object files.</p>
+<div class="codewrap"><div class="cap">point2.h</div><pre><code class="language-cpp">// point2.h -- the class declaration: the interface, and nothing else
+#ifndef POINT2_H
+#define POINT2_H
+
+class Point2 {
+public:
+    const double&amp; getx() const { return x; }      // inline
+    const double&amp; gety() const { return y; }      // inline
+    void set(const double &amp;a, const double &amp;b);   // not inline
+    void print() const;                           // not inline
+private:
+    // data
+    double x, y;
+};
+
+#endif</code></pre></div>
+<div class="codewrap"><div class="cap">point2.cpp</div><pre><code class="language-cpp">// point2.cpp -- the implementation: the method bodies
+#include &lt;iostream&gt;
+#include "point2.h"
+using namespace std;
+
+void Point2::set(const double &amp;a, const double &amp;b) {
+    x = a;
+    y = b;
+}
+
+void Point2::print() const {
+    cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+}</code></pre></div>
+<div class="codewrap"><div class="cap">main.cpp</div><pre><code class="language-cpp">// main.cpp -- a client of the class: includes only the header
+#include &lt;iostream&gt;
+#include "point2.h"
+using namespace std;
+
+int main() {
+    Point2 cpt;
+    cpt.set(1.23, 4.56);
+    cpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; cpt.getx() &lt;&lt; " " &lt;&lt; cpt.gety() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="shell">g++ -c point2.cpp
+g++ -c main.cpp
+g++ point2.o main.o -o pointprog
+./pointprog</pre>
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><strong>What gets recompiled.</strong> Change a body in <code>point2.cpp</code> and only <code>point2.cpp</code>
+      needs recompiling; <code>main.o</code> is still valid and you just relink. Change anything in <code>point2.h</code>
+      &mdash; including the body of an inline method &mdash; and <em>every</em> file that includes it
+      must be recompiled. That asymmetry is the practical argument for keeping big method bodies out
+      of the header.</li>
+    <li>The <code>Point2::</code> prefix is what makes <code>void Point2::print() const</code> a member rather than a free
+      function. Without it, <code>x</code> and <code>y</code> are not in scope and the compile fails immediately.</li>
+    <li>The <code>const</code> appears in both the declaration and the definition. It is part of the
+      signature.</li>
+    <li><code>point2.cpp</code> needs <code>#include &lt;iostream&gt;</code> because <code>print</code> uses <code>cout</code>. The header does
+      not, because nothing in the header mentions a stream &mdash; and headers should include as
+      little as they can get away with.</li>
+    <li>You can compile and link in one command &mdash; <code>g++ point2.cpp main.cpp -o pointprog</code> &mdash; but then every file is recompiled every time, which throws away
+      the benefit above.</li>
+    <li>The professor's accessors here return <code>const double&amp;</code>. For a <code>double</code>, returning <code>double</code>
+      by value is the safer default; see the warning in &sect;7.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; The <code>Rational</code> class <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+
+<p>Given the following program. The data members are private, so the free function <code>product</code> has to
+work through the accessors.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+private:
+    int numerator, denominator;
+public:
+    void set(int a, int b) { ... }              // part (a)
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void add1() { ... }                         // part (b)
+    void print() const {
+        cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl;
+    }
+};
+
+Rational product(Rational x, Rational y) { ... }   // part (c)
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();          // add1 adds 1 to the rational number
+    r1.print();         // prints 5/3
+    r2.print();         // prints 4/5
+    Rational p = product(r1, r2);
+    p.print();          // prints 20/15
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Give an implementation for the <code>set</code> method, which sets the values for numerator and denominator respectively.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    void set(int a, int b) {
+        numerator = a;
+        denominator = b;
+    }</code></pre>
+    <p>A textbook mutator: parameters named differently from the data members, no <code>const</code> (it writes
+    to the object), and no validation asked for. Two points on the exam, with no partial credit
+    &mdash; so do not get fancy.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Give an implementation for <code>add1</code>, which adds 1 to the rational number. Hint: <code>p/q + 1 = (p+q)/q</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    void add1() {
+        numerator = numerator + denominator;
+    }</code></pre>
+    <p>The denominator does not change. With <code>r1</code> holding 2/3, this makes the numerator
+    <code>2 + 3 = 5</code>, so <code>r1.print()</code> shows <code>5/3</code> exactly as the comment in <code>main</code>
+    predicts.</p>
+    <p>This is a mutator with no parameters &mdash; a perfectly ordinary thing for a method to be.
+    It is not <code>const</code>, because it writes.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Give an implementation for the <code>product</code> function, which returns the product of two rational numbers. Hint: <code>(x/y) * (w/z) = (xw)/(yz)</code>. You do not need to simplify the result.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> <code>product</code> is a <em>free function</em>, not a member, so it cannot touch
+    <code>numerator</code> or <code>denominator</code> directly &mdash; they are private. It must read through <code>getn()</code> and
+    <code>getd()</code>, build a fresh <code>Rational</code>, and write into it through <code>set</code>. Declare, compute, set,
+    return.</p>
+<pre><code class="language-cpp">Rational product(Rational x, Rational y) {
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}</code></pre>
+    <p>The complete program, with all three parts filled in:</p>
+<div class="codewrap"><div class="cap">rational.cpp</div><pre><code class="language-cpp">// rational.cpp -- a class with private data, accessors, and a free function
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+private:
+    int numerator, denominator;
+public:
+    void set(int a, int b) {
+        numerator = a;
+        denominator = b;
+    }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void add1() {
+        numerator = numerator + denominator;
+    }
+    void print() const {
+        cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl;
+    }
+};
+
+Rational product(Rational x, Rational y) {
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();          // add1 adds 1 to the rational number
+    r1.print();         // prints 5/3
+    r2.print();         // prints 4/5
+    Rational p = product(r1, r2);
+    p.print();          // prints 20/15
+    return 0;
+}</code></pre></div>
+<pre class="out">5/3
+4/5
+20/15</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li><strong>This is why the accessors exist.</strong> The exam deliberately makes <code>product</code> a
+        free function over private data, so the only route in is <code>getn()</code>/<code>getd()</code>. If you write
+        <code>x.numerator</code> you get zero for this part.</li>
+      <li>The rubric's point split for part (c) is 2 points for declaring a <code>Rational</code> object and
+        returning it, 2 for computing the numerator and denominator using the <code>get</code> methods, and 2
+        for setting them on the created object. Write those three things as three visible steps and
+        you collect the points even if the arithmetic slips.</li>
+      <li><code>20/15</code> is not reduced, and the question says it does not have to be. Answer the
+        question that was asked.</li>
+      <li><code>product</code> takes its parameters <strong>by value</strong>, exactly as the exam prints it, so
+        each call copies a <code>Rational</code>. Taking them as <code>const Rational &amp;</code> would be better style
+        and would still work &mdash; but only because <code>getn</code> and <code>getd</code> are <code>const</code>. (The exam's own
+        listing leaves the <code>const</code> off the accessors; it compiles because the parameters are copies.
+        Adding <code>const</code> to the accessors, as above, is strictly safer.)</li>
+      <li><code>Rational p = product(r1, r2);</code> copies the returned object into <code>p</code>. The compiler generated
+        that copy for us. In Class 14 we learn to write it ourselves, and why that matters the moment
+        a class owns a pointer.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 4 &mdash; Write C++ statements <span class="muted small">(from the Summer 2024 Midterm)</span></h3>
+
+<p>Write C++ statements to carry out the following tasks. Do not write complete programs, just give a
+single line, or a few lines, of C++ instructions. Given the following class <code>Point</code>:</p>
+
+<pre><code class="language-cpp">class Point {
+public:
+    int x, y;
+    void print() { cout &lt;&lt; "(" &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ")" &lt;&lt; endl; }
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare a point object <code>a</code> and set its value to <code>(3, 4)</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Point a;
+    a.x = 3;
+    a.y = 4;</code></pre>
+    <p>Three lines, and that is fine &mdash; the question says "a single line, or a few lines". The
+    data is public in this class, so direct assignment is the intended answer; there is no <code>set</code>
+    method to call. (This is one of the few places in the course where public data is correct,
+    because the exam gave you the class.)</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Declare a pointer <code>p</code> that dynamically allocates memory for a point.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Point *p = new Point;</code></pre>
+    <p>Singular <code>new</code>, no <code>[]</code>, no arguments. <code>new Point</code> returns a <code>Point*</code>, which is exactly what
+    the left-hand side declares.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Copy the data in <code>a</code> into the point that <code>p</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    p-&gt;x = a.x;
+    p-&gt;y = a.y;</code></pre>
+    <p>Or, equivalently, <code>(*p).x = a.x;</code> and <code>(*p).y = a.y;</code> &mdash; the rubric accepts both.</p>
+    <p>Look at each side of these assignments: <code>p</code> is a pointer, so it gets an arrow; <code>a</code> is an
+    object, so it gets a dot. Getting this mixed up is the single most common error on this
+    question.</p>
+    <p>You could also write <code>*p = a;</code> &mdash; the compiler-generated assignment copies both members
+    at once. It is correct, and it is what a C++ programmer would actually write, but the exam is
+    testing member access, so the two explicit lines are the safer answer here.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Print the point that the pointer <code>p</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    p-&gt;print();</code></pre>
+    <p>Or <code>(*p).print();</code>. Both appear in the rubric.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Release the memory for <code>p</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    delete p;</code></pre>
+    <p><strong>Not</strong> <code>delete [] p;</code>. The allocation was <code>new Point</code>, one object, so the
+    release is the singular <code>delete</code>. Using <code>delete []</code> on memory that came from a singular <code>new</code> is
+    undefined behavior.</p>
+    <p>Here are all five parts assembled into a program that compiles, runs and is leak-clean:</p>
+<div class="codewrap"><div class="cap">statements.cpp</div><pre><code class="language-cpp">// statements.cpp -- the five tasks, assembled into one runnable program
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    int x, y;
+    void print() { cout &lt;&lt; "(" &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ")" &lt;&lt; endl; }
+};
+
+int main() {
+    // (a) declare a point object a and set its value to (3, 4)
+    Point a;
+    a.x = 3;
+    a.y = 4;
+
+    // (b) declare a pointer p that dynamically allocates memory for a point
+    Point *p = new Point;
+
+    // (c) copy the data in a into the point p points to
+    p-&gt;x = a.x;
+    p-&gt;y = a.y;
+
+    // (d) print the point that p points to
+    p-&gt;print();
+
+    // (e) release the memory for p
+    delete p;
+    return 0;
+}</code></pre></div>
+<pre class="out">(3, 4)</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>This exact question has appeared on <strong>four</strong> midterms in this course, with only
+        the names and numbers changed &mdash; <code>Point</code> with <code>(3, 4)</code>, <code>Point</code> with
+        <code>(5, 7)</code>, and <code>Rectangle</code> with <code>[4 x 6]</code> and a <code>display</code> method. The
+        shape is always: declare and initialize an object, <code>new</code> a second one, copy across with
+        <code>-&gt;</code>, call a method with <code>-&gt;</code>, <code>delete</code>. Learn the five-step shape, not the names.</li>
+      <li>Three points per part, <strong>no partial credit</strong>. A missing <code>*</code> or a <code>.</code> where an
+        arrow belongs costs the whole part.</li>
+      <li><code>print</code> here is not <code>const</code>, exactly as the exam prints it. That is not a problem in this
+        question, because nothing is passed by <code>const</code> reference &mdash; but it is why you should
+        write <code>const</code> on your own accessors.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; A fully encapsulated <code>Rectangle</code> <span class="muted small">(added)</span></h3>
+
+<p>Write a complete C++ program containing a <code>Rectangle</code> class whose <code>width</code> and <code>height</code> are
+private. Give it a mutator <code>set</code>, <code>const</code> accessors for both dimensions, a <code>const</code> <code>area()</code> and a
+<code>const</code> <code>print()</code>. Then write a free function that takes two rectangles by <code>const</code> reference and
+returns the larger of the two by area. In <code>main</code>, create one rectangle normally, one with <code>new</code>,
+compare them, and release the heap one.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Everything on this page appears in this one program, so build it in the
+  order the class was taught. Data first, <code>private</code>. Then the mutator (not <code>const</code>), then the three
+  reading methods (all <code>const</code>). Then the free function: it is not a member, so it may only use the
+  public interface, and it takes <code>const Rectangle &amp;</code> parameters, which is legal only because
+  <code>area()</code> is <code>const</code>. Returning <code>const Rectangle&amp;</code> avoids copying, and is safe here because both
+  arguments outlive the call. Finally <code>main</code> exercises both an ordinary object and a heap one, so we
+  need <code>.</code> in one place and <code>-&gt;</code> in the other, plus one <code>delete</code> for the one <code>new</code>.</p>
+<div class="codewrap"><div class="cap">rectangle.cpp</div><pre><code class="language-cpp">// rectangle.cpp -- a complete encapsulated class used through its interface
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    void set(double w, double h) {
+        width  = w;
+        height = h;
+    }
+    double getWidth()  const { return width;  }
+    double getHeight() const { return height; }
+    double area() const { return width * height; }
+    void print() const {
+        cout &lt;&lt; "Rectangle " &lt;&lt; width &lt;&lt; " x " &lt;&lt; height
+             &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double width, height;
+};
+
+// free function: it can only use the public interface
+const Rectangle&amp; bigger(const Rectangle &amp;a, const Rectangle &amp;b) {
+    if (a.area() &gt;= b.area()) return a;
+    return b;
+}
+
+int main() {
+    Rectangle r;
+    r.set(3.0, 4.0);
+    r.print();
+
+    Rectangle *q = new Rectangle;
+    q-&gt;set(2.0, 8.0);
+    q-&gt;print();
+
+    cout &lt;&lt; "bigger area = " &lt;&lt; bigger(r, *q).area() &lt;&lt; endl;
+
+    delete q;
+    q = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">Rectangle 3 x 4, area = 12
+Rectangle 2 x 8, area = 16
+bigger area = 16</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>bigger(r, *q)</code> &mdash; the second argument is <code>*q</code>, not <code>q</code>. The function wants a
+      <code>Rectangle</code>, and <code>q</code> is a <code>Rectangle*</code>, so it has to be dereferenced. This is where the arrow
+      operator does <em>not</em> help you: <code>-&gt;</code> reaches a member, but here we are passing the whole
+      object.</li>
+    <li><code>bigger</code> returns <code>const Rectangle&amp;</code>, so no rectangle is copied anywhere in this program.
+      That is safe because both arguments are alive for the whole statement. Returning a reference to
+      a <em>local</em> object would be a serious bug &mdash; the Class 2 rule about returning
+      references still applies.</li>
+    <li>Because the return type is <code>const Rectangle&amp;</code>, we can only call <code>const</code> methods on the
+      result &mdash; <code>bigger(r, *q).area()</code> works precisely because <code>area()</code> is <code>const</code>. Try it with
+      the <code>const</code> removed and you get "discards qualifiers" again.</li>
+    <li>One <code>new</code>, one <code>delete</code>, and <code>q = nullptr;</code> afterwards. Under <code>valgrind</code> this program reports
+      <em>"All heap blocks were freed &mdash; no leaks are possible."</em></li>
+    <li>Both objects need <code>set</code> called before anything reads them, because the class has no
+      constructor yet. From Class 13, <code>Rectangle r(3.0, 4.0);</code> will do both jobs in one line and
+      remove the possibility of forgetting.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; What is the output for each of the following lines? <span class="muted small">(added)</span></h3>
+
+<p>Consider the following class and <code>main</code>. For each of the five labelled lines, state the output. If
+the line causes a compiler error, write ERROR and explain why the error occurs, then comment the line
+out and move on to the next one.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Counter {
+public:
+    void set(int v) { count = v; }
+    int  get() const { return count; }
+    void bump() { count++; }
+    void show() const { cout &lt;&lt; "count = " &lt;&lt; count &lt;&lt; endl; }
+private:
+    int count;
+};
+
+int main() {
+    Counter c;
+    Counter *p = new Counter;
+    c.set(5);
+    p-&gt;set(10);
+    const Counter &amp;r = c;
+
+    c.show();                          // (a)
+    p.show();                          // (b)
+    (*p).bump();  p-&gt;show();           // (c)
+    cout &lt;&lt; c.count &lt;&lt; endl;           // (d)
+    r.bump();                          // (e)
+
+    delete p;
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> <code>c.show();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">count = 5</pre>
+    <p><code>c</code> is an ordinary object, <code>show</code> is public and <code>const</code>, and <code>c.set(5)</code> ran earlier. Nothing
+    to trip over.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> <code>p.show();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>ERROR.</strong> <code>p</code> is a pointer, so the member must be reached with <code>-&gt;</code>.</p>
+<pre class="err">trace_err.cpp:23:7: error: request for member 'show' in 'p', which is of pointer type 'Counter*' (maybe you meant to use '-&gt;' ?)
+   23 |     p.show();                          // (b)
+      |       ^~~~</pre>
+    <p>The fix is <code>p-&gt;show();</code>, which would print <code>count = 10</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> <code>(*p).bump();  p-&gt;show();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">count = 11</pre>
+    <p>Both halves are legal. <code>(*p).bump()</code> is the long form of <code>p-&gt;bump()</code>; it dereferences the
+    pointer and then calls <code>bump</code>, taking the heap object's count from 10 to 11. Then
+    <code>p-&gt;show()</code> prints it.</p>
+    <p>Note that <code>bump</code> is <em>not</em> <code>const</code> &mdash; it increments a data member &mdash; and that
+    is fine here, because <code>p</code> is a plain <code>Counter*</code>, not a pointer to <code>const</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> <code>cout &lt;&lt; c.count &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>ERROR.</strong> <code>count</code> is private, and <code>main</code> is outside the class.</p>
+<pre class="err">trace_err.cpp:25:15: error: 'int Counter::count' is private within this context
+   25 |     cout &lt;&lt; c.count &lt;&lt; endl;           // (d)
+      |               ^~~~~
+trace_err.cpp:12:9: note: declared private here
+   12 |     int count;
+      |         ^~~~~
+trace_err.cpp:25:15: note: field 'int Counter::count' can be accessed via 'int Counter::get() const'
+   25 |     cout &lt;&lt; c.count &lt;&lt; endl;           // (d)
+      |               ^~~~~
+      |               get()</pre>
+    <p>The fix is the one g++ suggests: <code>cout &lt;&lt; c.get() &lt;&lt; endl;</code>, which prints
+    <code>5</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> <code>r.bump();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>ERROR.</strong> <code>r</code> is a <code>const Counter &amp;</code>, so only <code>const</code> methods may be called
+    through it, and <code>bump</code> is not one.</p>
+<pre class="err">trace_err.cpp:26:11: error: passing 'const Counter' as 'this' argument discards qualifiers [-fpermissive]
+   26 |     r.bump();                          // (e)
+      |     ~~~~~~^~
+trace_err.cpp:9:10: note:   in call to 'void Counter::bump()'
+    9 |     void bump() { count++; }
+      |          ^~~~</pre>
+    <p>There is no fix that keeps the meaning &mdash; <code>r</code> is a read-only handle by design, and
+    <code>bump</code> writes. You could call a <code>const</code> method instead: <code>cout &lt;&lt; r.get() &lt;&lt; endl;</code>
+    prints <code>5</code>.</p>
+    <p><strong>Things to notice.</strong> With (b), (d) and (e) commented out and (e) replaced by
+    <code>r.get()</code>, the surviving program prints:</p>
+<pre class="out">count = 5
+count = 11
+5</pre>
+    <p>The three errors are the three big traps of this class, one each: <em>dot on a pointer</em>,
+    <em>outside code touching private data</em>, and <em>a non-<code>const</code> method through a <code>const</code>
+    handle</em>. Learn to recognize those three g++ messages on sight and you will diagnose most of
+    your class bugs from the first line of the error.</p>
+    <p>Two exam habits this question is drilling: read the <em>declaration</em> of anything on the
+    left of a <code>.</code> or <code>-&gt;</code> before deciding which one is legal, and, when a line fails, say
+    <em>which</em> rule it broke rather than just "it does not compile" &mdash; the rubric for this
+    style of question pays for the explanation.</p>
+  </div></details>
+</div>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>A class can contain <strong>functions</strong> as well as data. Functions that belong to a
+        class are <strong>class methods</strong> (member functions). They are called with the dot
+        operator, <code>bpt.print()</code>, and inside the body the bare data-member names mean
+        <em>this object's</em> data.</li>
+      <li>A method that does not change the object should be tagged <code>const</code>, written
+        <em>after</em> the parameter list: <code>void print() const</code>. Accessors are <code>const</code>; mutators are
+        not.</li>
+      <li>Break the promise inside the body and you get <em>"assignment of member ... in read-only
+        object"</em>. Call a non-<code>const</code> method through a <code>const</code> object or reference and you get
+        <em>"discards qualifiers"</em>.</li>
+      <li><strong>Accessor</strong> ("get") methods return data members; <strong>mutator</strong>
+        ("set" or "put") methods change them. They are only meaningful once the data is
+        <code>private</code>.</li>
+      <li><code>public</code> members are reachable from anywhere; <code>private</code> members are reachable
+        <strong>inside the class only</strong>. Both data and methods can be either. Outside code
+        that touches a private member gets
+        <em><code>'double Point1::x' is private within this context</code></em> at compile time.</li>
+      <li>That one keyword is what makes encapsulation real: it lets the class enforce
+        <strong>invariants</strong> and lets you change the representation without touching a single
+        caller.</li>
+      <li>A pointer to an object works exactly like any other pointer. <code>new Point</code> allocates one
+        object; <code>delete p</code> releases it. One <code>new</code>, one <code>delete</code>.</li>
+      <li>The <strong>arrow operator</strong> <code>-&gt;</code> is "pointer member of": <code>p-&gt;print()</code> is
+        identical to <code>(*p).print()</code>. Use <code>.</code> when the left-hand thing is an object or a reference,
+        <code>-&gt;</code> when it is a pointer.</li>
+      <li>A method can be declared in the class and <strong>defined outside</strong> it with the
+        scope-resolution operator: <code>void Point2::print() const { ... }</code>. The <code>const</code> must appear in
+        both places.</li>
+      <li>That split lets the class declaration live in a header file and the bodies in a <code>.cpp</code>
+        file, so editing one body recompiles one file instead of the whole project.</li>
+      <li>None of these classes has a constructor yet, so every object is born with indeterminate
+        data and must be <code>set</code> before it is read.</li>
+    </ul>
+    <p><strong>Coming up in Class 11:</strong> the Exam 1 review &mdash; we pull together functions
+    and references, output formatting and loop control, file I/O, vectors, pointers and dynamic
+    memory, and these two classes on classes, and work them in the exact shapes the exam uses.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 9 &middot; Classes I</div><div class="pending">posts Tue Sep 29</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 11 &middot; Exam 1 Review</div><div class="pending">posts Tue Oct 6</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 16 — Static &amp; Namespaces | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 16 &middot; Static &amp; Namespaces</span><span class="sep">|</span><span class="where">Tue Oct 27</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 16 &middot; CSCI 211</div>
+  <h1>Static Members and Namespaces</h1>
+  <p class="sub">One variable shared by every object instead of one per object &mdash; and the mechanism, promised back in Class 1, that keeps two people's identically named classes from colliding.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain what makes a data member <code>static</code> &mdash; one variable shared by the whole class, not one copy per object &mdash; and say when that sharing is appropriate.</li>
+      <li>Write the mandatory out-of-class definition for a static data member, and recognize the linker error you get when you forget it.</li>
+      <li>Declare and use <code>const static</code> data members.</li>
+      <li>Write and call static member functions, and explain precisely why they have no <code>this</code> pointer and cannot touch non-static members.</li>
+      <li>Explain why the copy constructor never copies a class's static data.</li>
+      <li>Define a namespace, split it across multiple blocks, and call into it with a fully qualified <code>::</code> name.</li>
+      <li>Explain the difference between a <code>using</code> declaration and a <code>using</code> directive, and say why <code>using namespace std;</code> works the way it does.</li>
+      <li>Write and call into nested namespaces, and explain why <code>using namespace</code> does not belong in a header file.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Why share data across every object?</a></li>
+    <li><a href="#s2">Static data members and the out-of-class definition</a></li>
+    <li><a href="#s3">Static member functions: no <code>this</code>, and private statics</a></li>
+    <li><a href="#s4"><code>const static</code> members, and why copying skips them</a></li>
+    <li><a href="#s5">The name-collision problem: Alice, Bob, and why namespaces exist</a></li>
+    <li><a href="#s6">Defining and using a namespace</a></li>
+    <li><a href="#s7"><code>using</code> declaration vs. <code>using</code> directive, and <code>std</code></a></li>
+    <li><a href="#s8">Nested namespaces</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Why share data across every object?</h2>
+
+<p>Today is two short topics stitched into one class, and they are unrelated at first glance &mdash;
+one is about a keyword you put on a data member, the other is about organizing whole chunks of a
+program. What they share is a common shape: both exist to answer <em>"who owns this, and how many
+copies of it should there be?"</em> Keep that question in mind and both halves of today click into
+place.</p>
+
+<p>Start with a class that has no business duplicating its data. Here is a <code>Day</code> class: it stores
+the names of the seven days of the week, plus a count, so that any object can look up "what is day
+number 3 called?"</p>
+
+<div class="codewrap"><div class="cap">day.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Day {
+public:
+    Day() : numDays(7), day{"Sunday", "Monday", "Tuesday", "Wednesday",
+                             "Thursday", "Friday", "Saturday"} {}
+
+    int num() const { return numDays; }
+
+    string getDayOfWeek(int n) const {
+        if ((n &lt; 0) || (n &gt;= numDays)) { return string(""); }
+        return day[n];
+    }
+
+private:
+    int numDays;
+    string day[7];
+};
+
+int main() {
+    Day dw;
+    for (int n = 0; n &lt; dw.num(); ++n) {
+        cout &lt;&lt; dw.getDayOfWeek(n) &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the professor's original slide will not compile</span></div>
+  <div class="bd">
+    <p>The version above is a repaired one. As printed in the course notes, the constructor reads:</p>
+<pre><code class="language-cpp">Day() : numDays(7) {},
+day({"Sunday","Monday","Tuesday","Wednesday","Thursday",
+     "Friday","Saturday"}) {}</code></pre>
+    <p>This does not compile, for two reasons at once. A member initializer list is one comma-separated
+    sequence between the <code>:</code> and the single <code>{}</code> body &mdash; you cannot close the body early with <code>{}</code>
+    in the middle and then keep listing members after a comma. And even fixed up, a C-style array
+    member like <code>string day[7]</code> cannot be initialized with <em>parentheses</em>
+    &mdash; <code>day({...})</code> &mdash; only with braces. The corrected member initializer list is:</p>
+<pre><code class="language-cpp">Day() : numDays(7), day{"Sunday", "Monday", "Tuesday", "Wednesday",
+                         "Thursday", "Friday", "Saturday"} {}</code></pre>
+    <p>Note the braces, not parentheses, around the day names, and no stray <code>{}</code> in the middle. This
+    form needs C++11 or later (which is all we use in this course). Before C++11 there was no way to
+    initialize an array member in the initializer list at all &mdash; you had to assign each element
+    inside the constructor body, one line per day.</p>
+  </div>
+</div>
+
+<p>Now imagine a program that creates a thousand <code>Day</code> objects &mdash; one per employee shift record,
+say. Every single one of those thousand objects carries its own private copy of the same seven
+strings and the same number 7. Nothing about <code>numDays</code> or the day names is specific to any one
+object; every <code>Day</code> that will ever exist agrees on them completely. That is a thousand redundant
+copies of exactly the same eight values, for no benefit.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>When a value is the same for every object of a class, giving each object its own copy is pure
+    waste. What you want is <strong>one variable shared by the whole class</strong> &mdash; something
+    that behaves like a global variable, except that it belongs to the class instead of floating
+    loose in the program. That is exactly what <code>static</code> gives you.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.1</div>
+  <div class="bd">
+    <p>Consider the <code>Day</code> class above.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of <code>Day</code>'s two data members is a genuinely bad
+      candidate for per-object storage, and why?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both of them, actually &mdash; <code>numDays</code> and <code>day</code> are both the same for every <code>Day</code> object
+        that will ever be constructed. Neither depends on which particular object you are looking at.
+        A data member earns its own per-object copy only when different objects are expected to hold
+        different values; <code>numDays</code> and <code>day</code> fail that test completely.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> If you built 500 <code>Day</code> objects, roughly how much memory
+      is wasted compared with a design where the day names and the count are stored once?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>499 redundant copies of the whole <code>string day[7]</code> array plus the <code>int numDays</code>. Each
+        object's copy is identical byte-for-byte to every other object's copy, so 499 out of 500 of
+        them are pure duplication. The fix is not to make the array smaller &mdash; it is to make
+        there be only one array, shared by every object. That is the static member you meet next.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>Static data members and the out-of-class definition</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; static data member</span></div>
+  <div class="bd">
+    <p>A <strong>static data member</strong> is a data member that belongs to the <em>class itself</em>,
+    not to any individual object. Every object of the class shares the exact same variable &mdash;
+    change it through one object and every other object sees the new value, because there is only ever
+    one copy of it, no matter how many objects exist (including zero). You tag it with the keyword
+    <code>static</code> in the class declaration.</p>
+  </div>
+</div>
+
+<p>Here is <code>Day</code> rewritten as <code>SDay</code> ("static day"), with both data members made <code>static</code>:</p>
+
+<div class="codewrap"><div class="cap">sday.cpp</div><pre><code class="language-cpp">class SDay {
+public:
+    SDay() {}
+
+    // static data -- declared here, defined outside the class
+    static int numDays;
+    static string day[7];
+};
+
+// non-inline initialization of static data members
+int SDay::numDays = 7;
+string SDay::day[7] = {"Sunday", "Monday", "Tuesday", "Wednesday",
+                        "Thursday", "Friday", "Saturday"};
+
+int main() {
+    for (int n = 0; n &lt; SDay::numDays; ++n) {   // static member "SDay::numDays"
+        cout &lt;&lt; SDay::day[n] &lt;&lt; endl;           // static member "SDay::day[n]"
+    }
+    return 0;
+}</code></pre></div>
+
+<p>Two things jump out. First, <code>SDay</code>'s constructor does absolutely nothing &mdash; it does not
+initialize <code>numDays</code> or <code>day</code>. That is not an oversight. A constructor's job is to set up
+<em>one particular object</em>, and static data does not belong to any particular object; there is
+nothing per-object for the constructor to do. Second, <code>main</code> never creates an <code>SDay</code> object at all,
+yet reads <code>SDay::numDays</code> and <code>SDay::day[n]</code> perfectly well, using the class name and <code>::</code> instead of
+an object and <code>.</code>.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A static data member is really a global variable that happens to be scoped inside a class.
+    It exists independently of any object &mdash; even before the first object is ever constructed,
+    and even if no object is ever constructed at all.</p>
+  </div>
+</div>
+
+<p>Now look at the two lines directly under the class:</p>
+
+<pre><code class="language-cpp">int SDay::numDays = 7;
+string SDay::day[7] = {"Sunday", "Monday", "Tuesday", "Wednesday",
+                        "Thursday", "Friday", "Saturday"};</code></pre>
+
+<p>These are the <strong>out-of-class definitions</strong>, and they are not optional. Declaring
+<code>static int numDays;</code> inside the class only tells the compiler "this class has a static <code>int</code> member
+named <code>numDays</code>" &mdash; it does not create storage for it and does not give it a value. Somewhere,
+exactly once, a separate statement outside any class has to actually define the variable. Three rules
+govern that statement:</p>
+
+<ol>
+  <li>It is written in a <strong>.cpp file</strong>, never in a header.</li>
+  <li>It appears in <strong>exactly one</strong> .cpp file of the whole project.</li>
+  <li>If it appeared in more than one file, the variable would be defined more than once, which the
+  linker rejects.</li>
+</ol>
+
+<p>The compiler will not write this statement for you the way it writes a default constructor. If
+you forget it, your program compiles cleanly &mdash; every use of <code>SDay::numDays</code> type-checks fine
+&mdash; and then fails at the very last step, linking, because the linker cannot find the storage the
+compiled code refers to.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the linker error you get for forgetting</span></div>
+  <div class="bd">
+    <p>Same class, same <code>main</code>, with the two out-of-class definitions deleted. Predict what happens
+    when you try to build it &mdash; and specifically, at which stage (compiling or linking) it fails.</p>
+<div class="codewrap"><div class="cap">sday_nodef.cpp</div><pre><code class="language-cpp">class SDay {
+public:
+    SDay() {}
+    static int numDays;
+    static string day[7];
+};
+
+// the two definitions that belong here were left out on purpose
+
+int main() {
+    for (int n = 0; n &lt; SDay::numDays; ++n) {
+        cout &lt;&lt; SDay::day[n] &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">/usr/bin/ld: /tmp/ccxBYnFL.o: in function `main':
+sday_nodef.cpp:(.text+0x24): undefined reference to `SDay::day[abi:cxx11]'
+/usr/bin/ld: sday_nodef.cpp:(.text+0x55): undefined reference to `SDay::numDays'
+collect2: error: ld returned 1 exit status</pre>
+<p>Notice the message says "undefined <strong>reference</strong>", not "undefined variable" or a
+<code>g++</code> compiler diagnostic with a line number in your source &mdash; that is the tell that you have
+crossed from compiling into <strong>linking</strong>. The compiler was completely satisfied: it saw
+the declaration <code>static int numDays;</code> and trusted that storage for it exists somewhere. Only the
+linker, which stitches together every compiled piece of the program and needs to find one real memory
+location per variable, discovers that no such location was ever created.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.2</div>
+  <div class="bd">
+    <p>Suppose a project spans two files, <code>sday.cpp</code> and <code>main.cpp</code>, both of which
+    <code>#include "sday.h"</code> (a header containing the <code>SDay</code> class declaration with its two <code>static</code>
+    members).</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Where should the two out-of-class definitions,
+      <code>int SDay::numDays = 7;</code> and the array definition, be written?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>In exactly one of the <code>.cpp</code> files &mdash; conventionally <code>sday.cpp</code>, the source file that
+        implements the class. Never in the header <code>sday.h</code>, because the header gets <code>#include</code>d into
+        every <code>.cpp</code> file that uses the class, and each inclusion would produce its own definition.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What goes wrong if you put the definitions in the
+      header instead?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both <code>sday.cpp</code> and <code>main.cpp</code> <code>#include</code> the header, so both translation units end up with
+        their own definition of <code>SDay::numDays</code>. When the linker tries to combine them it finds the
+        same symbol defined twice and reports a <strong>multiple definition</strong> error &mdash; the
+        mirror image of the "undefined reference" error above, and just as fatal.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Static member functions: no <code>this</code>, and private statics</h2>
+
+<p>Data members are not the only thing that can be <code>static</code>. A class's methods can be static too, and
+in practice they almost always are, because keeping the underlying data <code>private</code> and exposing it
+through public static methods is exactly the encapsulation habit you already use for ordinary
+objects.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; static member function</span></div>
+  <div class="bd">
+    <p>A <strong>static member function</strong> is associated with the <em>class</em>, not with any
+    individual object, and so &mdash; exactly like a static data member &mdash; can be called without
+    an object in existence. You call it as <code>ClassName::functionName(args)</code>.</p>
+  </div>
+</div>
+
+<div class="codewrap"><div class="cap">psday.cpp</div><pre><code class="language-cpp">class PSDay {
+public:
+    PSDay() {}
+
+    static int num() { return numDays; }              // public static method
+
+    static string getDayOfWeek(int n) {                // public static method
+        if ((n &lt; 0) || (n &gt;= numDays)) { return string(""); }
+        return day[n];
+    }
+
+private:
+    // static data
+    static int numDays;
+    static string day[7];
+};
+
+int PSDay::numDays = 7;
+string PSDay::day[7] = {"Sunday", "Monday", "Tuesday", "Wednesday",
+                         "Thursday", "Friday", "Saturday"};
+
+int main() {
+    for (int n = 0; n &lt; PSDay::num(); ++n) {
+        cout &lt;&lt; PSDay::getDayOfWeek(n) &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+
+<p>Now the static data is <code>private</code>, exactly the way you would hide it in an ordinary class, and the
+only access is through the public static methods <code>num()</code> and <code>getDayOfWeek(int)</code>. <code>main</code> never
+constructs a <code>PSDay</code> object &mdash; it calls <code>PSDay::num()</code> and <code>PSDay::getDayOfWeek(n)</code> directly on
+the class.</p>
+
+<p>Static member functions come with two hard restrictions, and both trace back to the same fact:
+a static method has no associated object.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a static method cannot be <code>const</code></span></div>
+  <div class="bd">
+    <p>Tagging an ordinary method <code>const</code> is a promise <em>"calling this will not modify the object it
+    was called on."</em> A static method has no object it was called on &mdash; there is no receiving
+    object for the promise to be about &mdash; so the combination is meaningless, and <code>g++</code> refuses
+    it outright:</p>
+<pre><code class="language-cpp">static int num() const { return numDays; }   // ERROR: static + const</code></pre>
+<pre class="err">static_const_bad.cpp:8:22: error: static member function 'static int PSDay::num()' cannot have cv-qualifier
+    8 |     static int num() const { return numDays; }   // ERROR: static + const
+      |                      ^~~~~</pre>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a static method cannot touch a non-static member</span></div>
+  <div class="bd">
+    <p>Non-static data belongs to one particular object. A static method is not called on any
+    particular object, so if it tried to read a non-static member, the compiler would have no way to
+    know <em>whose</em> copy of that member you meant.</p>
+<pre><code class="language-cpp">class PSDay {
+public:
+    PSDay() : label("weekday") {}
+
+    static int num() {
+        cout &lt;&lt; label &lt;&lt; endl;   // ERROR: static method touching a non-static member
+        return numDays;
+    }
+
+private:
+    static int numDays;
+    string label;               // non-static
+};</code></pre>
+<pre class="err">static_nonstatic_bad.cpp: In static member function 'static int PSDay::num()':
+static_nonstatic_bad.cpp:10:17: error: invalid use of member 'PSDay::label' in static member function
+   10 |         cout &lt;&lt; label &lt;&lt; endl;   // ERROR: static method touching a non-static member
+      |                 ^~~~~
+static_nonstatic_bad.cpp:16:12: note: declared here
+   16 |     string label;               // non-static
+      |            ^~~~~</pre>
+    <p>A static member function is free to touch <em>other static</em> members &mdash; those exist
+    with or without an object &mdash; but never a non-static one.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.3</div>
+  <div class="bd">
+    <p>For each pair, say whether it is legal C++, and if not, why.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> A static method that calls another static method of the
+      same class.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Legal. Both methods are class-level, associated with the class rather than an object, so
+        one can freely call the other &mdash; there is no object involved on either side.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A non-static (ordinary) method that reads a static data
+      member.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Legal, and common. An ordinary method has both an object (through <code>this</code>) <em>and</em>
+        access to the class's static members, so it can read (or write) either kind freely. The
+        restriction only runs one direction: static code cannot see non-static data, but non-static
+        code can always see static data.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A static method that declares a local variable inside its
+      own body and modifies it.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Legal. A local variable is not a data member at all &mdash; it lives on the stack for the
+        duration of the call, exactly as in an ordinary free function. The static/non-static rule is
+        only about <em>class</em> data members.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span><code>const static</code> members, and why copying skips them</h2>
+
+<p><code>numDays</code> and the array of day names are not just shared &mdash; they never change. That makes
+them a natural fit for <code>const</code> as well as <code>static</code>. And although a static <em>method</em> cannot be
+<code>const</code> (&sect;3), a static <em>data member</em> can be, and should be whenever the value is a true
+constant.</p>
+
+<div class="codewrap"><div class="cap">cpsday.cpp</div><pre><code class="language-cpp">class CPSDay {
+public:
+    CPSDay() {}
+
+    static int num() { return numDays; }
+
+    static string getDayOfWeek(int n) {
+        if ((n &lt; 0) || (n &gt;= numDays)) { return string(""); }
+        return day[n];
+    }
+
+private:
+    static const int numDays;          // const static data
+    static const string day[7];        // const static data
+};
+
+const int CPSDay::numDays = 7;
+const string CPSDay::day[7] = {"Sunday", "Monday", "Tuesday", "Wednesday",
+                                "Thursday", "Friday", "Saturday"};
+
+int main() {
+    for (int n = 0; n &lt; CPSDay::num(); ++n) {
+        cout &lt;&lt; CPSDay::getDayOfWeek(n) &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+
+<p>The out-of-class definition still exists and still follows the same three rules from &sect;2
+&mdash; <code>const</code> does not remove the requirement, it just adds <code>const</code> to both the declaration and the
+definition. (A common modernization you will see in other people's code, though not what this course
+uses, is <code>static const int numDays = 7;</code> written directly inside the class for an integral constant
+like this one, which avoids repeating the value; we keep the out-of-class form here because it is
+what generalizes to every type, including the array.)</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; static data and the Big Three</span></div>
+  <div class="bd">
+    <p>The <strong>copy constructor</strong> and the <strong>assignment operator</strong> (Classes 14
+    and 15) exist to copy <em>one object's</em> data into another object. Static data does not belong
+    to any object, so there is nothing for either of them to copy &mdash; every object, old and new,
+    was already looking at the same single static variable. Likewise the <strong><code>this</code> pointer</strong>
+    (Class 15) does not exist inside a static method, for the identical reason: <code>this</code> points at the
+    object a method was called on, and a static method has no such object.</p>
+  </div>
+</div>
+
+<p>That statement is easy to accept in the abstract and easy to forget in practice, so make it
+concrete with a static member whose whole job is to count.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a static counter of "how many objects exist right now" (added)</span></div>
+  <div class="bd">
+    <p><code>Counter::objectsAlive</code> is a single <code>static int</code>, shared by every <code>Counter</code> that will ever
+    exist. Every constructor &mdash; including the <em>copy</em> constructor &mdash; increments it, and
+    the destructor decrements it. Predict the four printed numbers before opening the toggle, paying
+    special attention to the middle two.</p>
+<div class="codewrap"><div class="cap">counter.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Counter {
+public:
+    Counter() { ++objectsAlive; }
+    Counter(const Counter &amp;other) { ++objectsAlive; }   // still just increments
+    ~Counter() { --objectsAlive; }
+
+    static int howManyAlive() { return objectsAlive; }
+
+private:
+    static int objectsAlive;
+};
+
+int Counter::objectsAlive = 0;
+
+int main() {
+    cout &lt;&lt; "alive: " &lt;&lt; Counter::howManyAlive() &lt;&lt; endl;
+
+    Counter a;
+    cout &lt;&lt; "alive: " &lt;&lt; Counter::howManyAlive() &lt;&lt; endl;
+
+    {
+        Counter b = a;   // copy constructor runs
+        cout &lt;&lt; "alive: " &lt;&lt; Counter::howManyAlive() &lt;&lt; endl;
+    }   // b goes out of scope here
+
+    cout &lt;&lt; "alive: " &lt;&lt; Counter::howManyAlive() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">alive: 0
+alive: 1
+alive: 2
+alive: 1</pre>
+<p>Look closely at the copy constructor: <code>Counter(const Counter &amp;other) { ++objectsAlive; }</code>. It
+receives <code>other</code>, the object being copied from &mdash; and never reads a single field out of it. That
+is the point. Copying an object's static data would not even mean anything, because there is only one
+<code>objectsAlive</code> in the whole program; <code>b</code>'s "copy" of it and <code>a</code>'s "original" are the same variable.
+All the copy constructor does, correctly, is register that one more object now exists. When <code>b</code> is
+destroyed at the closing brace, the destructor decrements the same shared counter back down.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.4</div>
+  <div class="bd">
+    <p>In the <code>Counter</code> example, suppose someone "forgot" to write a copy constructor at all, relying on
+    the compiler-generated one from Class 14.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>The compiler-generated copy constructor copies every <em>non-static</em> data member
+      one-for-one from the source object. <code>Counter</code> has no non-static data members at all &mdash;
+      <code>objectsAlive</code> is static, and the implicitly generated copy constructor never touches static
+      members, exactly like the hand-written one above. So in this particular case the generated
+      version would behave identically: it still would not increment <code>objectsAlive</code>, which means the
+      count would be <em>wrong</em> after a copy (it would report one too few objects alive) unless you
+      write the increment yourself, as the example does. Relying on the default here would silently
+      break the whole point of the class.</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; unique serial numbers with a static counter</h3>
+
+<p>Write a <code>Widget</code> class where every object gets a unique integer id the moment it is constructed
+&mdash; the first <code>Widget</code> ever built gets id 1, the second gets id 2, and so on, no matter how many
+already exist or have been destroyed. You need exactly one static data member.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="28" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Widget {
+public:
+    Widget() {
+        // assign this object&#39;s id from the shared counter, then advance the counter
+    }
+    int getId() const { return id; }
+
+private:
+    int id;
+    // declare your static counter here
+
+};
+
+// define (and initialize) the static counter here
+
+
+int main() {
+    Widget w1, w2, w3;
+    cout &lt;&lt; &quot;w1 id: &quot; &lt;&lt; w1.getId() &lt;&lt; endl;
+    cout &lt;&lt; &quot;w2 id: &quot; &lt;&lt; w2.getId() &lt;&lt; endl;
+    cout &lt;&lt; &quot;w3 id: &quot; &lt;&lt; w3.getId() &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Widget {
+public:
+    Widget() {
+        // assign this object's id from the shared counter, then advance the counter
+    }
+    int getId() const { return id; }
+
+private:
+    int id;
+    // declare your static counter here
+
+};
+
+// define (and initialize) the static counter here
+
+
+int main() {
+    Widget w1, w2, w3;
+    cout &lt;&lt; "w1 id: " &lt;&lt; w1.getId() &lt;&lt; endl;
+    cout &lt;&lt; "w2 id: " &lt;&lt; w2.getId() &lt;&lt; endl;
+    cout &lt;&lt; "w3 id: " &lt;&lt; w3.getId() &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.5</div>
+  <div class="bd">
+    <p>Write the complete, working <code>Widget</code> class from the exercise above.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">ex1_widget.cpp</div><pre><code class="language-cpp">class Widget {
+public:
+    Widget() {
+        id = nextId;
+        ++nextId;
+    }
+    int getId() const { return id; }
+
+private:
+    int id;
+    static int nextId;
+};
+
+int Widget::nextId = 1;</code></pre></div>
+<pre class="out">w1 id: 1
+w2 id: 2
+w3 id: 3</pre>
+      <p><code>id</code> is an ordinary, non-static member &mdash; each <code>Widget</code> really does need its own copy,
+      since every object's id is different. <code>nextId</code> is the opposite: it is the single shared "next
+      number to hand out," so it has to be static. The constructor reads the current shared value into
+      the new object's own <code>id</code>, then advances the shared counter for the next object. Getting this
+      backward &mdash; making <code>id</code> static instead of <code>nextId</code> &mdash; would give every <code>Widget</code> the
+      <em>same</em> id, because there would be only one <code>id</code> for the whole class to share.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>The name-collision problem: Alice, Bob, and why namespaces exist</h2>
+
+<p>Switch topics completely now &mdash; from one variable shared inside a class to organizing whole
+blocks of code across a project. The motivating story the professor uses is worth walking through in
+full, because the reasoning is exactly what you will reach for the next time two pieces of code want
+the same name.</p>
+
+<p>Two students, Alice and Bob, are each assigned the same homework: write a <code>Point1</code> class with a
+<code>set</code>, some accessors, and a free function <code>distance</code> that computes the distance between two points.
+They work completely independently &mdash; nothing wrong with that so far. The trouble starts when the
+instructor collects both submissions into one project, because now there are <em>two</em> classes
+named <code>Point1</code> and <em>two</em> functions named <code>distance</code> in the same program. "How will we
+distinguish the class <code>Point1</code> and function <code>distance</code> written by Alice and Bob?"</p>
+
+<p>Two tempting fixes both turn out to be bad ideas.</p>
+
+<ul>
+  <li><strong>Rename the classes</strong> &mdash; <code>AlicePoint1</code> and <code>BobPoint1</code>. This works for two
+  people, but it does not scale: good naming practice says a name should describe what a thing
+  <em>does</em>, and <code>AlicePoint1</code> says nothing about that. In a project with many contributors you
+  would be prepending everyone's name to everything they wrote, which produces code that is confusing
+  to read and to maintain.</li>
+  <li><strong>Only compile one submission at a time</strong> &mdash; comment out Bob's code while using
+  Alice's, and vice versa. That sidesteps the immediate collision, but it fails the moment the project
+  needs <em>both</em> functionalities at once, and in a large real project it means recompiling
+  everything every time you switch, which is not remotely practical.</li>
+</ul>
+
+<p>The real fix keeps both names exactly as written and separates them a different way: by <em>where
+they live</em>, not by what they are called.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; namespace</span></div>
+  <div class="bd">
+    <p>A <strong>namespace</strong> is a named region of a program that groups together a set of
+    declarations &mdash; classes, functions, variables, anything &mdash; under one unique identifier.
+    Two names that would otherwise collide can coexist peacefully as long as they live in different
+    namespaces, because a namespace becomes part of a name's full identity.</p>
+    <p>Syntax: <code>namespace Name { ... }</code>. To use something declared inside, you normally write its
+    <strong>qualified name</strong>: <code>Name::thing</code>.</p>
+  </div>
+</div>
+
+<p>Wrapped in namespaces, Alice's and Bob's submissions become <code>Alice::Point1</code> / <code>Alice::distance</code> and
+<code>Bob::Point1</code> / <code>Bob::distance</code>. Both compile into the same program with no collision at all, because
+<code>Alice::Point1</code> and <code>Bob::Point1</code> are, as far as the compiler is concerned, completely different
+names &mdash; the fact that they end in the same four letters is irrelevant.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.6</div>
+  <div class="bd">
+    <p>Explain, in your own words, why "just rename one of the classes" is not the same solution as
+    "put one of the classes in a namespace" &mdash; even though both make <code>Point1</code> appear only once in
+    the raw source.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Renaming permanently changes the class's own name to something that has to carry extra
+      information (whose code this is) forever, in every file that uses it. A namespace leaves the
+      class's own name exactly as its author chose &mdash; still <code>Point1</code>, still meaningful on its own
+      &mdash; and adds the "whose code is this" information as a separate, optional prefix that you can
+      drop entirely inside code that only ever needs one namespace (more on that in &sect;7). The
+      identity information and the class's own name are two different jobs, and a namespace keeps them
+      separate instead of mashing them into one identifier.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Defining and using a namespace</h2>
+
+<p>Here are Alice's and Bob's submissions, side by side. The professor deliberately gives Bob's class
+different internals &mdash; <code>long</code> coordinates instead of <code>double</code> &mdash; specifically to
+demonstrate that two classes can share a name and even a namespace-qualified identity while doing
+something genuinely different underneath.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; <code>Bob::Point1</code> as printed does not compile</span></div>
+  <div class="bd">
+    <p>The course notes say, in prose, "we change data members <code>x</code> and <code>y</code>... to the type <code>long</code>,"
+    but the class as printed still declares <code>private: double x, y;</code> while the accessors are declared to
+    <em>return</em> <code>const long&amp;</code>:</p>
+<pre><code class="language-cpp">const long&amp; getx() const { return x; }   // x is a double -- this does not compile</code></pre>
+    <p>You cannot bind a <code>const long&amp;</code> reference to a <code>double</code> object: the two types are different, so
+    the compiler would have to manufacture a temporary <code>long</code> to bind the reference to, and returning a
+    reference to a temporary that is about to be destroyed is exactly the kind of thing the language
+    forbids. The class as printed in the source does not compile at all.</p>
+    <p>This page resolves it by actually making the data <code>long</code>, matching the prose's stated intent,
+    and returning the accessors <strong>by value</strong> rather than by <code>const&amp;</code> &mdash; matching the
+    <code>Point1</code> you have been using since Class 13, which also returns by value. (A second version of
+    <code>Point1</code> circulates in the original course notes with <code>const double&amp;</code>-returning accessors; the two
+    versions are equivalent in behavior for a type this small, and by-value is used consistently on
+    this page.) There was also a copy-paste slip in the original: the comment closing Bob's namespace
+    reads <code>} // namespace Alice</code>, which should say <code>Bob</code>.</p>
+  </div>
+</div>
+
+<div class="codewrap"><div class="cap">alice_bob.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+namespace Alice {
+    class Point1 {
+    public:
+        void set(const double &amp;a, const double &amp;b) {
+            x = a;
+            y = b;
+        }
+        double getx() const { return x; }
+        double gety() const { return y; }
+        void print() const {
+            cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+        }
+    private:
+        double x, y;
+    };
+
+    double distance(const Point1 &amp;a, const Point1 &amp;b) {
+        double dx = a.getx() - b.getx();
+        double dy = a.gety() - b.gety();
+        return sqrt(dx * dx + dy * dy);
+    }
+} // namespace Alice
+
+namespace Bob {
+    class Point1 {
+    public:
+        void set(const long &amp;a, const long &amp;b) {
+            x = a;
+            y = b;
+        }
+        long getx() const { return x; }
+        long gety() const { return y; }
+        void print() const {
+            cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+        }
+    private:
+        long x, y;
+    };
+
+    double distance(const Point1 &amp;a, const Point1 &amp;b) {
+        long dx = a.getx() - b.getx();
+        long dy = a.gety() - b.gety();
+        return sqrt(double(dx * dx + dy * dy));
+    }
+} // namespace Bob</code></pre></div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; both namespaces in one program</span></div>
+  <div class="bd">
+    <p>Predict the two distances printed before opening the toggle. Bob's points use whole-number
+    coordinates, so watch what that does to his numbers.</p>
+<div class="codewrap"><div class="cap">alice_bob_main.cpp</div><pre><code class="language-cpp">int main() {
+    Alice::Point1 ap1, ap2;
+    ap1.set(1.1, 2.2);
+    ap2.set(2.1, 3.2);
+
+    Bob::Point1 bp1, bp2;
+    bp1.set(-1, -2);
+    bp2.set(-3, -4);
+
+    cout &lt;&lt; "Alice: " &lt;&lt; Alice::distance(ap1, ap2) &lt;&lt; endl;
+    cout &lt;&lt; "Bob:   " &lt;&lt; Bob::distance(bp1, bp2) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Alice: 1.41421
+Bob:   2.82843</pre>
+<p>Every use of either <code>Point1</code> is qualified &mdash; <code>Alice::Point1</code>, <code>Bob::Point1</code>,
+<code>Alice::distance(...)</code>, <code>Bob::distance(...)</code> &mdash; so the compiler never has to guess which class
+or which function you mean. Bob's version truncates its coordinates to <code>long</code> before computing
+anything, which is intentional here (it is the whole point of giving his class different internals),
+but it is worth flagging as lossy: passing <code>bp1.set(-1, -2)</code> is fine since <code>-1</code> and <code>-2</code> are already
+whole numbers, but any fractional Bob coordinate would be silently truncated the moment <code>set</code> is
+called.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Because <code>Alice::Point1</code> and <code>Bob::Point1</code> are unrelated types as far as the compiler is concerned,
+mixing them in a call to either namespace's <code>distance</code> is a compile-time error &mdash; there is no
+overload of <code>Alice::distance</code> that accepts a <code>Bob::Point1</code> argument.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; mixing namespaces, and the fix</span></div>
+  <div class="bd">
+    <p>Predict whether this compiles.</p>
+<div class="codewrap"><div class="cap">mixmatch_bad.cpp</div><pre><code class="language-cpp">cout &lt;&lt; "mix and match: " &lt;&lt; Alice::distance(ap1, bp2) &lt;&lt; endl;</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">mixmatch_bad.cpp: In function 'int main()':
+mixmatch_bad.cpp:46:55: error: invalid initialization of reference of type 'const Alice::Point1&amp;' from expression of type 'Bob::Point1'
+   46 |     cout &lt;&lt; "mix and match: " &lt;&lt; Alice::distance(ap1, bp2) &lt;&lt; endl;
+      |                                                       ^~~
+mixmatch_bad.cpp:14:52: note: in passing argument 2 of 'double Alice::distance(const Point1&amp;, const Point1&amp;)'
+   14 |     double distance(const Point1 &amp;a, const Point1 &amp;b) {
+      |                                      ~~~~~~~~~~~~~~^</pre>
+<p><code>Alice::distance</code> only ever declared to take two <code>const Alice::Point1&amp;</code> parameters; a <code>Bob::Point1</code>
+is not one of those, and the compiler will not silently convert between two unrelated class types. To
+call <code>distance</code> on one point from each namespace, you have to write a <em>new</em> function that is
+not inside either namespace and explicitly names both types:</p>
+<div class="codewrap"><div class="cap">mixmatch_fixed.cpp</div><pre><code class="language-cpp">// not inside either namespace: takes one Alice::Point1 and one Bob::Point1
+double distance(const Alice::Point1 &amp;a, const Bob::Point1 &amp;b) {
+    double dx = a.getx() - b.getx();
+    double dy = a.gety() - b.gety();
+    return sqrt(dx * dx + dy * dy);
+}</code></pre></div>
+<pre class="out">mix and match: 7.43303</pre>
+<p>Notice <code>dx</code> and <code>dy</code> are declared <code>double</code> here, not <code>long</code>. <code>a.getx()</code> returns <code>double</code> and
+<code>b.getx()</code> returns <code>long</code>; if you declared <code>dx</code> as <code>long</code> (as the original course-notes version of
+this bridging function did), the subtraction result would be truncated to a whole number before the
+distance is even computed, silently throwing away Alice's fractional coordinates. Declaring the
+locals with the wider, more precise type avoids that.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>A namespace does not have to be written as one unbroken block. It can be split into several
+pieces &mdash; even across different files of the same project &mdash; and the compiler simply merges
+everything tagged with the same namespace name.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one namespace, two blocks</span></div>
+  <div class="bd">
+    <p><code>Alice</code> is written here as two separate <code>namespace Alice { ... }</code> blocks &mdash; the class in
+    one, the free function in the other. In a real project these two blocks could be in two entirely
+    different <code>.cpp</code> files. Predict the output.</p>
+<div class="codewrap"><div class="cap">split_ns.cpp</div><pre><code class="language-cpp">namespace Alice {                 // start of block 1
+    class Point1 {
+    public:
+        void set(const double &amp;a, const double &amp;b) {
+            x = a;
+            y = b;
+        }
+        double getx() const { return x; }
+        double gety() const { return y; }
+        void print() const {
+            cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+        }
+    private:
+        double x, y;
+    };
+} // namespace Alice, end of block 1
+
+namespace Alice {                 // start of block 2
+    double distance(const Point1 &amp;a, const Point1 &amp;b) {
+        double dx = a.getx() - b.getx();
+        double dy = a.gety() - b.gety();
+        return sqrt(dx * dx + dy * dy);
+    }
+} // namespace Alice, end of block 2
+
+int main() {
+    Alice::Point1 ap1, ap2;
+    ap1.set(1.1, 2.2);
+    ap2.set(2.1, 3.2);
+
+    cout &lt;&lt; Alice::distance(ap1, ap2) &lt;&lt; endl;
+    ap1.print();
+    ap2.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">1.41421
+print x,y 1.1 2.2
+print x,y 2.1 3.2</pre>
+<p>Both blocks say <code>namespace Alice</code> and nothing else distinguishes them &mdash; "block 1" and "block
+2" are just comments, not syntax. The compiler treats the two blocks as contributing to the very same
+namespace, so block 2's <code>distance</code> can refer to <code>Point1</code> (declared in block 1) with no qualification
+at all, because both blocks are inside <code>Alice</code>. This is what makes it practical to split a large
+namespace's class declarations into a header and its function definitions into a <code>.cpp</code> file, the way
+you already split ordinary classes.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; split a namespace across two blocks</h3>
+
+<p>Write a namespace <code>Lab</code> containing a <code>Sample</code> class (with a <code>setReading</code>/<code>getReading</code> pair for a
+<code>double</code>) in one block, and a free function <code>report(const Sample&amp;)</code> that prints the reading in a
+second, separate <code>namespace Lab { ... }</code> block below it.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="19" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+namespace Lab {   // block 1 -- put the Sample class here
+
+}
+
+namespace Lab {   // block 2 -- put report(const Sample&amp;) here
+
+}
+
+int main() {
+    Lab::Sample s1;
+    s1.setReading(98.6);
+    Lab::report(s1);
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+namespace Lab {   // block 1 -- put the Sample class here
+
+}
+
+namespace Lab {   // block 2 -- put report(const Sample&amp;) here
+
+}
+
+int main() {
+    Lab::Sample s1;
+    s1.setReading(98.6);
+    Lab::report(s1);
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.7</div>
+  <div class="bd">
+    <p>Write the two <code>Lab</code> blocks from the exercise above.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">ex2_lab_split.cpp</div><pre><code class="language-cpp">namespace Lab {                 // block 1
+    class Sample {
+    public:
+        void setReading(double r) { reading = r; }
+        double getReading() const { return reading; }
+    private:
+        double reading;
+    };
+} // namespace Lab, end of block 1
+
+namespace Lab {                 // block 2
+    void report(const Sample &amp;s) {
+        cout &lt;&lt; "reading: " &lt;&lt; s.getReading() &lt;&lt; endl;
+    }
+} // namespace Lab, end of block 2</code></pre></div>
+<pre class="out">reading: 98.6</pre>
+      <p>Just like the <code>Alice</code> example, <code>report</code> in block 2 refers to <code>Sample</code> with no prefix, because
+      both blocks belong to the same <code>Lab</code> namespace. Splitting the definition this way is what lets a
+      real project put the class declaration in <code>lab.h</code> and the free function in <code>lab.cpp</code>, both under
+      the same namespace.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span><code>using</code> declaration vs. <code>using</code> directive, and <code>std</code></h2>
+
+<p>Typing <code>Alice::</code> in front of every single name gets old fast if a piece of code only ever uses one
+namespace &mdash; there is no ambiguity to resolve, so the prefix is pure ceremony. C++ gives you two
+different ways to drop it, and they are not the same thing.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; using directive vs. using declaration</span></div>
+  <div class="bd">
+    <p>A <strong><code>using</code> directive</strong>, <code>using namespace Alice;</code>, tells the compiler "for any name
+    I use that you don't otherwise recognize, also search inside <code>Alice</code>." It brings in
+    <em>everything</em> in the namespace, unqualified, for the rest of the scope.</p>
+    <p>A <strong><code>using</code> declaration</strong>, <code>using Alice::Point1;</code>, brings in <em>one specific
+    name</em> and nothing else. Every other name from <code>Alice</code> still needs its full <code>Alice::</code> prefix.</p>
+  </div>
+</div>
+
+<div class="codewrap"><div class="cap">using_alice.cpp</div><pre><code class="language-cpp">namespace Alice {
+    class Point1 { /* ... as before ... */ };
+    double distance(const Point1 &amp;a, const Point1 &amp;b) { /* ... as before ... */ }
+}
+
+using namespace Alice;   // a using DIRECTIVE
+
+int main() {
+    Point1 ap1, ap2;      // compiler searches Alice for "Point1"
+    ap1.set(1.1, 2.2);
+    ap2.set(2.1, 3.2);
+
+    cout &lt;&lt; distance(ap1, ap2) &lt;&lt; endl;
+    ap1.print();
+    ap2.print();
+    return 0;
+}</code></pre></div>
+<pre class="out">1.41421
+print x,y 1.1 2.2
+print x,y 2.1 3.2</pre>
+
+<p>Compare that with a <code>using</code> declaration, which is more surgical: it brings in <code>Point1</code> by name but
+leaves <code>distance</code> requiring its full <code>Alice::</code> prefix.</p>
+
+<div class="codewrap"><div class="cap">using_decl.cpp</div><pre><code class="language-cpp">using Alice::Point1;   // using DECLARATION: only Point1 is unqualified now
+
+int main() {
+    Point1 ap1, ap2;              // fine -- Point1 was brought in
+    ap1.set(1.1, 2.2);
+    ap2.set(2.1, 3.2);
+
+    cout &lt;&lt; Alice::distance(ap1, ap2) &lt;&lt; endl;   // distance still needs the prefix
+    return 0;
+}</code></pre></div>
+<pre class="out">1.41421</pre>
+
+<p>None of this is new to you, even if the vocabulary is. Since Class 1, every program you have
+written has started with <code>using namespace std;</code>. Now you know exactly what that line does and why it
+was necessary: the entire standard library &mdash; <code>cout</code>, <code>cin</code>, <code>endl</code>, <code>string</code>, <code>vector</code>, all of
+it &mdash; lives inside one enormous namespace called <code>std</code>, written across many separate blocks (one
+per standard header). Without the directive, every one of those names needs the <code>std::</code> prefix:</p>
+
+<div class="codewrap"><div class="cap">std_qualified.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    std::cout &lt;&lt; "hello, world!" &lt;&lt; std::endl;   // "std::" required
+    return 0;
+}</code></pre></div>
+<pre class="out">hello, world!</pre>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.8</div>
+  <div class="bd">
+    <p>Now that <code>using namespace std;</code> has a name, revisit it directly.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Every program in this course, including today's, has
+      started with <code>#include &lt;iostream&gt;</code> followed by <code>using namespace std;</code>. What kind of <code>using</code> is
+      that &mdash; a directive or a declaration?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>A directive &mdash; it names the whole namespace (<code>std</code>), not one specific name inside it.
+        After that line every unqualified name the compiler cannot otherwise resolve is also searched
+        for inside <code>std</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Rewrite <code>using namespace std;</code> as a handful of <code>using</code>
+      declarations that bring in only the three names <code>cout</code>, <code>cin</code>, and <code>endl</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">using std::cout;
+using std::cin;
+using std::endl;</code></pre>
+        <p>This is more typing but more precise: any other <code>std</code> name &mdash; <code>string</code>, <code>vector</code>,
+        <code>sqrt</code> from <code>&lt;cmath&gt;</code>, and so on &mdash; would still need its <code>std::</code> prefix, or its own
+        <code>using</code> declaration.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; never put <code>using namespace</code> in a header</span></div>
+  <div class="bd">
+    <p>A <code>#include</code> is a textual copy-paste: everything in the included file lands, unqualified, inside
+    whatever file included it. If a header contains <code>using namespace Alice;</code>, then <em>every single
+    <code>.cpp</code> file that ever includes that header</em> silently gets <code>Alice</code>'s names dumped into its
+    unqualified name lookup &mdash; whether that file wanted them or not, and often without the author
+    of that file even knowing the header did this. The whole reason namespaces exist is to let two
+    pieces of code coexist without their names colliding; a <code>using namespace</code> directive sitting in a
+    widely included header quietly defeats that, reintroducing exactly the ambiguity the namespace was
+    built to prevent. Keep <code>using</code> directives &mdash; if you use them at all &mdash; inside <code>.cpp</code>
+    files, never headers.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; <code>using namespace</code> can reintroduce the very ambiguity it is meant to fix</span></div>
+  <div class="bd">
+    <p>Look again at the directive example above: it has <em>both</em> <code>using namespace std;</code>
+    <em>and</em> <code>using namespace Alice;</code> in scope, and both <code>std</code> and <code>Alice</code> declare something
+    related to a function called <code>distance</code> (<code>std::distance</code>, from <code>&lt;iterator&gt;</code>, is pulled in
+    transitively by <code>&lt;iostream&gt;</code>). With this standard library the call resolves cleanly to
+    <code>Alice::distance</code>, because <code>std::distance</code> requires iterator arguments and template deduction
+    simply fails for a <code>Point1</code>. But that is a property of overload resolution succeeding to pick the
+    right one, not a guarantee &mdash; a differently-shaped call, or a different standard library
+    implementation, could produce a genuinely ambiguous call or a confusing error. This is the
+    sharpest irony of <code>using namespace</code>: the mechanism that exists to resolve name collisions can, if
+    you stack enough directives, quietly bring two colliding names back into the same scope.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; using declarations only, for a mixed program</h3>
+
+<p>You have a program that uses <code>cout</code> and <code>endl</code> constantly, plus one call into a custom <code>Meters</code>
+namespace. Bring in <code>cout</code> and <code>endl</code> with <code>using</code> declarations so they need no prefix, while keeping
+<code>Meters::toFeet</code> fully qualified.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="16" data-starter="#include &lt;iostream&gt;
+
+namespace Meters {
+    double toFeet(double m) { return m * 3.28084; }
+}
+
+// add your using declarations here
+
+
+int main() {
+    double m = 10.0;
+    cout &lt;&lt; m &lt;&lt; &quot; meters = &quot; &lt;&lt; Meters::toFeet(m) &lt;&lt; &quot; feet&quot; &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+
+namespace Meters {
+    double toFeet(double m) { return m * 3.28084; }
+}
+
+// add your using declarations here
+
+
+int main() {
+    double m = 10.0;
+    cout &lt;&lt; m &lt;&lt; " meters = " &lt;&lt; Meters::toFeet(m) &lt;&lt; " feet" &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.9</div>
+  <div class="bd">
+    <p>Write the two <code>using</code> declarations needed to make the exercise program above compile.</p>
+    <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">ex3_using_decl.cpp</div><pre><code class="language-cpp">using std::cout;    // using declarations -- just these two names
+using std::endl;</code></pre></div>
+<pre class="out">10 meters = 32.8084 feet</pre>
+      <p><code>Meters::toFeet</code> never got its own <code>using</code> declaration, so it still needs its full prefix
+      &mdash; and that is deliberate: nothing in the exercise asked to drop the <code>Meters::</code> prefix, only
+      <code>cout</code> and <code>endl</code>. <code>using</code> declarations let you make that choice name by name.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Nested namespaces</h2>
+
+<p>Namespaces can be nested inside one another, which matters the moment your "unique name" problem
+itself has more than one dimension. The professor's example: suppose there are two students both
+named Alice, but in different lab sections, taught by different lab instructors &mdash; call the
+sections <code>Alpha</code> and <code>Beta</code>. There is also a Bob in <code>Alpha</code>'s section and a Charlie in <code>Beta</code>'s. Put
+each lab section in its own outer namespace, and each student inside it:</p>
+
+<div class="codewrap"><div class="cap">nested_ns.cpp</div><pre><code class="language-cpp">namespace Alpha {
+    namespace Alice {
+        void print() { cout &lt;&lt; "Alice, Alpha" &lt;&lt; endl; }
+    }
+    namespace Bob {
+        void print() { cout &lt;&lt; "Bob, Alpha" &lt;&lt; endl; }
+    }
+}
+
+namespace Beta {
+    namespace Alice {
+        void print() { cout &lt;&lt; "Alice, Beta" &lt;&lt; endl; }
+    }
+    namespace Charlie {
+        void print() { cout &lt;&lt; "Charlie, Beta" &lt;&lt; endl; }
+    }
+}
+
+int main() {
+    Alpha::Alice::print();
+    Beta::Alice::print();
+    Alpha::Bob::print();
+    Beta::Charlie::print();
+    return 0;
+}</code></pre></div>
+<pre class="out">Alice, Alpha
+Alice, Beta
+Bob, Alpha
+Charlie, Beta</pre>
+
+<p>Each fully qualified call chains the outer namespace, then the inner one, then the function:
+<code>Alpha::Alice::print()</code>. Now there is no ambiguity at all between the two students named Alice
+&mdash; <code>Alpha::Alice</code> and <code>Beta::Alice</code> are completely distinct, the same way <code>Alice::Point1</code> and
+<code>Bob::Point1</code> were distinct in &sect;6.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Nesting is just namespaces containing namespaces &mdash; there is no special syntax beyond
+    writing one <code>namespace</code> block inside another and chaining <code>::</code> one extra level for every level of
+    nesting. (C++17 also allows the compact spelling <code>namespace Alpha::Alice { ... }</code> for a nested
+    pair that is only ever written as one block; you will see both forms.)</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.10</div>
+  <div class="bd">
+    <p>Using the nested-namespace example above:</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write the statement that calls Bob's (in section <code>Alpha</code>)
+      <code>print()</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">Alpha::Bob::print();</code></pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> If you wrote <code>using namespace Alpha;</code> before <code>main</code>,
+      would <code>Alice::print();</code> (with no <code>Alpha::</code> prefix) now compile, and if so, whose <code>print</code> would it
+      call?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes, it would compile, and it would call <code>Alpha::Alice::print()</code> &mdash; printing
+        "Alice, Alpha". The directive <code>using namespace Alpha;</code> makes everything declared directly
+        inside <code>Alpha</code>, including the nested namespace <code>Alice</code>, reachable without the <code>Alpha::</code> prefix.
+        <code>Beta::Alice::print()</code> would still need its full prefix, since the directive only opened up
+        <code>Alpha</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.11</div>
+  <div class="bd">
+    <p>Summarize, in one sentence each: what problem does a namespace solve, and what is the difference
+    between a <code>using</code> directive and a <code>using</code> declaration?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>A namespace lets two pieces of code declare things with the same name without those names
+      colliding, by making the namespace part of each name's full, qualified identity. A <code>using</code>
+      directive (<code>using namespace X;</code>) opens up an <em>entire</em> namespace for unqualified lookup,
+      while a <code>using</code> declaration (<code>using X::name;</code>) opens up only <em>one specific name</em> from that
+      namespace, leaving everything else in it still requiring the <code>X::</code> prefix.</p>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 16.12</div>
+  <div class="bd">
+    <p>A teammate proposes writing <code>using namespace std;</code> at the very top of a shared header file, <code>utils.h</code>, that is <code>#include</code>d by twelve different <code>.cpp</code> files in the project, "to save everyone from typing <code>std::</code> over and over." Is this a good idea? Explain.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>No. <code>#include</code> is a textual copy-paste, so <code>using namespace std;</code> inside <code>utils.h</code> gets pasted,
+      unqualified, into all twelve <code>.cpp</code> files that include it &mdash; whether or not each of those
+      files' authors wanted <code>std</code>'s names dumped into their own scope, and often without them even
+      realizing the header did it. If any of those twelve files declares its own name that happens to
+      collide with something in <code>std</code> (or in some other namespace also opened this way), the collision
+      reappears project-wide, silently, exactly the failure mode namespaces exist to prevent. The
+      directive belongs in individual <code>.cpp</code> files &mdash; never in a header.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 16</span></div>
+  <div class="bd">
+    <p>The professor's own lecture notes for these two lectures pose no numbered practice exercises
+    &mdash; the two discussion questions in &sect;5 ("how will we distinguish...", "why not load one
+    submission at a time") are answered on the same slide they appear on, not left as homework. Problem
+    1 below is instead adapted from his exam bank: it is the <strong>only</strong> place namespaces are
+    tested across all ten of his graded exams, so it is worth doing carefully and exactly as given.
+    Problems 2 through 5 are additional, written in the style of his exam questions, since static
+    members and (mostly) namespaces do not otherwise appear on his exams.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Namespace and access-specifier trace <span class="muted small">(from the Fall 2023 Exam 2, Problem 4)</span></h3>
+
+<p>Consider the following program. For each labeled line, state exactly what it prints &mdash; or, if
+the line causes a compile-time or run-time error, explain why, then mentally "comment it out" and move
+to the next line.</p>
+
+<div class="codewrap"><div class="cap">examp4.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+namespace Alpha {
+    class Number {
+      public:
+        Number() : x(2023) {}
+        int value() const { return x; }
+        void print() const { cout &lt;&lt; "Alpha Number: " &lt;&lt; x &lt;&lt; endl; }
+      private:
+        int x;
+    };
+
+    int function(const Number &amp;n, const Number &amp;m) {
+        cout &lt;&lt; "Alpha:: function" &lt;&lt; endl;
+        return n.value() + m.value();
+    }
+}
+
+namespace Beta {
+    class Number {
+      public:
+        Number() : x(3.14) {}
+        double value() const { return x; }
+        void print() const { cout &lt;&lt; "Beta Number: " &lt;&lt; x &lt;&lt; endl; }
+      protected:
+        double x;
+    };
+
+    double function(const Number &amp;n, const Number &amp;m) {
+        cout &lt;&lt; "Beta:: function" &lt;&lt; endl;
+        return n.value() + m.value();
+    }
+}
+
+double function(const Alpha::Number &amp;n, const Beta::Number &amp;m) {
+    cout &lt;&lt; "Mix function" &lt;&lt; endl;
+    return n.value() + m.value();
+}
+
+int main() {
+    Alpha::Number a1, a2;
+    Beta::Number b1, b2;
+    a1.print();                                 // line (a)
+    cout &lt;&lt; b1.x &lt;&lt; endl;                       // line (b)
+    cout &lt;&lt; Alpha::function(a1, a2) &lt;&lt; endl;    // line (c)
+    cout &lt;&lt; Beta::function(b1, b2) &lt;&lt; endl;     // line (d)
+    cout &lt;&lt; function(a1, b2) &lt;&lt; endl;           // line (e)
+
+    return 0;
+}</code></pre></div>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> What is the output at line (a)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Alpha Number: 2023</pre>
+    <p><code>a1</code> is default-constructed, so <code>x</code> is initialized to <code>2023</code> by the member initializer list, and
+    <code>print()</code> is a perfectly ordinary public member function call.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> What is the output at line (b)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="err">exam_f23e2_p4_lineb.cpp: In function 'int main()':
+exam_f23e2_p4_lineb.cpp:16:16: error: 'double Beta::Number::x' is protected within this context
+   16 |     cout &lt;&lt; b1.x &lt;&lt; endl;   // line (b)
+      |                ^
+exam_f23e2_p4_lineb.cpp:10:16: note: declared protected here
+   10 |         double x;
+      |                ^</pre>
+    <p>This line does not print anything &mdash; it is a compile-time error. <code>Beta::Number::x</code> is
+    declared <code>protected</code>, which grants access only to <code>Beta::Number</code>'s own member functions (and to any
+    class that derives from it); <code>main</code> is neither, so <code>b1.x</code> is not reachable from outside the class.
+    Comment this line out and the rest of the program still compiles.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> What is the output at line (c)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Alpha:: function
+4046</pre>
+    <p><code>Alpha::function(a1, a2)</code> matches <code>Alpha</code>'s own <code>function</code>, which prints its announcement and
+    returns <code>n.value() + m.value()</code> as <code>int</code>: <code>2023 + 2023 = 4046</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> What is the output at line (d)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Beta:: function
+6.28</pre>
+    <p><code>Beta::function(b1, b2)</code> calls <code>Beta</code>'s <code>function</code>, which returns <code>3.14 + 3.14 = 6.28</code> as
+    <code>double</code>. Note the capitalization: the code prints <code>"Beta:: function"</code> (with a space after the
+    double colon) &mdash; copy the announcement text exactly as written, since exam rubrics for this
+    professor grade the announcement string as part of the answer.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> What is the output at line (e)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Mix function
+2026.14</pre>
+    <p><code>function(a1, b2)</code>, with no namespace prefix, is a call to the free function declared at global
+    scope (not inside either namespace), because that is the only <code>function</code> overload whose parameter
+    types &mdash; <code>const Alpha::Number&amp;</code> and <code>const Beta::Number&amp;</code> &mdash; match one argument of each
+    namespace's type. It returns <code>2023 + 3.14 = 2026.14</code>. This line is the whole point of the question:
+    it shows that a free function living <em>outside</em> both namespaces is exactly the tool for
+    bridging two namespace-qualified types, the same pattern as the <code>Alice</code>/<code>Bob</code> bridging function in
+    &sect;6.</p>
+  </div></details>
+</div>
+
+<h3>Problem 2 &mdash; Trace a static counter through construction, copying, and destruction <span class="muted small">(added)</span></h3>
+
+<p>Predict the exact output of the following program, line by line, before running it.</p>
+
+<div class="codewrap"><div class="cap">prac_ticket.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Ticket {
+public:
+    Ticket() {
+        id = nextId;
+        ++nextId;
+        cout &lt;&lt; "Ticket #" &lt;&lt; id &lt;&lt; " created" &lt;&lt; endl;
+    }
+    ~Ticket() {
+        cout &lt;&lt; "Ticket #" &lt;&lt; id &lt;&lt; " destroyed" &lt;&lt; endl;
+    }
+    int getId() const { return id; }
+
+private:
+    int id;
+    static int nextId;
+};
+
+int Ticket::nextId = 100;
+
+int main() {
+    Ticket a;
+    {
+        Ticket b;
+        cout &lt;&lt; "a=" &lt;&lt; a.getId() &lt;&lt; " b=" &lt;&lt; b.getId() &lt;&lt; endl;
+    }
+    Ticket c;
+    cout &lt;&lt; "c=" &lt;&lt; c.getId() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Track two things separately: the shared static <code>nextId</code>, which only ever
+  goes up, and each object's own <code>id</code>, which is frozen the moment that object's constructor runs.
+  <code>nextId</code> starts at 100. <code>a</code> is constructed first and takes <code>id = 100</code>, advancing <code>nextId</code> to 101.
+  <code>b</code>, inside the nested block, takes <code>id = 101</code>, advancing <code>nextId</code> to 102, then <code>b</code> is destroyed at
+  the closing brace &mdash; note that destroying <code>b</code> does <em>not</em> lower <code>nextId</code> back down, since
+  <code>nextId</code> only tracks "next id to hand out," not "how many are currently alive." <code>c</code> then takes
+  <code>id = 102</code>. Finally <code>a</code> and <code>c</code> are destroyed, in the reverse of their construction order, when
+  <code>main</code> ends.</p>
+<pre class="out">Ticket #100 created
+Ticket #101 created
+a=100 b=101
+Ticket #101 destroyed
+Ticket #102 created
+c=102
+Ticket #102 destroyed
+Ticket #100 destroyed</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>nextId</code> never decreases, even though <code>b</code> is destroyed partway through. This is a
+    <em>sequence-number</em> counter, not a <em>currently-alive</em> counter like the <code>Counter</code> example
+    in &sect;4 &mdash; the difference is entirely in what the constructor and destructor do (or, for
+    <code>nextId</code>, don't do) with the shared value.</li>
+    <li><code>c</code> is destroyed before <code>a</code> at the very end because C++ destroys local variables in the reverse
+    of the order they were constructed, and <code>a</code> was constructed first.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Implement a class that assigns unique account numbers <span class="muted small">(added)</span></h3>
+
+<p>Write a <code>BankAccount</code> class that stores an owner's name (a <code>string</code>) and assigns each new account a
+unique account number, starting at <code>1001</code> for the first account ever created and incrementing by one
+for each account after that. Give it a static method <code>howManyAccounts()</code> that reports how many
+accounts have been opened in total. Test it with three accounts.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Exactly one static data member is needed: <code>nextAccountNumber</code>, initialized
+  to <code>1001</code>. Each constructor call copies the current shared value into that object's own
+  <code>accountNumber</code>, then advances the shared value for the next account &mdash; the identical pattern as
+  the <code>Widget</code> exercise in &sect;4, just wearing different names. <code>howManyAccounts()</code> can be computed
+  entirely from the static member, with no extra counter needed: however many the shared "next number"
+  has advanced past <code>1001</code> is exactly how many accounts have been opened.</p>
+<div class="codewrap"><div class="cap">prac_bankid.cpp</div><pre><code class="language-cpp">class BankAccount {
+public:
+    BankAccount(const string &amp;ownerName) : owner(ownerName) {
+        accountNumber = nextAccountNumber;
+        ++nextAccountNumber;
+    }
+
+    int getAccountNumber() const { return accountNumber; }
+    const string&amp; getOwner() const { return owner; }
+
+    static int howManyAccounts() { return nextAccountNumber - 1001; }
+
+private:
+    string owner;
+    int accountNumber;
+    static int nextAccountNumber;
+};
+
+int BankAccount::nextAccountNumber = 1001;
+
+int main() {
+    BankAccount a("Priya");
+    BankAccount b("Devon");
+    BankAccount c("Marcus");
+
+    cout &lt;&lt; a.getOwner() &lt;&lt; ": " &lt;&lt; a.getAccountNumber() &lt;&lt; endl;
+    cout &lt;&lt; b.getOwner() &lt;&lt; ": " &lt;&lt; b.getAccountNumber() &lt;&lt; endl;
+    cout &lt;&lt; c.getOwner() &lt;&lt; ": " &lt;&lt; c.getAccountNumber() &lt;&lt; endl;
+    cout &lt;&lt; "accounts opened: " &lt;&lt; BankAccount::howManyAccounts() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Priya: 1001
+Devon: 1002
+Marcus: 1003
+accounts opened: 3</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>owner</code> and <code>accountNumber</code> are both ordinary, non-static members &mdash; every account
+    legitimately needs its own copy of each. Only the "what number comes next" bookkeeping is shared.</li>
+    <li><code>getOwner()</code> returns <code>const string&amp;</code> rather than <code>string</code> by value, which avoids an unnecessary
+    copy of the owner's name on every call &mdash; a small habit worth having once a member is a class
+    type rather than a small built-in type like <code>int</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; A namespace/nested-namespace trace with a using declaration <span class="muted small">(added)</span></h3>
+
+<p>Predict the output of each labeled line.</p>
+
+<div class="codewrap"><div class="cap">prac_nested_trace.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+namespace Store {
+    namespace Produce {
+        double price = 1.99;
+        void describe() { cout &lt;&lt; "Produce: $" &lt;&lt; price &lt;&lt; endl; }
+    }
+    namespace Bakery {
+        double price = 4.50;
+        void describe() { cout &lt;&lt; "Bakery: $" &lt;&lt; price &lt;&lt; endl; }
+    }
+}
+
+using Store::Bakery::describe;   // brings in ONLY Bakery's describe
+
+int main() {
+    Store::Produce::describe();            // (a)
+    describe();                            // (b)
+    cout &lt;&lt; Store::Produce::price &lt;&lt; endl; // (c)
+    return 0;
+}</code></pre></div>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Line (a)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Produce: $1.99</pre>
+    <p>Fully qualified, no ambiguity: <code>Store::Produce::describe()</code> can only mean the one nested inside
+    <code>Produce</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Line (b)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">Bakery: $4.5</pre>
+    <p>The <code>using</code> declaration <code>using Store::Bakery::describe;</code> brought exactly one name &mdash;
+    <code>Bakery</code>'s <code>describe</code> &mdash; into unqualified scope. <code>Produce::describe</code> was never given that
+    treatment, so the unqualified call <code>describe()</code> can only resolve to <code>Bakery</code>'s version. (And note
+    <code>cout</code>'s default formatting drops the trailing zero: <code>4.50</code> prints as <code>4.5</code>.)</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Line (c)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">1.99</pre>
+    <p><code>Store::Produce::price</code> is a fully qualified nested-namespace variable, unaffected by the
+    <code>using</code> declaration for <code>describe</code> &mdash; a <code>using</code> declaration only ever affects the one exact
+    name it names.</p>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; Diagnose and fix a missing static definition <span class="muted small">(added)</span></h3>
+
+<p>The following program compiles with no warnings but fails to build. Explain, precisely, at which
+stage it fails and why, then fix it.</p>
+
+<div class="codewrap"><div class="cap">prac_robot_bad.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Robot {
+public:
+    Robot() { ++fleetSize; }
+    static int getFleetSize() { return fleetSize; }
+private:
+    static int fleetSize;   // declared, never defined
+};
+
+int main() {
+    Robot r1, r2, r3;
+    cout &lt;&lt; "fleet size: " &lt;&lt; Robot::getFleetSize() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> <code>static int fleetSize;</code> inside the class is only a declaration &mdash; it
+  tells the compiler the member exists and what type it is, but creates no actual storage. Compiling
+  each <code>.cpp</code> file (there is only one here) succeeds, because every use of <code>fleetSize</code> type-checks
+  against that declaration. The failure shows up one stage later, at <strong>link time</strong>, when
+  the linker looks for the one piece of storage that <code>Robot::fleetSize</code> is supposed to refer to and
+  cannot find it anywhere.</p>
+<pre class="err">/usr/bin/ld: /tmp/ccrghob2.o: in function `Robot::Robot()':
+prac_robot_bad.cpp:(.text._ZN5RobotC2Ev[_ZN5RobotC5Ev]+0xe): undefined reference to `Robot::fleetSize'
+/usr/bin/ld: prac_robot_bad.cpp:(.text._ZN5RobotC2Ev[_ZN5RobotC5Ev]+0x17): undefined reference to `Robot::fleetSize'
+/usr/bin/ld: /tmp/ccrghob2.o: in function `Robot::getFleetSize()':
+prac_robot_bad.cpp:(.text._ZN5Robot12getFleetSizeEv[_ZN5Robot12getFleetSizeEv]+0xa): undefined reference to `Robot::fleetSize'
+collect2: error: ld returned 1 exit status</pre>
+  <p>The fix is the one-line out-of-class definition, placed in the <code>.cpp</code> file, outside the class:</p>
+<div class="codewrap"><div class="cap">prac_robot_fixed.cpp</div><pre><code class="language-cpp">int Robot::fleetSize = 0;   // the missing out-of-class definition</code></pre></div>
+<pre class="out">fleet size: 3</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The compiler gave zero warnings, even with <code>-Wall</code>, because nothing about the class
+    declaration itself is wrong &mdash; the missing piece is a separate statement the language requires
+    but does not check for at compile time.</li>
+    <li>Every constructor call increments the same shared <code>fleetSize</code>, which is exactly why three
+    <code>Robot</code> objects produce a fleet size of 3 rather than three separate values of 1.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>A <strong>static data member</strong> belongs to the class, not to any object &mdash; every
+      object shares the exact same variable. Declaring it inside the class is not enough; it needs a
+      separate <strong>out-of-class definition</strong>, in exactly one <code>.cpp</code> file, or the program
+      fails at <strong>link time</strong> with "undefined reference."</li>
+      <li>A static data member can also be <code>const</code>, using the same declare-in-class,
+      define-outside-the-class pattern.</li>
+      <li>A <strong>static member function</strong> is called on the class (<code>ClassName::method()</code>), not
+      on an object. It has no <code>this</code> pointer, cannot be <code>const</code> (there is no object to promise not to
+      modify), and cannot touch non-static members (there is no object to say which one).</li>
+      <li>The copy constructor and assignment operator never copy a class's static data, because
+      copying is about one object's data, and static data was never any one object's to begin with.</li>
+      <li>A <strong>namespace</strong> groups declarations under a unique name so that two identically
+      named classes or functions (Alice's <code>Point1</code> and Bob's <code>Point1</code>) can coexist; you reach into one
+      with <code>Namespace::name</code>. A namespace can be split across several blocks, even in different files.</li>
+      <li>A <strong><code>using</code> directive</strong> (<code>using namespace X;</code>) opens an entire namespace to
+      unqualified lookup; a <strong><code>using</code> declaration</strong> (<code>using X::name;</code>) opens only one
+      name. <code>using namespace std;</code>, in every program since Class 1, is a directive.</li>
+      <li>Namespaces can <strong>nest</strong> (<code>Alpha::Alice::print();</code>), and a <code>using namespace</code>
+      directive never belongs in a header file &mdash; it leaks into every file that includes it.</li>
+      <li><strong>Exam note:</strong> static members have never appeared on any of this professor's ten
+      graded exams. Namespaces appear exactly once &mdash; the Fall 2023 Exam 2 trace question worked as
+      Problem 1 above &mdash; so if you have limited review time, prioritize being able to read a
+      namespace-qualified trace like that one over memorizing every static-member rule.</li>
+    </ul>
+    <p><strong>Coming up in Class 17:</strong> operator overloading &mdash; how to teach your own
+    classes to respond to <code>+</code>, <code>*</code>, <code>==</code> and the rest, first as member functions and then, in Class 18,
+    as free functions with <code>friend</code> access.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 15 &middot; Assignment &amp; Big Three</div><div class="pending">posts Thu Oct 22</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 17 &middot; Operators I</div><div class="pending">posts Thu Oct 29</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

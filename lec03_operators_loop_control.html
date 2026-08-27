@@ -1,0 +1,2569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 3 — Operators &amp; Loops | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 3 &middot; Operators &amp; Loops</span><span class="sep">|</span><span class="where">Tue Sep 8</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 3 &middot; CSCI 211</div>
+  <h1>Increment, Output Formatting and Loop Control</h1>
+  <p class="sub">Four tiny operators, one printing rule and two keywords &mdash; the four things most likely to cost you points on an output-prediction question.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Say what each of <code>++x</code>, <code>x++</code>, <code>--x</code> and <code>x--</code> <em>evaluates to</em> and what each one <em>does</em> to the variable.</li>
+      <li>Explain why the choice between <code>++i</code> and <code>i++</code> is irrelevant in a <code>for</code> header and decisive inside a larger expression.</li>
+      <li>Predict the output of a single <code>cout</code> chain containing several increments, and carry the resulting values forward into the next line.</li>
+      <li>Recognize an expression that writes to the same variable twice, and say why C++ refuses to give it a meaning.</li>
+      <li>Predict how <code>cout</code> prints a <code>double</code> with no formatting instructions &mdash; six significant digits, trailing zeros dropped &mdash; including the point where it switches to scientific notation.</li>
+      <li>Use <code>fixed</code> and <code>setprecision</code> from the <code>&lt;iomanip&gt;</code> header to take control of that formatting.</li>
+      <li>State precisely what <code>break</code> and <code>continue</code> do to the rest of the loop body, the loop update, and the loop test.</li>
+      <li>Flatten a deeply nested <code>if</code> into a sequence of guard clauses using <code>continue</code>, and check that the two versions print the same thing.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Four operators, two questions</a></li>
+    <li><a href="#s2">When the choice makes no difference</a></li>
+    <li><a href="#s3">When the choice makes all the difference</a></li>
+    <li><a href="#s4">Chains, and side effects that outlive the line</a></li>
+    <li><a href="#s5">How <code>cout</code> prints a <code>double</code></a></li>
+    <li><a href="#s6"><code>break</code> and <code>continue</code></a></li>
+    <li><a href="#s7">Worked problem: the odd primes below 100</a></li>
+    <li><a href="#s8">From nested <code>if</code> to guard clauses</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Four operators, two questions</h2>
+
+<p>C++ has specialized operators to increment or decrement the value of a variable by 1. There are
+four of them, and you have been typing them since your first <code>for</code> loop:</p>
+
+<pre><code class="language-cpp">++x     // prefix increment
+x++     // postfix increment
+--x     // prefix decrement
+x--     // postfix decrement</code></pre>
+
+<p>They look like a convenience &mdash; a shorter way to write <code>x = x + 1</code>. They are, but they are
+also the single most reliable source of confusion in this course, and the reason is that each of
+them does <strong>two</strong> things, and students learn only the first one.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; value and side effect</span></div>
+  <div class="bd">
+    <p>Every expression in C++ has a <strong>value</strong> &mdash; the thing it evaluates to, which
+    is what gets handed to whatever surrounds it. Some expressions additionally have a
+    <strong>side effect</strong> &mdash; something they change in the program's memory on the way.</p>
+    <p><code>3 + 4</code> has a value (7) and no side effect. <code>x = 9</code> has a side effect (it stores 9 in
+    <code>x</code>) <em>and</em> a value (9, which is why <code>y = x = 9</code> works). The four increment and
+    decrement operators all have both, and <strong>the prefix and postfix forms have the same side
+    effect but different values.</strong></p>
+  </div>
+</div>
+
+<p>So there are always two questions to ask, and you must ask them separately:</p>
+
+<table class="trace">
+  <tr><th>Expression</th><th>Question 1: what does the expression evaluate to?</th><th>Question 2: what happens to <code>x</code>?</th></tr>
+  <tr><td><code>++x</code></td><td>the <strong>new</strong> value of <code>x</code> (after the step)</td><td>increases by 1</td></tr>
+  <tr><td><code>x++</code></td><td>the <strong>old</strong> value of <code>x</code> (before the step)</td><td>increases by 1</td></tr>
+  <tr><td><code>--x</code></td><td>the <strong>new</strong> value of <code>x</code></td><td>decreases by 1</td></tr>
+  <tr><td><code>x--</code></td><td>the <strong>old</strong> value of <code>x</code></td><td>decreases by 1</td></tr>
+</table>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>All four operators change the variable by exactly 1. What differs is <em>which value the
+    expression hands back</em>. Read the operator position as a schedule: <strong>the <code>++</code>
+    happens when you read it.</strong> <code>++x</code> &mdash; the step comes first, so you get the new value.
+    <code>x++</code> &mdash; the <code>x</code> comes first, so you get the old value and the step happens
+    afterwards.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same step, two different answers</span></div>
+  <div class="bd">
+    <p>Both halves of this program start from 3 and both end with the variable holding 4. The only
+    question is what lands in <code>m1</code> and <code>m2</code>. Write down your four numbers
+    before you open the toggle.</p>
+<div class="codewrap"><div class="cap">incr_increment.cpp</div><pre><code class="language-cpp">// incr_increment.cpp -- prefix vs postfix increment
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n1 = 3;
+    int m1 = ++n1;
+    cout &lt;&lt; "prefix: " &lt;&lt; m1 &lt;&lt; " " &lt;&lt; n1 &lt;&lt; endl;
+
+    int n2 = 3;
+    int m2 = n2++;
+    cout &lt;&lt; "postfix: " &lt;&lt; m2 &lt;&lt; " " &lt;&lt; n2 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">prefix: 4 4
+postfix: 3 4</pre>
+<p>Trace it one statement at a time. The right-hand column is the whole point: the two
+<code>n</code> variables finish in the same state, and the two <code>m</code> variables do not.</p>
+<table class="trace">
+  <tr><th>Statement</th><th>What the right-hand side evaluates to</th><th>State afterwards</th></tr>
+  <tr><td><code>int n1 = 3;</code></td><td>3</td><td><code>n1</code> is 3</td></tr>
+  <tr><td><code>int m1 = ++n1;</code></td><td><code>n1</code> steps to 4 <em>first</em>, so the expression is <strong>4</strong></td><td><code>n1</code> is 4, <code>m1</code> is 4</td></tr>
+  <tr><td><code>int n2 = 3;</code></td><td>3</td><td><code>n2</code> is 3</td></tr>
+  <tr><td><code>int m2 = n2++;</code></td><td>the expression is the old value, <strong>3</strong>; the step happens after</td><td><code>n2</code> is 4, <code>m2</code> is 3</td></tr>
+</table>
+<p>Notice what the postfix line means in practice: after <code>int m2 = n2++;</code> the two variables
+<em>disagree</em>. <code>m2</code> is 3 and <code>n2</code> is 4. That disagreement is exactly what
+exam questions are built on.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.1</div>
+  <div class="bd">
+    <p>Here is the decrement version of the same program. Predict all four numbers.</p>
+<div class="codewrap"><div class="cap">incr_decrement.cpp</div><pre><code class="language-cpp">// incr_decrement.cpp -- prefix vs postfix decrement
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n3 = 3;
+    int m3 = --n3;
+    cout &lt;&lt; "prefix: " &lt;&lt; m3 &lt;&lt; " " &lt;&lt; n3 &lt;&lt; endl;
+
+    int n4 = 3;
+    int m4 = n4--;
+    cout &lt;&lt; "postfix: " &lt;&lt; m4 &lt;&lt; " " &lt;&lt; n4 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+    <details class="soln"><summary></summary><div class="ans">
+<pre class="out">prefix: 2 2
+postfix: 3 2</pre>
+      <p><strong>Why.</strong> <code>--n3</code> steps <code>n3</code> down to 2 and then hands back that new
+      value, so <code>m3</code> and <code>n3</code> agree &mdash; both 2. <code>n4--</code> hands back the old
+      value 3 and <em>then</em> steps <code>n4</code> down to 2, so the two disagree.</p>
+      <p>The pattern generalizes and is worth memorizing in this form: <strong>a prefix form always
+      leaves the variable and the expression's value in agreement; a postfix form always leaves them
+      one apart.</strong></p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>When the choice makes no difference</h2>
+
+<p>Before we chase the differences, let's be clear about where there are none &mdash; because that
+is where you have been using these operators all along, and it explains why the distinction never
+came up in CSCI 111.</p>
+
+<p>If you write the operator as a <strong>complete statement</strong>, the value it produces is
+thrown away. Nothing reads it. All that survives is the side effect, and the side effect is the same
+for all four forms.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; statement position: all four forms agree</span></div>
+  <div class="bd">
+    <p>Four variables, four different operator forms, each on a line of its own. Predict the line
+    of output.</p>
+<div class="codewrap"><div class="cap">incr_statement.cpp</div><pre><code class="language-cpp">// incr_statement.cpp -- ++ and -- as standalone statements
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a = 1, b = 2, c = 3, d = 4;
+    ++a;
+    b++;
+    --c;
+    d--;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; " " &lt;&lt; c &lt;&lt; " " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">2 3 2 3</pre>
+<p><code>a</code> went 1 to 2, <code>b</code> went 2 to 3, <code>c</code> went 3 to 2,
+<code>d</code> went 4 to 3. Swapping every <code>++a</code> for <code>a++</code> and every <code>--c</code> for <code>c--</code> would print
+exactly the same line. When nothing reads the value, the two forms are interchangeable.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>The same reasoning covers the third slot of a <code>for</code> header, which is where you meet these
+operators most often. That slot is executed as a statement and its value is discarded, so all of
+these loops are identical:</p>
+
+<div class="codewrap"><div class="cap">forheader.cpp</div><pre><code class="language-cpp">// forheader.cpp -- ++i and i++ in a for header do exactly the same thing
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 0; i &lt; 4; ++i) cout &lt;&lt; i &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; 4; i++) cout &lt;&lt; i &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    for (int i = 3; i &gt;= 0; --i) cout &lt;&lt; i &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    for (int i = 3; i &gt;= 0; i--) cout &lt;&lt; i &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<pre class="out">0 1 2 3
+0 1 2 3
+3 2 1 0
+3 2 1 0</pre>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.2</div>
+  <div class="bd">
+    <p>Given that <code>++i</code> and <code>i++</code> behave identically in a <code>for</code> header:</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Is there any reason at all to prefer one of them?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>For an <code>int</code>, no &mdash; the compiler generates identical machine code and you should
+        write whichever you find easier to read. Most C++ programmers write <code>++i</code> out of habit.</p>
+        <p>That habit has a real reason behind it, and it arrives later in this course. Once
+        <code>i</code> is not an <code>int</code> but an object of a class you wrote, <code>i++</code> has to produce the
+        <em>old</em> value, which means it must first save a whole copy of the object before
+        stepping. <code>++i</code> has nothing to save. When we overload these operators ourselves in Class 17
+        the cost difference becomes visible in the code. Writing <code>++i</code> now costs nothing and means
+        you never have to change the habit.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What about the <em>second</em> slot &mdash; would <code>for (int i = 0; i++ &lt; 4; )</code> also print <code>0 1 2 3</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. The second slot is the loop <em>test</em>, and a test is an expression whose value is
+        very much read &mdash; so the prefix/postfix distinction is live there, and on top of that
+        the increment now happens once per test rather than once per iteration.</p>
+        <p>With <code>i++ &lt; 4</code> the test evaluates to the <em>old</em> <code>i</code>, so the body runs for
+        <code>i</code> equal to 1, 2, 3 and 4 (the test compared 0, 1, 2, 3), and the loop prints
+        <code>1 2 3 4</code>. With <code>++i &lt; 4</code> it would print <code>1 2 3</code>. Neither prints
+        <code>0 1 2 3</code>.</p>
+        <p><strong>The lesson is not that this is a puzzle to solve.</strong> It is that hiding the
+        loop update inside the test is unreadable, and you should not write it. Keep the update in
+        the third slot where a reader expects it.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>When the choice makes all the difference</h2>
+
+<p>Now move the operator <em>inside</em> a larger expression, so that something actually reads the
+value it produces. This is where the two forms separate, and it is the form every exam question in
+this course uses.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same four variables, inside one <code>cout</code></span></div>
+  <div class="bd">
+    <p>Identical starting values to the last example &mdash; 1, 2, 3, 4 &mdash; and identical
+    operators. The only change is that the operators now sit inside a <code>cout</code> chain instead of on
+    lines of their own. There are <strong>two</strong> lines of output to predict, and they are not
+    the same.</p>
+<div class="codewrap"><div class="cap">incr_expression.cpp</div><pre><code class="language-cpp">// incr_expression.cpp -- ++ and -- inside an output expression
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a = 1, b = 2, c = 3, d = 4;
+    cout &lt;&lt; ++a &lt;&lt; " " &lt;&lt; b++ &lt;&lt; " " &lt;&lt; --c &lt;&lt; " " &lt;&lt; d-- &lt;&lt; endl;
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b &lt;&lt; " " &lt;&lt; c &lt;&lt; " " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">2 2 2 4
+2 3 2 3</pre>
+<p>The second line is the one you already know &mdash; it is the same <code>2 3 2 3</code> from
+&sect;2, because the side effects are the same. The first line is the new information:</p>
+<table class="trace">
+  <tr><th>Sub-expression</th><th>Printed</th><th>Variable afterwards</th><th>Do they agree?</th></tr>
+  <tr><td><code>++a</code></td><td><strong>2</strong></td><td><code>a</code> is 2</td><td>yes &mdash; prefix</td></tr>
+  <tr><td><code>b++</code></td><td><strong>2</strong></td><td><code>b</code> is 3</td><td><strong>no</strong> &mdash; postfix</td></tr>
+  <tr><td><code>--c</code></td><td><strong>2</strong></td><td><code>c</code> is 2</td><td>yes &mdash; prefix</td></tr>
+  <tr><td><code>d--</code></td><td><strong>4</strong></td><td><code>d</code> is 3</td><td><strong>no</strong> &mdash; postfix</td></tr>
+</table>
+<p>Put the two lines side by side and the postfix columns are the ones that move:</p>
+<table class="trace">
+  <tr><th></th><th><code>a</code></th><th><code>b</code></th><th><code>c</code></th><th><code>d</code></th></tr>
+  <tr><td>printed by line 1</td><td>2</td><td>2</td><td>2</td><td>4</td></tr>
+  <tr><td>printed by line 2</td><td>2</td><td><strong>3</strong></td><td>2</td><td><strong>3</strong></td></tr>
+</table>
+<p>That is the whole exam question in one picture. A postfix operator prints one value and leaves
+behind a different one.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.3</div>
+  <div class="bd">
+    <p>Two counting loops that differ by one operator position. Predict all four lines.</p>
+<div class="codewrap"><div class="cap">ex1_solution.cpp</div><pre><code class="language-cpp">// ex1_solution.cpp -- the same counter printed two ways
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 0;
+    while (i &lt; 5) {
+        cout &lt;&lt; i++ &lt;&lt; " ";       // print the old value, then step
+    }
+    cout &lt;&lt; endl &lt;&lt; "i ended at " &lt;&lt; i &lt;&lt; endl;
+
+    int j = 0;
+    while (j &lt; 5) {
+        cout &lt;&lt; ++j &lt;&lt; " ";       // step first, then print the new value
+    }
+    cout &lt;&lt; endl &lt;&lt; "j ended at " &lt;&lt; j &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+    <details class="soln"><summary></summary><div class="ans">
+<pre class="out">0 1 2 3 4
+i ended at 5
+1 2 3 4 5
+j ended at 5</pre>
+      <p><strong>Why.</strong> Both loops run exactly five times, and both counters finish at 5 &mdash;
+      the side effect is identical. But <code>cout &lt;&lt; i++</code> prints the value <em>before</em> the step, so
+      the printed run starts at 0 and stops at 4, while <code>cout &lt;&lt; ++j</code> prints the value
+      <em>after</em> the step, so it starts at 1 and stops at 5.</p>
+      <p><strong>Things to notice.</strong> This is a genuinely useful idiom, not just a puzzle. When
+      you want to print an item and advance a counter in one step, <code>x[i++]</code> is the standard way to
+      write it &mdash; it means "use the current index, then move on." You will see it constantly
+      once we reach arrays and pointers in Class 7.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Chains, and side effects that outlive the line</h2>
+
+<p>This professor's exams ask you to predict output for a numbered <em>list</em> of lines, not for a
+single line. The trap is deliberate: the first line contains increments, and the second line prints
+the same variables. If you forget to carry the side effects forward, you get the first line right
+and the second line wrong, and there is no partial credit on either.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; how to trace a <code>cout</code> chain by hand</span></div>
+  <div class="bd">
+    <ol>
+      <li>Write the current value of every variable in the margin. Keep this table alive for the
+        whole program; do not restart it at each line.</li>
+      <li>Work through the chain <strong>strictly left to right</strong>, one item at a time.</li>
+      <li>For each item, ask the two questions from &sect;1 in order: <em>what does it print?</em>
+        then <em>what does it leave behind?</em> Write the printed character down and update your
+        margin table before moving to the next item.</li>
+      <li>When the line ends, your margin table is the starting point for the next line. Carry it
+        forward.</li>
+      <li>Remember that <code>cout</code> inserts <strong>nothing</strong> between items. If your chain has no
+        spaces in it, neither does the answer.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the exam's own shape, two lines</span></div>
+  <div class="bd">
+    <p>This is exactly the format used in the "what is the output for each of the following lines"
+    question. Note that there are no spaces anywhere in either chain, so each line of output is a run
+    of digits jammed together. Predict both lines.</p>
+<div class="codewrap"><div class="cap">chain_exam.cpp</div><pre><code class="language-cpp">// chain_exam.cpp -- one cout chain mixing ++ and --, then the same variables again
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int x = 3, y = 5, z = 7, w = 9;
+    cout &lt;&lt; x++ &lt;&lt; ++y &lt;&lt; z-- &lt;&lt; --w &lt;&lt; endl;   // line (a)
+    cout &lt;&lt; x &lt;&lt; y &lt;&lt; z &lt;&lt; w &lt;&lt; endl;           // line (b)
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">3678
+4668</pre>
+<p>Line (a), item by item, keeping the margin table alive:</p>
+<table class="trace">
+  <tr><th>Item</th><th>Prints</th><th><code>x</code></th><th><code>y</code></th><th><code>z</code></th><th><code>w</code></th></tr>
+  <tr><td><em>start</em></td><td>&mdash;</td><td>3</td><td>5</td><td>7</td><td>9</td></tr>
+  <tr><td><code>x++</code></td><td><strong>3</strong> (old)</td><td><strong>4</strong></td><td>5</td><td>7</td><td>9</td></tr>
+  <tr><td><code>++y</code></td><td><strong>6</strong> (new)</td><td>4</td><td><strong>6</strong></td><td>7</td><td>9</td></tr>
+  <tr><td><code>z--</code></td><td><strong>7</strong> (old)</td><td>4</td><td>6</td><td><strong>6</strong></td><td>9</td></tr>
+  <tr><td><code>--w</code></td><td><strong>8</strong> (new)</td><td>4</td><td>6</td><td>6</td><td><strong>8</strong></td></tr>
+</table>
+<p>So line (a) is <code>3</code>, <code>6</code>, <code>7</code>, <code>8</code> printed with
+nothing between them: <code>3678</code>.</p>
+<p>Line (b) prints the margin table as it now stands &mdash; <code>4</code>, <code>6</code>,
+<code>6</code>, <code>8</code> &mdash; giving <code>4668</code>. Every one of those four digits was
+changed by line (a). A student who answers line (b) with the original <code>3579</code> gets zero
+for that part.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>An output-prediction question is a <strong>simulation</strong>, not a series of independent
+    puzzles. Keep one running table of variable values from the top of <code>main</code> to the bottom. Most
+    lost points on this question type come from restarting the trace at each labelled line.</p>
+  </div>
+</div>
+
+<p>One more thing has to be said about the order, because it is the part students most often hear
+wrong. In a chain like <code>cout &lt;&lt; f() &lt;&lt; g()</code>, is the compiler allowed to run <code>g()</code> first? For
+<code>operator&lt;&lt;</code> in C++17, <strong>no</strong>: the left operand of each <code>&lt;&lt;</code> is fully evaluated,
+side effects included, before the right operand is touched. That is why the trace above is
+reliable and not a guess.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; changing the same variable twice in one statement</span></div>
+  <div class="bd">
+    <p>The left-to-right guarantee applies to the operands of <code>&lt;&lt;</code>. It does <strong>not</strong>
+    rescue a statement that writes to one variable twice through ordinary arithmetic. This line has
+    no defined meaning in any version of C++:</p>
+<div class="codewrap"><div class="cap">ub_selfassign.cpp</div><pre><code class="language-cpp">// ub_selfassign.cpp -- DO NOT WRITE THIS. i is modified twice in one statement.
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 5;
+    i = i++ + 1;          // undefined behavior
+    cout &lt;&lt; i &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+    <p><code>i++</code> stores a new value into <code>i</code>, and so does the assignment, and the language
+    does not say which happens first. This is <strong>undefined behavior</strong>: the standard
+    imposes no requirement at all, so the compiler may print 6, print 7, or do something else
+    entirely, and it is free to change its mind when you add an unrelated line elsewhere. There is no
+    correct answer to "what does this print," and the right response on an exam or in a code review
+    is to say so.</p>
+    <p>g++ tells you, if you asked for warnings:</p>
+<pre class="err">ub_selfassign.cpp: In function 'int main()':
+ub_selfassign.cpp:7:7: warning: operation on 'i' may be undefined [-Wsequence-point]
+    7 |     i = i++ + 1;          // undefined behavior
+      |     ~~^~~~~~~~~</pre>
+    <p>This is the concrete payoff of adding <code>-Wall</code> to the compile command. Write
+    <code>i = i + 1;</code> or <code>++i;</code> and the question disappears.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.4</div>
+  <div class="bd">
+    <p>From Class 5 onward the same question shows up with an <em>array subscript</em> as the target
+    instead of a plain variable, which makes it considerably harder to trace. The array here is
+    <code>x</code> with indices 0 through 7 holding <code>3 1 4 1 5 9 2 6</code>, and the counter
+    <code>k</code> starts at 4. Nothing separates the items in either chain.</p>
+<div class="codewrap"><div class="cap">chain_array.cpp</div><pre><code class="language-cpp">// chain_array.cpp -- the same idea with an array subscript as the target
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int k = 4, x[8] = {3,1,4,1,5,9,2,6};
+    cout &lt;&lt; x[k++] &lt;&lt; x[++k] &lt;&lt; k &lt;&lt; endl;      // line (a)
+    cout &lt;&lt; x[--k] &lt;&lt; x[--k] &lt;&lt; k &lt;&lt; endl;      // line (b)
+    return 0;
+}</code></pre></div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does line (a) print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Left to right, one item at a time. The subscript is evaluated first, then the array
+        element is looked up.</p>
+        <table class="trace">
+          <tr><th>Item</th><th>Subscript used</th><th>Prints</th><th><code>k</code> afterwards</th></tr>
+          <tr><td><em>start</em></td><td>&mdash;</td><td>&mdash;</td><td>4</td></tr>
+          <tr><td><code>x[k++]</code></td><td>4 (the old <code>k</code>)</td><td><code>x[4]</code> = <strong>5</strong></td><td>5</td></tr>
+          <tr><td><code>x[++k]</code></td><td>6 (the new <code>k</code>)</td><td><code>x[6]</code> = <strong>2</strong></td><td>6</td></tr>
+          <tr><td><code>k</code></td><td>&mdash;</td><td><strong>6</strong></td><td>6</td></tr>
+        </table>
+        <p>So line (a) is <code>526</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What does line (b) print? Remember to start from the state line (a) left behind.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>k</code> comes in at 6, not 4.</p>
+        <table class="trace">
+          <tr><th>Item</th><th>Subscript used</th><th>Prints</th><th><code>k</code> afterwards</th></tr>
+          <tr><td><em>start</em></td><td>&mdash;</td><td>&mdash;</td><td>6</td></tr>
+          <tr><td><code>x[--k]</code></td><td>5 (the new <code>k</code>)</td><td><code>x[5]</code> = <strong>9</strong></td><td>5</td></tr>
+          <tr><td><code>x[--k]</code></td><td>4 (the new <code>k</code>)</td><td><code>x[4]</code> = <strong>5</strong></td><td>4</td></tr>
+          <tr><td><code>k</code></td><td>&mdash;</td><td><strong>4</strong></td><td>4</td></tr>
+        </table>
+        <p>So line (b) is <code>954</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Compile this with <code>-Wall</code>. g++ prints a warning on both lines. Should you be worried?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Here is the warning:</p>
+<pre class="err">chain_array.cpp: In function 'int main()':
+chain_array.cpp:7:25: warning: operation on 'k' may be undefined [-Wsequence-point]
+    7 |     cout &lt;&lt; x[k++] &lt;&lt; x[++k] &lt;&lt; k &lt;&lt; endl;      // line (a)
+      |                         ^~~</pre>
+        <p>Two answers, and you need both.</p>
+        <p><strong>Technically</strong>, the C++17 rule from &sect;4 covers this: each operand of
+        <code>&lt;&lt;</code> is fully evaluated, side effects and all, before the next one, so the order is fixed and
+        the output <code>526</code> is what the standard requires. g++'s
+        <code>-Wsequence-point</code> check is older than that rule and deliberately conservative, so
+        it flags the line anyway. The program does print <code>526 / 954</code> under
+        <code>-std=c++11</code>, <code>c++14</code>, <code>c++17</code> and <code>c++20</code> alike.</p>
+        <p><strong>Practically</strong>, take the warning as advice about style. A line that
+        increments the same counter twice while indexing an array with it is hostile to read, and
+        before C++17 it really was unspecified. Outside an exam question, split it into two
+        statements. On the exam, trace it left to right &mdash; that is what the rubric expects and
+        what the compiler produces.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; make the counter print what you want</h3>
+
+<p>Fill in the two loops below so the first prints <code>0 1 2 3 4</code> and the second prints
+<code>1 2 3 4 5</code>, changing nothing but the operator position. Then add a third loop that
+prints <code>5 4 3 2 1</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="23" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 0;
+    while (i &lt; 5) {
+        cout &lt;&lt; /* i and one operator */ &lt;&lt; &quot; &quot;;
+    }
+    cout &lt;&lt; endl;
+
+    int j = 0;
+    while (j &lt; 5) {
+        cout &lt;&lt; /* j and one operator */ &lt;&lt; &quot; &quot;;
+    }
+    cout &lt;&lt; endl;
+
+    // third loop: print 5 4 3 2 1
+
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 0;
+    while (i &lt; 5) {
+        cout &lt;&lt; /* i and one operator */ &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    int j = 0;
+    while (j &lt; 5) {
+        cout &lt;&lt; /* j and one operator */ &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+
+    // third loop: print 5 4 3 2 1
+
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.5</div>
+  <div class="bd">
+    <p>Write the third loop from the exercise above &mdash; one that prints <code>5 4 3 2 1</code>
+    &mdash; and say what the counter holds when the loop ends.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> You want the <em>old</em> value printed on each pass, starting at 5,
+      so this is postfix decrement. Start the counter at 5 and keep going while it is still positive;
+      the last pass prints 1 and leaves the counter at 0.</p>
+<div class="codewrap"><div class="cap">qc_countdown.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n = 3;
+    while (n &gt; 0) {
+        cout &lt;&lt; n-- &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl &lt;&lt; "n is now " &lt;&lt; n &lt;&lt; endl;
+
+    int m = 3;
+    while (m &gt; 0) {
+        cout &lt;&lt; --m &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl &lt;&lt; "m is now " &lt;&lt; m &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+      <p>That program uses 3 rather than 5 so the contrast fits on one line, but the shape is the
+      one you want. Its output is:</p>
+<pre class="out">3 2 1
+n is now 0
+2 1 0
+m is now 0</pre>
+      <p>So the answer to the exercise is the <code>n</code> loop with 5 in place of 3:</p>
+<pre><code class="language-cpp">    int n = 5;
+    while (n &gt; 0) {
+        cout &lt;&lt; n-- &lt;&lt; " ";
+    }</code></pre>
+      <p>and the counter ends at <strong>0</strong>.</p>
+      <p><strong>Things to notice.</strong> The <code>m</code> loop is a trap that catches people every
+      semester. <code>--m</code> steps first, so the very first thing printed is 2, not 3, and the loop prints a
+      <code>0</code> that the other version never shows. Both loops run three times and both counters
+      end at 0 &mdash; the side effect is the same &mdash; but the printed sequences differ at both
+      ends.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>How <code>cout</code> prints a <code>double</code></h2>
+
+<p>Back in Class 1 a program computed the area of a circle of radius 3 and printed
+<code>28.2743</code>, even though the stored value has far more digits than that. We promised to
+come back to it. Here it is, because it is worth points.</p>
+
+<p>When you hand <code>cout</code> a <code>double</code> and give it no other instructions, it does not print the number.
+It prints a <em>rendering</em> of the number under a specific, fixed default rule, and the rule
+surprises people in three separate ways.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>cout</code>'s default floating-point format</span></div>
+  <div class="bd">
+    <p>An output stream carries a setting called its <strong>precision</strong>, and for <code>cout</code> it
+    starts at <strong>6</strong>. In the stream's default mode that number means <strong>six
+    significant digits</strong> &mdash; six digits counting from the first nonzero one, wherever the
+    decimal point happens to fall &mdash; not six digits after the decimal point.</p>
+    <p>On top of that, the default mode:</p>
+    <ul>
+      <li><strong>drops trailing zeros</strong>, and drops the decimal point too if nothing is left
+        after it; and</li>
+      <li><strong>switches to scientific notation</strong> when the number is too large or too small
+        to show in six significant digits without padding &mdash; roughly, when the exponent would be
+        6 or more, or less than <code>-5</code>.</li>
+    </ul>
+    <p>This applies to <code>double</code> and <code>float</code> values only. Integers are printed in full, always.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; ten values, no formatting</span></div>
+  <div class="bd">
+    <p>Ten <code>double</code> literals and expressions, printed with nothing but <code>cout</code>. Write down all ten
+    lines before you look. Several of them are not what you expect.</p>
+<div class="codewrap"><div class="cap">fmt_default.cpp</div><pre><code class="language-cpp">// fmt_default.cpp -- what cout does to a double when you don't tell it anything
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; 4.0        &lt;&lt; endl;
+    cout &lt;&lt; 73.5       &lt;&lt; endl;
+    cout &lt;&lt; 3.875      &lt;&lt; endl;
+    cout &lt;&lt; 1.0 / 3.0  &lt;&lt; endl;
+    cout &lt;&lt; 100.0 / 3.0 &lt;&lt; endl;
+    cout &lt;&lt; 2.0 / 3.0  &lt;&lt; endl;
+    cout &lt;&lt; 1234567.0  &lt;&lt; endl;
+    cout &lt;&lt; 12345678.0 &lt;&lt; endl;
+    cout &lt;&lt; 0.00001    &lt;&lt; endl;
+    cout &lt;&lt; 0.0001     &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">4
+73.5
+3.875
+0.333333
+33.3333
+0.666667
+1.23457e+06
+1.23457e+07
+1e-05
+0.0001</pre>
+<table class="trace">
+  <tr><th>Value</th><th>Printed</th><th>Which rule did it</th></tr>
+  <tr><td><code>4.0</code></td><td><code>4</code></td><td>Trailing zeros dropped &mdash; and then the decimal point has nothing after it, so that goes too. <strong>A <code>double</code> holding a whole number prints with no decimal point at all.</strong></td></tr>
+  <tr><td><code>73.5</code></td><td><code>73.5</code></td><td>Three significant digits, well under six. Printed exactly.</td></tr>
+  <tr><td><code>3.875</code></td><td><code>3.875</code></td><td>Four significant digits, and 3.875 is exactly representable in binary. Printed exactly.</td></tr>
+  <tr><td><code>1.0 / 3.0</code></td><td><code>0.333333</code></td><td>Six significant digits. The leading <code>0</code> is not a significant digit, so you get six 3s.</td></tr>
+  <tr><td><code>100.0 / 3.0</code></td><td><code>33.3333</code></td><td>Six significant digits again &mdash; but now two of them are in front of the point, so only four survive behind it. <em>This</em> is why "six significant digits" and "six decimal places" are different rules.</td></tr>
+  <tr><td><code>2.0 / 3.0</code></td><td><code>0.666667</code></td><td>Six digits, and the sixth is <strong>rounded up</strong>, not chopped.</td></tr>
+  <tr><td><code>1234567.0</code></td><td><code>1.23457e+06</code></td><td>Seven digits before the point cannot be shown in six, so the stream switches to scientific notation and rounds to six.</td></tr>
+  <tr><td><code>12345678.0</code></td><td><code>1.23457e+07</code></td><td>Same, one power of ten further along.</td></tr>
+  <tr><td><code>0.00001</code></td><td><code>1e-05</code></td><td>Too small &mdash; scientific notation at the other end.</td></tr>
+  <tr><td><code>0.0001</code></td><td><code>0.0001</code></td><td>Just inside the boundary, so it stays in ordinary notation. The switch really is a threshold, not a gradual thing.</td></tr>
+</table>
+<p>The first row is the one that costs points. When an exam asks for the output of a program whose
+<code>double</code> happens to hold 4, the correct answer is <code>4</code>. Writing <code>4.0</code> is
+marked wrong, and these parts carry no partial credit.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; writing <code>4.0</code> when the program prints <code>4</code></span></div>
+  <div class="bd">
+    <p>Every version of this course's midterm contains at least one output-prediction part whose
+    answer hinges on this. A program computes the area of a square of side 2.0, prints it, and the
+    expected answer is:</p>
+<pre class="out">4</pre>
+    <p>not <code>4.0</code> and not <code>4.00</code>. The value is a <code>double</code>; the printing rule is
+    what it is. Get in the habit now: <strong>when you write down a predicted line of output, write
+    what the stream will emit, not what the variable holds.</strong></p>
+    <p>The mirror-image mistake is just as common in the other direction. <code>cout &lt;&lt; 10 / 4</code> prints
+    <code>2</code>, because that is integer division &mdash; the value never became 2.5 in the first
+    place. Decide the <em>type</em> of the expression first, then apply the printing rule.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.6</div>
+  <div class="bd">
+    <p>Predict every line. Then decide, for each one, whether the surprise (if any) came from the
+    arithmetic or from the printing.</p>
+<div class="codewrap"><div class="cap">fmt_sigdigits.cpp</div><pre><code class="language-cpp">// fmt_sigdigits.cpp -- "six significant digits" is not "six decimal places"
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; 123.456789     &lt;&lt; endl;
+    cout &lt;&lt; 0.000123456789 &lt;&lt; endl;
+    cout &lt;&lt; 98765.4321     &lt;&lt; endl;
+    cout &lt;&lt; 987654.321     &lt;&lt; endl;
+    cout &lt;&lt; 9876543.21     &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+    <details class="soln"><summary></summary><div class="ans">
+<pre class="out">123.457
+0.000123457
+98765.4
+987654
+9.87654e+06</pre>
+      <table class="trace">
+        <tr><th>Line</th><th>Reasoning</th></tr>
+        <tr><td>1</td><td>Six significant digits: <code>1 2 3 4 5 6</code>, and the next digit is 7 so the last one rounds up to 7. <code>123.457</code>.</td></tr>
+        <tr><td>2</td><td>Leading zeros do not count as significant. The six digits are <code>1 2 3 4 5 6</code>, rounded to <code>...457</code>. The number is not small enough to trigger scientific notation.</td></tr>
+        <tr><td>3</td><td>Five digits sit in front of the point, so only one is left over: <code>98765.4</code>. The <code>321</code> is simply gone.</td></tr>
+        <tr><td>4</td><td>All six digits are in front of the point, so nothing is left for after it &mdash; and with nothing after it, the decimal point is dropped: <code>987654</code>. It looks like an <code>int</code> and is not one.</td></tr>
+        <tr><td>5</td><td>Seven digits in front of the point is one too many, so the stream flips to scientific notation: <code>9.87654e+06</code>.</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong> All five surprises came from the printing, not the
+      arithmetic. The stored <code>double</code> still holds every digit you typed &mdash; the value in memory is
+      unchanged, and if you feed it into further arithmetic you get the full precision. Only the
+      <em>display</em> is truncated. This is why you must never "read back" a printed value and
+      assume it is what the program is working with.</p>
+    </div></details>
+  </div>
+</div>
+
+<p>Rendering money as <code>149.1</code> instead of <code>149.10</code> is not acceptable, so C++
+gives you a way to override the default. It lives in a second header.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>fixed</code> and <code>setprecision</code></span></div>
+  <div class="bd">
+    <p><code>#include &lt;iomanip&gt;</code> brings in a set of <strong>manipulators</strong> &mdash; values you can
+    send to a stream that change how it behaves from that point on rather than printing anything.</p>
+    <ul>
+      <li><code>fixed</code> switches the stream out of its default mode into <strong>fixed-point</strong> mode.
+        In fixed mode the precision means <em>digits after the decimal point</em>, and trailing zeros
+        are kept.</li>
+      <li><code>setprecision(n)</code> sets the precision to <code>n</code>.</li>
+    </ul>
+    <p>Both are <strong>sticky</strong>: they change the stream and stay in force for every later
+    output until you change them again. They are not per-value formatting.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; taking control of the format</span></div>
+  <div class="bd">
+    <p>The same two values printed four times under four settings. Note that
+    <code>cout.unsetf(ios::fixed)</code> is the way back to the default mode.</p>
+<div class="codewrap"><div class="cap">fmt_iomanip.cpp</div><pre><code class="language-cpp">// fmt_iomanip.cpp -- taking control of the formatting
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+using namespace std;
+
+int main() {
+    double price = 4.0;
+    double third = 1.0 / 3.0;
+
+    cout &lt;&lt; "default:                " &lt;&lt; price &lt;&lt; "  " &lt;&lt; third &lt;&lt; endl;
+
+    cout &lt;&lt; fixed &lt;&lt; setprecision(2);
+    cout &lt;&lt; "fixed, 2 decimals:      " &lt;&lt; price &lt;&lt; "  " &lt;&lt; third &lt;&lt; endl;
+
+    cout &lt;&lt; setprecision(4);
+    cout &lt;&lt; "fixed, 4 decimals:      " &lt;&lt; price &lt;&lt; "  " &lt;&lt; third &lt;&lt; endl;
+
+    cout.unsetf(ios::fixed);
+    cout &lt;&lt; setprecision(6);
+    cout &lt;&lt; "back to the default:    " &lt;&lt; price &lt;&lt; "  " &lt;&lt; third &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">default:                4  0.333333
+fixed, 2 decimals:      4.00  0.33
+fixed, 4 decimals:      4.0000  0.3333
+back to the default:    4  0.333333</pre>
+<p>Three things to take from this:</p>
+<ul>
+  <li><code>fixed</code> is what makes <code>4.0</code> finally print as <code>4.00</code>. Without it,
+    <code>setprecision</code> alone would still drop the trailing zeros.</li>
+  <li>The third block only sends <code>setprecision(4)</code> &mdash; <code>fixed</code> is still in force from the
+    previous block, because manipulators stick. That is a feature when you want it and a bug when you
+    forget it.</li>
+  <li><code>setprecision</code> changes meaning depending on the mode. In fixed mode it counts digits after the
+    point; in the default mode it counts significant digits. Same call, two different rules.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.7</div>
+  <div class="bd">
+    <p>A student wants every number in a table printed to exactly two decimal places, so they write
+    <code>cout &lt;&lt; setprecision(2);</code> at the top of <code>main</code> and nothing else. They then print
+    <code>4.0</code>, <code>1.0/3.0</code> and <code>149.1</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What do they actually get, and why?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>They get <code>4</code>, <code>0.33</code> and <code>149</code>.</p>
+        <p>Without <code>fixed</code>, the stream stays in its default mode, so <code>setprecision(2)</code> means
+        <strong>two significant digits</strong>, and trailing zeros are still dropped. So
+        <code>4.0</code> loses its zeros as before; <code>1.0/3.0</code> keeps two significant digits
+        and becomes <code>0.33</code>; and <code>149.1</code> rounded to two significant digits would
+        be 150 &mdash; which prints as <code>149</code>? No: two significant digits of 149.1 is
+        <code>1.5e+02</code>. Do not guess at this one &mdash; the point of the question is that the
+        result is hard to predict and therefore the wrong tool. Reach for <code>fixed</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write the one line that actually does what they wanted.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    cout &lt;&lt; fixed &lt;&lt; setprecision(2);</code></pre>
+        <p>Send it once, before the table. Every <code>double</code> printed afterwards comes out with exactly
+        two digits after the point, trailing zeros and all: <code>4.00</code>, <code>0.33</code>,
+        <code>149.10</code>.</p>
+        <p><strong>Things to notice.</strong> Both names need <code>#include &lt;iomanip&gt;</code>. Strictly,
+        <code>fixed</code> alone lives in <code>&lt;ios&gt;</code> and comes along with <code>&lt;iostream&gt;</code>, but <code>setprecision</code> does
+        not &mdash; and since you almost always want the pair, just include <code>&lt;iomanip&gt;</code> whenever you
+        format numbers. Forgetting it produces <em>"'setprecision' was not declared in this
+        scope"</em>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span><code>break</code> and <code>continue</code></h2>
+
+<p>Suppose a program is executing a loop. It could be a <code>for</code> loop or a <code>while</code> loop &mdash; it does
+not matter. Two keywords let you cut a pass short.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>break</code></span></div>
+  <div class="bd">
+    <p><code>break</code> means <strong>exit the loop immediately</strong>.</p>
+    <ol>
+      <li>Do not execute the rest of the code in the loop, below the <code>break</code> statement.</li>
+      <li>Do <strong>not</strong> perform the end-of-loop test, and do <strong>not</strong> update
+        the loop counter.</li>
+    </ol>
+    <p>Execution resumes at the first statement after the loop.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>continue</code></span></div>
+  <div class="bd">
+    <p><code>continue</code> means <strong>go to the next iteration through the loop immediately</strong>.</p>
+    <ol>
+      <li>Do not execute the rest of the code in the loop, below the <code>continue</code> statement.</li>
+      <li><strong>Do</strong> update the loop counter and <strong>do</strong> perform the
+        end-of-loop test.</li>
+      <li>If the test passes, begin execution of the next pass through the loop.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Both keywords skip the rest of the loop body. The difference is entirely in what happens
+    next: <strong><code>break</code> skips the update and the test and leaves; <code>continue</code> performs the update
+    and the test and stays.</strong> If you can state that one sentence you can answer every
+    <code>break</code>/<code>continue</code> question on this course's exams.</p>
+  </div>
+</div>
+
+<p>Both keywords apply to the <strong>innermost</strong> loop that encloses them. In a nested loop,
+a <code>break</code> in the inner loop ends the inner loop only; the outer loop carries on. We rely on that in
+&sect;7.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one loop, two keywords</span></div>
+  <div class="bd">
+    <p>Here is the same <code>for</code> loop written twice. Only the keyword on line 4 of <code>main</code> differs.
+    Predict both outputs, and count the lines &mdash; they are not the same length.</p>
+<div class="codewrap"><div class="cap">loop_break_for.cpp</div><pre><code class="language-cpp">// loop_break_for.cpp -- break inside a for loop
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 0; i &lt; 5; ++i) {
+        cout &lt;&lt; i &lt;&lt; endl;
+        if (i == 2) break;
+        cout &lt;&lt; "Hello" &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0
+Hello
+1
+Hello
+2</pre>
+<p>Passes 0 and 1 run the whole body. On pass 2 the guard fires, so <code>2</code> has already been
+printed but the <code>Hello</code> below the <code>break</code> never is &mdash; and the loop is over. Passes 3
+and 4 do not happen at all.</p>
+
+</div></details>
+
+    <p>Now the identical loop with <code>continue</code>:</p>
+<div class="codewrap"><div class="cap">loop_continue_for.cpp</div><pre><code class="language-cpp">// loop_continue_for.cpp -- the same loop with continue instead of break
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 0; i &lt; 5; ++i) {
+        cout &lt;&lt; i &lt;&lt; endl;
+        if (i == 2) continue;
+        cout &lt;&lt; "Hello" &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">0
+Hello
+1
+Hello
+2
+3
+Hello
+4
+Hello</pre>
+<p>Pass 2 looks the same as before &mdash; <code>2</code> printed, <code>Hello</code> skipped &mdash;
+but then the loop <em>keeps going</em>. Passes 3 and 4 run in full.</p>
+<table class="trace">
+  <tr><th><code>i</code></th><th>with <code>break</code></th><th>with <code>continue</code></th></tr>
+  <tr><td>0</td><td><code>0</code> <code>Hello</code></td><td><code>0</code> <code>Hello</code></td></tr>
+  <tr><td>1</td><td><code>1</code> <code>Hello</code></td><td><code>1</code> <code>Hello</code></td></tr>
+  <tr><td>2</td><td><code>2</code>, then leave the loop</td><td><code>2</code>, then next pass</td></tr>
+  <tr><td>3</td><td>&mdash; never runs</td><td><code>3</code> <code>Hello</code></td></tr>
+  <tr><td>4</td><td>&mdash; never runs</td><td><code>4</code> <code>Hello</code></td></tr>
+</table>
+<p>The two versions agree exactly up to the moment the guard fires, and diverge completely after it.
+That is the entire distinction.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.8</div>
+  <div class="bd">
+    <p>The course notes present this pair with a different guard: <code>if (i &gt; 3)</code> instead of
+    <code>if (i == 2)</code>. Everything else is unchanged.</p>
+<pre><code class="language-cpp">    // version A
+    for (int i = 0; i &lt; 5; ++i) {
+        cout &lt;&lt; i &lt;&lt; endl;
+        if (i &gt; 3) break;
+        cout &lt;&lt; "Hello" &lt;&lt; endl;
+    }
+
+    // version B
+    for (int i = 0; i &lt; 5; ++i) {
+        cout &lt;&lt; i &lt;&lt; endl;
+        if (i &gt; 3) continue;
+        cout &lt;&lt; "Hello" &lt;&lt; endl;
+    }</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does each version print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both print the same nine lines:</p>
+<pre class="out">0
+Hello
+1
+Hello
+2
+Hello
+3
+Hello
+4</pre>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Why are they identical, when <code>break</code> and <code>continue</code> are supposed to be different?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because of <em>when</em> the guard first fires. <code>i &gt; 3</code> is false for
+        <code>i</code> equal to 0, 1, 2 and 3, so for four passes neither keyword executes at all and
+        the two loops are literally the same program. The guard first becomes true at
+        <code>i == 4</code> &mdash; and that is already the last pass, since <code>i &lt; 5</code> would fail next
+        time round anyway.</p>
+        <p>So on that final pass, <code>break</code> leaves the loop and <code>continue</code> performs the update
+        (<code>i</code> becomes 5) and then fails the test and leaves the loop. Two different routes
+        to the same exit, one line later.</p>
+        <p><strong>Things to notice.</strong> This is a good illustration of why you should not test
+        a distinction with an example where the distinction cannot show. If you are trying to
+        convince yourself that <code>break</code> and <code>continue</code> differ, pick a guard that fires
+        <em>in the middle</em> &mdash; which is exactly why the worked example above uses
+        <code>if (i == 2)</code>. Getting the same answer twice is not evidence that two things are the same.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<p>The other shape you will see is <code>while</code>. Here <code>break</code> is doing real work: the loop condition is
+literally <code>true</code>, so <code>break</code> is the <em>only</em> way out.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; <code>break</code> as the only exit</span></div>
+  <div class="bd">
+    <p>Watch the postfix decrement in the <code>cout</code> &mdash; it prints one value and leaves a different
+    one behind for the test on the very next line. That is &sect;3 doing real work.</p>
+<div class="codewrap"><div class="cap">loop_break_while.cpp</div><pre><code class="language-cpp">// loop_break_while.cpp -- break out of while (true)
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int x = 5;
+    while (true) {
+        cout &lt;&lt; x-- &lt;&lt; endl;
+        if (x % 3 == 0) break;
+        cout &lt;&lt; "Bye" &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">5
+Bye
+4</pre>
+<table class="trace">
+  <tr><th>Pass</th><th><code>x</code> on entry</th><th><code>cout &lt;&lt; x--</code> prints</th><th><code>x</code> now</th><th><code>x % 3 == 0</code>?</th><th>Result</th></tr>
+  <tr><td>1</td><td>5</td><td>5</td><td>4</td><td>4 % 3 is 1 &mdash; false</td><td>prints <code>Bye</code>, loops again</td></tr>
+  <tr><td>2</td><td>4</td><td>4</td><td>3</td><td>3 % 3 is 0 &mdash; <strong>true</strong></td><td><code>break</code> &mdash; loop ends, no <code>Bye</code></td></tr>
+</table>
+<p>Two lessons in three lines of output. First, <code>while (true)</code> is not an infinite loop when
+something inside it can <code>break</code>. Second, the value tested on the <code>if</code> line is not the value that was
+printed one line earlier &mdash; the postfix decrement saw to that.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; <code>continue</code> inside <code>while (true)</code> hangs</span></div>
+  <div class="bd">
+    <p>The course notes give four skeletons: <code>break</code> in a <code>for</code>, <code>break</code> in a <code>while (true)</code>,
+    <code>continue</code> in a <code>for</code>, and <code>continue</code> in a <code>while (true)</code>. The fourth one is a trap, and it is
+    worth spelling out because a student who copies it will lock up their terminal:</p>
+<pre><code class="language-cpp">    while (true) {
+        // ...
+        if (condition) continue;      // DANGER
+        // ...
+    }</code></pre>
+    <p><code>continue</code> jumps back to the loop test, and the loop test is <code>true</code>. If nothing
+    <em>above</em> the <code>continue</code> changes the state that <code>condition</code> depends on, the
+    program spins forever printing nothing. A <code>for</code> loop is safe from this because its third slot
+    still runs; a <code>while</code> loop has no third slot, so the update has to be inside the body, and it has
+    to be above the <code>continue</code>.</p>
+    <p>Compare the professor's own concrete version, which quietly fixes both problems &mdash; it
+    uses a real condition instead of <code>true</code>, and it puts the decrement in the <code>cout</code> line
+    <em>above</em> the guard:</p>
+<div class="codewrap"><div class="cap">loop_continue_while.cpp</div><pre><code class="language-cpp">// loop_continue_while.cpp -- continue inside a while loop that still makes progress
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int x = 5;
+    while (x &gt;= 0) {
+        cout &lt;&lt; x-- &lt;&lt; endl;
+        if (x % 3 == 0) continue;
+        cout &lt;&lt; "Bye" &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<pre class="out">5
+Bye
+4
+3
+Bye
+2
+Bye
+1
+0
+Bye</pre>
+    <p>If you ever do hang a program this way, press <kbd>Ctrl</kbd>+<kbd>C</kbd> to kill it. Then go
+    looking for the state change you left below the <code>continue</code>.</p>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Worked problem: the odd primes below 100</h2>
+
+<p>Here is the problem the course notes build the whole <code>break</code> section toward:</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; write a program that prints all the odd primes less than 100</span></div>
+  <div class="bd">
+    <p>Before any code, the plan &mdash; four steps, straight from the notes:</p>
+    <ol>
+      <li>Loop through the odd integers from 3 to 100, say <code>i</code>.</li>
+      <li>For each value of <code>i</code>, test whether <code>i</code> is prime by dividing by odd
+        integers <code>j</code> such that <code>j</code> is at least 3 and <code>j*j</code> is at most
+        <code>i</code>.</li>
+      <li>In the loop over <code>j</code>, if the remainder <code>i % j</code> is zero, then <code>i</code> is
+        not prime. <code>break</code> out of the loop over <code>j</code>.</li>
+      <li>If <code>i</code> is prime, print a line of output.</li>
+    </ol>
+    <p>Three of those steps carry a real idea, and they are worth pausing on before you read the
+    code.</p>
+    <ul>
+      <li><strong>Why <code>j*j &lt;= i</code> and not <code>j &lt; i</code>?</strong> If <code>i</code> has a divisor larger
+        than its square root, it must also have one smaller. So once <code>j*j</code> passes <code>i</code>, any
+        divisor would already have been found. For <code>i</code> near 100 that is the difference
+        between testing 5 divisors and testing 50. Notice it is written as a multiplication rather
+        than <code>sqrt(i)</code> &mdash; no library call, no floating point, no rounding worries.</li>
+      <li><strong>Why <code>j += 2</code>?</strong> <code>i</code> is odd, so no even number divides it. Testing
+        even divisors is wasted work.</li>
+      <li><strong>Why the <code>bool</code>?</strong> The <code>break</code> gets you out of the inner loop, but the outer
+        loop still has to know <em>why</em> the inner loop stopped &mdash; because it found a divisor,
+        or because it ran out of candidates. A flag variable carries that verdict across.</li>
+    </ul>
+    <p>Now predict: how many lines does this print, and what is the last one?</p>
+<div class="codewrap"><div class="cap">primes.cpp</div><pre><code class="language-cpp">// primes.cpp -- print every odd prime less than 100
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 3; i &lt; 100; i += 2) {
+        bool b = true;
+        for (int j = 3; j*j &lt;= i; j += 2) {
+            if ( (i % j) == 0 ) {
+                b = false;
+                break;
+            }
+        }
+        if (b == true) {
+            cout &lt;&lt; i &lt;&lt; " is prime." &lt;&lt; endl;
+        }
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">3 is prime.
+5 is prime.
+7 is prime.
+11 is prime.
+13 is prime.
+17 is prime.
+19 is prime.
+23 is prime.
+29 is prime.
+31 is prime.
+37 is prime.
+41 is prime.
+43 is prime.
+47 is prime.
+53 is prime.
+59 is prime.
+61 is prime.
+67 is prime.
+71 is prime.
+73 is prime.
+79 is prime.
+83 is prime.
+89 is prime.
+97 is prime.</pre>
+<p>Twenty-four lines, ending at 97. Trace two values of <code>i</code> by hand to see the <code>break</code>
+earn its keep:</p>
+<table class="trace">
+  <tr><th><code>i</code></th><th>inner loop</th><th><code>b</code> at the end</th><th>printed?</th></tr>
+  <tr><td>3</td><td><code>j</code> starts at 3, but <code>3*3 = 9</code> is already more than 3, so the loop body never runs</td><td><code>true</code></td><td>yes</td></tr>
+  <tr><td>9</td><td><code>j = 3</code>: <code>9 % 3</code> is 0 &mdash; set <code>b</code> false and <code>break</code></td><td><code>false</code></td><td>no</td></tr>
+  <tr><td>91</td><td><code>j = 3, 5</code> no; <code>j = 7</code>: <code>91 % 7</code> is 0 &mdash; <code>break</code></td><td><code>false</code></td><td>no</td></tr>
+  <tr><td>97</td><td><code>j = 3, 5, 7, 9</code> all leave a remainder; at <code>j = 11</code>, <code>121 &gt; 97</code> so the loop ends normally</td><td><code>true</code></td><td>yes</td></tr>
+</table>
+<p>The <code>i = 3</code> row is the case people get wrong when they trace by hand: a <code>for</code> loop
+whose condition is false on the very first check runs its body <strong>zero</strong> times. The flag
+is still <code>true</code>, so 3 is correctly reported as prime.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; three details in the original listing</span></div>
+  <div class="bd">
+    <p>Three things about this program as it appears in the course notes are worth fixing or saying
+    out loud, because each of them will bite somebody.</p>
+    <ul>
+      <li>The listing starts at <code>int main(){</code> with <strong>no <code>#include &lt;iostream&gt;</code> and no
+        <code>using namespace std;</code></strong>, yet it uses <code>cout</code> and <code>endl</code>. As printed it does not
+        compile. The version above adds the two missing lines. When you copy code off a slide, check
+        the top of the file first.</li>
+      <li>The problem says primes <em>less than</em> 100 but the original loop header reads
+        <code>for (int i = 3; i &lt;= 100; i += 2)</code>. It happens to be harmless &mdash; <code>i</code> only
+        ever takes odd values, so it never equals 100 &mdash; but the bound does not match the
+        specification, and a reader has to stop and prove that to themselves. The version above uses
+        <code>i &lt; 100</code>, which needs no proof.</li>
+      <li>The program never prints <strong>2</strong>, which is a prime. That is deliberate: the
+        problem asked for <em>odd</em> primes. If you are ever asked for all primes below 100, the
+        loop above needs a special case for 2 bolted on, because the whole <code>j += 2</code> optimization
+        assumes <code>i</code> is odd.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.9</div>
+  <div class="bd">
+    <p>Questions about the primes program above.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Replace the <code>break</code> with a <code>continue</code>. Does the program still print the right answer?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes &mdash; the output is unchanged. Once <code>b</code> has been set to <code>false</code> it is never set back
+        to <code>true</code>, so continuing to grind through the remaining candidate divisors cannot change the
+        verdict. It only wastes time.</p>
+        <p>That is the honest answer, and it is worth knowing: <code>break</code> here is an
+        <em>optimization</em>, not a correctness requirement. It matters when the loop is long. It
+        would matter enormously if the inner loop had a side effect, such as printing.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Delete the <code>bool b</code> entirely and print <code>i</code> right where the <code>break</code> currently is. What breaks?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>You would be printing exactly the numbers that are <em>not</em> prime, since that is the
+        branch the <code>break</code> lives in. Inverting it is not a one-line fix either: there is no statement
+        inside the inner loop that runs "if no divisor was ever found," because that fact is only
+        known <em>after</em> the loop finishes.</p>
+        <p>That is the general reason for the flag. <strong>A loop can tell you "I found one" the
+        moment it happens, but it can only tell you "there was none" once it has ended.</strong> When
+        you need the second kind of answer, you need a variable declared outside the loop to carry
+        it out. You will use this pattern in nearly every search you write.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> The inner loop starts at <code>j = 3</code>. Why is it safe never to test <code>j = 2</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because the outer loop only ever produces odd values of <code>i</code> &mdash; it starts at
+        3 and steps by 2 &mdash; and no odd number is divisible by 2. Testing it would always leave a
+        remainder, so it is guaranteed wasted work.</p>
+        <p>The same argument is what licenses <code>j += 2</code> rather than <code>j++</code>: every even divisor is a
+        multiple of 2, and we have just ruled 2 out.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; a filtered loop with both keywords</h3>
+
+<p>Write a loop over the integers 1 through 50 that prints only the multiples of 3 that are
+<em>not</em> multiples of 4, and stops as soon as it has printed one that is greater than 30. Use
+<code>continue</code> for the two filters and <code>break</code> for the stopping rule &mdash; do not use a nested <code>if</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="18" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i &lt;= 50; ++i) {
+        // guard 1: skip i if it is not a multiple of 3
+
+        // guard 2: skip i if it is also a multiple of 4
+
+        cout &lt;&lt; i &lt;&lt; &quot; &quot;;
+        // stopping rule: once we have printed one past 30, leave
+
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i &lt;= 50; ++i) {
+        // guard 1: skip i if it is not a multiple of 3
+
+        // guard 2: skip i if it is also a multiple of 4
+
+        cout &lt;&lt; i &lt;&lt; " ";
+        // stopping rule: once we have printed one past 30, leave
+
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.10</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output. Then answer this: would moving the
+    <code>break</code> <em>above</em> the <code>cout</code> change what is printed?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Three separate decisions, so three separate <code>if</code> statements, each one
+      a single line. The two filters phrase their conditions in the negative &mdash; "if this is
+      <em>not</em> what I want, skip" &mdash; which is what lets them sit flat instead of nesting.
+      The stopping rule goes <em>after</em> the <code>cout</code> because the specification says to print the
+      number that triggers it.</p>
+<div class="codewrap"><div class="cap">ex2_solution.cpp</div><pre><code class="language-cpp">// ex2_solution.cpp -- multiples of 3 that are not multiples of 4, stopping past 30
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i &lt;= 50; ++i) {
+        if (i % 3 != 0) continue;      // not a multiple of 3 -- skip
+        if (i % 4 == 0) continue;      // also a multiple of 4 -- skip
+        cout &lt;&lt; i &lt;&lt; " ";
+        if (i &gt; 30) break;             // printed one past 30 -- stop
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">3 6 9 15 18 21 27 30 33</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>12 and 24 are missing because they are multiples of 4; the second guard removed them.</li>
+        <li>The loop stops at 33, not at 30. <code>i &gt; 30</code> is false at 30, so 30 prints and the loop
+          continues; 33 is the first survivor above 30, and the <code>break</code> fires <em>after</em> it has
+          been printed.</li>
+        <li><strong>Yes, moving the <code>break</code> above the <code>cout</code> changes the output</strong> &mdash; you
+          would lose the <code>33</code> and the line would end at <code>30</code>. Where you place a
+          <code>break</code> relative to the work in the body is not a style question. It decides whether the
+          triggering item is included or excluded, and exam questions are built precisely on that
+          distinction.</li>
+        <li>The loop counter reaching 50 is now unreachable: the <code>break</code> always fires first. That is
+          fine, but if it were not guaranteed, the <code>for</code> bound would still stop the loop &mdash; it is
+          good practice to keep a bound even when you expect to <code>break</code> out.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>From nested <code>if</code> to guard clauses</h2>
+
+<p>The last idea today is the reason <code>continue</code> earns its place in the language. Consider a program
+that loops over some integers <code>i</code> and:</p>
+
+<ol>
+  <li>if <code>i</code> is divisible by 2, prints a line saying <code>i</code> is divisible by 2;</li>
+  <li>if <code>i</code> is <em>also</em> divisible by 3, prints a line saying <code>i</code> is
+    divisible by 2 and 3;</li>
+  <li>if <code>i</code> is <em>also</em> divisible by 5, prints a line saying <code>i</code> is
+    divisible by 2 and 3 and 5.</li>
+</ol>
+
+<p>Written the obvious way, each "also" becomes another level of nesting.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the nested version</span></div>
+  <div class="bd">
+    <p>Three levels deep, and the deepest <code>cout</code> sits five indent levels from the margin. Predict the
+    output &mdash; the loop visits <code>6, 10, 14, 18, 22, 26, 30</code>.</p>
+<div class="codewrap"><div class="cap">divis_nested.cpp</div><pre><code class="language-cpp">// divis_nested.cpp -- divisibility report, written with nested ifs
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 6; i &lt;= 30; i += 4) {
+        if ( (i % 2) == 0 ) {
+            cout &lt;&lt; i &lt;&lt; " is divisible by 2." &lt;&lt; endl;
+            if ( (i % 3) == 0 ) {
+                cout &lt;&lt; i &lt;&lt; " is divisible by 2 and 3." &lt;&lt; endl;
+                if ( (i % 5) == 0 ) {
+                    cout &lt;&lt; i &lt;&lt; " is divisible by 2 and 3 and 5." &lt;&lt; endl;
+                }
+            }
+        }
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">6 is divisible by 2.
+6 is divisible by 2 and 3.
+10 is divisible by 2.
+14 is divisible by 2.
+18 is divisible by 2.
+18 is divisible by 2 and 3.
+22 is divisible by 2.
+26 is divisible by 2.
+30 is divisible by 2.
+30 is divisible by 2 and 3.
+30 is divisible by 2 and 3 and 5.</pre>
+<p>Eleven lines. Only 30 reaches the innermost message, and every value reaches the first one
+&mdash; the loop starts at an even number and steps by 4, so every <code>i</code> it produces is
+even. Keep that in mind; we come back to it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now watch what happens when you turn each test inside out. Instead of "if the condition holds,
+do the rest of the work <em>inside</em> here," say "if the condition fails, abandon this pass
+<em>now</em>." The work moves out of the braces and the braces disappear.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; guard clause</span></div>
+  <div class="bd">
+    <p>A <strong>guard clause</strong> is a test at the top of a block whose only job is to bail out
+    early when the block has nothing to do. Inside a loop the bail-out is <code>continue</code> (or <code>break</code>);
+    inside a function it is <code>return</code>.</p>
+    <p>The transformation is mechanical. Any nesting of the form</p>
+<pre><code class="language-cpp">if (P) {
+    A;
+    if (Q) {
+        B;
+    }
+}</code></pre>
+    <p>can be rewritten, when it is the whole body of a loop, as</p>
+<pre><code class="language-cpp">if (!P) continue;
+A;
+if (!Q) continue;
+B;</code></pre>
+    <p>Each condition is <strong>negated</strong>, each <code>{</code> disappears, and each block of real work
+    moves out to the left. The two versions execute the same statements in the same order.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same program, flattened</span></div>
+  <div class="bd">
+    <p>Same loop, same three conditions, all three negated, <code>continue</code> in place of the braces.
+    Predict the output before revealing &mdash; and specifically, predict whether it differs from the
+    nested version.</p>
+<div class="codewrap"><div class="cap">divis_continue.cpp</div><pre><code class="language-cpp">// divis_continue.cpp -- the same report, written with guard clauses
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 6; i &lt;= 30; i += 4) {
+        if ( (i % 2) != 0 ) continue;
+        cout &lt;&lt; i &lt;&lt; " is divisible by 2." &lt;&lt; endl;
+        if ( (i % 3) != 0 ) continue;
+        cout &lt;&lt; i &lt;&lt; " is divisible by 2 and 3." &lt;&lt; endl;
+        if ( (i % 5) != 0 ) continue;
+        cout &lt;&lt; i &lt;&lt; " is divisible by 2 and 3 and 5." &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">6 is divisible by 2.
+6 is divisible by 2 and 3.
+10 is divisible by 2.
+14 is divisible by 2.
+18 is divisible by 2.
+18 is divisible by 2 and 3.
+22 is divisible by 2.
+26 is divisible by 2.
+30 is divisible by 2.
+30 is divisible by 2 and 3.
+30 is divisible by 2 and 3 and 5.</pre>
+<p>Byte for byte identical to the nested version. What changed is only the shape of the source:</p>
+<table class="trace">
+  <tr><th></th><th>nested</th><th>guard clauses</th></tr>
+  <tr><td>deepest indent level in the loop body</td><td>3</td><td>0</td></tr>
+  <tr><td>braces in the loop body</td><td>6</td><td>0</td></tr>
+  <tr><td>form of each condition</td><td><code>(i % 3) == 0</code></td><td><code>(i % 3) != 0</code></td></tr>
+  <tr><td>where the real work sits</td><td>buried</td><td>flush left, in reading order</td></tr>
+</table>
+<p>The flat version reads like the specification: <em>rule out the odd ones; report divisible by 2;
+rule out the non-multiples of 3; report divisible by 2 and 3;</em> and so on. That correspondence
+with the problem statement is the actual payoff, and it is why experienced C++ programmers reach for
+this shape by reflex when a body starts drifting to the right.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; a character that looks right but is not ASCII</span></div>
+  <div class="bd">
+    <p>The slide this program comes from contains a real, compile-breaking typo, and it is one you
+    will hit yourself sooner or later &mdash; usually after pasting code from a PDF, a chat window,
+    or a word processor. The printed line is</p>
+<pre><code class="language-cpp">    if ( (i%5) ！= 0 ) continue；</code></pre>
+    <p>Look closely at the <code>!</code> and the <code>;</code>. They are not <code>!</code> and
+    <code>;</code>. They are U+FF01 FULLWIDTH EXCLAMATION MARK and U+FF1B FULLWIDTH SEMICOLON &mdash;
+    different characters that happen to be drawn like the ones you want. The corrected line is the
+    one used above:</p>
+<pre><code class="language-cpp">    if ( (i % 5) != 0 ) continue;</code></pre>
+    <p>Compile the original and g++ produces this, which tells you nothing useful if you do not know
+    what to look for:</p>
+<pre class="err">fullwidth_bug.cpp: In function 'int main()':
+fullwidth_bug.cpp:6:21: error: expected ')' before '\U0000ff01'
+    6 |         if ( (i % 5) ！= 0 ) continue；
+      |            ~        ^~~
+      |                     )
+fullwidth_bug.cpp:6:30: error: 'continue\U0000ff1b' was not declared in this scope
+    6 |         if ( (i % 5) ！= 0 ) continue；
+      |                              ^~~~~~~~~~</pre>
+    <p>The whole family of these errors has one giveaway: <strong>the message quotes a
+    <code>\U0000xxxx</code> escape for a character you never knowingly typed</strong>, or complains
+    about an "extended character" that "is not valid in an identifier." A simpler case, a full-width
+    semicolon after a number, produces this:</p>
+<pre class="err">stray_semicolon.cpp: In function 'int main()':
+stray_semicolon.cpp:5:13: error: unable to find numeric literal operator 'operator""\U0000ff1b'
+    5 |     int x = 5；
+      |             ^~~</pre>
+    <p>Curly quotes from a word processor (<code>&ldquo;</code> and <code>&rdquo;</code> instead of
+    <code>"</code>) and non-breaking spaces behave the same way. The cure is always the same: retype
+    the suspicious line by hand in your editor. Do not try to fix it by staring at it &mdash; the
+    characters are designed to look identical.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.11</div>
+  <div class="bd">
+    <p>The loop above runs <code>i = 6, 10, 14, 18, 22, 26, 30</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many times does the first guard, <code>if ((i % 2) != 0) continue;</code>, actually fire?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Never.</strong> The loop starts at 6, which is even, and steps by 4, which is
+        even, so every value it produces is even and <code>(i % 2) != 0</code> is false every time.</p>
+        <p>The example under-demonstrates its own mechanism: the guard that is supposed to show
+        <code>continue</code> skipping a pass is dead code for this particular data. Worth knowing when you are
+        reading the notes and wondering why the effect is invisible.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Change the loop header to <code>for (int i = 1; i &lt;= 15; ++i)</code> and drop the third rule. What does the program print now?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">divis_step1.cpp</div><pre><code class="language-cpp">// divis_step1.cpp -- guard clauses, over a range where the first guard really fires
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i &lt;= 15; ++i) {
+        if ( (i % 2) != 0 ) continue;
+        cout &lt;&lt; i &lt;&lt; " is divisible by 2." &lt;&lt; endl;
+        if ( (i % 3) != 0 ) continue;
+        cout &lt;&lt; i &lt;&lt; " is divisible by 2 and 3." &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<pre class="out">2 is divisible by 2.
+4 is divisible by 2.
+6 is divisible by 2.
+6 is divisible by 2 and 3.
+8 is divisible by 2.
+10 is divisible by 2.
+12 is divisible by 2.
+12 is divisible by 2 and 3.
+14 is divisible by 2.</pre>
+        <p>Now the first guard fires on all eight odd values and you can see it working. The second
+        guard fires on 2, 4, 8, 10 and 14, letting only the multiples of 6 through.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Give one situation where you should <em>not</em> flatten a nested <code>if</code> into guard clauses.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Whenever the nested <code>if</code> is <strong>not the last thing in the loop body</strong>. The
+        rewrite only preserves behavior if everything below the innermost block would have been
+        skipped anyway. If the loop body continues with more work after the nest &mdash; a counter
+        update, a running total, a closing message &mdash; then <code>continue</code> would skip that too and
+        change the program.</p>
+        <p>Two more cases: if there are <code>else</code> branches, the transformation needs care, since
+        "otherwise" is not the same as "bail out"; and if the nesting is only two levels deep and
+        already readable, flattening it buys nothing. Guard clauses are a tool for a body that is
+        drifting to the right, not a rule to apply everywhere.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; flatten this loop</h3>
+
+<p>The loop below classifies exam scores and is three levels deep. Rewrite the body using guard
+clauses so that nothing is indented past the loop, and check that the output is unchanged.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int n = 8;
+    int score[n] = {88, -4, 95, 59, 100, 72, 130, 60};
+
+    for (int i = 0; i &lt; n; ++i) {
+        if (score[i] &gt;= 0) {
+            if (score[i] &lt;= 100) {
+                cout &lt;&lt; score[i] &lt;&lt; &quot;: valid&quot; &lt;&lt; endl;
+                if (score[i] &gt;= 60) {
+                    cout &lt;&lt; score[i] &lt;&lt; &quot;: passing&quot; &lt;&lt; endl;
+                    if (score[i] &gt;= 90) {
+                        cout &lt;&lt; score[i] &lt;&lt; &quot;: honors&quot; &lt;&lt; endl;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int n = 8;
+    int score[n] = {88, -4, 95, 59, 100, 72, 130, 60};
+
+    for (int i = 0; i &lt; n; ++i) {
+        if (score[i] &gt;= 0) {
+            if (score[i] &lt;= 100) {
+                cout &lt;&lt; score[i] &lt;&lt; ": valid" &lt;&lt; endl;
+                if (score[i] &gt;= 60) {
+                    cout &lt;&lt; score[i] &lt;&lt; ": passing" &lt;&lt; endl;
+                    if (score[i] &gt;= 90) {
+                        cout &lt;&lt; score[i] &lt;&lt; ": honors" &lt;&lt; endl;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 3.12</div>
+  <div class="bd">
+    <p>Write the flattened version of the scores loop, and give its output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Four conditions, so four guards, each one the negation of the test it
+      replaces. <code>score[i] &gt;= 0</code> negates to <code>score[i] &lt; 0</code>; <code>score[i] &lt;= 100</code> negates to
+      <code>score[i] &gt; 100</code>; <code>score[i] &gt;= 60</code> negates to <code>score[i] &lt; 60</code>; <code>score[i] &gt;= 90</code> negates to
+      <code>score[i] &lt; 90</code>. Notice that the first two guards are independent validity checks, so writing
+      them as two separate lines rather than one combined <code>||</code> keeps each reason for rejection
+      visible.</p>
+<div class="codewrap"><div class="cap">grade_guard.cpp</div><pre><code class="language-cpp">// grade_guard.cpp -- the same report, written with guard clauses
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int n = 8;
+    int score[n] = {88, -4, 95, 59, 100, 72, 130, 60};
+
+    for (int i = 0; i &lt; n; ++i) {
+        if (score[i] &lt; 0)   continue;
+        if (score[i] &gt; 100) continue;
+        cout &lt;&lt; score[i] &lt;&lt; ": valid" &lt;&lt; endl;
+        if (score[i] &lt; 60) continue;
+        cout &lt;&lt; score[i] &lt;&lt; ": passing" &lt;&lt; endl;
+        if (score[i] &lt; 90) continue;
+        cout &lt;&lt; score[i] &lt;&lt; ": honors" &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<pre class="out">88: valid
+88: passing
+95: valid
+95: passing
+95: honors
+59: valid
+100: valid
+100: passing
+100: honors
+72: valid
+72: passing
+60: valid
+60: passing</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>-4</code> and <code>130</code> produce no output at all &mdash; the two validity
+          guards remove them before anything is printed. In the nested version you have to read three
+          lines and match up two closing braces to establish that.</li>
+        <li><code>59</code> prints <code>valid</code> and stops; <code>100</code> and <code>95</code>
+          go all the way through. Boundary values are where these programs go wrong, so
+          <code>60</code>, <code>100</code> and <code>-4</code> are in the data on purpose. Always put
+          the boundaries in your test data.</li>
+        <li>Negating a comparison flips it <em>and</em> flips whether the boundary is included. The
+          opposite of <code>&gt;= 60</code> is <code>&lt; 60</code>, not <code>&lt;= 60</code>. Getting that wrong changes the answer for
+          exactly one score &mdash; 60 &mdash; which is exactly the kind of bug that survives a casual
+          test.</li>
+        <li>The two versions are the same program: compile both and their output is identical. That
+          is the check to run every time you refactor. A refactoring that changes the output is not a
+          refactoring, it is a bug.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 3</span></div>
+  <div class="bd">
+    <p>Problem 1 is the trace exercise posed in the original course notes for this material.
+    Problem 2 is Problem 3 of the Fall 2023 Exam 1, reproduced with its parts (a) through (d);
+    its part (e) used a <code>vector</code>, which we meet in Class 5. Problems 3, 4 and 5 are additional,
+    written to the same formats the exams use.</p>
+    <p>Commit to an answer before you open a solution. Output-prediction parts on this course's
+    exams carry <strong>no partial credit</strong>, so a habit of writing the answer down first is
+    worth building now. On the write-a-program parts the rubric pays for the standard opening and
+    closing lines on their own, so always write the <code>#include</code>, the <code>using</code>, the <code>int main()</code> and
+    the <code>return 0;</code> even if the middle defeats you.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; What does this program do? <span class="muted small">(from the course notes)</span></h3>
+
+<p>Read the program below and state exactly what it prints. It combines almost everything from today:
+a <code>continue</code> and a <code>break</code> in the same loop, a <code>while (true)</code> driver, compound assignment, and a
+function call embedded in a <code>cout</code> chain.</p>
+
+<div class="codewrap"><div class="cap">sum_abc.cpp</div><pre><code class="language-cpp">// sum_abc.cpp -- what does this program do?
+#include &lt;iostream&gt;
+using namespace std;
+
+int sum_abc(int n, const int a[], int b, int c) {
+    int sum = 0;
+    for (int i = 0; i &lt; n; ++i) {
+        if (a[i] &lt; b) continue;
+        if (a[i] &gt; c) break;
+        sum = sum + a[i];
+    }
+    return sum;
+}
+
+int main() {
+    const int n = 10;
+    int a[n];
+    for (int i = 0; i &lt; n; ++i)
+        a[i] = i*i;
+
+    int b = 10;
+    int c = 99;
+    while (true) {
+        if (b &gt;= c) break;
+        b += 7;
+        if (b % 3 == 0) continue;
+        c -= 5;
+        cout &lt;&lt; b &lt;&lt; " " &lt;&lt; c &lt;&lt; " " &lt;&lt; sum_abc(n, a, b, c) &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Two loops to understand, so take them one at a time.</p>
+  <p>First pin down the array: <code>a[i] = i*i</code> for <code>i</code> from 0 to 9 gives
+  <code>0 1 4 9 16 25 36 49 64 81</code>. That never changes, so write it down once.</p>
+  <p>Next understand <code>sum_abc</code>. It walks the array in order and adds up the elements, but with two
+  filters: <code>if (a[i] &lt; b) continue;</code> skips anything below <code>b</code> without stopping, and
+  <code>if (a[i] &gt; c) break;</code> stops the walk entirely at the first element above <code>c</code>. Since the
+  array happens to be sorted, the effect is <strong>sum every element in the range from
+  <code>b</code> to <code>c</code> inclusive</strong>. The <code>break</code> is safe only <em>because</em> the
+  array is sorted &mdash; on unsorted data it would abandon elements it should have counted.</p>
+  <p>Then trace the driver loop. Keep a table of <code>b</code> and <code>c</code>, apply the guards
+  in order, and remember that <code>continue</code> on a <code>while</code> loop skips the printing but also skips
+  <code>c -= 5</code>.</p>
+<pre class="out">17 94 255
+31 89 230
+38 84 194
+52 79 64
+59 74 64
+73 69 0</pre>
+  <p>The driver loop, pass by pass. <code>b</code> steps up by 7 every pass; <code>c</code> steps
+  down by 5 only on the passes that print:</p>
+  <table class="trace">
+    <tr><th>Pass</th><th><code>b</code> after <code>+= 7</code></th><th><code>b % 3 == 0</code>?</th><th><code>c</code></th><th>Printed?</th></tr>
+    <tr><td>1</td><td>17</td><td>no</td><td>94</td><td>yes</td></tr>
+    <tr><td>2</td><td>24</td><td><strong>yes</strong> &mdash; <code>continue</code></td><td>94</td><td>no</td></tr>
+    <tr><td>3</td><td>31</td><td>no</td><td>89</td><td>yes</td></tr>
+    <tr><td>4</td><td>38</td><td>no</td><td>84</td><td>yes</td></tr>
+    <tr><td>5</td><td>45</td><td><strong>yes</strong> &mdash; <code>continue</code></td><td>84</td><td>no</td></tr>
+    <tr><td>6</td><td>52</td><td>no</td><td>79</td><td>yes</td></tr>
+    <tr><td>7</td><td>59</td><td>no</td><td>74</td><td>yes</td></tr>
+    <tr><td>8</td><td>66</td><td><strong>yes</strong> &mdash; <code>continue</code></td><td>74</td><td>no</td></tr>
+    <tr><td>9</td><td>73</td><td>no</td><td>69</td><td>yes</td></tr>
+    <tr><td>10</td><td colspan="4"><code>b</code> is 73 and <code>c</code> is 69, so <code>b &gt;= c</code> and the <code>break</code> fires before anything else happens</td></tr>
+  </table>
+  <p>And the third column of each printed line, from the array
+  <code>0 1 4 9 16 25 36 49 64 81</code>:</p>
+  <table class="trace">
+    <tr><th><code>b</code></th><th><code>c</code></th><th>elements in range</th><th>sum</th></tr>
+    <tr><td>17</td><td>94</td><td>25, 36, 49, 64, 81</td><td>255</td></tr>
+    <tr><td>31</td><td>89</td><td>36, 49, 64, 81</td><td>230</td></tr>
+    <tr><td>38</td><td>84</td><td>49, 64, 81</td><td>194</td></tr>
+    <tr><td>52</td><td>79</td><td>64</td><td>64</td></tr>
+    <tr><td>59</td><td>74</td><td>64</td><td>64</td></tr>
+    <tr><td>73</td><td>69</td><td>none &mdash; the first element at or above 73 is 81, which is above 69, so the <code>break</code> fires immediately</td><td>0</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The last line is <code>73 69 0</code> and it is the one people get wrong. <code>b</code> has
+      overtaken <code>c</code>, so the range is empty and the function returns 0. The driver's
+      <code>break</code> guard is checked at the <em>top</em> of the next pass, so this line still prints first.</li>
+    <li><code>const int a[]</code> in the signature is a promise that <code>sum_abc</code> will not modify the caller's
+      array. Arrays are always passed by address in C++, so without the <code>const</code> the function could
+      scribble on <code>main</code>'s data. We take this apart properly in Class 7.</li>
+    <li>Both <code>continue</code> statements skip work below them. In <code>sum_abc</code> the skipped work is
+      <code>sum = sum + a[i];</code>; in <code>main</code> it is <code>c -= 5;</code> and the whole <code>cout</code>. Tracing this program is
+      largely an exercise in remembering that.</li>
+    <li><code>b += 7</code> is shorthand for <code>b = b + 7</code>. It is worth reading compound assignments out loud as
+      the long form while you are tracing, since it is easy to skim past them.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; What is the output for each of the following lines? <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+
+<p>Consider the following C++ program. What output would the program print for each of the labelled
+lines? Note that nothing separates the items in lines (a) and (b), or in lines (c) and (d).</p>
+
+<div class="codewrap"><div class="cap">exam_f23.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int x = 3, y = 5, z = 7, w = 9;
+    cout &lt;&lt; x++ &lt;&lt; ++y &lt;&lt; z-- &lt;&lt; --w &lt;&lt; endl;                    // line (a)
+    cout &lt;&lt; x &lt;&lt; y &lt;&lt; z &lt;&lt; w &lt;&lt; endl;                            // line (b)
+
+    for (int i=3; i&lt;9; i++) { if (i%5==0) break;    cout &lt;&lt; i; } // line (c)
+    cout &lt;&lt; endl;
+    for (int j=3; j&lt;9; j++) { if (j%5==0) continue; cout &lt;&lt; j; } // line (d)
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> What is the output at line (a)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> Left to right, two questions per item, margin table kept alive.</p>
+    <table class="trace">
+      <tr><th>Item</th><th>Prints</th><th>Leaves behind</th></tr>
+      <tr><td><code>x++</code></td><td><strong>3</strong> (old)</td><td><code>x</code> is 4</td></tr>
+      <tr><td><code>++y</code></td><td><strong>6</strong> (new)</td><td><code>y</code> is 6</td></tr>
+      <tr><td><code>z--</code></td><td><strong>7</strong> (old)</td><td><code>z</code> is 6</td></tr>
+      <tr><td><code>--w</code></td><td><strong>8</strong> (new)</td><td><code>w</code> is 8</td></tr>
+    </table>
+<pre class="out">3678</pre>
+    <p>No spaces &mdash; the chain contains none, so <code>cout</code> inserts none.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> What is the output at line (b)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">4668</pre>
+    <p>Line (b) prints the four variables as line (a) left them: 4, 6, 6, 8. Every single one of
+    them moved. If you wrote <code>3579</code> you restarted the trace instead of carrying it
+    forward &mdash; that is the mistake this part exists to catch.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> What is the output at line (c)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <table class="trace">
+      <tr><th><code>i</code></th><th><code>i % 5 == 0</code>?</th><th>What happens</th></tr>
+      <tr><td>3</td><td>no</td><td>prints <code>3</code></td></tr>
+      <tr><td>4</td><td>no</td><td>prints <code>4</code></td></tr>
+      <tr><td>5</td><td><strong>yes</strong></td><td><code>break</code> &mdash; loop ends, nothing printed for 5</td></tr>
+    </table>
+<pre class="out">34</pre>
+    <p>The <code>break</code> is <em>above</em> the <code>cout</code>, so 5 is never printed, and 6, 7 and 8 never
+    happen at all.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> What is the output at line (d)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <table class="trace">
+      <tr><th><code>j</code></th><th><code>j % 5 == 0</code>?</th><th>What happens</th></tr>
+      <tr><td>3</td><td>no</td><td>prints <code>3</code></td></tr>
+      <tr><td>4</td><td>no</td><td>prints <code>4</code></td></tr>
+      <tr><td>5</td><td><strong>yes</strong></td><td><code>continue</code> &mdash; 5 is skipped, loop carries on</td></tr>
+      <tr><td>6</td><td>no</td><td>prints <code>6</code></td></tr>
+      <tr><td>7</td><td>no</td><td>prints <code>7</code></td></tr>
+      <tr><td>8</td><td>no</td><td>prints <code>8</code></td></tr>
+    </table>
+<pre class="out">34678</pre>
+    <p><strong>Things to notice.</strong> This pair of parts is on every midterm this course has
+    given, always in exactly this shape: the same loop twice, one with <code>break</code> and one with
+    <code>continue</code>, guarded by a modulus test. The <code>break</code> answer is always a prefix of the sequence; the
+    <code>continue</code> answer is always the whole sequence with holes punched in it. If your two answers do
+    not have that relationship, you have made an error somewhere.</p>
+    <p>Here is the whole program's real output, all four lines:</p>
+<pre class="out">3678
+4668
+34
+34678</pre>
+  </div></details>
+</div>
+
+<h3>Problem 3 &mdash; Predict the printed <code>double</code>s <span class="muted small">(added)</span></h3>
+
+<p>Give the exact output of each labelled line. Decide the type of the expression first, then apply
+the printing rule.</p>
+
+<div class="codewrap"><div class="cap">prac_doubles.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int total = 9, count = 4;
+    double side = 2.0;
+
+    cout &lt;&lt; side * side &lt;&lt; endl;                              // (a)
+    cout &lt;&lt; total / count &lt;&lt; endl;                            // (b)
+    cout &lt;&lt; total / 2.0 &lt;&lt; endl;                              // (c)
+    cout &lt;&lt; static_cast&lt;double&gt;(total) / count &lt;&lt; endl;       // (d)
+    cout &lt;&lt; 0.1 + 0.2 &lt;&lt; endl;                                // (e)
+    cout &lt;&lt; 12345678.9 &lt;&lt; endl;                               // (f)
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Six independent lines. For each, name the type of the whole expression,
+  then say what the six-significant-digit rule does to it.</p>
+<pre class="out">4
+2
+4.5
+2.25
+0.3
+1.23457e+07</pre>
+  <table class="trace">
+    <tr><th>Line</th><th>Type</th><th>Value</th><th>Printed</th><th>Why</th></tr>
+    <tr><td>(a)</td><td><code>double</code></td><td>4.0</td><td><code>4</code></td><td>Trailing zeros dropped, then the bare decimal point too. <strong>Not</strong> <code>4.0</code>.</td></tr>
+    <tr><td>(b)</td><td><code>int</code></td><td>2</td><td><code>2</code></td><td>Integer division. The 0.25 never existed &mdash; it was discarded before printing was ever considered.</td></tr>
+    <tr><td>(c)</td><td><code>double</code></td><td>4.5</td><td><code>4.5</code></td><td>One operand is a <code>double</code> literal, so <code>total</code> is converted and the division is floating point.</td></tr>
+    <tr><td>(d)</td><td><code>double</code></td><td>2.25</td><td><code>2.25</code></td><td>The cast forces the conversion explicitly. This is the standard way to average two <code>int</code>s.</td></tr>
+    <tr><td>(e)</td><td><code>double</code></td><td>0.30000000000000004&hellip;</td><td><code>0.3</code></td><td>Neither 0.1 nor 0.2 is exactly representable in binary, so the sum is not exactly 0.3 &mdash; but rounded to six significant digits it prints as <code>0.3</code>.</td></tr>
+    <tr><td>(f)</td><td><code>double</code></td><td>12345678.9</td><td><code>1.23457e+07</code></td><td>Eight digits before the point, so the stream switches to scientific notation and rounds to six.</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>(a) and (b) are the two halves of the same trap and they pull in opposite directions. In (a)
+      the value <em>is</em> fractional-capable and prints as if it were an integer; in (b) the
+      value <em>looks</em> fractional and is not. Naming the type first protects you from both.</li>
+    <li>(e) is worth taking seriously beyond the printing. The comparison
+      <code>if (0.1 + 0.2 == 0.3)</code> is <strong>false</strong>, even though <code>cout</code> prints both sides as
+      <code>0.3</code>. Never compare two <code>double</code>s with <code>==</code>; compare the size of their difference
+      against a small tolerance instead.</li>
+    <li>(f) crosses the threshold; <code>1234567.8</code> would too, at seven digits. If you need
+      the plain form for a large number, send <code>fixed</code> first.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; Write a complete C++ program <span class="muted small">(added)</span></h3>
+
+<p>Write a complete C++ program that finds the first ten integers between 100 and 999 that are
+divisible by 7 but <em>not</em> divisible by 5. Print them on one line separated by spaces. Then
+print how many were found and their average, with the average shown to exactly two decimal places.
+Use <code>continue</code> for the filters and <code>break</code> for the stopping rule.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Four separate jobs, and keeping them separate is what makes the program
+  easy to write.</p>
+  <ul>
+    <li>Two filters, each its own guard clause with a negated condition, at the top of the loop body.
+      A number survives to the printing only if it passes both.</li>
+    <li>A counter and a running total, both declared <em>outside</em> the loop so they survive it.</li>
+    <li>A stopping rule after the work: once the counter reaches ten, <code>break</code>.</li>
+    <li>The average is <code>total / count</code>, and both of those are <code>int</code>, so it needs a cast to
+      <code>double</code> or it will silently be integer division. Then <code>fixed</code> and <code>setprecision(2)</code> from
+      <code>&lt;iomanip&gt;</code> to get two decimal places.</li>
+  </ul>
+<div class="codewrap"><div class="cap">prac_filter.cpp</div><pre><code class="language-cpp">// prac_filter.cpp -- the first ten multiples of 7 above 100 that are not multiples of 5
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+using namespace std;
+
+int main() {
+    int count = 0;
+    int total = 0;
+
+    for (int i = 100; i &lt;= 999; ++i) {
+        if (i % 7 != 0) continue;          // not a multiple of 7 -- skip it
+        if (i % 5 == 0) continue;          // also a multiple of 5 -- skip it
+        cout &lt;&lt; i &lt;&lt; " ";
+        total += i;
+        ++count;
+        if (count == 10) break;            // we have all ten -- stop looking
+    }
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; "count   = " &lt;&lt; count &lt;&lt; endl;
+    cout &lt;&lt; "average = " &lt;&lt; total / count &lt;&lt; endl;
+    cout &lt;&lt; "average = " &lt;&lt; static_cast&lt;double&gt;(total) / count &lt;&lt; endl;
+    cout &lt;&lt; fixed &lt;&lt; setprecision(2);
+    cout &lt;&lt; "average = " &lt;&lt; static_cast&lt;double&gt;(total) / count &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">112 119 126 133 147 154 161 168 182 189
+count   = 10
+average = 149
+average = 149.1
+average = 149.10</pre>
+  <p>The three <code>average</code> lines are deliberate &mdash; they show the same quantity computed
+  and printed three ways so you can see each mistake in isolation.</p>
+  <table class="trace">
+    <tr><th>Line</th><th>Result</th><th>What it shows</th></tr>
+    <tr><td><code>total / count</code></td><td><code>149</code></td><td>Both operands are <code>int</code>, so this is integer division. The <code>.1</code> is gone before printing is even considered. <strong>This is the bug to avoid.</strong></td></tr>
+    <tr><td>with the cast</td><td><code>149.1</code></td><td>Correct value, default formatting &mdash; six significant digits, trailing zeros dropped, so the second decimal place vanishes.</td></tr>
+    <tr><td>with <code>fixed</code> and <code>setprecision(2)</code></td><td><code>149.10</code></td><td>Correct value, correct presentation. This is what the problem asked for.</td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>140, 175 and 105 are missing from the list because they are multiples of 5 as well as 7. The
+      second guard removed them. 105 never appears because it is below the first survivor anyway.</li>
+    <li>The <code>break</code> fires <em>after</em> the tenth number has been printed and counted. Putting it
+      before <code>++count</code> would stop at nine.</li>
+    <li>The <code>for</code> bound of 999 is never reached &mdash; the <code>break</code> always fires first. Keep it
+      anyway. A loop with no bound of its own and one exit path is one edit away from running
+      forever.</li>
+    <li>On an exam, the opening <code>#include</code>s, the <code>using namespace std;</code>, <code>int main()</code> and
+      <code>return 0;</code> are worth a point or two on their own under this professor's rubrics. Write them
+      first, before you think about the algorithm.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 5 &mdash; Flatten and fix <span class="muted small">(added)</span></h3>
+
+<p>A student wrote the loop below to report on a list of temperatures. It is meant to print
+<code>reading</code> for every value in the plausible range from <code>-50</code> to
+<code>60</code>, then <code>warm</code> for those at 25 or above, then <code>hot</code> for those at
+35 or above. Rewrite the body using guard clauses, and say what it prints.</p>
+
+<pre><code class="language-cpp">    const int n = 6;
+    int t[n] = {18, 25, -80, 35, 60, 41};
+
+    for (int i = 0; i &lt; n; ++i) {
+        if (t[i] &gt;= -50) {
+            if (t[i] &lt;= 60) {
+                cout &lt;&lt; t[i] &lt;&lt; ": reading" &lt;&lt; endl;
+                if (t[i] &gt;= 25) {
+                    cout &lt;&lt; t[i] &lt;&lt; ": warm" &lt;&lt; endl;
+                    if (t[i] &gt;= 35) {
+                        cout &lt;&lt; t[i] &lt;&lt; ": hot" &lt;&lt; endl;
+                    }
+                }
+            }
+        }
+    }</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The nest is the entire loop body and there are no <code>else</code> branches and no
+  work after it, so the mechanical transformation from &sect;8 applies directly. Negate each of the
+  four conditions and replace each <code>{</code> with a <code>continue</code>. Watch the boundaries: the opposite of
+  <code>&gt;= -50</code> is <code>&lt; -50</code>, and the opposite of <code>&lt;= 60</code> is <code>&gt; 60</code>.</p>
+<div class="codewrap"><div class="cap">temps_guard.cpp</div><pre><code class="language-cpp">// temps_guard.cpp -- temperature report, guard-clause style
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int n = 6;
+    int t[n] = {18, 25, -80, 35, 60, 41};
+
+    for (int i = 0; i &lt; n; ++i) {
+        if (t[i] &lt; -50) continue;
+        if (t[i] &gt; 60)  continue;
+        cout &lt;&lt; t[i] &lt;&lt; ": reading" &lt;&lt; endl;
+        if (t[i] &lt; 25) continue;
+        cout &lt;&lt; t[i] &lt;&lt; ": warm" &lt;&lt; endl;
+        if (t[i] &lt; 35) continue;
+        cout &lt;&lt; t[i] &lt;&lt; ": hot" &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<pre class="out">18: reading
+25: reading
+25: warm
+35: reading
+35: warm
+35: hot
+60: reading
+60: warm
+60: hot
+41: reading
+41: warm
+41: hot</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>-80</code> produces nothing &mdash; the first guard removes it. <code>60</code> is
+      kept, because the check is <code>&lt;= 60</code> and 60 is inside the range; the negated guard <code>&gt; 60</code> is
+      false for it. That one character is the difference between five reported values and four.</li>
+    <li><code>25</code> gets <code>reading</code> and <code>warm</code> but not <code>hot</code>;
+      <code>35</code> gets all three. Both are boundary values and both are in the data on
+      purpose.</li>
+    <li>The values come out in array order, not sorted order &mdash; <code>41</code> is printed last
+      because it is last in the array. A loop over an array reports in the order the array holds,
+      and nothing here sorts anything.</li>
+    <li>The flat version has one entry point and six statements you read top to bottom. The nested
+      version has the same six statements and four closing braces you have to match up by eye. Both
+      compile to the same thing; only one of them can be checked against the specification at a
+      glance.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>All four of <code>++x</code>, <code>x++</code>, <code>--x</code>, <code>x--</code> change the variable by exactly 1. What differs is the
+        <strong>value the expression hands back</strong>: a prefix form gives the <em>new</em> value,
+        a postfix form gives the <em>old</em> one.</li>
+      <li>As a standalone statement, or in the third slot of a <code>for</code> header, the value is discarded,
+        so all four forms behave identically. Inside a larger expression the difference is
+        everything.</li>
+      <li>In C++17 the operands of <code>&lt;&lt;</code> are evaluated <strong>strictly left to right</strong>, side
+        effects included, so a <code>cout</code> chain can be traced one item at a time. Carry the resulting
+        values forward into the next line &mdash; that is what output-prediction questions are
+        testing.</li>
+      <li>A statement that writes to the same variable twice, such as <code>i = i++ + 1;</code>, is
+        <strong>undefined behavior</strong>. It has no correct answer. Compile with <code>-Wall</code> and g++
+        will tell you.</li>
+      <li><strong>Output formatting &mdash; added to these notes, not in the original lecture:</strong>
+        with no instructions, <code>cout</code> prints a <code>double</code> to <strong>six significant digits</strong>,
+        drops trailing zeros and the bare decimal point, and switches to scientific notation outside
+        roughly <code>1e-5</code> to <code>1e+6</code>. So <code>4.0</code> prints as
+        <code>4</code>, <code>1.0/3.0</code> as <code>0.333333</code>, <code>100.0/3.0</code> as
+        <code>33.3333</code> and <code>1234567.0</code> as <code>1.23457e+06</code>. Exam
+        output-prediction parts depend on this and give no partial credit.</li>
+      <li><code>#include &lt;iomanip&gt;</code> and send <code>fixed</code> and <code>setprecision(n)</code> to take control. They are
+        sticky: they change the stream, not one value. Under <code>fixed</code> the precision counts digits
+        after the point, so <code>4.0</code> finally prints as <code>4.00</code>.</li>
+      <li><code>break</code> exits the loop immediately &mdash; no more body, <strong>no update, no test</strong>.
+        <code>continue</code> starts the next pass immediately &mdash; no more body, but the update
+        <strong>does</strong> run and the test <strong>is</strong> performed. Both act on the
+        innermost enclosing loop.</li>
+      <li><code>continue</code> inside <code>while (true)</code> hangs the program unless something above it changes the
+        state the condition depends on.</li>
+      <li>Deep <code>if</code> nesting inside a loop flattens mechanically into <strong>guard clauses</strong>:
+        negate each condition, replace each block with <code>continue</code>, and the real work moves out to the
+        left. Valid only when the nest is the whole loop body.</li>
+      <li>A character that looks like <code>!</code> or <code>;</code> but is not ASCII produces a compiler message quoting
+        a <code>\U0000xxxx</code> escape you never typed. Retype the line rather than staring at it.</li>
+    </ul>
+    <p><strong>Coming up in Class 4:</strong> we give programs a memory that outlives them &mdash;
+    reading and writing files with <code>ifstream</code> and <code>ofstream</code>, and generating random numbers.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 2 &middot; Functions &amp; References</div><div class="pending">posts Thu Sep 3</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 4 &middot; File I/O</div><div class="pending">posts Thu Sep 10</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

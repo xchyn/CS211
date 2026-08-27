@@ -1,0 +1,3312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 26 — Class Templates | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 26 &middot; Class Templates</span><span class="sep">|</span><span class="where">Thu Dec 3</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 26 &middot; CSCI 211</div>
+  <h1>Class Templates and Generic Programming</h1>
+  <p class="sub">One class definition, any type you like &mdash; and the memory-management discipline that comes with it.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Write a function template with <em>two</em> independent type parameters and call it with explicit template arguments.</li>
+      <li>Turn an ordinary class into a <strong>class template</strong>, and name the resulting type correctly when you declare an object.</li>
+      <li>Explain what the bare class name means <em>inside</em> the template body, and why you must write it with its argument <em>outside</em>.</li>
+      <li>Define a member function outside the class template, with the <code>template &lt;typename T&gt;</code> line and the <code>ClassName&lt;T&gt;::</code> qualifier, and recognize the g++ error for each way of getting it wrong.</li>
+      <li>Explain why a class template's definitions must stay in the header file, and diagnose the <em>undefined reference</em> linker error that follows when they do not.</li>
+      <li>Implement the Big Three &mdash; destructor, copy constructor, assignment operator &mdash; for a class template that owns dynamically allocated memory, with a genuine deep copy and a self-assignment guard.</li>
+      <li>Define <strong>generic programming</strong> and give two examples of it.</li>
+      <li>Name the four categories of functionality in the Standard Template Library.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Templates and polymorphism: two roads to generality</a></li>
+    <li><a href="#s2">Two or more type parameters</a></li>
+    <li><a href="#s3">From a class to a class template</a></li>
+    <li><a href="#s4">What the class name means inside the template</a></li>
+    <li><a href="#s5">Defining members outside the class template</a></li>
+    <li><a href="#s6">Why it all has to live in the header</a></li>
+    <li><a href="#s7"><code>DynAlloc</code>: a class template that owns memory</a></li>
+    <li><a href="#s8">Generic programming, and what the STL is</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Templates and polymorphism: two roads to generality</h2>
+
+<p>In Class 25 you wrote your first <strong>function templates</strong>: one definition of <code>swap</code> or
+<code>maximum</code>, written once with a stand-in type <code>T</code>, and the compiler manufactured a separate real
+function for every type you actually used it with. Today we do the same thing to a whole
+<em>class</em>. That is the piece the Standard Library is built out of, and it is the piece that
+finally lets you explain what <code>vector&lt;int&gt;</code> really is.</p>
+
+<p>Before the syntax, one comparison worth having straight in your head, because the two techniques
+look similar from a distance and are completely different underneath.</p>
+
+<p>Templates and polymorphism have something in common: both are ways to write <strong>abstract code
+that is not restricted to a specific class or data type</strong>. But they get there by opposite
+routes.</p>
+
+<table class="trace">
+  <tr><th></th><th>Polymorphism (Classes 24&ndash;25)</th><th>Templates (Classes 25&ndash;26)</th></tr>
+  <tr>
+    <td><strong>How you write it</strong></td>
+    <td>A base class supplies some functionality plus a set of <em>virtual</em> functions. Derived
+      classes inherit and override some or all of them.</td>
+    <td>One definition with a stand-in type parameter. There is <strong>no inheritance tree</strong>
+      at all.</td>
+  </tr>
+  <tr>
+    <td><strong>Who can participate</strong></td>
+    <td>Only members of the inheritance tree. A class that does not derive from the base
+      <em>cannot</em> be part of a polymorphic library, no matter how suitable it looks.</td>
+    <td>Almost any class the user wants to write. Nobody has to have anticipated it.</td>
+  </tr>
+  <tr>
+    <td><strong>The catch</strong></td>
+    <td>You must own, or at least be able to edit, the hierarchy.</td>
+    <td>There are restrictions on the <em>properties</em> of the classes: whatever operations the
+      template body performs, <code>T</code> had better support. Nothing declares those requirements &mdash;
+      you find out when instantiation fails.</td>
+  </tr>
+  <tr>
+    <td><strong>When it is decided</strong></td>
+    <td>At <strong>run time</strong>, through the virtual table.</td>
+    <td>At <strong>compile time</strong>. By the time the program runs, the generality is gone and
+      only ordinary machine code remains.</td>
+  </tr>
+</table>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Templates and polymorphism are both useful techniques, but they implement "generality" in
+    <strong>different ways</strong>. Polymorphism generalizes over a family of classes you have
+    designed together. Templates generalize over types nobody has met yet &mdash; including types
+    that will be written years after your code ships.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.1</div>
+  <div class="bd">
+    <p>You are writing a container that stores a list of items and prints them all. You have two
+    designs in mind.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Design A stores <code>Printable*</code> pointers, where <code>Printable</code> is an abstract base class with a pure virtual <code>print()</code>. What must a user do to store their own <code>Employee</code> objects in it?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>They must change <code>Employee</code> so that it derives from <code>Printable</code> and overrides <code>print()</code>.
+        If <code>Employee</code> came from somebody else's library and they cannot edit it, they are stuck
+        &mdash; they would have to write a wrapper class that derives from <code>Printable</code> and holds an
+        <code>Employee</code> inside it.</p>
+        <p>That is the restriction the professor states plainly: the participating classes are
+        <em>restricted to be members of the inheritance tree</em>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Design B is a class template <code>List&lt;T&gt;</code> whose <code>printAll()</code> does <code>cout &lt;&lt; items[i]</code> for each element. What must a user do to store <code>Employee</code> objects in <em>this</em> one?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Nothing to the inheritance hierarchy &mdash; <code>Employee</code> does not have to derive from
+        anything. But <code>Employee</code> does have to support the operations the template body performs on
+        it. Here that means an <code>operator&lt;&lt;</code> taking an <code>ostream</code> and an <code>Employee</code>, plus whatever
+        else <code>List</code> needs (usually a default constructor and an assignment operator).</p>
+        <p>So the requirement did not disappear; it changed shape. Instead of "inherit from this
+        base class" it became "supply these operations." And unlike a base class, nothing writes
+        that requirement down. You discover it when <code>List&lt;Employee&gt;</code> refuses to compile.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> One of these two designs makes the decision at compile time and one at run time. Which is which, and why does it matter?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Design A decides at <strong>run time</strong>: the <code>Printable*</code> could point at anything,
+        and the virtual-table lookup picks the right <code>print()</code> while the program runs. Design B
+        decides at <strong>compile time</strong>: <code>List&lt;Employee&gt;</code> and <code>List&lt;int&gt;</code> are two separate
+        classes, each with its own compiled code, generated before the program ever starts.</p>
+        <p>Why it matters: the template version has no virtual-call overhead and can be optimized as
+        ordinary code, but it produces a separate copy of the class for every type you use, and its
+        error messages arrive at compile time in a heap. The polymorphic version compiles once and
+        can accept objects whose types are chosen while the program is running &mdash; something a
+        template flatly cannot do.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>Two or more type parameters</h2>
+
+<p>Every template in Class 25 had exactly one type parameter. Nothing forces that. It is
+straightforward to write a templated function with two templated data types &mdash; you list them
+both inside the angle brackets, separated by a comma, each with its own <code>typename</code> keyword.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; template parameter list</span></div>
+  <div class="bd">
+    <p>The <code>template &lt;...&gt;</code> line that precedes a template is its <strong>template parameter
+    list</strong>. It names the stand-in types the definition below it is allowed to use. Each entry
+    needs its own keyword:</p>
+<pre><code class="language-cpp">template &lt;typename T, typename U&gt;   // two parameters: correct
+template &lt;typename T, U&gt;            // wrong: U is missing its keyword</code></pre>
+    <p>The parameters are <strong>independent</strong>. <code>T</code> and <code>U</code> can be deduced or specified as
+    two different types, or as the same type &mdash; nothing links them.</p>
+  </div>
+</div>
+
+<p>Here is the professor's example: a function that prints two input parameters <code>x</code> and <code>y</code> whose
+data types are independent of each other.</p>
+
+<pre><code class="language-cpp">template &lt;typename T, typename U&gt; void printInput(T x, U y) {
+    cout &lt;&lt; x &lt;&lt; endl;
+    cout &lt;&lt; y &lt;&lt; endl;
+}</code></pre>
+
+<p>Code like the above gets messy to read once the parameter list grows. The convention used in this
+course &mdash; and the one you should copy &mdash; is to put the <code>template</code> line on a line of its
+own:</p>
+
+<pre><code class="language-cpp">template &lt;typename T, typename U&gt;
+void printInput(T x, U y) {
+    cout &lt;&lt; x &lt;&lt; endl;
+    cout &lt;&lt; y &lt;&lt; endl;
+}</code></pre>
+
+<p>These two are the same code. The line break is purely for humans, and it matters more than it
+sounds like it should: once you start writing class templates, the <code>template</code> line and the thing it
+introduces get far apart, and a consistent layout is the only thing keeping them legible.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; four instantiations of one function</span></div>
+  <div class="bd">
+    <p>The four calls below use every combination of <code>int</code>, <code>double</code> and <code>string</code>. Write down all
+    eight lines of output, in order, before you open the answer. Watch the <em>order</em> of the
+    template arguments against the order of the actual arguments.</p>
+<div class="codewrap"><div class="cap">printinput.cpp</div><pre><code class="language-cpp">// printinput.cpp -- a function template with TWO independent type parameters
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T, typename U&gt;
+void printInput(T x, U y) {
+    cout &lt;&lt; x &lt;&lt; endl;
+    cout &lt;&lt; y &lt;&lt; endl;
+}
+
+int main() {
+    int n = 7;
+    double d = 1.2345;
+    string s("abcd");
+
+    printInput&lt;int, double&gt;(n, d);
+    printInput&lt;double, int&gt;(d, n);
+    printInput&lt;int, string&gt;(n, s);
+    printInput&lt;string, double&gt;(s, d);
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">7
+1.2345
+1.2345
+7
+7
+abcd
+abcd
+1.2345</pre>
+    <p>Four calls, two lines each. The explicit template arguments and the actual arguments line up
+    positionally:</p>
+    <table class="trace">
+      <tr><th>Call</th><th><code>T</code></th><th><code>U</code></th><th>prints</th></tr>
+      <tr><td><code>printInput&lt;int, double&gt;(n, d)</code></td><td><code>int</code></td><td><code>double</code></td><td><code>7</code> then <code>1.2345</code></td></tr>
+      <tr><td><code>printInput&lt;double, int&gt;(d, n)</code></td><td><code>double</code></td><td><code>int</code></td><td><code>1.2345</code> then <code>7</code></td></tr>
+      <tr><td><code>printInput&lt;int, string&gt;(n, s)</code></td><td><code>int</code></td><td><code>string</code></td><td><code>7</code> then <code>abcd</code></td></tr>
+      <tr><td><code>printInput&lt;string, double&gt;(s, d)</code></td><td><code>string</code></td><td><code>double</code></td><td><code>abcd</code> then <code>1.2345</code></td></tr>
+    </table>
+    <p>The compiler generated <strong>four different functions</strong> from that one definition,
+    and the finished executable contains all four. That is the whole mechanism: a template is not
+    code, it is a recipe for making code.</p>
+    <p>One honest complaint about this program: all eight lines look alike, and nothing on screen
+    says which instantiation produced which pair. When you write a demonstration like this for
+    yourself, label the output &mdash; you will see it done in the Quick Check below.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.2</div>
+  <div class="bd">
+    <p>Working from the same <code>printInput</code> template:</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What happens if you call <code>printInput(d, s);</code> with no angle brackets at all?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It compiles and runs. The compiler performs <strong>template argument deduction</strong>
+        (Class 25) on both parameters at once: <code>d</code> is a <code>double</code>, so <code>T</code> is <code>double</code>; <code>s</code> is a
+        <code>string</code>, so <code>U</code> is <code>string</code>. Explicit template arguments are optional exactly when every
+        parameter can be deduced from the call.</p>
+        <p>Here is a version that labels its output so you can see which type went where:</p>
+<div class="codewrap"><div class="cap">printinput2.cpp</div><pre><code class="language-cpp">// printinput2.cpp -- same idea, but each line says which instantiation printed it
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T, typename U&gt;
+void printInput(T x, U y) {
+    cout &lt;&lt; "first  (T): " &lt;&lt; x &lt;&lt; endl;
+    cout &lt;&lt; "second (U): " &lt;&lt; y &lt;&lt; endl;
+}
+
+int main() {
+    int n = 7;
+    double d = 1.2345;
+    string s("abcd");
+
+    cout &lt;&lt; "--- printInput&lt;int,double&gt; ---" &lt;&lt; endl;
+    printInput&lt;int, double&gt;(n, d);
+    cout &lt;&lt; "--- printInput&lt;string,double&gt; ---" &lt;&lt; endl;
+    printInput&lt;string, double&gt;(s, d);
+    cout &lt;&lt; "--- deduced, no explicit arguments ---" &lt;&lt; endl;
+    printInput(d, s);
+
+    return 0;
+}</code></pre></div>
+<pre class="out">--- printInput&lt;int,double&gt; ---
+first  (T): 7
+second (U): 1.2345
+--- printInput&lt;string,double&gt; ---
+first  (T): abcd
+second (U): 1.2345
+--- deduced, no explicit arguments ---
+first  (T): 1.2345
+second (U): abcd</pre>
+        <p>Note that on the exams this professor <em>always</em> writes the template arguments
+        explicitly at the call site, so that students see the angle brackets. Write them.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Is <code>printInput&lt;int, int&gt;(3, 4);</code> legal, given that <code>T</code> and <code>U</code> are supposed to be two different parameters?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Perfectly legal. "Independent" means nothing <em>links</em> <code>T</code> and <code>U</code>, not that they
+        must differ. Giving both the same type is allowed and produces exactly one more
+        instantiation, the one where <code>T</code> and <code>U</code> are both <code>int</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A student writes <code>template &lt;typename T, U&gt;</code> and gets an error. What is missing, and what is the smallest fix?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Each parameter needs its own keyword. The fix is one word:</p>
+<pre><code class="language-cpp">template &lt;typename T, typename U&gt;</code></pre>
+        <p>You may also write <code>template &lt;class T, class U&gt;</code>. In a template parameter list <code>class</code>
+        and <code>typename</code> mean exactly the same thing &mdash; it is a matter of taste, and you will see
+        this professor use both, sometimes in the same lecture. <code>class</code> there does <em>not</em> mean
+        the argument has to be a class type; <code>printInput&lt;int, double&gt;</code> is fine either way.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>From a class to a class template</h2>
+
+<p>We can write a templated <strong>class</strong>, not just a templated function. The procedure is
+the one you already know from Class 25, applied to a bigger unit of code &mdash; and, as always,
+the way to get it right is to begin with a specific data type and generalize afterwards.</p>
+
+<p>So start with <code>string</code>. Here is a small class the professor calls <code>Sclass</code> ("string class"). It
+has a private data member of type <code>string</code>, a non-default constructor, an accessor, a mutator and a
+public method:</p>
+
+<div class="codewrap"><div class="cap">sclass.cpp</div><pre><code class="language-cpp">class Sclass {
+public:
+    Sclass(const string &amp;a) { x = a; }
+    string get() const { return x; }
+    void set(const string &amp;a) { x = a; }
+    void print() const { cout &lt;&lt; x &lt;&lt; endl; }
+private:
+    string x;
+};</code></pre></div>
+
+<p>Nothing in that class is really <em>about</em> strings. Every one of those four functions would
+read identically for <code>int</code>, or <code>double</code>, or <code>Rectangle</code>. So generalize it.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; converting a class into a class template</span></div>
+  <div class="bd">
+    <ol>
+      <li>Write and test the class for <strong>one</strong> concrete type first. Debugging a
+        template you have never seen work is much harder than debugging a plain class.</li>
+      <li>Replace every occurrence of that concrete type with the stand-in name <code>T</code> &mdash; in the
+        data members, the parameters and the return types.</li>
+      <li><strong>Prepend</strong> a <code>template &lt;typename T&gt;</code> line immediately before the word
+        <code>class</code>.</li>
+      <li>Rename the class if the old name mentioned the type (<code>Sclass</code> becomes <code>Tclass</code>).</li>
+      <li>Everywhere <em>outside</em> the class, write the class name with its argument:
+        <code>Tclass&lt;int&gt;</code>, never a bare <code>Tclass</code>.</li>
+    </ol>
+  </div>
+</div>
+
+<p>Steps 2 and 3 give this. It is character-for-character the class above, with <code>string</code> replaced by
+<code>T</code> and one new first line:</p>
+
+<pre><code class="language-cpp">template &lt;typename T&gt; class Tclass {
+public:
+    Tclass(const T &amp;a) { x = a; }
+    T get() const { return x; }
+    void set(const T &amp;a) { x = a; }
+    void print() const { cout &lt;&lt; x &lt;&lt; endl; }
+private:
+    T x;
+};</code></pre>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; class template, instantiation</span></div>
+  <div class="bd">
+    <p>A <strong>class template</strong> is a pattern from which the compiler generates classes.
+    <code>Tclass</code> by itself is not a type &mdash; you cannot declare an object of it, you cannot make a
+    pointer to it, and it has no size.</p>
+    <p>When you write <code>Tclass&lt;int&gt;</code> you name a <strong>specialization</strong>, and the compiler
+    performs an <strong>instantiation</strong>: it takes the pattern, substitutes <code>int</code> for every
+    <code>T</code>, and compiles the result as an ordinary class. That generated class is a real type. So:</p>
+<pre><code class="language-cpp">Tclass&lt;int&gt; it(n);      // "n" is type int
+Tclass&lt;double&gt; dt(d);   // "d" is type double
+Tclass&lt;string&gt; st(s);   // "s" is type string</code></pre>
+    <p>The type is the <em>whole</em> phrase <code>Tclass&lt;int&gt;</code> &mdash; the name and its argument
+    together. Read it aloud as "Tclass of int."</p>
+  </div>
+</div>
+
+<p>How do you print one of these? Class 18 gave you the pattern: overload <code>operator&lt;&lt;</code> as a free
+function taking an <code>ostream</code> reference and a <code>const</code> reference to the object. The templated version
+is the same thing with a <code>template</code> line on top &mdash; and one detail that trips everybody, so look
+at the parameter type carefully:</p>
+
+<pre><code class="language-cpp">template &lt;typename T&gt;
+ostream&amp; operator&lt;&lt; (ostream &amp;os, const Tclass&lt;T&gt; &amp;t) {
+    return os &lt;&lt; "(" &lt;&lt; t.get() &lt;&lt; ")";
+}</code></pre>
+
+<p>The parameter is <code>const Tclass&lt;T&gt; &amp;t</code>, not <code>const Tclass &amp;t</code>. Outside the class body, the class
+name has to carry its template argument, and here the argument is the parameter <code>T</code> of this
+function template. We will come back to exactly why in the next section.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one class definition, three types</span></div>
+  <div class="bd">
+    <p>This is the professor's demonstration program for <code>Tclass</code>, with the templated <code>operator&lt;&lt;</code>
+    included. Predict all six lines. The last three are the interesting ones &mdash; note what
+    <code>operator&lt;&lt;</code> adds around the value.</p>
+<div class="codewrap"><div class="cap">tclass.cpp</div><pre><code class="language-cpp">// tclass.cpp -- the same class, templated, plus a templated operator&lt;&lt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Tclass {
+public:
+    Tclass(const T &amp;a) { x = a; }
+    T get() const { return x; }
+    void set(const T &amp;a) { x = a; }
+    void print() const { cout &lt;&lt; x &lt;&lt; endl; }
+private:
+    T x;
+};
+
+template &lt;typename T&gt;
+ostream&amp; operator&lt;&lt; (ostream &amp;os, const Tclass&lt;T&gt; &amp;t) {
+    return os &lt;&lt; "(" &lt;&lt; t.get() &lt;&lt; ")";
+}
+
+int main() {
+    int n = 7;
+    double d = 1.2345;
+    string s("abcd");
+
+    Tclass&lt;int&gt;    it(n);
+    Tclass&lt;double&gt; dt(d);
+    Tclass&lt;string&gt; st(s);
+
+    it.print();
+    dt.print();
+    st.print();
+
+    cout &lt;&lt; it &lt;&lt; endl;
+    cout &lt;&lt; dt &lt;&lt; endl;
+    cout &lt;&lt; st &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">7
+1.2345
+abcd
+(7)
+(1.2345)
+(abcd)</pre>
+    <p>Three objects, three different types, one class definition. <code>it.print()</code> runs the <code>print</code>
+    generated for <code>Tclass&lt;int&gt;</code>; <code>st.print()</code> runs a different function, compiled separately, whose
+    <code>x</code> is a <code>string</code>. They share source code and nothing else.</p>
+    <p>The parenthesized lines come from <code>operator&lt;&lt;</code>, which was itself instantiated three times.
+    Notice that <code>operator&lt;&lt;</code> reaches the private <code>x</code> through the public accessor <code>t.get()</code> &mdash;
+    it is a free function, not a member, so it has no other route. Making it a <code>friend</code> would be the
+    alternative (Class 18); the accessor is cleaner and is what the course uses here.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the demo program in the course notes does not compile as printed</span></div>
+  <div class="bd">
+    <p>The lecture notes show the <code>operator&lt;&lt;</code> overload on one slide, then present the "working C++
+    program" on the next slide <strong>without it</strong> &mdash; while still calling
+    <code>cout &lt;&lt; it &lt;&lt; endl;</code> three times. Typed in exactly as printed, that program is rejected:</p>
+<pre class="err">tclass_noop.cpp: In function 'int main()':
+tclass_noop.cpp:21:10: error: no match for 'operator&lt;&lt;' (operand types are 'std::ostream' {aka 'std::basic_ostream&lt;char&gt;'} and 'Tclass&lt;int&gt;')
+   21 |     cout &lt;&lt; it &lt;&lt; endl;
+      |     ~~~~ ^~ ~~
+      |     |       |
+      |     |       Tclass&lt;int&gt;
+      |     std::ostream {aka std::basic_ostream&lt;char&gt;}</pre>
+    <p>The fix is to paste the <code>operator&lt;&lt;</code> definition in between the class and <code>main</code>, which is
+    what the listing above does. Learn to read this error, because it is the one you get every time
+    you try to <code>cout</code> an object of a class you wrote and forgot to give an output operator. The
+    phrase to look for is <em>"no match for <code>operator&lt;&lt;</code>"</em> followed by the two operand
+    types &mdash; the second one names your class.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.3</div>
+  <div class="bd">
+    <p>Each line below is a separate attempted declaration, using the <code>Tclass</code> above. Say whether it
+    compiles, and if not, why.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>Tclass&lt;int&gt; a(7);</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Compiles. <code>Tclass&lt;int&gt;</code> is a real type and <code>7</code> is an <code>int</code>, which binds to the
+        constructor's <code>const T &amp;a</code> parameter.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>Tclass&lt;int&gt; b;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Does not compile. <code>Tclass</code> declares a non-default constructor, so the compiler does not
+        supply a default one &mdash; exactly the rule from Class 13, unchanged by templates. There
+        is no way to build a <code>Tclass&lt;int&gt;</code> without giving it an initial value.</p>
+        <p>That is worth noticing as a design flaw: it means you cannot write
+        <code>vector&lt;Tclass&lt;int&gt;&gt; v(10);</code> either. If you want that, add a default constructor to the
+        template.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>Tclass&lt;int&gt; c(7); Tclass&lt;double&gt; d(1.5); c = d;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The two declarations are fine; the assignment is rejected:</p>
+<pre class="err">unrelated.cpp: In function 'int main()':
+unrelated.cpp:17:10: error: no match for 'operator=' (operand types are 'Tclass&lt;int&gt;' and 'Tclass&lt;double&gt;')
+   17 |     it = dt;                   // is this allowed?
+      |          ^~
+unrelated.cpp:6:7: note:   no known conversion for argument 1 from 'Tclass&lt;double&gt;' to 'const Tclass&lt;int&gt;&amp;'</pre>
+        <p>This is the single most important consequence of instantiation: <code>Tclass&lt;int&gt;</code> and
+        <code>Tclass&lt;double&gt;</code> are <strong>two unrelated classes</strong> that merely happen to have been
+        generated from the same source. They are no more assignable to each other than <code>Rectangle</code>
+        and <code>Employee</code> would be. The shared template does not create a family relationship, and
+        there is no base class lurking behind them.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>Tclass e(7);</code> &mdash; no angle brackets.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>This one deserves a careful answer, because the honest answer is "it depends on the
+        C++ version, and you should write the brackets anyway."</p>
+        <p>Under <code>-std=c++17</code> it compiles: C++17 added <em>class template argument deduction</em>,
+        which lets the compiler work out from the constructor argument <code>7</code> that you meant
+        <code>Tclass&lt;int&gt;</code>. Under the older C++11 or C++14 rules it is an error.</p>
+        <p>Do not rely on it. The deduction only works in a variable declaration; the moment you
+        need the type anywhere else &mdash; a function parameter, a return type, a data member
+        &mdash; the bare name is an error, which we will see in section 4. And every exam in this
+        course writes the argument explicitly. Write <code>Tclass&lt;int&gt; e(7);</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; templatize a class</h3>
+
+<p>Below is a concrete class that stores two <code>double</code> values and reports the larger of them. Turn it
+into a class template so it works for any type that supports <code>&lt;</code>, then build one for <code>int</code> and one
+for <code>string</code> in <code>main</code> and print both answers.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// Step 1: the concrete version. Templatize it.
+class DoublePair {
+public:
+    DoublePair(const double &amp;a, const double &amp;b) { first = a; second = b; }
+    double larger() const { return (first &lt; second) ? second : first; }
+private:
+    double first;
+    double second;
+};
+
+int main() {
+    DoublePair dp(3.5, 2.25);
+    cout &lt;&lt; dp.larger() &lt;&lt; endl;
+
+    // then: build one for int and one for string
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// Step 1: the concrete version. Templatize it.
+class DoublePair {
+public:
+    DoublePair(const double &amp;a, const double &amp;b) { first = a; second = b; }
+    double larger() const { return (first &lt; second) ? second : first; }
+private:
+    double first;
+    double second;
+};
+
+int main() {
+    DoublePair dp(3.5, 2.25);
+    cout &lt;&lt; dp.larger() &lt;&lt; endl;
+
+    // then: build one for int and one for string
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.4</div>
+  <div class="bd">
+    <p>Write the templated version of <code>DoublePair</code> described above &mdash; call it <code>MaxPair</code> &mdash;
+    and a <code>main</code> that uses it with <code>int</code> and with <code>string</code>. What does it print for the two
+    strings <code>"apple"</code> and <code>"banana"</code>?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Replace both <code>double</code>s with <code>T</code>, prepend the <code>template</code> line, and rename:</p>
+<div class="codewrap"><div class="cap">maxpair.cpp</div><pre><code class="language-cpp">// maxpair.cpp -- a class template over any type that supports &lt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class MaxPair {
+public:
+    MaxPair(const T &amp;a, const T &amp;b) { first = a; second = b; }
+    T larger() const { return (first &lt; second) ? second : first; }
+private:
+    T first;
+    T second;
+};
+
+int main() {
+    MaxPair&lt;int&gt; ip(3, 9);
+    cout &lt;&lt; ip.larger() &lt;&lt; endl;
+
+    MaxPair&lt;double&gt; dp(3.5, 2.25);
+    cout &lt;&lt; dp.larger() &lt;&lt; endl;
+
+    MaxPair&lt;string&gt; sp("apple", "banana");
+    cout &lt;&lt; sp.larger() &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<pre class="out">9
+3.5
+banana</pre>
+      <p><code>"banana"</code> wins because <code>string</code> compares <em>lexicographically</em> &mdash; <code>'a'</code> comes
+      before <code>'b'</code>, so <code>"apple" &lt; "banana"</code> is true. The template body never mentioned strings; it
+      just asked <code>T</code> whether one value was less than another, and <code>string</code> answered.</p>
+      <p>Two things to notice. First, the constructor takes <code>const T &amp;</code> rather than <code>T</code>, which costs
+      nothing for an <code>int</code> and saves a whole string copy for a <code>string</code> &mdash; the habit from
+      Class 2 pays off doubly in templates, where you do not know how expensive <code>T</code> is. Second, this
+      class has an unwritten requirement: <code>T</code> must support <code>&lt;</code>. Try <code>MaxPair&lt;Rectangle&gt;</code> on a
+      <code>Rectangle</code> class with no <code>operator&lt;</code> and you get a compile error pointing at the line
+      <code>(first &lt; second)</code> &mdash; inside <em>your</em> template, not at the user's call.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>What the class name means inside the template</h2>
+
+<p>Look again at that <code>operator&lt;&lt;</code> parameter: <code>const Tclass&lt;T&gt; &amp;t</code>. Then look at a copy constructor
+declared <em>inside</em> a class template &mdash; you will meet one in section 7 &mdash; which is
+written <code>Tclass(const Tclass &amp;orig);</code> with no brackets at all. Both are correct. That looks
+inconsistent until you know the rule.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>Inside</strong> the body of a class template, the bare class name means "the class
+    currently being instantiated" &mdash; inside <code>Tclass&lt;int&gt;</code>, the name <code>Tclass</code> means
+    <code>Tclass&lt;int&gt;</code>. <strong>Outside</strong> the body, the bare class name is not a type at all and
+    must be written with its argument: <code>Tclass&lt;T&gt;</code> or <code>Tclass&lt;int&gt;</code>.</p>
+  </div>
+</div>
+
+<p>So all three of these declarations mean the same thing when they appear inside the class body,
+and the first is what you will normally write:</p>
+
+<pre><code class="language-cpp">template &lt;typename T&gt;
+class Tclass {
+public:
+    Tclass(const Tclass &amp;orig);         // "the current instantiation"
+    // Tclass(const Tclass&lt;T&gt; &amp;orig);   // identical meaning, more typing
+private:
+    T x;
+};</code></pre>
+
+<p>Outside the body the shorthand is gone. Every one of these is a place where the bare name is an
+error: a function parameter, a return type, a data member of another class, a <code>new</code> expression, a
+variable declaration in <code>main</code>.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the bare name where a type is required</span></div>
+  <div class="bd">
+    <p>This program tries to write a free function taking a <code>Tclass</code> by value. Predict the error
+    before you look &mdash; and predict whether the line in <code>main</code> is also an error.</p>
+<div class="codewrap"><div class="cap">noargs.cpp</div><pre><code class="language-cpp">// noargs.cpp -- using the template name where a type is required
+#include &lt;iostream&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Tclass {
+public:
+    Tclass(const T &amp;a) { x = a; }
+    T get() const { return x; }
+private:
+    T x;
+};
+
+void show(Tclass t) {          // Tclass is not a type
+    cout &lt;&lt; t.get() &lt;&lt; endl;
+}
+
+int main() {
+    Tclass a(7);               // C++17 can work this one out
+    show(a);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">noargs.cpp:14:11: error: missing template argument list after 'Tclass'; template placeholder not permitted in parameter
+   14 | void show(Tclass t) {          // Tclass is not a type
+      |           ^~~~~~
+      |                 &lt;&gt;
+noargs.cpp:6:7: note: 'template&lt;class T&gt; class Tclass' declared here
+    6 | class Tclass {
+      |       ^~~~~~</pre>
+    <p>g++ even shows you the shape of what is missing: <code>&lt;&gt;</code>. The fix is to make <code>show</code> a template
+    of its own, so that it has a <code>T</code> to hand to <code>Tclass</code>:</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+void show(Tclass&lt;T&gt; t) {
+    cout &lt;&lt; t.get() &lt;&lt; endl;
+}</code></pre>
+    <p>And the line in <code>main</code> is <em>not</em> an error under C++17 &mdash; the compiler deduces
+    <code>Tclass&lt;int&gt;</code> from the argument <code>7</code>. That asymmetry is exactly why students find this confusing:
+    one bare name is accepted, the other is not. Write the argument in both places and the question
+    never comes up.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.5</div>
+  <div class="bd">
+    <p>Here is a class template with three declarations in it. For each one, decide whether it is
+    legal and say what type the name <code>Node</code> refers to.</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+class Node {
+public:
+    Node(const T &amp;v);
+    Node combine(const Node &amp;other) const;   // (a)
+    void link(Node&lt;T&gt; *next);                // (b)
+private:
+    T value;
+    Node *nextNode;                          // (c)
+};</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Is <code>Node combine(const Node &amp;other) const;</code> legal here?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Legal. It is inside the class body, so both bare <code>Node</code>s mean <code>Node&lt;T&gt;</code> &mdash; the
+        return type and the parameter type. When you define this function <em>outside</em> the class
+        you will have to write the qualifier in full, which is the next section's subject.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Is <code>void link(Node&lt;T&gt; *next);</code> legal here?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Legal, and identical in meaning to writing <code>Node *next</code>. Spelling out the argument inside
+        the body is never wrong &mdash; it is just longer. Some people write it out deliberately for
+        clarity; the professor's code uses the short form.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Is the data member <code>Node *nextNode;</code> legal here?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Legal &mdash; still inside the body, so it means <code>Node&lt;T&gt; *nextNode</code>. A class template
+        may hold a pointer to its own instantiation, which is how a templated linked list is built.
+        None of the three is the illegal one; the trick question was whether you would flinch at
+        (c). What would <em>not</em> be legal is a data member of type <code>Node</code> (no pointer, no
+        argument) declared in some other, non-template class, or the bare name used in a free
+        function &mdash; both are outside the body.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Defining members outside the class template</h2>
+
+<p>Everything so far defined its member functions <strong>inline</strong>, right inside the class
+body. That is fine for one-liners, and it is what the professor's <code>Tclass</code> does. But a real class
+has functions that are twenty lines long, and burying them inside the class makes the interface
+impossible to read. From Class 10 onwards you have been splitting them out:</p>
+
+<pre><code class="language-cpp">class Sclass {
+public:
+    string get() const;          // declared here
+private:
+    string x;
+};
+
+string Sclass::get() const { return x; }   // defined out here</code></pre>
+
+<p>Some important modifications are required to do the same thing for a class template. There are
+exactly two, and students get one or the other wrong every single time.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; defining a member of a class template outside the class</span></div>
+  <div class="bd">
+    <ol>
+      <li>Write <code>template &lt;typename T&gt;</code> on its own line, immediately above the definition.
+        <strong>Every</strong> definition needs its own copy of this line &mdash; it is not written
+        once for the group.</li>
+      <li>Write the return type as usual.</li>
+      <li>Qualify the function name with <strong><code>ClassName&lt;T&gt;::</code></strong> &mdash; the class name
+        <em>with</em> its template argument. Not <code>ClassName::</code>.</li>
+      <li>Repeat the parameter list and any <code>const</code> exactly as declared.</li>
+    </ol>
+    <p>So the shape is always:</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+ReturnType ClassName&lt;T&gt;::method(parameters) const { ... }</code></pre>
+    <p>The <code>T</code> in the qualifier is the same <code>T</code> the <code>template</code> line just introduced. That is the
+    whole trick: the <code>template</code> line creates the name <code>T</code>, and <code>ClassName&lt;T&gt;</code> uses it.</p>
+  </div>
+</div>
+
+<p>Here is the professor's <code>Tclass</code>, written out that way. Compare it line by line with the inline
+version in section 3 &mdash; the bodies are identical, only the packaging changed.</p>
+
+<div class="codewrap"><div class="cap">tclass_noninline.cpp</div><pre><code class="language-cpp">template &lt;typename T&gt;
+class Tclass {
+public:
+    Tclass(const T &amp;a);
+    T get() const;
+    void set(const T &amp;a);
+    void print() const;
+private:
+    T x;
+};
+
+template &lt;typename T&gt;
+Tclass&lt;T&gt;::Tclass(const T &amp;a) { x = a; }
+
+template &lt;typename T&gt;
+T Tclass&lt;T&gt;::get() const { return x; }
+
+template &lt;typename T&gt;
+void Tclass&lt;T&gt;::set(const T &amp;a) { x = a; }
+
+template &lt;typename T&gt;
+void Tclass&lt;T&gt;::print() const { cout &lt;&lt; x &lt;&lt; endl; }</code></pre></div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>Notice that we must write <strong><code>Tclass&lt;T&gt;::</code></strong>, unlike <code>Tclass::</code> for a
+    non-templated class. The constructor is the one that looks strangest:
+    <code>Tclass&lt;T&gt;::Tclass(const T &amp;a)</code>. The part before the <code>::</code> is the <em>type</em>, which needs its
+    argument; the part after the <code>::</code> is the <em>function name</em>, which is just the class's own
+    name and never takes brackets. Read it as "the <code>Tclass</code> constructor belonging to
+    <code>Tclass&lt;T&gt;</code>."</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the two ways to get the qualifier wrong</span></div>
+  <div class="bd">
+    <p>Two students each write out <code>get</code> and each drops exactly one of the two required pieces. The
+    first forgets the <code>&lt;T&gt;</code> on the class name:</p>
+<div class="codewrap"><div class="cap">badqual1.cpp</div><pre><code class="language-cpp">template &lt;typename T&gt;
+class Tclass {
+public:
+    T get() const;
+private:
+    T x;
+};
+
+template &lt;typename T&gt;
+T Tclass::get() const { return x; }      // missing &lt;T&gt;</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">badqual1.cpp:14:3: error: 'template&lt;class T&gt; class Tclass' used without template arguments
+   14 | T Tclass::get() const { return x; }
+      |   ^~~~~~
+badqual1.cpp:14:17: error: non-member function 'T get()' cannot have cv-qualifier
+   14 | T Tclass::get() const { return x; }
+      |                 ^~~~~
+badqual1.cpp: In function 'T get()':
+badqual1.cpp:14:32: error: 'x' was not declared in this scope
+   14 | T Tclass::get() const { return x; }
+      |                                ^</pre>
+    <p>Read the first line and stop: <em>"used without template arguments."</em> That message names
+    the exact mistake, and the two errors after it are just fallout &mdash; having failed to attach
+    the definition to the class, g++ decided this was some free function called <code>get</code>, which
+    therefore may not be <code>const</code> and has no member <code>x</code> in scope. Fix the first error and all three
+    disappear.</p>
+
+</div></details>
+    <p>The second student remembers the <code>&lt;T&gt;</code> but forgets the <code>template</code> line above it:</p>
+<div class="codewrap"><div class="cap">badqual2.cpp</div><pre><code class="language-cpp">template &lt;typename T&gt;
+class Tclass {
+public:
+    T get() const;
+private:
+    T x;
+};
+
+T Tclass&lt;T&gt;::get() const { return x; }   // missing template &lt;typename T&gt;</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">badqual2.cpp:13:1: error: 'T' does not name a type
+   13 | T Tclass&lt;T&gt;::get() const { return x; }
+      | ^</pre>
+    <p>One line, and it is pointing at the very first character. Without the <code>template</code> line there
+    is no such name as <code>T</code> at this point in the file &mdash; the <code>T</code> inside the class body went out
+    of scope at the closing <code>};</code>. So the return type <code>T</code> is meaningless, and g++ never even gets as
+    far as the <code>Tclass&lt;T&gt;</code> part.</p>
+    <p><em>"does not name a type"</em>, on a line that starts with <code>T</code>, in a file full of templates,
+    almost always means a missing <code>template</code> line. It is the single most common template typo in
+    this course.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; defining a member twice</span></div>
+  <div class="bd">
+    <p>The lecture notes for <code>DynAlloc</code> show two accessors defined inline in the class <em>and</em>
+    show the non-inline equivalents underneath, commented out, as an illustration of the alternative
+    form:</p>
+<pre><code class="language-cpp">// template &lt;class T&gt;
+// T DynAlloc&lt;T&gt;::getObj() const { return obj; }</code></pre>
+    <p>Use one form or the other, never both. If you uncomment those lines while the inline versions
+    are still in the class, you get a redefinition error, and the message
+    (<em>"redefinition of <code>T DynAlloc&lt;T&gt;::getObj() const</code>"</em>) will make no sense until you
+    remember there are two copies. The commented-out block is documentation, not spare parts.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; move the definitions out</h3>
+
+<p>Take the class template below, which currently defines everything inline, and rewrite it with
+every member defined outside the class. Add one new method as well:
+<code>bool equals(const Tclass&lt;T&gt; &amp;other) const</code>, which reports whether the two stored values are the
+same.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="27" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Tclass {
+public:
+    Tclass(const T &amp;a) { x = a; }
+    T get() const { return x; }
+    void set(const T &amp;a) { x = a; }
+    void print() const { cout &lt;&lt; x &lt;&lt; endl; }
+    // declare equals here
+private:
+    T x;
+};
+
+// definitions go here, each with its own template line:
+// template &lt;typename T&gt;
+// T Tclass&lt;T&gt;::get() const { ... }
+
+int main() {
+    Tclass&lt;int&gt; a(7), b(7);
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Tclass {
+public:
+    Tclass(const T &amp;a) { x = a; }
+    T get() const { return x; }
+    void set(const T &amp;a) { x = a; }
+    void print() const { cout &lt;&lt; x &lt;&lt; endl; }
+    // declare equals here
+private:
+    T x;
+};
+
+// definitions go here, each with its own template line:
+// template &lt;typename T&gt;
+// T Tclass&lt;T&gt;::get() const { ... }
+
+int main() {
+    Tclass&lt;int&gt; a(7), b(7);
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.6</div>
+  <div class="bd">
+    <p>Write the fully non-inline <code>Tclass</code> with the extra <code>equals</code> method, plus a <code>main</code> that
+    compares two <code>Tclass&lt;int&gt;</code> objects and two <code>Tclass&lt;string&gt;</code> objects. What does <code>cout</code> print for
+    a <code>bool</code>?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Move each body below the class, giving every one a
+      <code>template &lt;typename T&gt;</code> line and a <code>Tclass&lt;T&gt;::</code> qualifier. <code>equals</code> compares <code>x</code> with
+      <code>other.x</code> &mdash;
+      legal even though <code>x</code> is private, because a member function of a class may reach the private
+      parts of <em>any</em> object of that same class, not only its own.</p>
+<div class="codewrap"><div class="cap">tclass_equals.cpp</div><pre><code class="language-cpp">// tclass_equals.cpp -- Tclass, all definitions non-inline, plus an extra method
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Tclass {
+public:
+    Tclass(const T &amp;a);
+    T get() const;
+    void set(const T &amp;a);
+    void print() const;
+    bool equals(const Tclass&lt;T&gt; &amp;other) const;
+private:
+    T x;
+};
+
+template &lt;typename T&gt;
+Tclass&lt;T&gt;::Tclass(const T &amp;a) { x = a; }
+
+template &lt;typename T&gt;
+T Tclass&lt;T&gt;::get() const { return x; }
+
+template &lt;typename T&gt;
+void Tclass&lt;T&gt;::set(const T &amp;a) { x = a; }
+
+template &lt;typename T&gt;
+void Tclass&lt;T&gt;::print() const { cout &lt;&lt; x &lt;&lt; endl; }
+
+template &lt;typename T&gt;
+bool Tclass&lt;T&gt;::equals(const Tclass&lt;T&gt; &amp;other) const { return x == other.x; }
+
+template &lt;typename T&gt;
+ostream&amp; operator&lt;&lt; (ostream &amp;os, const Tclass&lt;T&gt; &amp;t) {
+    return os &lt;&lt; "(" &lt;&lt; t.get() &lt;&lt; ")";
+}
+
+int main() {
+    Tclass&lt;int&gt; a(7), b(7), c(9);
+    cout &lt;&lt; a &lt;&lt; " equals " &lt;&lt; b &lt;&lt; "? " &lt;&lt; a.equals(b) &lt;&lt; endl;
+    cout &lt;&lt; a &lt;&lt; " equals " &lt;&lt; c &lt;&lt; "? " &lt;&lt; a.equals(c) &lt;&lt; endl;
+
+    Tclass&lt;string&gt; p("red"), q("blue");
+    cout &lt;&lt; p &lt;&lt; " equals " &lt;&lt; q &lt;&lt; "? " &lt;&lt; p.equals(q) &lt;&lt; endl;
+    q.set("red");
+    cout &lt;&lt; p &lt;&lt; " equals " &lt;&lt; q &lt;&lt; "? " &lt;&lt; p.equals(q) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">(7) equals (7)? 1
+(7) equals (9)? 0
+(red) equals (blue)? 0
+(red) equals (red)? 1</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>cout</code> prints a <code>bool</code> as <code>1</code> or <code>0</code> unless you ask otherwise. That is a Class 3 detail
+          that shows up on exams; if you want <code>true</code>/<code>false</code> you must say so.</li>
+        <li>Inside the class, <code>bool equals(const Tclass&lt;T&gt; &amp;other) const;</code> could equally have been
+          written <code>bool equals(const Tclass &amp;other) const;</code>. Outside, in the definition, the
+          qualifier <code>Tclass&lt;T&gt;::</code> is mandatory &mdash; but the <em>parameter</em> may be written
+          either way once you are inside the function's scope. Spelling it out is a good habit.</li>
+        <li><code>equals</code> adds a requirement to <code>T</code>: it must support <code>==</code>. <code>int</code> and <code>string</code> both do.
+          Every operator the body uses is another unwritten condition on the types your class
+          template will accept.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Why it all has to live in the header</h2>
+
+<p>Class 2 taught you the standard way to split a C++ program across files: declarations in a
+<code>.h</code> header, definitions in a matching <code>.cpp</code>, and every source file that
+wants to use the class does <code>#include "thing.h"</code>. Each <code>.cpp</code> is compiled on
+its own into an object file, and the linker joins them at the end.</p>
+
+<p>Do that to a class template and it fails. Not with a compiler error &mdash; every file compiles
+perfectly &mdash; but at the very last step, with a message most students have never seen before.
+This is worth doing once, carefully, because it will otherwise eat an evening of your life.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the split that does not link</span></div>
+  <div class="bd">
+    <p>Three files, laid out exactly the way Class 2 taught. A header with the class template:</p>
+<div class="codewrap"><div class="cap">box.h</div><pre><code class="language-cpp">// box.h -- a class template, declared here and (wrongly) defined in box.cpp
+#ifndef BOX_H
+#define BOX_H
+
+template &lt;typename T&gt;
+class Box {
+public:
+    Box(const T &amp;a);
+    T get() const;
+    void set(const T &amp;a);
+private:
+    T item;
+};
+
+#endif</code></pre></div>
+    <p>A source file with the definitions, each correctly written with its <code>template</code> line and its
+    <code>Box&lt;T&gt;::</code> qualifier:</p>
+<div class="codewrap"><div class="cap">box.cpp</div><pre><code class="language-cpp">// box.cpp -- the member definitions, in a separate translation unit
+#include "box.h"
+
+template &lt;typename T&gt;
+Box&lt;T&gt;::Box(const T &amp;a) { item = a; }
+
+template &lt;typename T&gt;
+T Box&lt;T&gt;::get() const { return item; }
+
+template &lt;typename T&gt;
+void Box&lt;T&gt;::set(const T &amp;a) { item = a; }</code></pre></div>
+    <p>And a program that uses it:</p>
+<div class="codewrap"><div class="cap">mainbox.cpp</div><pre><code class="language-cpp">// mainbox.cpp -- uses Box&lt;int&gt;
+#include &lt;iostream&gt;
+#include "box.h"
+using namespace std;
+
+int main() {
+    Box&lt;int&gt; b(42);
+    cout &lt;&lt; b.get() &lt;&lt; endl;
+    b.set(99);
+    cout &lt;&lt; b.get() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+    <p>Now compile each file separately and then link them, the way Class 2 did it. Both compilation
+    steps succeed. Predict what the third command does.</p>
+<pre class="shell">g++ -c box.cpp
+g++ -c mainbox.cpp
+g++ mainbox.o box.o -o boxprog</pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">/usr/bin/ld: mainbox.o: in function `main':
+mainbox.cpp:(.text+0x31): undefined reference to `Box&lt;int&gt;::Box(int const&amp;)'
+/usr/bin/ld: mainbox.cpp:(.text+0x3d): undefined reference to `Box&lt;int&gt;::get() const'
+/usr/bin/ld: mainbox.cpp:(.text+0x7a): undefined reference to `Box&lt;int&gt;::set(int const&amp;)'
+/usr/bin/ld: mainbox.cpp:(.text+0x86): undefined reference to `Box&lt;int&gt;::get() const'
+collect2: error: ld returned 1 exit status</pre>
+    <p>Three things tell you this is a <strong>linker</strong> error and not a compiler error:
+    the tool named is <code>ld</code>, not <code>g++</code>; there is no line-and-column arrow
+    pointing into your source; and the phrase is <em>undefined reference</em>, which means "somebody
+    called this function and nobody ever supplied a body."</p>
+    <p>But you <em>did</em> supply a body. It is right there in <code>box.cpp</code>, and
+    <code>box.cpp</code> compiled without a murmur. So where did it go? Ask the object file what is
+    inside it:</p>
+<pre class="shell">nm -C box.o</pre>
+    <p><code>nm</code> lists the symbols in an object file, and for <code>box.o</code> it prints
+    <strong>nothing at all</strong>. The file is empty. That is the answer.</p>
+    <p>A template is not code &mdash; it is a recipe for making code. The compiler only produces a
+    real <code>Box&lt;int&gt;::get</code> when it sees somebody actually <em>use</em> <code>Box&lt;int&gt;</code>. While compiling
+    <code>box.cpp</code> it saw the recipe and no user, so it generated nothing. While compiling
+    <code>mainbox.cpp</code> it saw a user and no recipe &mdash; the header has only the
+    declarations &mdash; so it emitted a call and left the address for the linker to fill in. The
+    linker then looked in both object files for <code>Box&lt;int&gt;::get</code>, and it genuinely is not in either
+    of them.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A class template's <strong>definitions must be visible at the point of instantiation</strong>.
+    In practice that means: <strong>put the whole class template &mdash; declarations and definitions
+    together &mdash; in the header file.</strong> You cannot split it into a <code>.cpp</code> the
+    usual way. This is the one place where the multi-file discipline from Class 2 does not
+    apply.</p>
+  </div>
+</div>
+
+<p>The fix is a two-second edit: move the definitions out of <code>box.cpp</code> and paste them
+into <code>box.h</code>, below the class. Then delete <code>box.cpp</code> entirely &mdash; there is
+nothing left for it to hold.</p>
+
+<div class="codewrap"><div class="cap">boxfix.h</div><pre><code class="language-cpp">// boxfix.h -- the same class template, with every definition in the header
+#ifndef BOXFIX_H
+#define BOXFIX_H
+
+template &lt;typename T&gt;
+class Box {
+public:
+    Box(const T &amp;a);
+    T get() const;
+    void set(const T &amp;a);
+private:
+    T item;
+};
+
+// The definitions stay in the header, below the class.
+template &lt;typename T&gt;
+Box&lt;T&gt;::Box(const T &amp;a) { item = a; }
+
+template &lt;typename T&gt;
+T Box&lt;T&gt;::get() const { return item; }
+
+template &lt;typename T&gt;
+void Box&lt;T&gt;::set(const T &amp;a) { item = a; }
+
+#endif</code></pre></div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the header-only version, and what the linker sees now</span></div>
+  <div class="bd">
+    <p>Now there is only one <code>.cpp</code> to compile, and it uses <code>Box</code> at two different types.
+    Predict the three lines of output, then look at what changed inside the object file.</p>
+<div class="codewrap"><div class="cap">mainboxfix.cpp</div><pre><code class="language-cpp">// mainboxfix.cpp -- uses Box&lt;int&gt; and Box&lt;string&gt;; nothing else to link
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include "boxfix.h"
+using namespace std;
+
+int main() {
+    Box&lt;int&gt; b(42);
+    cout &lt;&lt; b.get() &lt;&lt; endl;
+    b.set(99);
+    cout &lt;&lt; b.get() &lt;&lt; endl;
+
+    Box&lt;string&gt; s("hello");
+    cout &lt;&lt; s.get() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="shell">g++ mainboxfix.cpp -o boxfix
+./boxfix</pre>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">42
+99
+hello</pre>
+    <p>And this time the object file is not empty. Compile it without linking and ask
+    <code>nm</code> which <code>Box&lt;int&gt;</code> symbols ended up inside:</p>
+<pre class="shell">g++ -c mainboxfix.cpp -o mainboxfix.o
+nm -C mainboxfix.o | grep "Box&lt;int&gt;" | sort -u</pre>
+<pre class="out">0000000000000000 W Box&lt;int&gt;::Box(int const&amp;)
+0000000000000000 W Box&lt;int&gt;::get() const
+0000000000000000 W Box&lt;int&gt;::set(int const&amp;)
+0000000000000000 n Box&lt;int&gt;::Box(int const&amp;)</pre>
+    <p>Those functions exist now because <code>mainboxfix.cpp</code> both <em>used</em>
+    <code>Box&lt;int&gt;</code> and <em>could see</em> the definitions when it did. The compiler instantiated them on
+    the spot. There is a matching set for <code>Box&lt;string&gt;</code>, and no set for any other type, because no
+    other type was asked for.</p>
+    <p>The <code>W</code> in the second column stands for "weak." If ten different source files all include
+    this header and all use <code>Box&lt;int&gt;</code>, every one of them generates its own copy of these functions
+    &mdash; and the weak marking tells the linker to quietly keep one and discard the rest rather
+    than complain about duplicate definitions. That is the machinery that makes header-only class
+    templates work at all.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.7</div>
+  <div class="bd">
+    <p>A classmate has a working single-file program containing a class template <code>Stack</code> and a
+    <code>main</code>. They split it up for their project and now cannot build it.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> They report: "<code>g++ -c stack.cpp</code> works, <code>g++ -c main.cpp</code> works, and then linking says <em>undefined reference to <code>Stack&lt;int&gt;::push(int)</code></em>." What did they do, and what is the fix?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>They put the class template's declarations in <code>stack.h</code> and its definitions in
+        <code>stack.cpp</code>, which is correct for an ordinary class and wrong for a template. The
+        compiler never instantiated <code>Stack&lt;int&gt;::push</code> while compiling <code>stack.cpp</code>,
+        because that file never uses <code>Stack&lt;int&gt;</code>.</p>
+        <p>The fix: move every definition into <code>stack.h</code>, below the class, keeping the
+        <code>template &lt;typename T&gt;</code> line and the <code>Stack&lt;T&gt;::</code> qualifier on each one. Then remove
+        <code>stack.cpp</code> from the build.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Why does the error mention <code>Stack&lt;int&gt;</code> specifically, rather than <code>Stack</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because <code>Stack</code> is not a class and has no functions. The only function the program ever
+        asked for was the one belonging to the instantiation <code>Stack&lt;int&gt;</code>, so that is the name the
+        linker went looking for. If <code>main</code> had also used <code>Stack&lt;string&gt;</code>, you would see a second set
+        of undefined references naming that one too.</p>
+        <p>This is a useful diagnostic habit generally: the names in a linker error tell you exactly
+        which instantiations your program requested.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Their header now contains full function bodies. Does it still need the <code>#ifndef</code> / <code>#define</code> include guard, or does that only matter for declarations?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It needs the guard more than ever. Without it, a source file that includes the header
+        twice (directly and again through some other header) would see the class defined twice in
+        one translation unit, which is an error. The guard is what makes a header safe to include
+        repeatedly, and nothing about templates changes that.</p>
+        <p>Note the difference between the two kinds of duplication: <em>within</em> one translation
+        unit the include guard prevents it; <em>across</em> translation units, the weak-symbol
+        mechanism from the previous example handles it. You need both.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span><code>DynAlloc</code>: a class template that owns memory</h2>
+
+<p>This section is where the whole course arrives at the same place. We are going to build one class
+that needs, simultaneously: dynamic allocation with <code>new</code> and <code>new[]</code> (Class 8), a destructor
+(Class 14), a copy constructor that performs a genuine <strong>deep copy</strong> (Class 14), an
+assignment operator with a self-assignment guard returning <code>*this</code> (Class 15), a member
+initialization list in declaration order (Class 13), non-inline definitions, and templates. Nothing
+here is new except the last item. What is new is having to do all of it at once.</p>
+
+<p>The professor's class is called <code>DynAlloc</code>. It deliberately holds one of each kind of member so
+that every case shows up:</p>
+
+<table class="trace">
+  <tr><th>Member</th><th>What it is</th><th>What the Big Three must do with it</th></tr>
+  <tr><td><code>int len</code></td><td>a plain value</td><td>copy it</td></tr>
+  <tr><td><code>T obj</code></td><td>an object of the templated type, held by value</td><td>copy it</td></tr>
+  <tr><td><code>T *ptr</code></td><td>a pointer to one dynamically allocated <code>T</code></td><td>allocate a new one and copy the pointed-to value; <code>delete</code> it</td></tr>
+  <tr><td><code>T *array</code></td><td>a pointer to a dynamically allocated array of <code>T</code></td><td>allocate a new array and copy every element; <code>delete []</code> it</td></tr>
+</table>
+
+<h3>Stage 1 &mdash; construction and destruction</h3>
+
+<p>Start with the class body and only the two members that manage the lifetime. Read the constructor
+carefully: it uses <strong>memberwise initialization</strong> (the member initialization list from
+Class 13) for everything it can, then finishes the work that cannot be done in the list.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; stage 1: it allocates, it frees</span></div>
+  <div class="bd">
+    <p>Two objects are built, one <code>DynAlloc&lt;int&gt;</code> and one <code>DynAlloc&lt;string&gt;</code>. Predict the output,
+    including how many destructor lines appear and in what order.</p>
+<div class="codewrap"><div class="cap">dyn1.cpp</div><pre><code class="language-cpp">// dyn1.cpp -- stage 1: a class template that owns memory (constructor + destructor)
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;class T&gt;
+class DynAlloc {
+public:
+    DynAlloc(T a, T b, int n);
+    ~DynAlloc();
+
+    T getObj() const { return obj; }
+    const T* getPtr() const { return ptr; }
+    void setObj(T a);
+    void setPtrValue(T b);
+    T* getElement(int n);
+    void print() const;
+
+private:
+    int len;
+    T obj;
+    T *ptr;
+    T *array;
+};
+
+template &lt;class T&gt;
+DynAlloc&lt;T&gt;::DynAlloc(T a, T b, int n)
+    : len(0), obj(a), ptr(new T), array(nullptr) {   // memberwise initialization
+    *ptr = b;
+    if (n &gt; 0) {
+        len = n;
+        array = new T[len];
+    }
+    cout &lt;&lt; "DynAlloc: non-default constructor" &lt;&lt; endl;
+}
+
+template &lt;class T&gt;
+DynAlloc&lt;T&gt;::~DynAlloc() {
+    delete ptr;
+    delete [] array;
+    cout &lt;&lt; "DynAlloc: destructor" &lt;&lt; endl;
+}
+
+template &lt;class T&gt;
+void DynAlloc&lt;T&gt;::setObj(T a) { obj = a; }
+
+template &lt;class T&gt;
+void DynAlloc&lt;T&gt;::setPtrValue(T b) { *ptr = b; }
+
+template &lt;class T&gt;
+T* DynAlloc&lt;T&gt;::getElement(int n) {
+    if ((n &gt;= 0) &amp;&amp; (n &lt; len)) return &amp;array[n];
+    else return nullptr;
+}
+
+template &lt;class T&gt;
+void DynAlloc&lt;T&gt;::print() const {
+    cout &lt;&lt; "  obj = " &lt;&lt; obj &lt;&lt; ", *ptr = " &lt;&lt; *ptr &lt;&lt; ", array[" &lt;&lt; len &lt;&lt; "] =";
+    for (int i = 0; i &lt; len; ++i) cout &lt;&lt; " " &lt;&lt; array[i];
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    DynAlloc&lt;int&gt; a(10, 20, 3);
+    for (int i = 0; i &lt; 3; ++i) *a.getElement(i) = (i + 1) * 100;
+    a.print();
+
+    if (a.getElement(7) == nullptr) cout &lt;&lt; "  getElement(7) is out of range" &lt;&lt; endl;
+
+    DynAlloc&lt;string&gt; s("hello", "world", 2);
+    *s.getElement(0) = "red";
+    *s.getElement(1) = "blue";
+    s.print();
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">DynAlloc: non-default constructor
+  obj = 10, *ptr = 20, array[3] = 100 200 300
+  getElement(7) is out of range
+DynAlloc: non-default constructor
+  obj = hello, *ptr = world, array[2] = red blue
+DynAlloc: destructor
+DynAlloc: destructor</pre>
+    <p>Points to take from this:</p>
+    <ul>
+      <li>Two destructor lines, and they run <em>after</em> everything in <code>main</code>, in reverse order
+        of construction &mdash; <code>s</code> first, then <code>a</code>. That is the local-object rule from Class 14,
+        untouched by templates.</li>
+      <li><code>getElement</code> does a <strong>bounds check</strong> and returns <code>nullptr</code> when the index is
+        out of range, which is why the third line prints. Returning a <code>T*</code> rather than a <code>T</code> is what
+        lets the caller <em>write</em> through it: <code>*a.getElement(0) = 100;</code>.</li>
+      <li><code>DynAlloc&lt;string&gt;</code> works with no extra effort. <code>new T</code> becomes <code>new string</code>,
+        <code>delete [] array</code> runs <code>string</code>'s destructor on every element, and the
+        <code>cout &lt;&lt; array[i]</code> inside <code>print</code> finds <code>string</code>'s <code>operator&lt;&lt;</code>. All of it was already true of <code>T</code>; the template just
+        had to not get in the way.</li>
+    </ul>
+    <p>Because this program allocates, it is worth checking with a memory tool rather than trusting
+    it. Here is what <code>valgrind</code> reports &mdash; everything below is tool output, not
+    program output:</p>
+<pre class="shell">valgrind --leak-check=full ./dyn1</pre>
+<pre class="out">==12532== HEAP SUMMARY:
+==12532==     in use at exit: 0 bytes in 0 blocks
+==12532==   total heap usage: 6 allocs, 6 frees, 77,944 bytes allocated
+==12532== 
+==12532== All heap blocks were freed -- no leaks are possible
+==12532== 
+==12532== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</pre>
+    <p>Six allocations, six frees. Two of those allocations are <code>new T</code> and two are <code>new T[len]</code>,
+    one pair per object; the other two belong to the <code>string</code> objects themselves.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; the initialization list in the wrong order</span></div>
+  <div class="bd">
+    <p>The constructor above lists its members as <code>len(0), obj(a), ptr(new T), array(nullptr)</code>. The
+    course notes write the same list in a different order:</p>
+<pre><code class="language-cpp">DynAlloc&lt;T&gt;::DynAlloc(T a, T b, int n) : obj(a), ptr(new T), array(NULL), len(0) {</code></pre>
+    <p>Members are initialized in <strong>declaration order</strong>, not in the order you list them
+    &mdash; the exact subtlety taught with the member initialization list in Class 13. The
+    declarations are <code>int len; T obj; T *ptr; T *array;</code>, so <code>len</code> is initialized first no matter
+    where you write it. Compile the notes' version and g++ tells you so:</p>
+<pre class="err">reorder.cpp: In instantiation of 'DynAlloc&lt;T&gt;::DynAlloc(T, T, int) [with T = int]':
+reorder.cpp:13:8: warning: 'DynAlloc&lt;int&gt;::array' will be initialized after [-Wreorder]
+   13 |     T *array;
+      |        ^~~~~
+reorder.cpp:10:9: warning:   'int DynAlloc&lt;int&gt;::len' [-Wreorder]
+   10 |     int len;
+      |         ^~~
+reorder.cpp:17:1: warning:   when initialized here [-Wreorder]
+   17 | DynAlloc&lt;T&gt;::DynAlloc(T a, T b, int n) : obj(a), ptr(new T), array(NULL), len(0) {
+      | ^~~~~~~~~~~</pre>
+    <p>Here the behavior is still correct, because <code>len(0)</code> is immediately overwritten by
+    <code>len = n;</code> in the body. But it is exactly the trap the professor warns about, and the day one
+    member's initializer <em>reads</em> another member, the order stops being cosmetic and starts
+    being a bug. Always write the list in declaration order. Note also that <code>-Wreorder</code> only fires
+    when the template is <em>instantiated</em> &mdash; the first line of the warning says "in
+    instantiation of" &mdash; so a template you never use is a template you never get warned
+    about.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.8</div>
+  <div class="bd">
+    <p>Questions about stage 1 as it stands.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Why is it <code>delete ptr;</code> for one member and <code>delete [] array;</code> for the other?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because of how each was allocated. <code>ptr</code> came from <code>new T</code> &mdash; a single object &mdash;
+        so it is released with <code>delete</code>. <code>array</code> came from <code>new T[len]</code> &mdash; an array &mdash; so
+        it is released with <code>delete []</code>, which is what tells the run-time system to destroy every
+        element, not just the first. Mismatching them is undefined behavior, and with a <code>T</code> like
+        <code>string</code> it will leak every element after the first.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> If a caller passes <code>n = 0</code>, <code>array</code> stays <code>nullptr</code>. Is <code>delete [] array;</code> in the destructor then a bug?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. <code>delete</code> and <code>delete []</code> on a null pointer are defined to do nothing at all. That is
+        why initializing <code>array</code> to <code>nullptr</code> in the list matters so much: it guarantees the
+        destructor is safe on every path without needing an <code>if</code>. An <em>uninitialized</em> pointer,
+        by contrast, holds garbage, and deleting it is a crash.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> The professor's version writes <code>return NULL;</code> in <code>getElement</code> and <code>array(NULL)</code> in the list; the version above writes <code>nullptr</code>. Does it matter?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both work here, but <code>nullptr</code> is the right modern choice and is what you should write.
+        <code>NULL</code> is an old macro that expands to the integer <code>0</code>, so it is not really a pointer at
+        all; it needs <code>&lt;cstddef&gt;</code> (usually pulled in by accident through another header) and it can
+        pick the wrong overload when a function takes both an <code>int</code> and a pointer. <code>nullptr</code> is a
+        genuine keyword with a genuine pointer type and none of those problems.</p>
+        <p>You will still see <code>NULL</code> throughout this course's materials and on the exams, where it
+        is accepted. Read it as "null pointer" and write <code>nullptr</code> in your own code.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> The course notes call the mutator <code>setPtr(T b)</code>, and its body is <code>*ptr = b;</code>. The version above renames it. Why?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because the name lies. <code>setPtr</code> sounds like it changes which object <code>ptr</code> points at; what
+        it actually does is overwrite the <em>value</em> that <code>ptr</code> already points to. The pointer
+        itself never changes. That is why the listing above calls it <code>setPtrValue</code>.</p>
+        <p>This is not pedantry &mdash; a caller who believes the name will write
+        <code>d.setPtr(something)</code> expecting the old target to be replaced, and will be surprised. Name
+        mutators after what they modify.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>Stage 2 &mdash; what happens if you stop here</h3>
+
+<p>Stage 1 has a destructor and no copy constructor and no assignment operator. Class 14 called that
+the danger zone: as soon as a class owns memory, the compiler-generated copy operations are wrong,
+and they are wrong in a way that does not show up until the objects are destroyed.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the compiler's copy constructor, on a class that owns memory</span></div>
+  <div class="bd">
+    <p>Exactly the stage-1 class, with a <code>main</code> that copies. Work out what the four <code>print</code> lines
+    say, and what happens at the end of the program.</p>
+<div class="codewrap"><div class="cap">dyn2.cpp &mdash; only main changes; the class is exactly stage 1</div><pre><code class="language-cpp">int main() {
+    DynAlloc&lt;int&gt; a(10, 20, 3);
+    for (int i = 0; i &lt; 3; ++i) *a.getElement(i) = (i + 1) * 100;
+    a.print();
+
+    DynAlloc&lt;int&gt; b = a;        // no copy constructor written: compiler supplies one
+    b.print();
+
+    *b.getElement(0) = 999;     // change b ...
+    cout &lt;&lt; "after changing b:" &lt;&lt; endl;
+    a.print();                  // ... and look at a
+    b.print();
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">DynAlloc: non-default constructor
+  obj = 10, *ptr = 20, array[3] = 100 200 300
+  obj = 10, *ptr = 20, array[3] = 100 200 300
+after changing b:
+  obj = 10, *ptr = 20, array[3] = 999 200 300
+  obj = 10, *ptr = 20, array[3] = 999 200 300
+DynAlloc: destructor
+free(): double free detected in tcache 2</pre>
+    <p>Two separate failures, both classic.</p>
+    <p><strong>Failure one: they share.</strong> Writing <code>999</code> through <code>b</code> changed <code>a</code> as well. The
+    compiler's copy constructor copies each member individually, and copying a pointer copies the
+    <em>address</em>, not the thing at that address. So <code>a.array</code> and <code>b.array</code> are the same
+    address. That is a <strong>shallow copy</strong>.</p>
+    <p><strong>Failure two: they both free it.</strong> At the end of <code>main</code> both destructors run.
+    The first releases the memory; the second releases the same memory again. Notice there is only
+    <em>one</em> "DynAlloc: destructor" line in the output &mdash; the second destructor aborted the
+    program partway through, before reaching its <code>cout</code>.</p>
+    <p><code>valgrind</code> names the problem precisely. This is tool output, and the run is
+    <em>supposed</em> to fail here:</p>
+<pre class="out">==15470== Invalid free() / delete / delete[] / realloc()
+==15470==    at 0x484A61D: operator delete(void*, unsigned long)
+==15470==    by 0x1094D3: DynAlloc&lt;int&gt;::~DynAlloc()
+==15470==    by 0x109375: main
+==15470==  Address 0x4e26080 is 0 bytes inside a block of size 4 free'd
+==15470==    at 0x484A61D: operator delete(void*, unsigned long)
+==15470==    by 0x1094D3: DynAlloc&lt;int&gt;::~DynAlloc()
+==15470==    by 0x109369: main
+==15470== 
+==15470== HEAP SUMMARY:
+==15470==     in use at exit: 0 bytes in 0 blocks
+==15470==   total heap usage: 4 allocs, 6 frees, 77,840 bytes allocated
+==15470== 
+==15470== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)</pre>
+    <p>Read the heap line: <strong>4 allocs, 6 frees.</strong> Two objects released four blocks that
+    only two <code>new</code> expressions ever created. Valgrind reports the address as
+    <em>"0 bytes inside a block ... free'd"</em> and then shows you the earlier release, so you can
+    see both destructor calls at once.</p>
+    <p>None of this is a template problem. It is the Class 14 problem, arriving unchanged inside a
+    template. Templates do not make you exempt from the Big Three &mdash; they make the consequences
+    apply to every type you instantiate.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.9</div>
+  <div class="bd">
+    <p>The stage-2 program also has a <code>T *ptr</code> member, not just the array, and both objects were
+    destroyed. Sketch what memory looks like just before <code>main</code> returns: how many heap blocks exist,
+    and how many pointers name each one?</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Two heap blocks exist, both created by <code>a</code>'s constructor:</p>
+      <table class="trace">
+        <tr><th>Heap block</th><th>Created by</th><th>Pointed at by</th></tr>
+        <tr><td>one <code>int</code>, holding <code>20</code></td><td><code>ptr(new T)</code> in <code>a</code>'s constructor</td><td><code>a.ptr</code> <em>and</em> <code>b.ptr</code></td></tr>
+        <tr><td>three <code>int</code>s, holding <code>999 200 300</code></td><td><code>array = new T[len]</code> in <code>a</code>'s constructor</td><td><code>a.array</code> <em>and</em> <code>b.array</code></td></tr>
+      </table>
+      <p><code>b</code>'s construction allocated nothing at all &mdash; that is the whole point. Four pointers,
+      two blocks. Then two destructors run, each performing one <code>delete</code> and one <code>delete []</code>: four
+      releases of two blocks.</p>
+      <p>The <code>obj</code> and <code>len</code> members, being plain values, were copied correctly and cause no trouble.
+      That is the general rule: the compiler's copy is right for every member that <em>is</em> its
+      value and wrong for every member that merely <em>points at</em> its value.</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>Stage 3 &mdash; the Big Three, deep</h3>
+
+<p>Now add the two missing members. Nothing about them is template-specific except the two lines of
+packaging on each definition &mdash; compare them to the <code>MyList</code> and <code>Polynomial</code> versions you
+wrote in Classes 14 and 15 and you will find the bodies are the same code you already know.</p>
+
+<p>The copy constructor allocates its own storage and copies the <em>values</em>:</p>
+
+<pre><code class="language-cpp">template &lt;class T&gt;
+DynAlloc&lt;T&gt;::DynAlloc(const DynAlloc &amp;orig)
+    : len(orig.len), obj(orig.obj), ptr(new T(*orig.ptr)), array(nullptr) {
+    if (len &gt; 0) {
+        array = new T[len];
+        for (int i = 0; i &lt; len; ++i)
+            array[i] = orig.array[i];
+    }
+    cout &lt;&lt; "DynAlloc: copy constructor" &lt;&lt; endl;
+}</code></pre>
+
+<p>Two details in that signature are worth pausing on. The parameter is <code>const DynAlloc &amp;orig</code> with
+no <code>&lt;T&gt;</code>, because we are inside the class's own scope &mdash; section 4's rule. But the qualifier
+before the <code>::</code> is <code>DynAlloc&lt;T&gt;</code>, because that part is outside. The same line shows both halves of
+the rule.</p>
+
+<p>And the assignment operator, whose signature is the one the professor singles out for attention:</p>
+
+<pre><code class="language-cpp">template &lt;class T&gt;
+DynAlloc&lt;T&gt;&amp; DynAlloc&lt;T&gt;::operator= (const DynAlloc &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    obj = rhs.obj;
+    *ptr = *rhs.ptr;
+    delete [] array;
+    array = nullptr;
+    len = rhs.len;
+    if (len &gt; 0) {
+        array = new T[len];
+        for (int i = 0; i &lt; len; ++i)
+            array[i] = rhs.array[i];
+    }
+    cout &lt;&lt; "DynAlloc: assignment operation" &lt;&lt; endl;
+    return *this;
+}</code></pre>
+
+<p>The return type is <code>DynAlloc&lt;T&gt;&amp;</code> &mdash; with the argument, because a return type is outside the
+class body. The function name is <code>DynAlloc&lt;T&gt;::operator=</code>. The parameter is <code>const DynAlloc &amp;rhs</code>,
+inside, so no argument needed. Students routinely write <code>DynAlloc&amp; DynAlloc::operator=</code> and get the
+"used without template arguments" error from section 5, twice.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the complete class, exercised</span></div>
+  <div class="bd">
+    <p>Here is the whole thing, with a <code>main</code> that copy-constructs, assigns, self-assigns and then
+    does it all again with <code>T = string</code>. Predict the announcement lines <em>and</em> whether each
+    <code>print</code> shows the two objects sharing or not. The self-assignment line is the sly one.</p>
+<div class="codewrap"><div class="cap">dyn3.cpp</div><pre><code class="language-cpp">// dyn3.cpp -- stage 3: DynAlloc with the full Big Three, deep copy throughout
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;class T&gt;
+class DynAlloc {
+public:
+    DynAlloc(T a, T b, int n);
+    ~DynAlloc();
+    DynAlloc(const DynAlloc &amp;orig);
+    DynAlloc&amp; operator= (const DynAlloc &amp;rhs);
+
+    T getObj() const { return obj; }
+    const T* getPtr() const { return ptr; }
+    void setObj(T a);
+    void setPtrValue(T b);
+    T* getElement(int n);
+    void print() const;
+
+private:
+    int len;
+    T obj;
+    T *ptr;
+    T *array;
+};
+
+template &lt;class T&gt;
+DynAlloc&lt;T&gt;::DynAlloc(T a, T b, int n)
+    : len(0), obj(a), ptr(new T), array(nullptr) {   // memberwise initialization
+    *ptr = b;
+    if (n &gt; 0) {
+        len = n;
+        array = new T[len];
+    }
+    cout &lt;&lt; "DynAlloc: non-default constructor" &lt;&lt; endl;
+}
+
+template &lt;class T&gt;
+DynAlloc&lt;T&gt;::~DynAlloc() {
+    delete ptr;
+    delete [] array;
+    cout &lt;&lt; "DynAlloc: destructor" &lt;&lt; endl;
+}
+
+template &lt;class T&gt;
+DynAlloc&lt;T&gt;::DynAlloc(const DynAlloc &amp;orig)
+    : len(orig.len), obj(orig.obj), ptr(new T(*orig.ptr)), array(nullptr) {
+    if (len &gt; 0) {
+        array = new T[len];
+        for (int i = 0; i &lt; len; ++i)
+            array[i] = orig.array[i];
+    }
+    cout &lt;&lt; "DynAlloc: copy constructor" &lt;&lt; endl;
+}
+
+template &lt;class T&gt;
+DynAlloc&lt;T&gt;&amp; DynAlloc&lt;T&gt;::operator= (const DynAlloc &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    obj = rhs.obj;
+    *ptr = *rhs.ptr;
+    delete [] array;
+    array = nullptr;
+    len = rhs.len;
+    if (len &gt; 0) {
+        array = new T[len];
+        for (int i = 0; i &lt; len; ++i)
+            array[i] = rhs.array[i];
+    }
+    cout &lt;&lt; "DynAlloc: assignment operation" &lt;&lt; endl;
+    return *this;
+}
+
+template &lt;class T&gt;
+void DynAlloc&lt;T&gt;::setObj(T a) { obj = a; }
+
+template &lt;class T&gt;
+void DynAlloc&lt;T&gt;::setPtrValue(T b) { *ptr = b; }
+
+template &lt;class T&gt;
+T* DynAlloc&lt;T&gt;::getElement(int n) {
+    if ((n &gt;= 0) &amp;&amp; (n &lt; len)) return &amp;array[n];
+    else return nullptr;
+}
+
+template &lt;class T&gt;
+void DynAlloc&lt;T&gt;::print() const {
+    cout &lt;&lt; "  obj = " &lt;&lt; obj &lt;&lt; ", *ptr = " &lt;&lt; *ptr &lt;&lt; ", array[" &lt;&lt; len &lt;&lt; "] =";
+    for (int i = 0; i &lt; len; ++i) cout &lt;&lt; " " &lt;&lt; array[i];
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    DynAlloc&lt;int&gt; a(10, 20, 3);
+    for (int i = 0; i &lt; 3; ++i) *a.getElement(i) = (i + 1) * 100;
+
+    DynAlloc&lt;int&gt; b = a;              // copy constructor
+    *b.getElement(0) = 999;
+    cout &lt;&lt; "a:" &lt;&lt; endl; a.print();
+    cout &lt;&lt; "b:" &lt;&lt; endl; b.print();
+
+    DynAlloc&lt;int&gt; c(0, 0, 1);
+    c = a;                            // assignment operator
+    *c.getElement(2) = -7;
+    cout &lt;&lt; "a:" &lt;&lt; endl; a.print();
+    cout &lt;&lt; "c:" &lt;&lt; endl; c.print();
+
+    c = c;                            // self-assignment
+    cout &lt;&lt; "c after self-assignment:" &lt;&lt; endl; c.print();
+
+    DynAlloc&lt;string&gt; s("hello", "world", 2);
+    *s.getElement(0) = "red";
+    *s.getElement(1) = "blue";
+    DynAlloc&lt;string&gt; t = s;           // copy constructor, T = string
+    *t.getElement(1) = "green";
+    cout &lt;&lt; "s:" &lt;&lt; endl; s.print();
+    cout &lt;&lt; "t:" &lt;&lt; endl; t.print();
+
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">DynAlloc: non-default constructor
+DynAlloc: copy constructor
+a:
+  obj = 10, *ptr = 20, array[3] = 100 200 300
+b:
+  obj = 10, *ptr = 20, array[3] = 999 200 300
+DynAlloc: non-default constructor
+DynAlloc: assignment operation
+a:
+  obj = 10, *ptr = 20, array[3] = 100 200 300
+c:
+  obj = 10, *ptr = 20, array[3] = 100 200 -7
+c after self-assignment:
+  obj = 10, *ptr = 20, array[3] = 100 200 -7
+DynAlloc: destructor
+DynAlloc: destructor
+DynAlloc: destructor
+DynAlloc: destructor
+DynAlloc: destructor</pre>
+    <p>Everything that was broken in stage 2 is fixed:</p>
+    <ul>
+      <li>Writing <code>999</code> into <code>b</code> left <code>a</code> alone. Writing <code>-7</code> into <code>c</code> left <code>a</code> alone. Changing
+        <code>t</code>'s second string to <code>"green"</code> left <code>s</code> saying <code>"blue"</code>. Three independent proofs of deep
+        copy, one of them at <code>T = string</code>.</li>
+      <li><strong><code>c = c;</code> printed nothing.</strong> The guard <code>if (this == &amp;rhs) return *this;</code>
+        fired and returned immediately, before the <code>delete []</code>. That is not an optimization &mdash;
+        it is what stops the function from freeing <code>rhs</code>'s array and then copying out of the memory
+        it just released. Remove the guard and this line silently corrupts <code>c</code>.</li>
+      <li>Five constructions, five destructions. Count them in the listing: <code>a</code>, <code>b</code>, <code>c</code>, <code>s</code>, <code>t</code>.</li>
+    </ul>
+    <p>And the memory check. This is <code>valgrind</code> output, not program output:</p>
+<pre class="shell">valgrind --leak-check=full ./dyn3</pre>
+<pre class="out">==17989== HEAP SUMMARY:
+==17989==     in use at exit: 0 bytes in 0 blocks
+==17989==   total heap usage: 13 allocs, 13 frees, 78,084 bytes allocated
+==17989== 
+==17989== All heap blocks were freed -- no leaks are possible
+==17989== 
+==17989== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</pre>
+    <p>Thirteen allocations, thirteen frees, zero errors &mdash; compare stage 2's "4 allocs, 6
+    frees" and two errors. The extra allocations are exactly the ones the copy constructor and the
+    assignment operator now perform on their own behalf, which is what a deep copy <em>is</em>.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; assigning in the body instead of initializing in the list</span></div>
+  <div class="bd">
+    <p>The course notes' copy constructor starts with only <code>: array(NULL)</code> and then assigns the rest
+    inside the body:</p>
+<pre><code class="language-cpp">DynAlloc&lt;T&gt;::DynAlloc(const DynAlloc&amp; orig) : array(NULL) {
+    obj = orig.obj;          // default-construct obj, THEN overwrite it
+    ptr = new T;
+    *ptr = *orig.ptr;
+    len = orig.len;
+    // ...
+}</code></pre>
+    <p>It works for <code>int</code> and <code>string</code>, but it quietly imposes a requirement the rest of the class
+    does not: <code>obj = orig.obj;</code> in the body means <code>obj</code> was <strong>default-constructed first</strong>
+    and then assigned, so <code>T</code> must have a public default constructor. Meanwhile the ordinary
+    constructor writes <code>obj(a)</code>, which needs no such thing. The result is a class that accepts a
+    given <code>T</code> when you construct an object and rejects it when you copy one &mdash; a confusing
+    failure to debug, and one that only appears for the user who supplies that particular <code>T</code>.</p>
+    <p>The version used above initializes consistently:
+    <code>: len(orig.len), obj(orig.obj), ptr(new T(*orig.ptr)), array(nullptr)</code>. It is also faster, for
+    the reason Class 13 gave: initializing once beats constructing and then assigning. Same for
+    <code>new T(*orig.ptr)</code> versus <code>new T; *ptr = ...</code>.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write the assignment operator</h3>
+
+<p>Below is a class template <code>Buffer</code> that owns a dynamic array and already has its constructor,
+destructor and copy constructor. Write the assignment operator, non-inline, with the correct
+templated signature. Get the four required pieces in: the guard, releasing the old array, allocating
+and deep-copying the new one, and returning <code>*this</code>.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Buffer {
+public:
+    Buffer(int n);
+    ~Buffer();
+    Buffer(const Buffer &amp;orig);
+    Buffer&amp; operator= (const Buffer &amp;rhs);
+    T&amp; at(int i) { return data[i]; }
+    int size() const { return len; }
+private:
+    int len;
+    T *data;
+};
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::Buffer(int n) : len(n), data(nullptr) {
+    if (len &gt; 0) data = new T[len];
+}
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::~Buffer() { delete [] data; }
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::Buffer(const Buffer &amp;orig) : len(orig.len), data(nullptr) {
+    if (len &gt; 0) {
+        data = new T[len];
+        for (int i = 0; i &lt; len; ++i) data[i] = orig.data[i];
+    }
+}
+
+// write operator= here
+
+int main() {
+    Buffer&lt;int&gt; a(3);
+    for (int i = 0; i &lt; 3; ++i) a.at(i) = i + 1;
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Buffer {
+public:
+    Buffer(int n);
+    ~Buffer();
+    Buffer(const Buffer &amp;orig);
+    Buffer&amp; operator= (const Buffer &amp;rhs);
+    T&amp; at(int i) { return data[i]; }
+    int size() const { return len; }
+private:
+    int len;
+    T *data;
+};
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::Buffer(int n) : len(n), data(nullptr) {
+    if (len &gt; 0) data = new T[len];
+}
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::~Buffer() { delete [] data; }
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::Buffer(const Buffer &amp;orig) : len(orig.len), data(nullptr) {
+    if (len &gt; 0) {
+        data = new T[len];
+        for (int i = 0; i &lt; len; ++i) data[i] = orig.data[i];
+    }
+}
+
+// write operator= here
+
+int main() {
+    Buffer&lt;int&gt; a(3);
+    for (int i = 0; i &lt; 3; ++i) a.at(i) = i + 1;
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.10</div>
+  <div class="bd">
+    <p>Write <code>Buffer&lt;T&gt;::operator=</code> and a <code>main</code> that proves the copy is deep: assign one buffer to
+    another, change the source, and show the destination did not follow.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Four steps, always in this order: guard against self-assignment;
+      release what this object currently owns; take the size and allocate fresh storage; copy the
+      elements one at a time. Then <code>return *this;</code> so that chained assignment works. The signature
+      needs a <code>template &lt;typename T&gt;</code> line, the return type <code>Buffer&lt;T&gt;&amp;</code>, and the qualifier
+      <code>Buffer&lt;T&gt;::</code>.</p>
+<div class="codewrap"><div class="cap">buffer.cpp</div><pre><code class="language-cpp">// buffer.cpp -- a class template that owns a dynamic array, with the Big Three
+#include &lt;iostream&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Buffer {
+public:
+    Buffer(int n);
+    ~Buffer();
+    Buffer(const Buffer &amp;orig);
+    Buffer&amp; operator= (const Buffer &amp;rhs);
+    T&amp; at(int i) { return data[i]; }
+    int size() const { return len; }
+private:
+    int len;
+    T *data;
+};
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::Buffer(int n) : len(n), data(nullptr) {
+    if (len &gt; 0) data = new T[len];
+}
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::~Buffer() { delete [] data; }
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;::Buffer(const Buffer &amp;orig) : len(orig.len), data(nullptr) {
+    if (len &gt; 0) {
+        data = new T[len];
+        for (int i = 0; i &lt; len; ++i) data[i] = orig.data[i];
+    }
+}
+
+template &lt;typename T&gt;
+Buffer&lt;T&gt;&amp; Buffer&lt;T&gt;::operator= (const Buffer &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    delete [] data;
+    data = nullptr;
+    len = rhs.len;
+    if (len &gt; 0) {
+        data = new T[len];
+        for (int i = 0; i &lt; len; ++i) data[i] = rhs.data[i];
+    }
+    return *this;
+}
+
+int main() {
+    Buffer&lt;int&gt; a(3);
+    for (int i = 0; i &lt; 3; ++i) a.at(i) = (i + 1) * 10;
+
+    Buffer&lt;int&gt; b(1);
+    b = a;                       // assignment operator
+    a.at(0) = 999;               // change the source afterwards
+
+    cout &lt;&lt; "a:";
+    for (int i = 0; i &lt; a.size(); ++i) cout &lt;&lt; " " &lt;&lt; a.at(i);
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; "b:";
+    for (int i = 0; i &lt; b.size(); ++i) cout &lt;&lt; " " &lt;&lt; b.at(i);
+    cout &lt;&lt; endl;
+
+    b = b;                       // self-assignment must survive
+    cout &lt;&lt; "b after self-assignment:";
+    for (int i = 0; i &lt; b.size(); ++i) cout &lt;&lt; " " &lt;&lt; b.at(i);
+    cout &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<pre class="out">a: 999 20 30
+b: 10 20 30
+b after self-assignment: 10 20 30</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>b</code> was built with room for one element and ends up holding three. The old array had to
+          be released and a new one of the right size allocated &mdash; that is why an assignment
+          operator is more work than a copy constructor, which starts from nothing.</li>
+        <li>Setting <code>data = nullptr</code> immediately after <code>delete []</code> is belt and braces: if the
+          allocation on the next line threw, the object would still be destructible. It also means
+          the <code>len == 0</code> case needs no special handling.</li>
+        <li>Drop the guard and run <code>b = b;</code> and you get garbage or a crash, because
+          <code>delete [] data;</code> would have destroyed the very array the loop is about to read from.
+          Every rubric in this course pays points for that one line.</li>
+        <li>The valgrind run for this program reports <em>"All heap blocks were freed &mdash; no
+          leaks are possible"</em> with 0 errors. If yours does not, the usual cause is forgetting
+          the <code>delete []</code> before reallocating &mdash; a leak rather than a crash, and therefore
+          invisible without the tool.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.11</div>
+  <div class="bd">
+    <p>Suppose you want to use <code>DynAlloc</code> with a class of your own, <code>Point</code>, so you write
+    <code>DynAlloc&lt;Point&gt; dp(p1, p2, 4);</code>. Which members must <code>Point</code> have for that line and the rest of
+    the class to compile? Answer before you look &mdash; you can read them off the template body.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Walk through everything the class template does to a <code>T</code> and list what each one demands:</p>
+      <table class="trace">
+        <tr><th>What the template does</th><th>What <code>Point</code> must therefore have</th></tr>
+        <tr><td><code>DynAlloc(T a, T b, int n)</code> takes its parameters by value</td><td>a copy constructor</td></tr>
+        <tr><td><code>ptr = new T</code> and <code>array = new T[len]</code></td><td>a public <strong>default constructor</strong> &mdash; <code>new T[len]</code> default-constructs every element</td></tr>
+        <tr><td><code>*ptr = b;</code> and <code>array[i] = orig.array[i];</code></td><td>a copy assignment operator</td></tr>
+        <tr><td><code>delete ptr; delete [] array;</code></td><td>a public destructor (any class has one unless you hide it)</td></tr>
+        <tr><td><code>print()</code> does <code>cout &lt;&lt; obj</code></td><td>an <code>operator&lt;&lt;</code> for <code>Point</code> &mdash; but only if you actually call <code>print</code></td></tr>
+      </table>
+      <p>Two lessons. First, the requirements are real and there are more of them than you expect
+      &mdash; this is the "restrictions on the properties of the classes" the professor mentions when
+      comparing templates with polymorphism. Second, the last row is the interesting one: a member
+      function of a class template is only compiled if it is <em>used</em>. <code>DynAlloc&lt;Point&gt;</code> with
+      no <code>operator&lt;&lt;</code> compiles perfectly as long as nobody ever calls <code>print()</code> on it. The error
+      appears the day somebody does.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Generic programming, and what the STL is</h2>
+
+<p>Everything today has been machinery. Step back for the idea it serves.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; generic programming</span></div>
+  <div class="bd">
+    <p><strong>Generic programming</strong> is a style of programming in which the code is
+    <strong>independent of any specific data type</strong>. The data type is specified
+    <em>later</em>, not when the code is actually written.</p>
+    <p>It is a <strong>concept</strong>, independent of any programming language &mdash; other
+    languages implement it by other means. <strong>Templates provide a mechanism to implement
+    generic programming</strong> in C++.</p>
+  </div>
+</div>
+
+<p>Two examples make the idea concrete, and the professor picks exactly the two that this course has
+been circling all semester.</p>
+
+<p><strong>A dynamically resizable array.</strong> The fundamental software design of such an array
+&mdash; keep a block of storage, remember how much of it is used, allocate a bigger block and copy
+when you run out &mdash; does not depend on whether the elements are <code>int</code> or <code>double</code> or <code>Employee</code>.
+Not one line of that design mentions a type. The <code>vector</code> class in the STL <em>is</em> a dynamically
+resizable array, it is a templated class, and that is why you have been writing <code>vector&lt;int&gt;</code> and
+<code>vector&lt;double&gt;</code> since Class 5. You now know exactly what that syntax means: it is an instantiation,
+the same thing you did to <code>Tclass</code> this morning.</p>
+
+<p><strong>Sorting.</strong> The fundamental concept of sorting data does not depend on a specific
+data type either. To sort, you need only two things: an array of objects, and a
+<strong>comparison function</strong> that can say one object is "less than" another. Given those,
+you can establish a ranking &mdash; and the sorting algorithm itself never has to know what it is
+ranking. That is why <code>MaxPair&lt;string&gt;</code> in section 3 worked without being told anything about
+strings: it asked <code>T</code> whether one value was less than another, and let <code>T</code> answer.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>The test for a generic design is this: can you describe the algorithm or the data structure
+    completely without naming a type? If yes, the type is an accident of the version you happened to
+    write first, and it belongs in a template parameter.</p>
+  </div>
+</div>
+
+<p>Which brings us to the library the whole thing is named after.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the STL</span></div>
+  <div class="bd">
+    <p>The <strong>STL</strong> (Standard Template Library) is a very important part of the standard
+    C++ library. It employs the concept of generic programming: <strong>all of the classes in the
+    STL are templated classes.</strong></p>
+    <p>It provides support for four broad categories of functionality:</p>
+    <ol>
+      <li><strong>Containers</strong> &mdash; classes that hold collections of objects. A <code>vector</code>
+        (a dynamically resizable array) is a container.</li>
+      <li><strong>Algorithms</strong> &mdash; operations performed on those collections. Sorting is
+        an example of an algorithm.</li>
+      <li><strong>Iterators</strong> &mdash; a generalization of the concept of pointers, used to
+        walk over a container without knowing which kind of container it is.</li>
+      <li><strong>Function objects</strong>, also called <strong>functors</strong> &mdash; objects
+        that can be called and used as if they were functions, which is how you hand a custom
+        comparison to a sorting algorithm.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 26.12</div>
+  <div class="bd">
+    <p>Two questions to close the loop on the whole semester.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> You have used <code>vector</code> since Class 5 without knowing any of today's material. What does the declaration <code>vector&lt;string&gt; names;</code> actually cause the compiler to do?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It instantiates the <code>vector</code> class template with <code>T = string</code>, generating a real class
+        &mdash; a class with its own dynamically allocated array of <code>string</code>, its own destructor,
+        its own copy constructor, its own assignment operator, all deep &mdash; and then declares an
+        object of that class. Every one of those pieces is exactly what you built by hand in
+        <code>DynAlloc</code> this morning.</p>
+        <p>And <code>vector&lt;int&gt;</code> is a completely different class, generated separately. The two are as
+        unrelated as <code>Tclass&lt;int&gt;</code> and <code>Tclass&lt;double&gt;</code> in Quick Check 26.3.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Given what you know about where a class template's definitions must live, what would you expect to find inside the file that <code>#include &lt;vector&gt;</code> pulls in &mdash; declarations, or declarations and definitions?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both. There is no compiled <code>vector.o</code> sitting in the library for the linker to find,
+        because there is no such thing as "the" <code>vector</code> &mdash; the compiler has to build
+        <code>vector&lt;string&gt;</code> from source at the moment you ask for it. So the entire implementation of
+        <code>vector</code>, bodies and all, is in the header you include.</p>
+        <p>That is also why C++ programs that use lots of templates compile slowly: every source
+        file that includes <code>&lt;vector&gt;</code> re-reads and re-instantiates the whole thing. It is the price
+        of section 6's rule, paid by every C++ program ever written.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 26</span></div>
+  <div class="bd">
+    <p>Problem 1 is the demonstration program from the course notes for this lecture, completed.
+    Problems 2, 3 and 4 are taken from this course's final exams and adapted: the exams test
+    <em>function</em> templates, so each one has been extended to the class templates you learned
+    today &mdash; the extension is exactly the kind these finals have used. Problems 5 and 6 were
+    written for these notes to cover two things the exams do not reach: a class template with two
+    type parameters, and the header rule.</p>
+    <p>Work each one on paper or in a compiler <em>before</em> opening the answer. On this
+    professor's finals, an output-prediction part carries no partial credit, while a write-code part
+    pays for the signature line alone &mdash; on a template question the <code>template &lt;typename T&gt;</code>
+    line plus a correct signature is worth 30&ndash;40% of the problem by itself. Write it first,
+    every time, even if you are unsure of the body.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; The templated class demonstration program <span class="muted small">(from the course notes)</span></h3>
+
+<p>Starting from the class <code>Sclass</code> (which stores a <code>string</code>), write the class template <code>Tclass</code>
+with a non-default constructor, an accessor <code>get</code>, a mutator <code>set</code> and a <code>print</code> method. Overload
+<code>operator&lt;&lt;</code> for it so that a <code>Tclass</code> object prints as its value in parentheses. Then write a
+<code>main</code> that builds one object each for <code>int</code>, <code>double</code> and <code>string</code>, and prints all three twice
+&mdash; once with <code>print()</code> and once with <code>cout</code>.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The class conversion is mechanical: replace <code>string</code> with <code>T</code>, prepend
+  <code>template &lt;typename T&gt;</code>, rename. The <code>operator&lt;&lt;</code> is the part worth thinking about. It is a free
+  function, not a member, so it needs its own <code>template &lt;typename T&gt;</code> line; its second parameter is
+  <code>const Tclass&lt;T&gt; &amp;t</code> &mdash; the class name outside the class body must carry its argument; and it
+  reaches the private <code>x</code> through the public <code>get()</code>. Return <code>os</code> (as the result of the chained
+  <code>&lt;&lt;</code>) so that <code>cout &lt;&lt; it &lt;&lt; endl;</code> works.</p>
+<div class="codewrap"><div class="cap">tclass.cpp</div><pre><code class="language-cpp">// tclass.cpp -- the same class, templated, plus a templated operator&lt;&lt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class Tclass {
+public:
+    Tclass(const T &amp;a) { x = a; }
+    T get() const { return x; }
+    void set(const T &amp;a) { x = a; }
+    void print() const { cout &lt;&lt; x &lt;&lt; endl; }
+private:
+    T x;
+};
+
+template &lt;typename T&gt;
+ostream&amp; operator&lt;&lt; (ostream &amp;os, const Tclass&lt;T&gt; &amp;t) {
+    return os &lt;&lt; "(" &lt;&lt; t.get() &lt;&lt; ")";
+}
+
+int main() {
+    int n = 7;
+    double d = 1.2345;
+    string s("abcd");
+
+    Tclass&lt;int&gt;    it(n);
+    Tclass&lt;double&gt; dt(d);
+    Tclass&lt;string&gt; st(s);
+
+    it.print();
+    dt.print();
+    st.print();
+
+    cout &lt;&lt; it &lt;&lt; endl;
+    cout &lt;&lt; dt &lt;&lt; endl;
+    cout &lt;&lt; st &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<pre class="out">7
+1.2345
+abcd
+(7)
+(1.2345)
+(abcd)</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The version of this program printed in the course notes <strong>omits the <code>operator&lt;&lt;</code>
+      definition</strong> while still calling <code>cout &lt;&lt; it &lt;&lt; endl;</code>. As printed it does not compile
+      &mdash; you get <em>"no match for <code>operator&lt;&lt;</code>"</em>. Always check that a listing you are
+      copying actually contains every function it calls.</li>
+    <li><code>return os &lt;&lt; "(" &lt;&lt; t.get() &lt;&lt; ")";</code> works because each <code>&lt;&lt;</code> returns the stream by
+      reference, so the value of the whole chain is <code>os</code> itself &mdash; exactly the return type the
+      function promises. This is the Class 18 pattern with a template line bolted on.</li>
+    <li>The <code>print()</code> method and <code>operator&lt;&lt;</code> are not redundant. <code>print()</code> is a member and can see
+      <code>x</code> directly; <code>operator&lt;&lt;</code> is a free function and composes into a larger expression. A class
+      normally wants the second one; the notes show both so you can compare.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; A templated <code>MyList</code>: the special members <span class="muted small">(from the Winter 2025 Final, adapted)</span></h3>
+
+<p>The final exam gives you a <code>MyList</code> class holding <code>string *items; int size;</code> and asks you to
+supply the members it left out. Here is the same class, made into a class template so that it holds
+items of any type. The constructors, <code>print</code> and the data members are given; the rest are yours.</p>
+
+<pre><code class="language-cpp">template &lt;typename T&gt;
+class MyList {
+public:
+    MyList() : items(nullptr), size(0) {
+        cout &lt;&lt; "MyList: default constructor" &lt;&lt; endl;
+    }
+    MyList(const T s[], int n) : items(new T[n]), size(n) {
+        for (int i = 0; i &lt; size; i++) items[i] = s[i];
+        cout &lt;&lt; "MyList: non-default constructor" &lt;&lt; endl;
+    }
+    void print() const {
+        cout &lt;&lt; "MyList (" &lt;&lt; size &lt;&lt; " items): ";
+        for (int i = 0; i &lt; size; i++) cout &lt;&lt; items[i] &lt;&lt; ", ";
+        cout &lt;&lt; endl;
+    }
+    // destructor, copy constructor and assignment operation omitted here
+protected:
+    T *items;
+    int size;
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Implement a destructor, <strong>non-inline</strong>, that prints "MyList: destructor" as its last instruction.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>The exam's version is written inside the class. Written outside, it needs the two extra
+    pieces from section 5:</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+MyList&lt;T&gt;::~MyList() {
+    delete [] items;
+    cout &lt;&lt; "MyList: destructor" &lt;&lt; endl;
+}</code></pre>
+    <p><code>delete []</code>, not <code>delete</code>, because <code>items</code> came from <code>new T[n]</code>. The announcement goes
+    <em>last</em>, after the release &mdash; on this professor's exams the words "first instruction"
+    and "last instruction" are load-bearing and change the correct answer, so read them.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Implement a copy constructor that performs a deep copy and prints "MyList: copy constructor" as its last instruction.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">template &lt;typename T&gt;
+MyList&lt;T&gt;::MyList(const MyList &amp;orig) : items(nullptr), size(orig.size) {
+    items = new T[size];
+    for (int i = 0; i &lt; size; i++) items[i] = orig.items[i];
+    cout &lt;&lt; "MyList: copy constructor" &lt;&lt; endl;
+}</code></pre>
+    <p>Allocate first, then copy element by element. Copying <code>orig.items</code> itself &mdash; the pointer
+    &mdash; is the shallow-copy bug from section 7, and it costs the deep-copy points outright.
+    Note the parameter is <code>const MyList &amp;orig</code> with no <code>&lt;T&gt;</code>: it is inside the function's own class
+    scope. The qualifier <code>MyList&lt;T&gt;::</code> before the <code>::</code> is not.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Implement the assignment operation, printing "MyList: assignment operation" as its last instruction.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">template &lt;typename T&gt;
+MyList&lt;T&gt;&amp; MyList&lt;T&gt;::operator= (const MyList &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    delete [] items;
+    size = rhs.size;
+    items = new T[size];
+    for (int i = 0; i &lt; size; i++) items[i] = rhs.items[i];
+    cout &lt;&lt; "MyList: assignment operation" &lt;&lt; endl;
+    return *this;
+}</code></pre>
+    <p>The five things a rubric looks for, all present: the guard <code>if (this == &amp;rhs) return *this;</code>,
+    releasing the old array before reallocating, taking the new size, the element-by-element copy,
+    and <code>return *this;</code>. The return type is <code>MyList&lt;T&gt;&amp;</code> because a return type sits outside the
+    class body.</p>
+    <p>Here is the finished class, compiled and run, with a <code>main</code> that exercises all four
+    special members at two different types:</p>
+<div class="codewrap"><div class="cap">mylist.cpp</div><pre><code class="language-cpp">// mylist.cpp -- MyList from the final exam, turned into a class template
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+class MyList {
+public:
+    MyList() : items(nullptr), size(0) {
+        cout &lt;&lt; "MyList: default constructor" &lt;&lt; endl;
+    }
+    MyList(const T s[], int n) : items(new T[n]), size(n) {
+        for (int i = 0; i &lt; size; i++) items[i] = s[i];
+        cout &lt;&lt; "MyList: non-default constructor" &lt;&lt; endl;
+    }
+    ~MyList();
+    MyList(const MyList &amp;orig);
+    MyList&amp; operator= (const MyList &amp;rhs);
+    void print() const {
+        cout &lt;&lt; "MyList (" &lt;&lt; size &lt;&lt; " items): ";
+        for (int i = 0; i &lt; size; i++) cout &lt;&lt; items[i] &lt;&lt; ", ";
+        cout &lt;&lt; endl;
+    }
+protected:
+    T *items;
+    int size;
+};
+
+template &lt;typename T&gt;
+MyList&lt;T&gt;::~MyList() {
+    delete [] items;
+    cout &lt;&lt; "MyList: destructor" &lt;&lt; endl;
+}
+
+template &lt;typename T&gt;
+MyList&lt;T&gt;::MyList(const MyList &amp;orig) : items(nullptr), size(orig.size) {
+    items = new T[size];
+    for (int i = 0; i &lt; size; i++) items[i] = orig.items[i];
+    cout &lt;&lt; "MyList: copy constructor" &lt;&lt; endl;
+}
+
+template &lt;typename T&gt;
+MyList&lt;T&gt;&amp; MyList&lt;T&gt;::operator= (const MyList &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    delete [] items;
+    size = rhs.size;
+    items = new T[size];
+    for (int i = 0; i &lt; size; i++) items[i] = rhs.items[i];
+    cout &lt;&lt; "MyList: assignment operation" &lt;&lt; endl;
+    return *this;
+}
+
+int main() {
+    string names[3] = {"Ann", "Bob", "Cy"};
+    int    codes[4] = {10, 20, 30, 40};
+
+    MyList&lt;string&gt; ml(names, 3);
+    ml.print();
+
+    MyList&lt;int&gt; nl(codes, 4);
+    nl.print();
+
+    MyList&lt;string&gt; copy = ml;
+    copy.print();
+
+    MyList&lt;int&gt; empty;
+    empty = nl;
+    empty.print();
+
+    return 0;
+}</code></pre></div>
+<pre class="out">MyList: non-default constructor
+MyList (3 items): Ann, Bob, Cy, 
+MyList: non-default constructor
+MyList (4 items): 10, 20, 30, 40, 
+MyList: copy constructor
+MyList (3 items): Ann, Bob, Cy, 
+MyList: default constructor
+MyList: assignment operation
+MyList (4 items): 10, 20, 30, 40, 
+MyList: destructor
+MyList: destructor
+MyList: destructor
+MyList: destructor</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li><code>MyList&lt;string&gt;</code> and <code>MyList&lt;int&gt;</code> are separate classes, and each prints the same
+        announcements &mdash; the strings inside the template are the same source text, instantiated
+        twice.</li>
+      <li>The exam's printed version of this class contains three typos: <code>items(null)</code> for
+        <code>nullptr</code>, <code>item[i]</code> for <code>items[i]</code>, and <code>sting *items</code> for <code>string *items</code>. Read exam code
+        with that in mind; if a stem does not compile, answer the question it obviously means.</li>
+      <li>In the templated version the <code>MyList()</code> default constructor becomes genuinely useful:
+        <code>MyList&lt;int&gt; empty;</code> then <code>empty = nl;</code> is what makes the assignment operator reachable at
+        all.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 3 &mdash; What will the output be? <span class="muted small">(from the Winter 2025 Final, adapted)</span></h3>
+
+<p>Assuming your templated <code>MyList</code> from Problem 2 is correctly implemented and prints the
+corresponding messages, what will be the output of the following <code>main</code>? Give the exact ordered list
+of printed lines.</p>
+
+<pre><code class="language-cpp">int main() {
+    string names[3] = {"Ann", "Bob", "Cy"};
+    int    codes[4] = {10, 20, 30, 40};
+
+    MyList&lt;string&gt; ml(names, 3);
+    ml.print();
+
+    MyList&lt;int&gt; nl(codes, 4);
+    nl.print();
+
+    MyList&lt;string&gt; copy = ml;
+    copy.print();
+
+    MyList&lt;int&gt; empty;
+    empty = nl;
+    empty.print();
+
+    return 0;
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Go line by line and ask which special member each statement calls. The
+  only trap is <code>MyList&lt;string&gt; copy = ml;</code> &mdash; that is an <em>initialization</em>, so it calls
+  the copy constructor, not the assignment operator, even though there is an <code>=</code> in it. Then count
+  destructors: one per object, in reverse order of construction, all after the last statement of
+  <code>main</code>.</p>
+  <table class="trace">
+    <tr><th>Statement</th><th>What runs</th><th>Lines printed</th></tr>
+    <tr><td><code>MyList&lt;string&gt; ml(names, 3);</code></td><td>non-default constructor</td><td><code>MyList: non-default constructor</code></td></tr>
+    <tr><td><code>ml.print();</code></td><td><code>print</code></td><td><code>MyList (3 items): Ann, Bob, Cy, </code></td></tr>
+    <tr><td><code>MyList&lt;int&gt; nl(codes, 4);</code></td><td>non-default constructor</td><td><code>MyList: non-default constructor</code></td></tr>
+    <tr><td><code>nl.print();</code></td><td><code>print</code></td><td><code>MyList (4 items): 10, 20, 30, 40, </code></td></tr>
+    <tr><td><code>MyList&lt;string&gt; copy = ml;</code></td><td><strong>copy constructor</strong></td><td><code>MyList: copy constructor</code></td></tr>
+    <tr><td><code>copy.print();</code></td><td><code>print</code></td><td><code>MyList (3 items): Ann, Bob, Cy, </code></td></tr>
+    <tr><td><code>MyList&lt;int&gt; empty;</code></td><td>default constructor</td><td><code>MyList: default constructor</code></td></tr>
+    <tr><td><code>empty = nl;</code></td><td><strong>assignment operation</strong></td><td><code>MyList: assignment operation</code></td></tr>
+    <tr><td><code>empty.print();</code></td><td><code>print</code></td><td><code>MyList (4 items): 10, 20, 30, 40, </code></td></tr>
+    <tr><td>end of <code>main</code></td><td>four destructors, reverse order: <code>empty</code>, <code>copy</code>, <code>nl</code>, <code>ml</code></td><td>four <code>MyList: destructor</code> lines</td></tr>
+  </table>
+  <p>So thirteen lines:</p>
+<pre class="out">MyList: non-default constructor
+MyList (3 items): Ann, Bob, Cy, 
+MyList: non-default constructor
+MyList (4 items): 10, 20, 30, 40, 
+MyList: copy constructor
+MyList (3 items): Ann, Bob, Cy, 
+MyList: default constructor
+MyList: assignment operation
+MyList (4 items): 10, 20, 30, 40, 
+MyList: destructor
+MyList: destructor
+MyList: destructor
+MyList: destructor</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>=</code> in a <em>declaration</em> means copy construction; <code>=</code> between two objects that already
+      exist means assignment. Getting these two backwards is the most common way to lose all the
+      points on this question, and it costs you twice: a wrong line and a missing one.</li>
+    <li><code>print</code> puts a comma and a space after <em>every</em> item, including the last, so each list
+      line ends with <code>, </code> before the newline. Reproduce that exactly &mdash; on an output-prediction
+      question there is no partial credit.</li>
+    <li>The destructor lines carry no information about which object died. That is the professor's
+      usual design and it is deliberate: you must reason about the count and the order rather than
+      reading it off.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; Templated <code>reverse</code>, twice <span class="muted small">(from the Fall 2023 Final, extended)</span></h3>
+
+<p>The final exam asks: <em>write a templated function called <code>reverse</code> that takes in an array of
+any datatype and the array size, and reverses the array entries.</em> A driver like this must
+work:</p>
+
+<pre><code class="language-cpp">int main() {
+    int a[5] = {1, 2, 3, 4, 5};
+    string b[2] = {"Hello", "Bye"};
+    reverse&lt;int&gt;(a, 5);
+    reverse&lt;string&gt;(b, 2);
+    for (int i = 0; i &lt; 5; i++) cout &lt;&lt; a[i] &lt;&lt; " ";    // print: 5 4 3 2 1
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; 2; i++) cout &lt;&lt; b[i] &lt;&lt; " ";    // print: Bye Hello
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Write the function template <code>reverse</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>Swap the ends inward, stopping at the middle. Note the array is <em>not</em> <code>const</code> &mdash;
+    the whole point is to modify the caller's array in place, and an array parameter is always a
+    pointer to the caller's storage.</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+void reverse(T arr[], int size) {
+    for (int i = 0; i &lt; size / 2; ++i) {
+        T temp = arr[i];
+        arr[i] = arr[size - i - 1];
+        arr[size - i - 1] = temp;
+    }
+}</code></pre>
+    <p><code>size / 2</code> is integer division, which is exactly right for both parities: with 5 elements the
+    loop runs for <code>i = 0, 1</code> and the middle element at index 2 correctly stays put. <code>T temp</code> inside
+    the loop is the reason this needs a template at all &mdash; the temporary has to be of whatever
+    type the array holds.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Now write a class template <code>Sequence&lt;T&gt;</code> that <em>owns</em> a dynamic array of <code>T</code> and offers <code>reverse()</code> as a member function, along with the Big Three. Show that copying a <code>Sequence</code> and reversing the copy leaves the original alone.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> The class stores <code>int len; T *data;</code>. The constructor copies from a
+    caller-supplied array, so the object owns its data outright; that means a destructor, and that
+    in turn means a copy constructor and an assignment operator. The <code>reverse()</code> member is the same
+    loop as part (a) with <code>arr</code> replaced by <code>data</code> and <code>size</code> by <code>len</code> &mdash; which is the point:
+    the algorithm did not change, only who owns the storage.</p>
+<div class="codewrap"><div class="cap">sequence.cpp</div><pre><code class="language-cpp">// sequence.cpp -- the exam's templated reverse, and the same idea as a class template
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// Part (a): the free function template, exactly as the final exam asks for it.
+template &lt;typename T&gt;
+void reverse(T arr[], int size) {
+    for (int i = 0; i &lt; size / 2; ++i) {
+        T temp = arr[i];
+        arr[i] = arr[size - i - 1];
+        arr[size - i - 1] = temp;
+    }
+}
+
+// Part (b): a class template that owns its array and can reverse itself.
+template &lt;typename T&gt;
+class Sequence {
+public:
+    Sequence(const T arr[], int n);
+    ~Sequence();
+    Sequence(const Sequence &amp;orig);
+    Sequence&amp; operator= (const Sequence &amp;rhs);
+    void reverse();
+    void print() const;
+private:
+    int len;
+    T *data;
+};
+
+template &lt;typename T&gt;
+Sequence&lt;T&gt;::Sequence(const T arr[], int n) : len(n), data(nullptr) {
+    if (len &gt; 0) {
+        data = new T[len];
+        for (int i = 0; i &lt; len; ++i) data[i] = arr[i];
+    }
+}
+
+template &lt;typename T&gt;
+Sequence&lt;T&gt;::~Sequence() { delete [] data; }
+
+template &lt;typename T&gt;
+Sequence&lt;T&gt;::Sequence(const Sequence &amp;orig) : len(orig.len), data(nullptr) {
+    if (len &gt; 0) {
+        data = new T[len];
+        for (int i = 0; i &lt; len; ++i) data[i] = orig.data[i];
+    }
+}
+
+template &lt;typename T&gt;
+Sequence&lt;T&gt;&amp; Sequence&lt;T&gt;::operator= (const Sequence &amp;rhs) {
+    if (this == &amp;rhs) return *this;
+    delete [] data;
+    data = nullptr;
+    len = rhs.len;
+    if (len &gt; 0) {
+        data = new T[len];
+        for (int i = 0; i &lt; len; ++i) data[i] = rhs.data[i];
+    }
+    return *this;
+}
+
+template &lt;typename T&gt;
+void Sequence&lt;T&gt;::reverse() {
+    for (int i = 0; i &lt; len / 2; ++i) {
+        T temp = data[i];
+        data[i] = data[len - i - 1];
+        data[len - i - 1] = temp;
+    }
+}
+
+template &lt;typename T&gt;
+void Sequence&lt;T&gt;::print() const {
+    for (int i = 0; i &lt; len; ++i) cout &lt;&lt; data[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    int a[5] = {1, 2, 3, 4, 5};
+    string b[2] = {"Hello", "Bye"};
+
+    reverse&lt;int&gt;(a, 5);
+    reverse&lt;string&gt;(b, 2);
+    for (int i = 0; i &lt; 5; i++) cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    for (int i = 0; i &lt; 2; i++) cout &lt;&lt; b[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    Sequence&lt;int&gt; si(a, 5);
+    si.reverse();
+    si.print();
+
+    Sequence&lt;string&gt; ss(b, 2);
+    Sequence&lt;string&gt; copy = ss;
+    copy.reverse();
+    ss.print();
+    copy.print();
+
+    return 0;
+}</code></pre></div>
+<pre class="out">5 4 3 2 1 
+Bye Hello 
+1 2 3 4 5 
+Bye Hello 
+Hello Bye </pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>The third line is <code>1 2 3 4 5</code> because <code>si</code> was built from the <em>already reversed</em>
+        array <code>a</code> and then reversed again. Trace slowly; this is the sort of double reversal exam
+        questions love.</li>
+      <li>Lines four and five are the proof of deep copy: <code>copy.reverse()</code> changed only <code>copy</code>. With
+        the compiler-generated copy constructor both would read <code>Hello Bye</code>, and the program would
+        then crash on the second destructor.</li>
+      <li>The member function and the free function have the same body. Neither is more "templated"
+        than the other &mdash; what a class template buys you here is ownership and lifetime
+        management, not generality.</li>
+      <li>The driver printed in the exam paper starts both its loops at <code>i = 1</code>, which would skip
+        the first element and contradict the expected output written in its own comments. The
+        version above starts at <code>0</code>. If a stem contradicts itself like this, answer what it clearly
+        intends and say so in a comment.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; A class template with two type parameters <span class="muted small">(added)</span></h3>
+
+<p>Write a class template <code>Pair</code> that stores one value of type <code>T</code> and one of type <code>U</code>. Give it a
+constructor, accessors and mutators for both members, a method <code>swapped()</code> that returns a
+<code>Pair&lt;U, T&gt;</code> with the two values exchanged, and an <code>operator&lt;&lt;</code> printing it as
+<code>(first, second)</code>. Define every member function <strong>outside</strong> the class. Then
+build a <code>Pair&lt;string, int&gt;</code> and a <code>Pair&lt;int, double&gt;</code> and print them.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Two type parameters means every <code>template</code> line names both, and every
+  out-of-class qualifier is <code>Pair&lt;T, U&gt;::</code>. The interesting member is <code>swapped()</code>: its return type
+  is a <em>different instantiation</em> of the same class template, <code>Pair&lt;U, T&gt;</code>, which it builds
+  and returns by value. That is legal and useful, and it is a good illustration of the fact that
+  <code>Pair&lt;T,U&gt;</code> and <code>Pair&lt;U,T&gt;</code> are unrelated types &mdash; you cannot assign one to the other, only
+  construct one from the other's parts.</p>
+<div class="codewrap"><div class="cap">pairtu.cpp</div><pre><code class="language-cpp">// pairtu.cpp -- a class template with TWO type parameters
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T, typename U&gt;
+class Pair {
+public:
+    Pair(const T &amp;a, const U &amp;b);
+    T getFirst() const;
+    U getSecond() const;
+    void setFirst(const T &amp;a);
+    void setSecond(const U &amp;b);
+    Pair&lt;U, T&gt; swapped() const;
+private:
+    T first;
+    U second;
+};
+
+template &lt;typename T, typename U&gt;
+Pair&lt;T, U&gt;::Pair(const T &amp;a, const U &amp;b) : first(a), second(b) { }
+
+template &lt;typename T, typename U&gt;
+T Pair&lt;T, U&gt;::getFirst() const { return first; }
+
+template &lt;typename T, typename U&gt;
+U Pair&lt;T, U&gt;::getSecond() const { return second; }
+
+template &lt;typename T, typename U&gt;
+void Pair&lt;T, U&gt;::setFirst(const T &amp;a) { first = a; }
+
+template &lt;typename T, typename U&gt;
+void Pair&lt;T, U&gt;::setSecond(const U &amp;b) { second = b; }
+
+template &lt;typename T, typename U&gt;
+Pair&lt;U, T&gt; Pair&lt;T, U&gt;::swapped() const { return Pair&lt;U, T&gt;(second, first); }
+
+template &lt;typename T, typename U&gt;
+ostream&amp; operator&lt;&lt; (ostream &amp;os, const Pair&lt;T, U&gt; &amp;p) {
+    return os &lt;&lt; "(" &lt;&lt; p.getFirst() &lt;&lt; ", " &lt;&lt; p.getSecond() &lt;&lt; ")";
+}
+
+int main() {
+    Pair&lt;string, int&gt; student("Ann", 92);
+    cout &lt;&lt; student &lt;&lt; endl;
+    cout &lt;&lt; student.swapped() &lt;&lt; endl;
+
+    Pair&lt;int, double&gt; reading(3, 98.6);
+    cout &lt;&lt; reading &lt;&lt; endl;
+    reading.setSecond(101.4);
+    cout &lt;&lt; reading &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>
+<pre class="out">(Ann, 92)
+(92, Ann)
+(3, 98.6)
+(3, 101.4)</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>Every out-of-class definition repeats the full <code>template &lt;typename T, typename U&gt;</code> line.
+      There is no way to write it once for the group. It is tedious and it is not optional.</li>
+    <li>The constructor uses a member initialization list, <code>: first(a), second(b) { }</code>, with an
+      empty body. For a <code>T</code> like <code>string</code> that is one construction instead of a construction plus an
+      assignment, and it is also the only way to initialize a member that has no default
+      constructor.</li>
+    <li><code>operator&lt;&lt;</code> is itself a template over both parameters, and its second parameter is
+      <code>const Pair&lt;T, U&gt; &amp;p</code>. Miss either type argument there and you get "used without template
+      arguments."</li>
+    <li><code>cout &lt;&lt; reading</code> prints <code>98.6</code> and then <code>101.4</code>, both to <code>cout</code>'s default six significant
+      digits &mdash; a <code>double</code> that happened to be <code>98.60000</code> would print as <code>98.6</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Split it into files <span class="muted small">(added)</span></h3>
+
+<p>A classmate has a single file containing a class template <code>Box</code> and a <code>main</code> that uses
+<code>Box&lt;int&gt;</code>. For their project they must split it into <code>box.h</code>, <code>box.cpp</code> and
+<code>mainbox.cpp</code>. They do it the way Class 2 taught, both <code>.cpp</code> files compile cleanly, and
+the link step fails. Explain precisely why, and give the corrected file layout.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Identify what stage failed &mdash; the message comes from
+  <code>ld</code>, not <code>g++</code>, so this is linking, not compiling. Then explain what is
+  actually inside each object file. Then fix the layout.</p>
+  <p><strong>What they saw.</strong></p>
+<pre class="shell">g++ -c box.cpp
+g++ -c mainbox.cpp
+g++ mainbox.o box.o -o boxprog</pre>
+<pre class="err">/usr/bin/ld: mainbox.o: in function `main':
+mainbox.cpp:(.text+0x31): undefined reference to `Box&lt;int&gt;::Box(int const&amp;)'
+/usr/bin/ld: mainbox.cpp:(.text+0x3d): undefined reference to `Box&lt;int&gt;::get() const'
+collect2: error: ld returned 1 exit status</pre>
+  <p><strong>Why.</strong> A class template is a recipe, not code. The compiler only manufactures a
+  real <code>Box&lt;int&gt;::get</code> when it sees the definitions <em>and</em> a use of <code>Box&lt;int&gt;</code> in the same
+  translation unit. Compiling <code>box.cpp</code> it saw the definitions and no use, so it emitted
+  nothing at all &mdash; <code>nm -C box.o</code> lists no symbols. Compiling
+  <code>mainbox.cpp</code> it saw a use and, through the header, only declarations, so it emitted
+  calls to functions it expected somebody else to provide. Neither object file contains the
+  function, so the linker fails.</p>
+  <p><strong>The fix.</strong> Put the entire class template &mdash; declarations and definitions
+  &mdash; in the header, and delete <code>box.cpp</code>:</p>
+<div class="codewrap"><div class="cap">box.h</div><pre><code class="language-cpp">// box.h -- a class template: declarations AND definitions, together
+#ifndef BOX_H
+#define BOX_H
+
+template &lt;typename T&gt;
+class Box {
+public:
+    Box(const T &amp;a);
+    T get() const;
+    void set(const T &amp;a);
+private:
+    T item;
+};
+
+template &lt;typename T&gt;
+Box&lt;T&gt;::Box(const T &amp;a) { item = a; }
+
+template &lt;typename T&gt;
+T Box&lt;T&gt;::get() const { return item; }
+
+template &lt;typename T&gt;
+void Box&lt;T&gt;::set(const T &amp;a) { item = a; }
+
+#endif</code></pre></div>
+<pre class="shell">g++ mainbox.cpp -o boxprog
+./boxprog</pre>
+<pre class="out">42
+99</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>You may keep the definitions inline inside the class body instead. Both work; the layout
+      above keeps the interface readable at the top of the file, which matters once the functions
+      are longer than one line.</li>
+    <li>The include guard is still required. It stops one translation unit from seeing the class
+      twice. A <em>different</em> mechanism &mdash; the linker treating template instantiations as
+      weak symbols and keeping just one &mdash; handles the same function being generated in several
+      translation units.</li>
+    <li>Ordinary classes and free functions in the same project still follow the Class 2 rule:
+      declarations in the header, definitions in a <code>.cpp</code>. Templates are the exception,
+      not the new rule.</li>
+    <li>If you ever truly need a template's definitions in a <code>.cpp</code>, there is a
+      mechanism &mdash; explicit instantiation, which you met for functions in Class 25 &mdash; but
+      it requires you to list in advance every type the template will ever be used with. That is
+      almost never what you want, which is why the header is the standard answer.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>Templates and polymorphism both produce code that is not tied to one type. Polymorphism
+        works through an <strong>inheritance tree</strong> and decides at run time; templates have
+        <strong>no inheritance tree</strong> and decide at compile time. Templates accept almost any
+        class, subject to unwritten requirements on the operations <code>T</code> must support.</li>
+      <li>A template parameter list may name more than one type:
+        <code>template &lt;typename T, typename U&gt;</code>. The parameters are independent, each needs its own
+        <code>typename</code> (or <code>class</code>), and each definition repeats the whole line.</li>
+      <li>A <strong>class template</strong> is written by replacing the concrete type with <code>T</code> and
+        prepending <code>template &lt;typename T&gt;</code>. <code>Tclass</code> alone is not a type; <code>Tclass&lt;int&gt;</code> is. Each
+        instantiation is a <strong>separate, unrelated class</strong> &mdash; <code>Tclass&lt;int&gt;</code> cannot be
+        assigned to <code>Tclass&lt;double&gt;</code>.</li>
+      <li><strong>Inside</strong> the class body the bare class name means the current instantiation,
+        so <code>Tclass(const Tclass &amp;orig)</code> is fine. <strong>Outside</strong> it, the name must carry its
+        argument: <code>const Tclass&lt;T&gt; &amp;t</code>.</li>
+      <li>A member defined outside the class needs <strong>two</strong> things: its own
+        <code>template &lt;typename T&gt;</code> line, and the qualifier <strong><code>Tclass&lt;T&gt;::</code></strong> rather than
+        <code>Tclass::</code>. Omit the <code>&lt;T&gt;</code> and g++ says <em>"used without template arguments"</em>; omit the
+        <code>template</code> line and it says <em>"'T' does not name a type"</em>.</li>
+      <li>A class template's definitions must be visible where it is instantiated, so
+        <strong>they go in the header</strong>. Splitting them into a <code>.cpp</code> compiles
+        cleanly and then fails at link time with <em>undefined reference to
+        <code>Box&lt;int&gt;::get()</code></em> &mdash; the object file for that <code>.cpp</code> is empty.</li>
+      <li>A class template that owns memory needs the whole Big Three, exactly as an ordinary class
+        does: a destructor with matching <code>delete</code>/<code>delete []</code>, a copy constructor that allocates and
+        copies <em>values</em>, and an <code>operator=</code> with <code>if (this == &amp;rhs) return *this;</code>, an
+        old-storage release, a fresh allocation, and <code>return *this;</code>. <code>DynAlloc</code> without them
+        shares its arrays between objects and then frees them twice.</li>
+      <li>Write member initialization lists in <strong>declaration order</strong>, or <code>-Wreorder</code>
+        will tell you about it &mdash; but only once somebody instantiates the template.</li>
+      <li><strong>Generic programming</strong> is a style in which the code is independent of any
+        specific data type, with the type supplied later. It is a language-independent concept;
+        templates are C++'s mechanism for it.</li>
+      <li>The <strong>STL</strong> is built entirely from templated classes and supplies
+        <strong>containers</strong>, <strong>algorithms</strong>, <strong>iterators</strong> and
+        <strong>function objects</strong>. <code>vector&lt;int&gt;</code> has been an instantiation of a class
+        template all along.</li>
+    </ul>
+    <p><strong>Coming up in Class 27:</strong> we open the STL properly &mdash; <code>vector</code> seen with
+    new eyes, <code>set</code> and <code>map</code>, iterators as the generalization of pointers, and the <code>sort</code>
+    algorithm that turns "give me a comparison" into a working ranking.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 25 &middot; Abstract &amp; Templates</div><div class="pending">posts Tue Dec 1</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 27 &middot; The STL</div><div class="pending">posts Tue Dec 8</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

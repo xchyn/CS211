@@ -1,0 +1,2653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 9 — Classes I | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 9 &middot; Classes I</span><span class="sep">|</span><span class="where">Tue Sep 29</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 9 &middot; CSCI 211</div>
+  <h1>Classes I &mdash; Building Your Own Type</h1>
+  <p class="sub">Four things you can do with any value in C++ &mdash; create it, copy it, assign it, destroy it &mdash; and the syntax that lets you build a type of your own that does all four.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Name the four operations C++ supports for every type &mdash; <em>create</em>, <em>copy</em>,
+        <em>assign</em>, <em>destroy</em> &mdash; and say what each one means for an object.</li>
+      <li>Write a class declaration with <code>public</code> data members, including the terminating semicolon,
+        and explain why that semicolon is there.</li>
+      <li>Instantiate objects of your own class: one at a time, in an array, and on the heap with
+        <code>new</code>.</li>
+      <li>Use the dot operator to read and to write a data member, and say out loud exactly what
+        <code>apt.x</code> means.</li>
+      <li>List what the compiler generates for you when you write no functions at all, and use
+        <code>sizeof</code> on a class you wrote.</li>
+      <li>Explain why the data members of a <code>Point</code> you just declared are <em>not</em> zero, and what
+        happens if you print them anyway.</li>
+      <li>Trace which objects change when one object is copied, assigned, or passed to a function by
+        value.</li>
+      <li>Predict the output of expressions that mix the dot operator with <code>+ - * /</code> and with
+        <code>++</code>/<code>--</code>, using the precedence rule.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">A class is a type you write yourself</a></li>
+    <li><a href="#s2">Declaring a class: <code>class Point</code></a></li>
+    <li><a href="#s3">Objects, and the dot operator</a></li>
+    <li><a href="#s4">Born with garbage: uninitialized data members</a></li>
+    <li><a href="#s5">What the compiler writes for you</a></li>
+    <li><a href="#s6">Copy and assign, today</a></li>
+    <li><a href="#s7">The dot operator's precedence</a></li>
+    <li><a href="#s8"><code>apt.x++</code> and <code>--apt.y</code></a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>A class is a type you write yourself</h2>
+
+<p>Class 1 gave you the vocabulary: a <em>class</em> is a blueprint, an <em>object</em> is an
+instance built from it, attributes are its data and methods are its behavior. Today that stops being
+vocabulary and becomes syntax. This is the class where C++ finally reaches the subject in the course
+title.</p>
+
+<p>Start from something you already trust. Here is what you can do with an <code>int</code>:</p>
+
+<pre><code class="language-cpp">int i, j, k;          // 1. CREATE: three int variables, in one statement
+double x, y, z;       //    ...and three doubles
+
+// 2. COPY: f(i) hands f a copy of i, if f takes its parameter by value
+
+i = j;                // 3. ASSIGN: i already existed; now it holds j's value
+x = y;
+
+// 4. DESTROY: when i, j, k go out of scope they cease to exist</code></pre>
+
+<p>Four operations. You have used all four since your first program without once thinking of them as
+a set. The design decision at the heart of C++ is that <strong>a class you write yourself supports
+exactly the same four</strong>. Nothing about your own type is second class.</p>
+
+<pre><code class="language-cpp">MyClass obj1, obj2, obj3;   // 1. CREATE (instantiate) three objects
+
+// 2. COPY: pass an object to a function by value and it is copied
+
+obj1 = obj2;                // 3. ASSIGN one object to another
+
+// 4. DESTROY: objects are destroyed when they go out of scope,
+//             and the memory allocated for them is released</code></pre>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; instantiate, object</span></div>
+  <div class="bd">
+    <p>To <strong>instantiate</strong> a class is to create one object from it. The verb and the noun
+    go together: <code>Point apt;</code> instantiates the class <code>Point</code>, and the thing it
+    produces &mdash; <code>apt</code> &mdash; is an <strong>object</strong> of that class.</p>
+    <p>For a built-in type we say "variable"; for a class we usually say "object". They are the same
+    idea. An object is a variable whose type you wrote.</p>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the frame for the whole semester</span></div>
+  <div class="bd">
+    <p><strong>Create. Copy. Assign. Destroy.</strong> Those four words are the syllabus for the
+    second half of this course. Today the compiler does all four for you, silently and for free.
+    Starting in Class 13 you will learn to take each one over yourself, in exactly this order, and
+    every exam in this course asks you to write at least one of them.</p>
+  </div>
+</div>
+
+<p>It is worth seeing the map now, because it turns "a pile of unrelated topics" into "one topic,
+four times":</p>
+
+<table class="trace">
+  <tr><th>Operation</th><th>For an <code>int</code></th><th>For an object</th><th>The function that does it</th><th>Where we write it</th></tr>
+  <tr><td><strong>Create</strong></td><td><code>int i;</code></td><td><code>Point apt;</code></td><td>constructor</td><td>Class 13</td></tr>
+  <tr><td><strong>Copy</strong></td><td><code>int j = i;</code></td><td><code>Point b = a;</code></td><td>copy constructor</td><td>Class 14</td></tr>
+  <tr><td><strong>Assign</strong></td><td><code>i = j;</code></td><td><code>a = b;</code></td><td><code>operator=</code></td><td>Class 15</td></tr>
+  <tr><td><strong>Destroy</strong></td><td>scope ends</td><td>scope ends</td><td>destructor</td><td>Class 14</td></tr>
+</table>
+
+<p>Today we use all four and write none of them. That is not laziness; it is the point of &sect;5.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.1</div>
+  <div class="bd">
+    <p>Consider this fragment, which uses only built-in types:</p>
+<pre><code class="language-cpp">int a = 5;                  // (i)
+int b = a;                  // (ii)
+int c;
+c = a;                      // (iii)
+{
+    int d = 9;              // (iv)
+    c = d;                  // (v)
+}                           // (vi)</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Label each of the six marked points with one of <em>create</em>, <em>copy</em>, <em>assign</em>, <em>destroy</em>. Two of them deserve two labels.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Point</th><th>Operation</th><th>Why</th></tr>
+          <tr><td>(i)</td><td>create</td><td><code>a</code> did not exist before this line; it is brought into being with the value 5.</td></tr>
+          <tr><td>(ii)</td><td>create <em>and</em> copy</td><td><code>b</code> is brand new <em>and</em> starts life holding a duplicate of <code>a</code>. Both things happen in one statement.</td></tr>
+          <tr><td>(iii)</td><td>assign</td><td><code>c</code> already existed. Its old value is overwritten. This is <em>not</em> a copy in the technical sense &mdash; the object was already there.</td></tr>
+          <tr><td>(iv)</td><td>create</td><td>A new variable inside the inner block.</td></tr>
+          <tr><td>(v)</td><td>assign</td><td>Again, <code>c</code> already exists.</td></tr>
+          <tr><td>(vi)</td><td>destroy</td><td>The closing brace ends <code>d</code>'s scope. <code>d</code> is gone.</td></tr>
+        </table>
+        <p>The distinction between (ii) and (iii) looks like hair-splitting for an <code>int</code>. For an
+        object it is the difference between two entirely different functions you will have to write
+        &mdash; the copy constructor and <code>operator=</code> &mdash; so start making the
+        distinction now.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A function is declared <code>void f(Point p);</code> and called as <code>f(a);</code>. Which of the four operations happens at the call, and which happens when <code>f</code> returns?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>At the call: <strong>create</strong> and <strong>copy</strong>. The parameter
+        <code>p</code> is a new object, created and filled with a duplicate of <code>a</code>. That
+        is precisely what "call by value" means &mdash; the mechanism you took apart in Class 2, now
+        applied to an object instead of an <code>int</code>.</p>
+        <p>When <code>f</code> returns: <strong>destroy</strong>. <code>p</code> goes out of scope and
+        ceases to exist. Whatever <code>f</code> did to <code>p</code> dies with it, which is why
+        <code>a</code> is unchanged back in the caller.</p>
+        <p>For a <code>Point</code> holding two <code>double</code>s this costs 16 bytes of copying and nobody
+        notices. For an object that owns a megabyte of dynamic memory it is a very different story,
+        and that is the problem Class 14 exists to solve.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>Declaring a class: <code>class Point</code></h2>
+
+<p>Here is the entire syntax, in five lines. Read it, then we will take it apart word by word.</p>
+
+<pre><code class="language-cpp">class Point {
+public:
+    double x, y;
+};</code></pre>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; class, data member</span></div>
+  <div class="bd">
+    <p>At its simplest, <strong>a class is a container of data.</strong> The declaration above says:
+    there is now a type called <code>Point</code>, and every <code>Point</code> contains two
+    coordinates, <code>x</code> and <code>y</code>, both of type <code>double</code>.</p>
+    <p>A variable declared inside a class is called a <strong>data member</strong> of that class.
+    (Class 1 called these <em>attributes</em>; C++ calls them data members, and so will the exams.)
+    <code>x</code> and <code>y</code> are the two data members of <code>Point</code>.</p>
+  </div>
+</div>
+
+<p>Now the pieces:</p>
+
+<table class="trace">
+  <tr><th>Piece</th><th>What it does</th></tr>
+  <tr><td><code>class</code></td><td>The keyword that starts a class declaration. Lower case, always.</td></tr>
+  <tr><td><code>Point</code></td><td>The name you are inventing. From this line on, <code>Point</code> is a type name and may be used anywhere <code>int</code> or <code>double</code> could be. Capitalizing class names is a convention, not a rule &mdash; but follow it.</td></tr>
+  <tr><td><code>{</code> &hellip; <code>}</code></td><td>The class <strong>body</strong>. Everything the class contains goes between these braces.</td></tr>
+  <tr><td><code>public:</code></td><td>An <em>access specifier</em>. Everything written after it is visible to the outside world.</td></tr>
+  <tr><td><code>double x, y;</code></td><td>Two data members. Ordinary declaration syntax &mdash; a type, then a comma-separated list of names, then a semicolon.</td></tr>
+  <tr><td><code>;</code></td><td>The terminating semicolon. Not optional. See below.</td></tr>
+</table>
+
+<p>Two things this declaration does <em>not</em> do, both worth saying out loud. It does not set aside
+any memory &mdash; a blueprint is not a house. And it does not give <code>x</code> and <code>y</code>
+any values; there are no values yet, because there is no object yet.</p>
+
+<h3>The keyword <code>public</code></h3>
+
+<p>The keyword <code>public</code> means all the items in the class are visible to outside applications. Any
+other part of the program can read or write the values of <code>x</code> and <code>y</code>. That is
+a strong statement, and by the end of next class you will think it is usually a bad idea &mdash; but
+for today it is exactly what we want, because it lets us look at the mechanics of a class without
+anything getting in the way.</p>
+
+<p>There are two other access specifiers, <code>private</code> and <code>protected</code>. <code>private</code> is the one that makes
+encapsulation real, and it arrives in Class 10. <code>protected</code> only starts to matter once classes
+inherit from one another, in Class 19.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; forgetting <code>public:</code> entirely</span></div>
+  <div class="bd">
+    <p>If you leave the <code>public:</code> line out, the class still compiles &mdash; but every
+    member of a <code>class</code> is <strong>private by default</strong>, so the first line of
+    <code>main</code> that touches <code>apt.x</code> fails:</p>
+<pre class="err">nopublic.cpp: In function 'int main()':
+nopublic.cpp:10:9: error: 'double Point::x' is private within this context
+   10 |     apt.x = 2.5;
+      |         ^
+nopublic.cpp:5:12: note: declared private here
+    5 |     double x, y;
+      |            ^</pre>
+    <p>The word <em>private</em> in an error message when you never typed the word <code>private</code>
+    is a reliable sign of exactly one thing: a missing <code>public:</code>. Note also that the errors
+    land in <code>main</code>, several lines below the actual omission &mdash; the class itself is
+    perfectly legal.</p>
+  </div>
+</div>
+
+<h3>That semicolon after the closing brace</h3>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; <code>};</code></span></div>
+  <div class="bd">
+    <p>A class declaration is <strong>terminated by a semicolon</strong>. The semicolon after the
+    closing brace looks peculiar &mdash; and it is peculiar &mdash; but it is necessary. The code will
+    not compile without it.</p>
+    <p>Functions end with a plain <code>}</code> and no semicolon. Classes end with <code>};</code>.
+    You will get this wrong. Everyone does, several times, and then never again.</p>
+  </div>
+</div>
+
+<p>The reason is that C++ lets you declare variables in the same statement that declares the class,
+like this:</p>
+
+<pre><code class="language-cpp">class Point {
+public:
+    double x, y;
+} origin, corner;         // legal C++: declares the class AND two objects</code></pre>
+
+<p>Because that is allowed, the compiler cannot know the declaration is finished until it sees a
+semicolon. The feature itself is obscure and we shall never use it in this course &mdash; but the
+semicolon it forces on everyone is not optional.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; leave the semicolon off and read the error</span></div>
+  <div class="bd">
+    <p>Your professor's advice on this point is one word: <em>try it</em>. So here it is, tried. This
+    file is correct in every respect except that the class ends with <code>}</code> instead of
+    <code>};</code>. Before you open the toggle, guess which line number the compiler will blame.</p>
+<div class="codewrap"><div class="cap">nosemi.cpp</div><pre><code class="language-cpp">// nosemi.cpp -- the terminating semicolon after the class has been left off
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+}
+
+int main() {
+    Point apt;
+    apt.x = 2.5;
+    apt.y = 2.0;
+    cout &lt;&lt; apt.x &lt;&lt; " " &lt;&lt; apt.y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">nosemi.cpp:8:2: error: expected ';' after class definition
+    8 | }
+      |  ^
+      |  ;</pre>
+<p>Modern g++ handles this one gracefully: a single error, pointing at the exact character, with the
+missing <code>;</code> drawn underneath. Older compilers &mdash; and g++ itself, if the mistake is
+tangled up with anything else &mdash; report a cascade of nonsense starting at <code>int main</code>,
+several lines <em>below</em> the real problem.</p>
+<p>That is the general lesson about compiler errors and it is worth more than the specific one:
+<strong>the reported line is where the compiler noticed, not necessarily where you erred.</strong>
+When an error points at a line that is obviously fine, look upward.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Data members can be any type</h3>
+
+<p>Nothing restricts a class to two <code>double</code>s. A class can contain data members of any type &mdash;
+<code>int</code>, <code>string</code>, arrays &mdash; and it can even contain objects of other classes.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a class with three different member types</span></div>
+  <div class="bd">
+    <p>A <code>Book</code> needs a title, a page count and a price, and no two of those are the same
+    type. Predict all three lines of output &mdash; one of them has a formatting trap in it that we
+    met back in Class 3.</p>
+<div class="codewrap"><div class="cap">book.cpp</div><pre><code class="language-cpp">// book.cpp -- a class whose data members are not all the same type
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Book {
+public:
+    string title;
+    int    pages;
+    double price;
+};
+
+int main() {
+    Book b1;
+    b1.title = "The C++ Programming Language";
+    b1.pages = 1368;
+    b1.price = 59.99;
+
+    Book b2;
+    b2.title = "Effective C++";
+    b2.pages = 320;
+    b2.price = 39.50;
+
+    cout &lt;&lt; b1.title &lt;&lt; ", " &lt;&lt; b1.pages &lt;&lt; " pages, $" &lt;&lt; b1.price &lt;&lt; endl;
+    cout &lt;&lt; b2.title &lt;&lt; ", " &lt;&lt; b2.pages &lt;&lt; " pages, $" &lt;&lt; b2.price &lt;&lt; endl;
+    cout &lt;&lt; "pages together = " &lt;&lt; b1.pages + b2.pages &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">The C++ Programming Language, 1368 pages, $59.99
+Effective C++, 320 pages, $39.5
+pages together = 1688</pre>
+<p>The trap is on line two: <code>39.50</code> prints as <code>39.5</code>. <code>cout</code> drops trailing
+zeros from a <code>double</code> by default, which for a price is exactly the wrong thing. Fixing it needs
+<code>fixed</code> and <code>setprecision(2)</code> from Class 3 &mdash; and noticing that you
+<em>need</em> to fix it is the real skill.</p>
+<p>Two structural points. First, <code>b1</code> and <code>b2</code> are two separate objects, each
+with its own <code>title</code>, its own <code>pages</code> and its own <code>price</code>; setting
+<code>b2</code> had no effect on <code>b1</code>. Second, <code>b1.pages + b2.pages</code> is
+ordinary <code>int</code> arithmetic &mdash; once you have reached a data member with the dot, it is just a
+variable like any other.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>A class can also hold objects of another class. A line segment is two points:</p>
+
+<div class="codewrap"><div class="cap">segment.cpp</div><pre><code class="language-cpp">// segment.cpp -- a class whose data members are objects of another class
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+class Segment {
+public:
+    Point a, b;          // two Point objects live inside every Segment
+};
+
+int main() {
+    Segment s;
+    s.a.x = 0.0;
+    s.a.y = 0.0;
+    s.b.x = 3.0;
+    s.b.y = 4.0;
+
+    cout &lt;&lt; "from (" &lt;&lt; s.a.x &lt;&lt; ", " &lt;&lt; s.a.y &lt;&lt; ")"
+         &lt;&lt; " to (" &lt;&lt; s.b.x &lt;&lt; ", " &lt;&lt; s.b.y &lt;&lt; ")" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<pre class="out">from (0, 0) to (3, 4)</pre>
+
+<p>Read <code>s.a.x</code> from left to right: take the object <code>s</code>, get its member
+<code>a</code> (which is itself a <code>Point</code>), then get <em>that</em> object's member
+<code>x</code>. The dots chain as far as the nesting goes. Note that <code>Point</code> must be
+declared <em>before</em> <code>Segment</code>, because the compiler has to know how big a
+<code>Point</code> is in order to lay out a <code>Segment</code>.</p>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.2</div>
+  <div class="bd">
+    <p>This class declaration contains <strong>three</strong> separate errors. Find all three and
+    write the corrected declaration.</p>
+<pre><code class="language-cpp">Class Student {
+public
+    string name;
+    int credits
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Go through the skeleton from &sect;2 piece by piece &mdash; keyword,
+      name, brace, access specifier, members, closing brace, semicolon &mdash; and check each one.</p>
+      <table class="trace">
+        <tr><th>Error</th><th>Fix</th></tr>
+        <tr><td><code>Class</code> with a capital C</td><td>C++ is case sensitive and the keyword is <code>class</code>. As written, the compiler thinks <code>Class</code> is a type name it has never heard of.</td></tr>
+        <tr><td><code>public</code> with no colon</td><td>An access specifier is a label and needs a colon: <code>public:</code></td></tr>
+        <tr><td><code>int credits</code> with no semicolon</td><td>Every member declaration ends with a semicolon, just like any other declaration.</td></tr>
+        <tr><td>and the fourth&hellip;</td><td>The closing brace has no <code>;</code> after it. The question said three errors; this is a fourth. Never trust a stated count.</td></tr>
+      </table>
+      <p>Corrected:</p>
+<pre><code class="language-cpp">class Student {
+public:
+    string name;
+    int credits;
+};</code></pre>
+      <p><strong>Things to notice.</strong> The declaration also needs <code>#include &lt;string&gt;</code>
+      somewhere above it to use <code>string</code>. When you write a class in a file of your own, the includes
+      that its members need have to be there &mdash; a class body is not exempt.</p>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s3"><span class="num">3.</span>Objects, and the dot operator</h2>
+
+<p>The declaration created a type. Now use it.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the dot operator</span></div>
+  <div class="bd">
+    <p>The <strong>dot operator</strong> <code>.</code> is the "member of" operator for a C++ class.
+    The expression <code>apt.x</code> means <em>the data member <code>x</code> inside the object
+    <code>apt</code></em>.</p>
+    <p>It is an ordinary operator with an ordinary result: <code>apt.x</code> <em>is</em> a
+    <code>double</code> variable, and you can do anything to it that you can do to a
+    <code>double</code>. Read it, write it, add to it, pass it to a function.</p>
+  </div>
+</div>
+
+<p>Notice the shape of it: the <strong>object</strong> goes on the left, the <strong>member
+name</strong> goes on the right. Not the class &mdash; the object. <code>Point.x</code> is
+meaningless, because the class has no <code>x</code>; only the objects do.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the first complete class program</span></div>
+  <div class="bd">
+    <p>This is your professor's first class program, and it is deliberately as small as a class
+    program can be. Predict both lines of output exactly &mdash; and be careful with the second
+    one.</p>
+<div class="codewrap"><div class="cap">point_first.cpp</div><pre><code class="language-cpp">// point_first.cpp -- declare a class, create one object, use the dot operator
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    Point apt;
+
+    apt.x = 2.5;
+    apt.y = 2.0;
+
+    cout &lt;&lt; apt.x &lt;&lt; endl;
+    cout &lt;&lt; apt.y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">2.5
+2</pre>
+<p>The second line is <code>2</code>, not <code>2.0</code>. <code>apt.y</code> really does hold the
+<code>double</code> value 2.0, but <code>cout</code> drops trailing zeros. This is the Class 3 formatting rule, and it
+costs points on exams every single term. When you are asked to write down what a program prints,
+write <code>2</code>.</p>
+<p>Now the structure, statement by statement:</p>
+<table class="trace">
+  <tr><th>Statement</th><th>What happens</th></tr>
+  <tr><td><code>class Point { ... };</code></td><td>Declares a type. <strong>No memory is set aside.</strong> The compiler now knows that a <code>Point</code> is two <code>double</code>s.</td></tr>
+  <tr><td><code>Point apt;</code></td><td>Creates &mdash; <em>instantiates</em> &mdash; one object. <strong>This</strong> is what occupies memory: 16 bytes of it, on the stack, in <code>main</code>'s frame. The type name goes first, exactly as in <code>int n;</code>.</td></tr>
+  <tr><td><code>apt.x = 2.5;</code></td><td>Reaches inside <code>apt</code> and writes 2.5 into its <code>x</code>. The dot operator is on the left of an assignment here, which is fine &mdash; <code>apt.x</code> names a variable.</td></tr>
+  <tr><td><code>cout &lt;&lt; apt.x</code></td><td>Reaches inside <code>apt</code> and reads its <code>x</code>. Same operator, other direction.</td></tr>
+</table>
+<p>One more observation that matters more than it looks. Nowhere in this program did we tell the
+compiler <em>how</em> to make a <code>Point</code>. We never wrote a function to build one. And yet
+<code>Point apt;</code> worked. That is &sect;5.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.3</div>
+  <div class="bd">
+    <p>Using the <code>Point</code> class from the program above:</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write the statements that create two objects, <code>p</code> and <code>q</code>, set <code>p</code> to (1, 2) and <code>q</code> to (9, 9), and print both.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Point p;                                       // create
+    Point q;                                       // create
+    p.x = 1.0;   p.y = 2.0;                        // set p
+    q.x = 9.0;   q.y = 9.0;                        // set q
+    cout &lt;&lt; p.x &lt;&lt; " " &lt;&lt; p.y &lt;&lt; endl;
+    cout &lt;&lt; q.x &lt;&lt; " " &lt;&lt; q.y &lt;&lt; endl;</code></pre>
+        <p>The two declarations can also be combined into <code>Point p, q;</code> &mdash; exactly as
+        with <code>int</code>. Either is correct.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> How many copies of the variable <code>x</code> now exist in memory?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Two.</strong> One inside <code>p</code>, one inside <code>q</code>. Data members
+        are per-object; that is the entire reason objects exist. Writing to <code>q.x</code> cannot
+        possibly affect <code>p.x</code>.</p>
+        <p>The class itself has no <code>x</code> at all. If it did, all objects would share it, and
+        the whole idea would collapse.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A student writes <code>Point.x = 5.0;</code>. What is wrong, and what does g++ say?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>Point</code> is a <em>type</em>, not an object. Asking for the <code>x</code> of a
+        type is like asking for the street address of the word "house". The dot operator needs an
+        object on its left.</p>
+<pre class="err">classdot.cpp: In function 'int main()':
+classdot.cpp:8:10: error: expected unqualified-id before '.' token
+    8 |     Point.x = 5.0;
+      |          ^</pre>
+        <p>The fix is to name an object: <code>apt.x = 5.0;</code>. If you find yourself wanting to
+        store one value shared by <em>all</em> objects of the class, C++ does have a feature for that
+        &mdash; <code>static</code> data members, in Class 16 &mdash; and it is spelled quite differently.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; write a class with mixed member types</h3>
+
+<p>Write a class called <code>Course</code> with three public data members: a <code>string</code> code, an <code>int</code>
+number of credits, and a <code>double</code> average grade. In <code>main</code>, create two
+<code>Course</code> objects, fill them in with the dot operator, and print each one on its own line.
+Then print the total number of credits across the two.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="26" data-starter="#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Course {
+public:
+    // three data members: code, credits, average
+
+
+};      // &lt;-- do not forget this semicolon
+
+int main() {
+    Course c1;
+    // set c1&#39;s three members with the dot operator
+
+
+    Course c2;
+    // set c2&#39;s three members
+
+
+    // print both, then print the total credits
+
+    return 0;
+}">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Course {
+public:
+    // three data members: code, credits, average
+
+
+};      // &lt;-- do not forget this semicolon
+
+int main() {
+    Course c1;
+    // set c1's three members with the dot operator
+
+
+    Course c2;
+    // set c2's three members
+
+
+    // print both, then print the total credits
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.4</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output for the data of your choice. Use
+    <code>CSCI 211</code> with 3 credits and average 88.5, and <code>MATH 141</code> with 4 credits
+    and average 79.25.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The three nouns in the problem statement become the three data
+      members, and their types are dictated by the data: a course code has letters and a space, so
+      <code>string</code>; credits are whole, so <code>int</code>; an average is fractional, so <code>double</code>. Everything goes
+      under <code>public:</code> so <code>main</code> can reach it, and the declaration ends with
+      <code>};</code>.</p>
+<div class="codewrap"><div class="cap">course.cpp</div><pre><code class="language-cpp">// course.cpp -- a class with three data members of three different types
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Course {
+public:
+    string code;
+    int    credits;
+    double average;
+};
+
+int main() {
+    Course c1;
+    c1.code    = "CSCI 211";
+    c1.credits = 3;
+    c1.average = 88.5;
+
+    Course c2;
+    c2.code    = "MATH 141";
+    c2.credits = 4;
+    c2.average = 79.25;
+
+    cout &lt;&lt; c1.code &lt;&lt; ": " &lt;&lt; c1.credits &lt;&lt; " credits, average "
+         &lt;&lt; c1.average &lt;&lt; endl;
+    cout &lt;&lt; c2.code &lt;&lt; ": " &lt;&lt; c2.credits &lt;&lt; " credits, average "
+         &lt;&lt; c2.average &lt;&lt; endl;
+
+    cout &lt;&lt; "total credits = " &lt;&lt; c1.credits + c2.credits &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">CSCI 211: 3 credits, average 88.5
+MATH 141: 4 credits, average 79.25
+total credits = 7</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>#include &lt;string&gt;</code> is needed because a data member is a <code>string</code>. It is
+          easy to get away without it &mdash; <code>iostream</code> often drags <code>string</code> in on its own &mdash;
+          but relying on that is how a program that compiles on your laptop fails on the grader's
+          machine.</li>
+        <li>Each object is filled in three statements. There is no way today to write
+          <code>Course c1("CSCI 211", 3, 88.5);</code>, because that would need a constructor. Write
+          that line down and look forward to Class 13.</li>
+        <li><code>c1.credits + c2.credits</code> is <code>int</code> arithmetic. Once the dot has done its job
+          the result is an ordinary <code>int</code>, with all the usual rules &mdash; including integer
+          division if you had divided.</li>
+        <li>Aligning the <code>=</code> signs is not required and the compiler does not care. It does
+          make a block of member assignments much easier to scan for a missing line.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Born with garbage: uninitialized data members</h2>
+
+<p>Every program on this page so far has been careful to set both members before reading either one.
+That was not an accident. Here is what happens if you do not.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; printing a <code>Point</code> nobody set</span></div>
+  <div class="bd">
+    <p>This program creates a <code>Point</code> and immediately prints it. What are the two numbers?
+    Commit to an answer &mdash; most people say "0 and 0" &mdash; and then look.</p>
+<div class="codewrap"><div class="cap">uninit.cpp</div><pre><code class="language-cpp">// uninit.cpp -- reading data members that were never set. Undefined behavior.
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    Point apt;                 // x and y are NOT zero -- they hold whatever was there
+    cout &lt;&lt; "x = " &lt;&lt; apt.x &lt;&lt; endl;
+    cout &lt;&lt; "y = " &lt;&lt; apt.y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>First, compiling it with <code>-Wall</code> is already informative:</p>
+<pre class="err">uninit.cpp: In function 'int main()':
+uninit.cpp:12:27: warning: 'apt.Point::x' is used uninitialized [-Wuninitialized]
+   12 |     cout &lt;&lt; "x = " &lt;&lt; apt.x &lt;&lt; endl;
+      |                           ^
+uninit.cpp:11:11: note: 'apt' declared here
+   11 |     Point apt;                 // x and y are NOT zero -- they hold whatever was there
+      |           ^~~</pre>
+<p>It compiles anyway &mdash; a warning is not an error &mdash; and here are two consecutive runs of
+the same executable on the same machine:</p>
+<pre class="out">x = 0
+y = 6.95296e-310</pre>
+<pre class="out">x = 0
+y = 6.95293e-310</pre>
+<p>Those numbers are <strong>representative, not reproducible</strong>. On your machine you will get
+different ones, and you may well get different ones on two runs in a row, as happened here. That is
+the whole point.</p>
+<p>Notice how cruel the <code>x = 0</code> is. It looks like the members <em>are</em> initialized to
+zero, and a student who tests only <code>x</code> walks away believing something false. The zero is
+not a guarantee; it is whatever bytes happened to be sitting at that address, and this time they
+happened to be zeros.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; undefined behavior</span></div>
+  <div class="bd">
+    <p>An operation has <strong>undefined behavior</strong> when the C++ standard places no
+    requirement at all on what happens. The program may print garbage, print something plausible,
+    crash, or behave differently every time it runs. The compiler is not obliged to warn you, and it
+    is allowed to assume you never do it.</p>
+    <p>Reading a variable that was never given a value is undefined behavior. It is <em>not</em>
+    "reading zero", and a program that appears to work is not evidence to the contrary.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; every object on this page is born uninitialized</span></div>
+  <div class="bd">
+    <p>A class with <code>public</code> data and no constructor &mdash; which is every class on this page
+    &mdash; leaves its data members <strong>indeterminate</strong> from the moment the object is
+    created until something assigns to them. <code>Point apt;</code> does not zero anything out. It
+    reserves 16 bytes and hands them to you exactly as they were.</p>
+    <p>So there is a rule for today, and you must apply it by hand every time:</p>
+    <ul>
+      <li><strong>Set every data member before you read any of them.</strong></li>
+      <li>Set them <em>all</em>. Setting <code>apt.x</code> and forgetting <code>apt.y</code> is the
+        common version of this bug, and the half that works hides the half that does not.</li>
+      <li>Compile with <code>-Wall</code>. g++ catches the simple cases, as it did above.</li>
+    </ul>
+    <p>This is not a permanent state of affairs. In <strong>Class 13</strong> you will write a
+    <em>constructor</em> &mdash; a function the compiler calls automatically at creation &mdash; and
+    from then on <code>Point apt;</code> can guarantee (0, 0), or whatever else you decide. Every
+    class you write after Class 13 will have one, and this whole category of bug disappears. Today we
+    are working without a safety net, deliberately, so that you can see what the net is for.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.5</div>
+  <div class="bd">
+    <p>Consider these two fragments, both using <code>class Point { public: double x, y; };</code>.</p>
+<pre><code class="language-cpp">// fragment A
+Point p;
+p.x = 3.0;
+cout &lt;&lt; p.x + p.y &lt;&lt; endl;
+
+// fragment B
+Point q;
+q.x = 3.0;
+q.y = 4.0;
+cout &lt;&lt; q.x + q.y &lt;&lt; endl;</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does fragment B print, and what does fragment A print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Fragment B prints <code>7</code>. Both members were set, the arithmetic is ordinary, and
+        the trailing <code>.0</code> is dropped by <code>cout</code>.</p>
+        <p>Fragment A has <strong>no answer</strong>. <code>p.y</code> was never set, so
+        <code>p.x + p.y</code> reads an indeterminate value and the behavior of the whole program is
+        undefined. "It prints 3" is wrong. "It prints 3 plus garbage" is closer, but the honest answer
+        on an exam is <em>undefined behavior &mdash; <code>p.y</code> was never initialized</em>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A classmate runs fragment A, gets <code>3</code>, and concludes that data members start at zero. What is the flaw in the reasoning?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>They tested one machine, one compiler, one build, one run. Undefined behavior is allowed to
+        look correct &mdash; that is what makes it dangerous rather than merely annoying. The same
+        binary produced two different values for <code>y</code> on two consecutive runs in the worked
+        example above.</p>
+        <p>The reasoning error has a name worth carrying with you: <em>absence of a symptom is not
+        evidence of correctness</em>. In C++ a large fraction of the worst bugs are of exactly this
+        kind, which is why we lean on <code>-Wall</code>, on tools like <code>valgrind</code>, and from Class 13
+        on constructors that make the question impossible to ask.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>What the compiler writes for you</h2>
+
+<p>Go back to <code>point_first.cpp</code> and notice what is missing. We declared two data members
+and nothing else &mdash; no functions of any kind. And yet <code>Point apt;</code> created an object,
+and when <code>main</code> ended that object was cleaned up. Somebody did that work.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the four free functions</span></div>
+  <div class="bd">
+    <p>If you do not specify explicit rules for a class you define, <strong>the compiler
+    automatically generates functions to perform these operations by default</strong>:</p>
+    <ol>
+      <li><strong>Create</strong> (instantiate) an object.</li>
+      <li><strong>Copy</strong> an object &mdash; recall "call by value".</li>
+      <li><strong>Assign</strong> an object &mdash; recall <code>x = y</code>.</li>
+      <li><strong>Destroy</strong> an object when it goes out of scope.</li>
+    </ol>
+    <p>The same four from &sect;1. This is why a class with no functions in it is still a usable
+    type.</p>
+  </div>
+</div>
+
+<p>And the compiler throws in more than that. It also knows how to build, without being told:</p>
+
+<ul>
+  <li><strong>arrays of objects</strong> &mdash; <code>Point corners[3];</code></li>
+  <li><strong>pointers to objects</strong> &mdash; <code>Point *p;</code></li>
+  <li><code>new</code> and <code>delete</code> for your class, so objects can live on the heap</li>
+  <li><code>sizeof</code>, so you can ask how big one of your objects is</li>
+</ul>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the default is not always what you want</span></div>
+  <div class="bd">
+    <p>The compiler's automatic versions of those four operations are simple-minded: they work
+    member by member. For a <code>Point</code> made of two <code>double</code>s that is precisely right, and you
+    should not write a line of your own.</p>
+    <p>The moment a class contains a <strong>pointer</strong> to memory it owns, the defaults become
+    actively wrong. Copying member by member copies the pointer, so two objects end up pointing at
+    the same block; the first one destroyed frees it and the second is left holding a dangling
+    pointer. That failure is the reason Classes 13&ndash;15 exist, and writing the four functions
+    correctly is this professor's single most frequent exam question. For today, the defaults are
+    exactly right &mdash; enjoy it.</p>
+  </div>
+</div>
+
+<h3><code>sizeof</code> on a class you wrote</h3>
+
+<p>You write <code>sizeof(Point)</code> in the same way you write <code>sizeof(int)</code>. There is
+one surprise in it.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the size of an object is not always the sum of its parts</span></div>
+  <div class="bd">
+    <p><code>Point</code> holds two <code>double</code>s; <code>Tag</code> holds a <code>char</code> and an <code>int</code>. Work out
+    all six numbers before you reveal them. One of them is not what arithmetic says.</p>
+<div class="codewrap"><div class="cap">sizes.cpp</div><pre><code class="language-cpp">// sizes.cpp -- sizeof works on a class you wrote, exactly as it works on int
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+class Tag {
+public:
+    char letter;
+    int  count;
+};
+
+int main() {
+    cout &lt;&lt; "sizeof(double) = " &lt;&lt; sizeof(double) &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(Point)  = " &lt;&lt; sizeof(Point)  &lt;&lt; endl;
+
+    cout &lt;&lt; "sizeof(char)   = " &lt;&lt; sizeof(char)   &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(int)    = " &lt;&lt; sizeof(int)    &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(Tag)    = " &lt;&lt; sizeof(Tag)    &lt;&lt; endl;
+
+    Point apt;
+    apt.x = 1.0;
+    apt.y = 2.0;
+    cout &lt;&lt; "sizeof(apt)    = " &lt;&lt; sizeof(apt)    &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">sizeof(double) = 8
+sizeof(Point)  = 16
+sizeof(char)   = 1
+sizeof(int)    = 4
+sizeof(Tag)    = 8
+sizeof(apt)    = 16</pre>
+<p><code>Point</code> is 16, which is 8 + 8, exactly as expected. <code>Tag</code> holds a 1-byte
+<code>char</code> and a 4-byte <code>int</code> &mdash; that is 5 bytes of data &mdash; and <code>sizeof(Tag)</code> comes
+back <strong>8</strong>.</p>
+<p>The extra three bytes are <em>padding</em>. The machine reads a 4-byte <code>int</code> fastest when it sits
+at an address divisible by 4, so the compiler leaves a three-byte hole after <code>letter</code> to
+line <code>count</code> up, and then rounds the whole object up to a multiple of 4 so that arrays of
+<code>Tag</code> stay aligned too.</p>
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>The size of an object is not necessarily the sum of the sizes of its data members.</strong>
+    Always use the <code>sizeof</code> operator and do not attempt to outsmart the compiler. Any
+    program that computes an object's size by adding up its members by hand is a program that will
+    break on some machine, some day.</p>
+  </div>
+</div>
+<p>Last line: <code>sizeof</code> works on an object as well as on a type name, and
+<code>sizeof(apt)</code> is <code>sizeof(Point)</code>. Note also that the size does not depend on
+the <em>values</em> &mdash; every <code>Point</code> that ever exists is 16 bytes.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Arrays of objects, and pointers to objects</h3>
+
+<p>Everything you learned about arrays in Class 7 and about <code>new</code>/<code>delete</code> in Class 8 applies
+unchanged to a class you wrote. The compiler sets all of it up for you.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; three <code>Point</code>s in an array and one on the heap</span></div>
+  <div class="bd">
+    <p>Two familiar mechanisms, new element type. Predict the four lines. Pay attention to the
+    parentheses in <code>(*p).x</code> &mdash; they are not decoration, and &sect;7 explains why.</p>
+<div class="codewrap"><div class="cap">many_points.cpp</div><pre><code class="language-cpp">// many_points.cpp -- arrays of objects and pointers to objects, for free
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    Point corners[3];              // an array of three Point objects
+    for (int i = 0; i &lt; 3; i++) {
+        corners[i].x = i;
+        corners[i].y = i * i;
+    }
+    for (int i = 0; i &lt; 3; i++) {
+        cout &lt;&lt; "corners[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; corners[i].x
+             &lt;&lt; " " &lt;&lt; corners[i].y &lt;&lt; endl;
+    }
+
+    Point *p = new Point;          // one Point on the heap
+    (*p).x = 7.5;                  // parentheses required: dot binds tighter than *
+    (*p).y = -1.5;
+    cout &lt;&lt; "heap point = " &lt;&lt; (*p).x &lt;&lt; " " &lt;&lt; (*p).y &lt;&lt; endl;
+
+    delete p;
+    p = nullptr;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">corners[0] = 0 0
+corners[1] = 1 1
+corners[2] = 2 4
+heap point = 7.5 -1.5</pre>
+<p>Three things to take from this.</p>
+<ul>
+  <li><code>Point corners[3];</code> creates <strong>three whole objects</strong>, back to back, 48
+    bytes in all. All six data members are uninitialized until the loop fills them &mdash; &sect;4
+    applies to arrays too, only three times over.</li>
+  <li><code>corners[i].x</code> is read left to right: subscript first, then the dot. That order is
+    guaranteed, and &sect;7 says why.</li>
+  <li><code>new Point</code> returns a <code>Point *</code>, and <code>delete p;</code> destroys the
+    object and returns its memory. One <code>new</code>, one <code>delete</code>, nothing leaked.
+    Setting <code>p = nullptr;</code> afterwards is the Class 8 habit that stops you dereferencing a
+    dead pointer.</li>
+</ul>
+<p>Writing <code>(*p).x</code> every time gets old fast. C++ has a one-character shorthand for it,
+the arrow operator, and it is the first thing we do in Class 10.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.6</div>
+  <div class="bd">
+    <p>Given <code>class Point { public: double x, y; };</code> on a machine where a <code>double</code> is 8
+    bytes:</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does <code>sizeof(Point)</code> report, and what does <code>sizeof(corners)</code> report for <code>Point corners[3];</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>sizeof(Point)</code> is <strong>16</strong> &mdash; two 8-byte <code>double</code>s, with no
+        padding needed because both members already align.</p>
+        <p><code>sizeof(corners)</code> is <strong>48</strong>. An array of objects is just the
+        objects, laid end to end, with nothing between them. That is exactly why array indexing works
+        at all: the compiler finds element <code>i</code> by stepping <code>i * sizeof(Point)</code>
+        bytes from the start.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Now add a third data member, <code>char label;</code>. Predict <code>sizeof(Point)</code> and explain your reasoning.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>The honest answer is <strong>"probably 24, and I would use <code>sizeof</code> rather than trust
+        that."</strong></p>
+        <p>The reasoning: 8 + 8 + 1 is 17 bytes of data, but the object must be padded up to a
+        multiple of its strictest member alignment &mdash; 8, for the <code>double</code>s &mdash; so that an
+        array of them keeps every <code>double</code> aligned. The next multiple of 8 above 17 is 24, so seven
+        bytes of padding follow <code>label</code>.</p>
+        <p>That is the right prediction on every mainstream compiler, and it is still a prediction.
+        The rule from the worked example stands: use the operator, do not do the arithmetic in your
+        head and bake the answer into your program.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; an array of objects</h3>
+
+<p>Fill an array of three <code>Point</code> objects with the corners of a triangle &mdash; (0,&nbsp;0),
+(6,&nbsp;0) and (0,&nbsp;9) &mdash; print each one, then compute and print the centroid, which is
+just the average of the three x values and the average of the three y values.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    const int N = 3;
+    Point tri[N];
+
+    // set tri[0], tri[1], tri[2] -- remember BOTH members of each
+
+
+    // print each one, and accumulate the sums
+
+
+    // centroid = (sum of x)/N, (sum of y)/N
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    const int N = 3;
+    Point tri[N];
+
+    // set tri[0], tri[1], tri[2] -- remember BOTH members of each
+
+
+    // print each one, and accumulate the sums
+
+
+    // centroid = (sum of x)/N, (sum of y)/N
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.7</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> One loop can do both jobs: print element <code>i</code> and add its
+      two members into running totals. The accumulators must be <code>double</code> and must start at 0.0
+      &mdash; they are ordinary local variables, and unlike the data members, a local you initialize
+      yourself is safe. Divide by <code>N</code> at the end; since <code>sumx</code> is a <code>double</code>
+      the division is floating point even though <code>N</code> is an <code>int</code>.</p>
+<div class="codewrap"><div class="cap">centroid.cpp</div><pre><code class="language-cpp">// centroid.cpp -- an array of objects, filled and averaged with the dot operator
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    const int N = 3;
+    Point tri[N];
+
+    tri[0].x = 0.0;   tri[0].y = 0.0;
+    tri[1].x = 6.0;   tri[1].y = 0.0;
+    tri[2].x = 0.0;   tri[2].y = 9.0;
+
+    double sumx = 0.0, sumy = 0.0;
+    for (int i = 0; i &lt; N; ++i) {
+        cout &lt;&lt; "tri[" &lt;&lt; i &lt;&lt; "] = (" &lt;&lt; tri[i].x &lt;&lt; ", " &lt;&lt; tri[i].y &lt;&lt; ")" &lt;&lt; endl;
+        sumx = sumx + tri[i].x;
+        sumy = sumy + tri[i].y;
+    }
+
+    cout &lt;&lt; "centroid = (" &lt;&lt; sumx / N &lt;&lt; ", " &lt;&lt; sumy / N &lt;&lt; ")" &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">tri[0] = (0, 0)
+tri[1] = (6, 0)
+tri[2] = (0, 9)
+centroid = (2, 3)</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>Six assignments for three points. Every one of the six is necessary; miss one and you are
+          back in &sect;4 with an indeterminate value in the sum.</li>
+        <li><code>tri[i].x</code> mixes two operators. Both <code>[]</code> and <code>.</code> outrank everything else and
+          they group left to right, so it means <em>"element <code>i</code> of <code>tri</code>, then
+          its <code>x</code>"</em> without any parentheses. This is the good case; &sect;7 shows the
+          bad one.</li>
+        <li><code>sumx / N</code> is <code>double / int</code>, so the <code>int</code> is promoted and the division is
+          floating point. Had <code>sumx</code> been an <code>int</code>, <code>6 / 3</code> would have been
+          fine but <code>7 / 3</code> would have silently produced 2.</li>
+        <li>The centroid comes out at exactly (2, 3), so <code>cout</code> prints no decimal point at all.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Copy and assign, today</h2>
+
+<p>&sect;5 claimed the compiler gives you copy and assignment for free. Let's watch it happen, because
+"for free" turns out to mean something very specific: <strong>member by member</strong>.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; memberwise copy</span></div>
+  <div class="bd">
+    <p>The compiler's default copy and default assignment both work the same way: they copy each data
+    member of the source object into the corresponding data member of the destination, one at a time,
+    using that member's own copy rules.</p>
+    <p>For a <code>Point</code>, that means <code>b.x = a.x;</code> and <code>b.y = a.y;</code> and
+    nothing else. The two objects are afterwards completely independent &mdash; changing one cannot
+    touch the other.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; three ways an object gets duplicated</span></div>
+  <div class="bd">
+    <p>This program copies at declaration, assigns after the fact, and passes by value. Six lines of
+    output. Write down all six before you reveal &mdash; especially the last one.</p>
+<div class="codewrap"><div class="cap">copy_assign.cpp</div><pre><code class="language-cpp">// copy_assign.cpp -- create, copy, assign, destroy: all four already work
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+// takes its argument BY VALUE, so it receives a copy of the caller's object
+void shift(Point p) {
+    p.x = p.x + 100;
+    p.y = p.y + 100;
+    cout &lt;&lt; "  inside shift: " &lt;&lt; p.x &lt;&lt; " " &lt;&lt; p.y &lt;&lt; endl;
+}
+
+int main() {
+    Point a;                       // create
+    a.x = 1.5;
+    a.y = 2.5;
+
+    Point b = a;                   // copy: b starts life as a duplicate of a
+    cout &lt;&lt; "b after copy:   " &lt;&lt; b.x &lt;&lt; " " &lt;&lt; b.y &lt;&lt; endl;
+
+    b.x = 99.0;                    // change b only
+    cout &lt;&lt; "a after b.x=99: " &lt;&lt; a.x &lt;&lt; " " &lt;&lt; a.y &lt;&lt; endl;
+    cout &lt;&lt; "b after b.x=99: " &lt;&lt; b.x &lt;&lt; " " &lt;&lt; b.y &lt;&lt; endl;
+
+    Point c;                       // create
+    c.x = 0.0;
+    c.y = 0.0;
+    c = a;                         // assign: c already existed, now it holds a's values
+    cout &lt;&lt; "c after c = a:  " &lt;&lt; c.x &lt;&lt; " " &lt;&lt; c.y &lt;&lt; endl;
+
+    cout &lt;&lt; "calling shift(a)" &lt;&lt; endl;
+    shift(a);                      // copy again -- this time made by the call itself
+    cout &lt;&lt; "a after shift:  " &lt;&lt; a.x &lt;&lt; " " &lt;&lt; a.y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">b after copy:   1.5 2.5
+a after b.x=99: 1.5 2.5
+b after b.x=99: 99 2.5
+c after c = a:  1.5 2.5
+calling shift(a)
+  inside shift: 101.5 102.5
+a after shift:  1.5 2.5</pre>
+<p>Every one of those lines is the same lesson from a different angle: <strong>a copy is a separate
+object.</strong></p>
+<table class="trace">
+  <tr><th>Statement</th><th>Operation</th><th>State afterwards</th></tr>
+  <tr><td><code>Point a;</code> then two assignments</td><td>create</td><td><code>a</code> = (1.5, 2.5)</td></tr>
+  <tr><td><code>Point b = a;</code></td><td><strong>copy</strong> &mdash; <code>b</code> is new</td><td><code>a</code> = (1.5, 2.5), <code>b</code> = (1.5, 2.5)</td></tr>
+  <tr><td><code>b.x = 99.0;</code></td><td>ordinary write</td><td><code>a</code> = (1.5, 2.5) &mdash; <em>untouched</em>, <code>b</code> = (99, 2.5)</td></tr>
+  <tr><td><code>Point c;</code> then two assignments</td><td>create</td><td><code>c</code> = (0, 0)</td></tr>
+  <tr><td><code>c = a;</code></td><td><strong>assign</strong> &mdash; <code>c</code> already existed</td><td><code>c</code> = (1.5, 2.5)</td></tr>
+  <tr><td><code>shift(a);</code></td><td><strong>copy</strong> into the parameter <code>p</code></td><td><code>p</code> = (101.5, 102.5) inside; <code>a</code> still (1.5, 2.5)</td></tr>
+  <tr><td><code>shift</code> returns</td><td><strong>destroy</strong> <code>p</code></td><td><code>p</code> no longer exists</td></tr>
+</table>
+<p>The last two rows are the ones to fix in memory. <code>shift</code> looks like it modifies its
+argument, and it does &mdash; it modifies <em>its copy</em>. This is the object version of
+<code>swap1</code> from Class 1: same mechanism, bigger thing being copied. Give <code>shift</code>
+a reference parameter, <code>void shift(Point &amp;p)</code>, and it changes <code>a</code> for real.</p>
+<p>And note the vocabulary distinction the trace makes concrete. <code>Point b = a;</code> is a
+<em>copy</em> because <code>b</code> is being born. <code>c = a;</code> is an <em>assignment</em>
+because <code>c</code> was already alive and is having its contents replaced. Same punctuation, two
+different operations, and from Class 14 onward two different functions that you write yourself.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.8</div>
+  <div class="bd">
+    <p>Using <code>class Point { public: double x, y; };</code>, decide for each line whether it is a
+    <em>copy</em> or an <em>assignment</em>, and say how many <code>Point</code> objects exist
+    afterwards. Assume <code>a</code> already exists and holds (1, 2).</p>
+<pre><code class="language-cpp">Point b = a;            // (i)
+Point c(a);             // (ii)  -- yes, this is legal
+Point d;
+d = a;                  // (iii)
+b = d;                  // (iv)</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <table class="trace">
+        <tr><th>Line</th><th>Copy or assign?</th><th>Objects alive afterwards</th></tr>
+        <tr><td>(i)</td><td><strong>copy</strong> &mdash; <code>b</code> is created and initialized from <code>a</code> in one step</td><td>2 (<code>a</code>, <code>b</code>)</td></tr>
+        <tr><td>(ii)</td><td><strong>copy</strong> &mdash; different spelling, identical meaning to (i)</td><td>3</td></tr>
+        <tr><td>(iii)</td><td><strong>assign</strong> &mdash; <code>d</code> was created on the line before, with garbage in it; now it gets <code>a</code>'s values</td><td>4</td></tr>
+        <tr><td>(iv)</td><td><strong>assign</strong> &mdash; both objects already exist</td><td>4</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The test is not the punctuation, it is <em>whether the object on the left already
+          existed</em>. If the line also declares it, that is a copy; if the object was declared
+          earlier, that is an assignment.</li>
+        <li>Line (ii) shows the function-call spelling of a copy. It is worth recognizing now because
+          from Class 14 the copy constructor really is a function and this really is a call to it.</li>
+        <li>Line (iii) is the one to watch on an exam trace: two operations on two lines, create then
+          assign, where (i) does both at once. In Class 14 those two routes will print different
+          things, and telling them apart is worth several points.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>The dot operator's precedence</h2>
+
+<p>The dot is an operator, so it has a place in the precedence table, and its place is very near the
+top.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the precedence rule</span></div>
+  <div class="bd">
+    <ol>
+      <li>The dot operator has <strong>higher precedence</strong> than <code>+</code>,
+        <code>-</code>, <code>*</code>, <code>/</code>, <code>++</code> and <code>--</code>.</li>
+      <li>Only the parentheses <code>()</code> and bracket <code>[]</code> operators have higher
+        precedence than the dot.</li>
+    </ol>
+    <p>Practically: <strong>the dot goes first.</strong> Whatever else is in the expression, the
+    member is fetched before anything is done to it.</p>
+  </div>
+</div>
+
+<p>For the arithmetic operators this is the only sane arrangement, and it is why nobody ever notices
+it. The dot in <code>apt.x</code> and <code>apt.y</code> binds more strongly than the <code>+</code>,
+so <code>apt.x + apt.y</code> is the sum of the two members. It could not reasonably mean anything
+else &mdash; the alternative reading, <code>apt.(x + apt).y</code>, is not even grammatical.</p>
+
+<table class="trace">
+  <tr><th>You write</th><th>It means</th><th>Not</th></tr>
+  <tr><td><code>apt.x + apt.y</code></td><td><code>(apt.x) + (apt.y)</code></td><td>anything else</td></tr>
+  <tr><td><code>apt.x * 2</code></td><td><code>(apt.x) * 2</code></td><td>&mdash;</td></tr>
+  <tr><td><code>corners[i].x</code></td><td><code>(corners[i]).x</code></td><td>&mdash;</td></tr>
+  <tr><td><code>*p.x</code></td><td><code>*(p.x)</code></td><td><code>(*p).x</code> &mdash; <strong>this one bites</strong></td></tr>
+</table>
+
+<p>The last row is where the rule stops being invisible. If <code>p</code> is a
+<code>Point *</code>, then <code>*p.x</code> does <em>not</em> mean "dereference <code>p</code>, then
+take <code>x</code>". The dot outranks the <code>*</code>, so the compiler tries to take the member
+<code>x</code> of the pointer <code>p</code> and then dereference the result &mdash; and pointers
+have no members.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the missing parentheses</span></div>
+  <div class="bd">
+    <p>One character of punctuation is missing here. Predict what g++ says &mdash; and in particular,
+    predict which of the two symbols it complains about.</p>
+<div class="codewrap"><div class="cap">deref_bad.cpp</div><pre><code class="language-cpp">// deref_bad.cpp -- forgetting the parentheses around *p
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    Point *p = new Point;
+    *p.x = 7.5;              // wrong: this parses as *(p.x)
+    delete p;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">deref_bad.cpp: In function 'int main()':
+deref_bad.cpp:12:8: error: request for member 'x' in 'p', which is of pointer type 'Point*' (maybe you meant to use '-&gt;' ?)
+   12 |     *p.x = 7.5;              // wrong: this parses as *(p.x)
+      |        ^</pre>
+<p>The caret points at the <strong>dot</strong>, not at the <code>*</code>. That tells you the
+compiler got as far as <code>p.x</code> and choked there: <em>request for member 'x' in 'p', which is
+of pointer type</em>. It never reached the dereference at all.</p>
+<p>Two ways to fix it:</p>
+<pre><code class="language-cpp">    (*p).x = 7.5;            // parenthesize the dereference so it happens first
+    p-&gt;x   = 7.5;            // or use the arrow operator -- Class 10</code></pre>
+<p>g++ even suggests the second one in the error text. We will take the arrow apart properly next
+class; for today, write the parentheses, and notice that you need them <em>because of</em> the
+precedence rule in the box above. This is that rule doing visible work.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.9</div>
+  <div class="bd">
+    <p>Add parentheses to each expression to show the order in which the operators are applied. Assume
+    <code>Point apt;</code>, <code>Point arr[5];</code>, <code>Point *p;</code> and
+    <code>double d;</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>apt.x * apt.y + 1</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>(((apt.x) * (apt.y)) + 1)</code></p>
+        <p>Dots first, then <code>*</code>, then <code>+</code>. The two dots are entirely
+        uncontroversial; the interesting part of the expression is the ordinary arithmetic
+        precedence you already knew.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>arr[2].y / d</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>(((arr[2]).y) / d)</code></p>
+        <p><code>[]</code> and <code>.</code> are the two highest-precedence operators here and they
+        associate left to right, so the subscript happens first and the dot is applied to the element
+        it produced. You never need parentheses for this shape.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>*p.y</code> &mdash; add the parentheses that show how the compiler reads it, then add the parentheses that make it do what the programmer meant.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>How the compiler reads it: <code>*(p.y)</code> &mdash; which is an error, because
+        <code>p</code> is a pointer and has no member <code>y</code>.</p>
+        <p>What the programmer meant: <code>(*p).y</code> &mdash; dereference first, then take the
+        member.</p>
+        <p>This is the single most common punctuation bug in code that mixes pointers and objects,
+        and it is the reason the arrow operator exists. From Class 10 you will write
+        <code>p-&gt;y</code> and stop thinking about it.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span><code>apt.x++</code> and <code>--apt.y</code></h2>
+
+<p>Arithmetic was the easy case. Now combine the dot with <code>++</code> and <code>--</code>, which
+Class 3 taught you to distrust. This combination &mdash; member access plus increment inside an
+output statement &mdash; is the exact shape of this professor's output-prediction exam questions, so
+it is worth being slow and careful here.</p>
+
+<p>The rule from &sect;7 does all the work. Take <code>apt.x++</code>:</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; reading <code>apt.x++</code> and <code>--apt.y</code></span></div>
+  <div class="bd">
+    <p>For <code>apt.x++</code>:</p>
+    <ol>
+      <li>First apply the dot operator and get <code>apt.x</code> &mdash; the <code>double</code>
+        variable living inside <code>apt</code>.</li>
+      <li>Then apply the <code>++</code> operator, incrementing the value of <code>x</code> in
+        <code>apt</code>.</li>
+    </ol>
+    <p>For <code>--apt.y</code>, in spite of the <code>--</code> being written first:</p>
+    <ol>
+      <li>First apply the dot operator and get <code>apt.y</code>.</li>
+      <li>Then apply the <code>--</code> operator, decrementing the value of <code>y</code> in
+        <code>apt</code>.</li>
+      <li>The <code>--</code> does <strong>not</strong> apply to the object <code>apt</code>. It would
+        make no sense to "decrement the object <code>apt</code>" &mdash; and the compiler would reject
+        it, because you have not told it what that would mean.</li>
+    </ol>
+    <p>Written out: <code>--apt.y</code> is <code>--(apt.y)</code>, never <code>(--apt).y</code>.</p>
+  </div>
+</div>
+
+<p>There are four such expressions for each member &mdash; <code>++apt.x</code>,
+<code>--apt.x</code>, <code>apt.x++</code> and <code>apt.x--</code> &mdash; and the prefix/postfix
+distinction is exactly the one from Class 3, unchanged: all four step the member by 1, and what
+differs is the value the expression hands back. Prefix hands back the new value, postfix the old.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the dot against every arithmetic operator</span></div>
+  <div class="bd">
+    <p>This is your professor's own program, and it is the centerpiece of this class. It starts a
+    <code>Point</code> at (2.5, 2.0), computes four arithmetic combinations of the members, then
+    increments one member and decrements the other. <strong>Ten lines of output. Write down all ten
+    before you open the toggle.</strong> The two traps are the same two that catch people every
+    term: a <code>double</code> that prints without a decimal point, and the final two lines, which do not print
+    what their labels suggest.</p>
+<div class="codewrap"><div class="cap">point_ops.cpp</div><pre><code class="language-cpp">// point_ops.cpp -- the dot operator against +, -, *, / and against ++, --
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    Point apt;
+    apt.x = 2.5;
+    apt.y = 2.0;
+
+    cout &lt;&lt; "point x = " &lt;&lt; apt.x &lt;&lt; endl;
+    cout &lt;&lt; "point y = " &lt;&lt; apt.y &lt;&lt; endl;
+
+    double xy_plus  = apt.x + apt.y;
+    double xy_minus = apt.x - apt.y;
+    double xy_mult  = apt.x * apt.y;
+    double xy_div   = apt.x / apt.y;
+
+    cout &lt;&lt; "xy_plus  = " &lt;&lt; xy_plus  &lt;&lt; endl;
+    cout &lt;&lt; "xy_minus = " &lt;&lt; xy_minus &lt;&lt; endl;
+    cout &lt;&lt; "xy_mult  = " &lt;&lt; xy_mult  &lt;&lt; endl;
+    cout &lt;&lt; "xy_div   = " &lt;&lt; xy_div   &lt;&lt; endl;
+
+    apt.x++;
+    --apt.y;
+
+    cout &lt;&lt; "apt.x++ = " &lt;&lt; apt.x &lt;&lt; endl;
+    cout &lt;&lt; "--apt.y = " &lt;&lt; apt.y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">point x = 2.5
+point y = 2
+xy_plus  = 4.5
+xy_minus = 0.5
+xy_mult  = 5
+xy_div   = 1.25
+apt.x++ = 3.5
+--apt.y = 1</pre>
+<p>Here is the whole program as a running state table. The right-hand columns carry forward, exactly
+as they must on an exam.</p>
+<table class="trace">
+  <tr><th>Statement</th><th>Prints</th><th><code>apt.x</code></th><th><code>apt.y</code></th></tr>
+  <tr><td><code>apt.x = 2.5; apt.y = 2.0;</code></td><td>&mdash;</td><td>2.5</td><td>2.0</td></tr>
+  <tr><td><code>cout &lt;&lt; "point x = " &lt;&lt; apt.x</code></td><td><code>point x = 2.5</code></td><td>2.5</td><td>2.0</td></tr>
+  <tr><td><code>cout &lt;&lt; "point y = " &lt;&lt; apt.y</code></td><td><code>point y = <strong>2</strong></code></td><td>2.5</td><td>2.0</td></tr>
+  <tr><td><code>xy_plus  = apt.x + apt.y</code></td><td><code>xy_plus  = 4.5</code></td><td>2.5</td><td>2.0</td></tr>
+  <tr><td><code>xy_minus = apt.x - apt.y</code></td><td><code>xy_minus = 0.5</code></td><td>2.5</td><td>2.0</td></tr>
+  <tr><td><code>xy_mult  = apt.x * apt.y</code></td><td><code>xy_mult  = <strong>5</strong></code></td><td>2.5</td><td>2.0</td></tr>
+  <tr><td><code>xy_div   = apt.x / apt.y</code></td><td><code>xy_div   = 1.25</code></td><td>2.5</td><td>2.0</td></tr>
+  <tr><td><code>apt.x++;</code></td><td>&mdash;</td><td><strong>3.5</strong></td><td>2.0</td></tr>
+  <tr><td><code>--apt.y;</code></td><td>&mdash;</td><td>3.5</td><td><strong>1.0</strong></td></tr>
+  <tr><td><code>cout &lt;&lt; "apt.x++ = " &lt;&lt; apt.x</code></td><td><code>apt.x++ = 3.5</code></td><td>3.5</td><td>1.0</td></tr>
+  <tr><td><code>cout &lt;&lt; "--apt.y = " &lt;&lt; apt.y</code></td><td><code>--apt.y = <strong>1</strong></code></td><td>3.5</td><td>1.0</td></tr>
+</table>
+<p>Now the three places people lose points.</p>
+<ul>
+  <li><strong><code>point y = 2</code>.</strong> <code>apt.y</code> holds 2.0. <code>cout</code> prints it as
+    <code>2</code>. Same for <code>xy_mult = 5</code> (which is 5.0) and the last line,
+    <code>1</code> (which is 1.0). Writing <code>2.0</code> on an exam is a wrong answer.</li>
+  <li><strong>The last two labels lie.</strong> The string <code>"apt.x++ = "</code> is just text; the
+    increment already happened on its own statement two lines earlier. What is printed is the
+    <em>current</em> value of <code>apt.x</code>, 3.5. Do not let a label tell you what a program
+    does.</li>
+  <li><strong>The four arithmetic lines do not change anything.</strong> <code>apt.x</code> is still
+    2.5 after all four; reading a member is not writing to it. Only the two statements
+    <code>apt.x++;</code> and <code>--apt.y;</code> alter the object.</li>
+</ul>
+<p>One last observation on the increments as written. <code>apt.x++;</code> stands alone as a
+statement, so the value the expression produces is thrown away and only the side effect survives. In
+that position, <code>apt.x++;</code> and <code>++apt.x;</code> are indistinguishable &mdash; exactly
+as they are for a plain <code>int</code>. The prefix/postfix choice only matters when the value is used, which
+is the next Quick Check.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; and a word of advice from your professor</span></div>
+  <div class="bd">
+    <p>In general, expressions like <code>apt.x++</code> and <code>--apt.y</code> are confusing to
+    read. Your professor's advice is blunt, and worth taking: <em>avoid writing such code &mdash; one
+    can find other ways to do the job.</em> In your own programs, write
+    <code>apt.x = apt.x + 1;</code> and be done with it.</p>
+    <p>But you still have to be able to <strong>read</strong> them, because they appear on every
+    midterm this professor has given. The skill being tested is not "would you write this" &mdash; it
+    is "can you evaluate an expression exactly as the language defines it."</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.10</div>
+  <div class="bd">
+    <p>The same class, but now the increments happen <em>inside</em> the output statement, which is
+    how the exams do it. Recall the Class 3 rule: the operands of <code>&lt;&lt;</code> are evaluated
+    strictly left to right, side effects and all, and the side effects carry forward to the next
+    line.</p>
+<div class="codewrap"><div class="cap">dot_chain.cpp</div><pre><code class="language-cpp">// dot_chain.cpp -- member access inside a cout chain, exam style
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    int x, y;
+};
+
+int main() {
+    Point p;
+    p.x = 3;
+    p.y = 5;
+    cout &lt;&lt; p.x++ &lt;&lt; p.x &lt;&lt; --p.y &lt;&lt; endl;         // line (a)
+    cout &lt;&lt; p.x + p.y &lt;&lt; p.x-- &lt;&lt; ++p.y &lt;&lt; endl;   // line (b)
+    cout &lt;&lt; p.x &lt;&lt; p.y &lt;&lt; endl;                    // line (c)
+    return 0;
+}</code></pre></div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does line (a) print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Item</th><th>Prints</th><th><code>p.x</code></th><th><code>p.y</code></th></tr>
+          <tr><td><em>start</em></td><td>&mdash;</td><td>3</td><td>5</td></tr>
+          <tr><td><code>p.x++</code></td><td><strong>3</strong> (the old value)</td><td><strong>4</strong></td><td>5</td></tr>
+          <tr><td><code>p.x</code></td><td><strong>4</strong></td><td>4</td><td>5</td></tr>
+          <tr><td><code>--p.y</code></td><td><strong>4</strong> (the new value)</td><td>4</td><td><strong>4</strong></td></tr>
+        </table>
+        <p>Nothing is printed between the items, so line (a) is <code>344</code>.</p>
+        <p>Note the second item: <code>p.x</code> prints 4, not 3. The postfix increment on the first
+        item had already taken effect by the time the second operand was evaluated.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> What does line (b) print? Start from the state line (a) left behind.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>p.x</code> is 4 and <code>p.y</code> is 4 coming in &mdash; <em>not</em> 3 and 5.</p>
+        <table class="trace">
+          <tr><th>Item</th><th>Prints</th><th><code>p.x</code></th><th><code>p.y</code></th></tr>
+          <tr><td><em>start</em></td><td>&mdash;</td><td>4</td><td>4</td></tr>
+          <tr><td><code>p.x + p.y</code></td><td><strong>8</strong></td><td>4</td><td>4</td></tr>
+          <tr><td><code>p.x--</code></td><td><strong>4</strong> (old)</td><td><strong>3</strong></td><td>4</td></tr>
+          <tr><td><code>++p.y</code></td><td><strong>5</strong> (new)</td><td>3</td><td><strong>5</strong></td></tr>
+        </table>
+        <p>Line (b) is <code>845</code>. The <code>8</code> is a two-digit-looking answer that is
+        really one number; jamming values together with no separator is deliberate on these
+        questions, so count the items, not the characters.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> What does line (c) print, and what did g++ warn about when this was compiled with <code>-Wall</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Line (c) prints <code>35</code> &mdash; <code>p.x</code> is 3 and <code>p.y</code> is 5,
+        which is coincidentally where they started but by a completely different route.</p>
+        <p>The full verified output of the program:</p>
+<pre class="out">344
+845
+35</pre>
+        <p>And the warning:</p>
+<pre class="err">dot_chain.cpp: In function 'int main()':
+dot_chain.cpp:14:16: warning: operation on 'p.Point::x' may be undefined [-Wsequence-point]
+   14 |     cout &lt;&lt; p.x++ &lt;&lt; p.x &lt;&lt; --p.y &lt;&lt; endl;         // line (a)
+      |             ~~~^~</pre>
+        <p>The same situation as Class 3, &sect;4: the C++17 rule makes each operand of
+        <code>&lt;&lt;</code> fully evaluated before the next, so the answer is well defined, and
+        g++'s <code>-Wsequence-point</code> check is older than that rule and deliberately
+        conservative. Treat the warning as style advice &mdash; do not write lines like this &mdash;
+        and trace it left to right when an exam hands you one.</p>
+        <p><strong>Things to notice.</strong> The dot never complicated any of this. Once you have
+        read <code>p.x</code> as "the <code>int</code> inside <code>p</code>", every trace is the plain-variable
+        trace from Class 3. That is the real content of today's precedence rule: <em>the dot gets out
+        of the way first.</em></p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; increment a member both ways</h3>
+
+<p>Write a class <code>Score</code> with two public <code>int</code> members, <code>correct</code> and
+<code>wrong</code>. Set them to 7 and 3. Then increment <code>correct</code> and decrement
+<code>wrong</code> as standalone statements and print both; then write one <code>cout</code> chain that prints
+<code>correct++</code>, then <code>correct</code>, then <code>--wrong</code>; then print both members
+one final time. Predict every number before you run it.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="27" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Score {
+public:
+    int correct, wrong;
+};
+
+int main() {
+    Score s;
+    s.correct = 7;
+    s.wrong   = 3;
+
+    cout &lt;&lt; &quot;start:  &quot; &lt;&lt; s.correct &lt;&lt; &quot; &quot; &lt;&lt; s.wrong &lt;&lt; endl;
+
+    // 1. increment correct and decrement wrong as separate statements, then print
+
+
+    // 2. one cout chain: s.correct++, then s.correct, then --s.wrong
+
+
+    // 3. print both members one last time
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Score {
+public:
+    int correct, wrong;
+};
+
+int main() {
+    Score s;
+    s.correct = 7;
+    s.wrong   = 3;
+
+    cout &lt;&lt; "start:  " &lt;&lt; s.correct &lt;&lt; " " &lt;&lt; s.wrong &lt;&lt; endl;
+
+    // 1. increment correct and decrement wrong as separate statements, then print
+
+
+    // 2. one cout chain: s.correct++, then s.correct, then --s.wrong
+
+
+    // 3. print both members one last time
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 9.11</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output of all four lines.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> Keep a running table of <code>correct</code> and <code>wrong</code>
+      from the first assignment to the last line, and never restart it. The standalone statements in
+      step 1 change the members but print nothing; the chain in step 2 both prints and changes.</p>
+<div class="codewrap"><div class="cap">score.cpp</div><pre><code class="language-cpp">// score.cpp -- in-class exercise solution: dot with ++ and --
+#include &lt;iostream&gt;
+using namespace std;
+
+class Score {
+public:
+    int correct, wrong;
+};
+
+int main() {
+    Score s;
+    s.correct = 7;
+    s.wrong   = 3;
+
+    cout &lt;&lt; "start:  " &lt;&lt; s.correct &lt;&lt; " " &lt;&lt; s.wrong &lt;&lt; endl;
+
+    s.correct++;
+    --s.wrong;
+
+    cout &lt;&lt; "after:  " &lt;&lt; s.correct &lt;&lt; " " &lt;&lt; s.wrong &lt;&lt; endl;
+    cout &lt;&lt; "chain:  " &lt;&lt; s.correct++ &lt;&lt; " " &lt;&lt; s.correct &lt;&lt; " " &lt;&lt; --s.wrong &lt;&lt; endl;
+    cout &lt;&lt; "final:  " &lt;&lt; s.correct &lt;&lt; " " &lt;&lt; s.wrong &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">start:  7 3
+after:  8 2
+chain:  8 9 1
+final:  9 1</pre>
+      <table class="trace">
+        <tr><th>Step</th><th>Prints</th><th><code>correct</code></th><th><code>wrong</code></th></tr>
+        <tr><td>after the two assignments</td><td><code>start:  7 3</code></td><td>7</td><td>3</td></tr>
+        <tr><td><code>s.correct++;</code></td><td>&mdash;</td><td>8</td><td>3</td></tr>
+        <tr><td><code>--s.wrong;</code></td><td>&mdash;</td><td>8</td><td>2</td></tr>
+        <tr><td>the "after" line</td><td><code>after:  8 2</code></td><td>8</td><td>2</td></tr>
+        <tr><td>chain item 1: <code>s.correct++</code></td><td><strong>8</strong> (old)</td><td>9</td><td>2</td></tr>
+        <tr><td>chain item 2: <code>s.correct</code></td><td><strong>9</strong></td><td>9</td><td>2</td></tr>
+        <tr><td>chain item 3: <code>--s.wrong</code></td><td><strong>1</strong> (new)</td><td>9</td><td>1</td></tr>
+        <tr><td>the "final" line</td><td><code>final:  9 1</code></td><td>9</td><td>1</td></tr>
+      </table>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The chain prints <code>8 9 1</code> &mdash; the first two items differ by one, which is
+          the signature of a postfix increment followed by a plain read of the same member.</li>
+        <li>The <code>final:</code> line agrees with the last two items of the chain. If your trace
+          says otherwise, you dropped a side effect somewhere in the chain.</li>
+        <li>In step 1 the standalone <code>s.correct++;</code> could equally be
+          <code>++s.correct;</code> &mdash; nothing uses the value. In step 2 the choice is
+          load-bearing: <code>++s.correct</code> would have printed <code>9 9 1</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 9</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 are the two things the original course notes tell you to do for this lecture
+    &mdash; declare a class and use it, then take the terminating semicolon out and see what happens.
+    Problem 3 is adapted from a real exam paper; its later parts have been rewritten to stay inside
+    what we have covered, because the original used a class method and the arrow operator, both of
+    which arrive in Class 10. Problems 4, 5 and 6 were written for these notes in the three formats
+    this professor uses on every midterm: <em>write a complete C++ program</em>, <em>write C++
+    statements to carry out the following tasks</em>, and <em>what is the output for each of the
+    following lines</em>.</p>
+    <p>Work each one on paper or in a compiler <em>before</em> opening the answer. Output-prediction
+    parts carry <strong>no partial credit</strong> on this professor's exams; write-code parts pay
+    points for the signature and the standard beginning and ending alone, so always write those
+    down.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Declare a class and use it <span class="muted small">(from the course notes)</span></h3>
+
+<p>Declare a class <code>Point</code> containing two coordinates <code>x</code> and <code>y</code>,
+both of type <code>double</code>, visible to the outside world. Write a <code>main</code> that
+creates one <code>Point</code> called <code>apt</code>, sets it to (2.5, 2.0), and prints each
+coordinate on its own line. State the exact output.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Four decisions, and each maps to one piece of syntax: the type is a class,
+  so <code>class Point</code>; the data must be reachable from <code>main</code>, so
+  <code>public:</code>; the coordinates are fractional, so <code>double x, y;</code>; and the
+  declaration must end with <code>};</code>. In <code>main</code>, <code>Point apt;</code> creates the
+  object and the dot operator does everything else.</p>
+<div class="codewrap"><div class="cap">point_first.cpp</div><pre><code class="language-cpp">// point_first.cpp -- declare a class, create one object, use the dot operator
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+int main() {
+    Point apt;
+
+    apt.x = 2.5;
+    apt.y = 2.0;
+
+    cout &lt;&lt; apt.x &lt;&lt; endl;
+    cout &lt;&lt; apt.y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">2.5
+2</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The second line of output is <code>2</code>. If you wrote <code>2.0</code>, that is a wrong
+      answer on an exam &mdash; <code>cout</code> drops trailing zeros from a <code>double</code>.</li>
+    <li>The class goes <em>above</em> <code>main</code>. The compiler reads top to bottom and must
+      know what a <code>Point</code> is before it meets <code>Point apt;</code>.</li>
+    <li>Both members are set before either is read. Skip that and you are in undefined-behavior
+      territory (&sect;4), even though the program would still compile.</li>
+    <li>On an exam, the <code>#include</code>, the <code>using</code> line, <code>int main()</code>
+      and <code>return 0;</code> are collectively worth 1&ndash;2 points as "standard beginning and
+      standard ending." Write them even if you run out of time on the rest.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; Remove the terminating semicolon <span class="muted small">(from the course notes)</span></h3>
+
+<p>Take your program from Problem 1, delete the semicolon after the closing brace of the class, and
+compile it. What does the compiler say, and why does the language require that semicolon at all?</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> This one is answered by doing it, not by reasoning about it. Compile, read
+  the message carefully, and note in particular <em>which line</em> is blamed.</p>
+<div class="codewrap"><div class="cap">nosemi.cpp</div><pre><code class="language-cpp">// nosemi.cpp -- the terminating semicolon after the class has been left off
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+}
+
+int main() {
+    Point apt;
+    apt.x = 2.5;
+    apt.y = 2.0;
+    cout &lt;&lt; apt.x &lt;&lt; " " &lt;&lt; apt.y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="err">nosemi.cpp:8:2: error: expected ';' after class definition
+    8 | }
+      |  ^
+      |  ;</pre>
+  <p><strong>Why the language requires it.</strong> C++ lets you declare objects in the very statement
+  that declares the class:</p>
+<pre><code class="language-cpp">class Point {
+public:
+    double x, y;
+} origin, corner;      // declares the class AND two Point objects</code></pre>
+  <p>Because that is legal, the compiler cannot tell that the declaration is over until it sees a
+  semicolon. The feature is obscure and we will never use it in this course &mdash; but the semicolon
+  it forces on everybody is mandatory.</p>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>No executable is produced. This is a <strong>compile-time</strong> error, so nothing runs.</li>
+    <li>g++ 13 reports it cleanly, at the right character, and even draws the missing <code>;</code>.
+      That is a modern luxury. Tangle this mistake up with anything else &mdash; a missing brace, say
+      &mdash; and you get a cascade of errors starting well below the real problem.</li>
+    <li>The mirror-image mistake is putting a semicolon after a <em>function</em> body, where it does
+      not belong. Functions end with <code>}</code>; classes end with <code>};</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; Write C++ statements <span class="muted small">(from the Summer 2024 Midterm)</span></h3>
+
+<p>Do not write a complete program; give a single line, or a few lines, of C++ for each task. You are
+given the following class:</p>
+
+<pre><code class="language-cpp">class Point {
+public:
+    int x, y;
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare a <code>Point</code> object <code>a</code> and set its value to (3, 4).</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Point a;
+    a.x = 3;
+    a.y = 4;</code></pre>
+    <p>Three statements, not one. There is no way to write <code>Point a(3, 4);</code> until we have
+    constructors in Class 13 &mdash; and on the exam where this question was set, constructors had
+    not been covered either, so the three-line answer was the expected one.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Declare a pointer <code>p</code> that dynamically allocates memory for a <code>Point</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Point *p = new Point;</code></pre>
+    <p>The type of the pointer is <code>Point *</code> and <code>new Point</code> returns exactly
+    that. Note that no parentheses are needed after <code>Point</code> &mdash; and note that the
+    object it creates has, once again, two indeterminate members.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Copy the data in <code>a</code> into the <code>Point</code> that <code>p</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    (*p).x = a.x;
+    (*p).y = a.y;</code></pre>
+    <p>The parentheses around <code>*p</code> are compulsory: the dot outranks the <code>*</code>, so
+    <code>*p.x</code> would be parsed as <code>*(p.x)</code> and rejected (&sect;7).</p>
+    <p>A shorter answer also works, because the default assignment copies member by member:</p>
+<pre><code class="language-cpp">    *p = a;                // assign the whole object at once</code></pre>
+    <p>Both are correct. The exam's own answer key gives the member-by-member version, plus the
+    <code>p-&gt;x = a.x;</code> spelling that we meet in Class 10.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Print the <code>Point</code> that <code>p</code> points to, in the form (3, 4).</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    cout &lt;&lt; "(" &lt;&lt; (*p).x &lt;&lt; ", " &lt;&lt; (*p).y &lt;&lt; ")" &lt;&lt; endl;</code></pre>
+    <p>The original exam supplied the class with a <code>print()</code> method and asked for
+    <code>p-&gt;print();</code>. Both the method and the arrow are Class 10 material, so here we do
+    the printing by hand &mdash; which is what the method would have done anyway.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Release the memory for <code>p</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    delete p;</code></pre>
+    <p>Plain <code>delete</code>, not <code>delete []</code> &mdash; one object was allocated with
+    <code>new Point</code>, not an array with <code>new Point[n]</code>. Getting that pairing wrong is
+    undefined behavior, and it is worth points on this professor's exams every term.</p>
+    <p>Here are all five parts assembled into a program that compiles, runs, and gives back every
+    byte it allocated:</p>
+<div class="codewrap"><div class="cap">statements.cpp</div><pre><code class="language-cpp">// statements.cpp -- the five statements of the exam question, assembled into a program
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    int x, y;
+};
+
+int main() {
+    Point a;                                  // (a)
+    a.x = 3;
+    a.y = 4;
+
+    Point *p = new Point;                     // (b)
+
+    (*p).x = a.x;                             // (c)
+    (*p).y = a.y;
+
+    cout &lt;&lt; "(" &lt;&lt; (*p).x &lt;&lt; ", " &lt;&lt; (*p).y &lt;&lt; ")" &lt;&lt; endl;   // (d)
+
+    delete p;                                 // (e)
+    return 0;
+}</code></pre></div>
+<pre class="out">(3, 4)</pre>
+    <p><strong>Things to notice.</strong> This question is worth 15 points, 3 per part, with
+    <strong>no partial credit</strong> &mdash; and it is the same five tasks every single term, with
+    the class renamed (<code>Point</code>, <code>Rectangle</code>) and the numbers changed. It is the
+    cheapest 15 points on the paper if you have practiced it, and the answers are short enough to
+    write from memory. Practice it until it is automatic.</p>
+  </div></details>
+</div>
+
+<h3>Problem 4 &mdash; What is the output <span class="muted small">(added)</span></h3>
+
+<p>Consider the following program. What would it print for each of the labelled lines? Give your
+answer exactly, character for character, remembering that <code>cout</code> puts nothing between items.</p>
+
+<div class="codewrap"><div class="cap">counter_trace.cpp</div><pre><code class="language-cpp">// counter_trace.cpp -- output prediction: the dot operator inside cout chains
+#include &lt;iostream&gt;
+using namespace std;
+
+class Counter {
+public:
+    int hits, misses;
+};
+
+int main() {
+    Counter c;
+    c.hits   = 2;
+    c.misses = 9;
+
+    cout &lt;&lt; c.hits++ &lt;&lt; ++c.misses &lt;&lt; c.hits &lt;&lt; endl;   // line (a)
+    cout &lt;&lt; c.hits + c.misses &lt;&lt; --c.misses &lt;&lt; endl;    // line (b)
+    cout &lt;&lt; c.hits-- &lt;&lt; c.hits &lt;&lt; c.misses-- &lt;&lt; endl;   // line (c)
+    cout &lt;&lt; c.hits &lt;&lt; c.misses &lt;&lt; endl;                 // line (d)
+    return 0;
+}</code></pre></div>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Line (a).</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <table class="trace">
+      <tr><th>Item</th><th>Prints</th><th><code>hits</code></th><th><code>misses</code></th></tr>
+      <tr><td><em>start</em></td><td>&mdash;</td><td>2</td><td>9</td></tr>
+      <tr><td><code>c.hits++</code></td><td><strong>2</strong> (old)</td><td><strong>3</strong></td><td>9</td></tr>
+      <tr><td><code>++c.misses</code></td><td><strong>10</strong> (new)</td><td>3</td><td><strong>10</strong></td></tr>
+      <tr><td><code>c.hits</code></td><td><strong>3</strong></td><td>3</td><td>10</td></tr>
+    </table>
+    <p>Jammed together with no separators: <code>2103</code>.</p>
+    <p>That looks like four digits and it is really three values &mdash; 2, then 10, then 3. This
+    ambiguity is deliberate on these questions; count items, not characters.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Line (b).</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>Coming in: <code>hits</code> is 3, <code>misses</code> is 10.</p>
+    <table class="trace">
+      <tr><th>Item</th><th>Prints</th><th><code>hits</code></th><th><code>misses</code></th></tr>
+      <tr><td><code>c.hits + c.misses</code></td><td><strong>13</strong></td><td>3</td><td>10</td></tr>
+      <tr><td><code>--c.misses</code></td><td><strong>9</strong> (new)</td><td>3</td><td><strong>9</strong></td></tr>
+    </table>
+    <p>Line (b) is <code>139</code>.</p>
+    <p>The sum is computed <em>before</em> the decrement, because the operands of <code>&lt;&lt;</code>
+    go strictly left to right. Evaluating the decrement first would have given 12.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Line (c).</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p>Coming in: <code>hits</code> is 3, <code>misses</code> is 9.</p>
+    <table class="trace">
+      <tr><th>Item</th><th>Prints</th><th><code>hits</code></th><th><code>misses</code></th></tr>
+      <tr><td><code>c.hits--</code></td><td><strong>3</strong> (old)</td><td><strong>2</strong></td><td>9</td></tr>
+      <tr><td><code>c.hits</code></td><td><strong>2</strong></td><td>2</td><td>9</td></tr>
+      <tr><td><code>c.misses--</code></td><td><strong>9</strong> (old)</td><td>2</td><td><strong>8</strong></td></tr>
+    </table>
+    <p>Line (c) is <code>329</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Line (d).</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><code>hits</code> is 2 and <code>misses</code> is 8, so line (d) is <code>28</code>. The whole
+    verified output:</p>
+<pre class="out">2103
+139
+329
+28</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>The trace is a <em>single simulation</em> from the top of <code>main</code> to the bottom.
+        A student who restarts at each labelled line gets (a) right and (b), (c), (d) wrong &mdash;
+        and with no partial credit, that is 6 of 8 points gone on one habit.</li>
+      <li>The dot contributed nothing but a longer name. Every rule here is the Class 3 rule for
+        plain variables; the member access simply happens first, every time.</li>
+      <li>Line (b) is the one worth double-checking: an addition that reads two members without
+        changing either, followed by an item that changes one of them.</li>
+      <li>Compiled with <code>-Wall</code>, g++ raises <code>-Wsequence-point</code> warnings on lines
+        (a) and (c). They are conservative, as Class 3 explained; the C++17 left-to-right rule for
+        <code>&lt;&lt;</code> makes every answer above well defined.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; Write a complete C++ program <span class="muted small">(added)</span></h3>
+
+<p>Write a complete C++ program that does the following. Declare a class <code>Rectangle</code> with
+two public <code>double</code> data members, <code>width</code> and <code>height</code>. In <code>main</code>,
+let the user enter width-and-height pairs until they enter <code>0 0</code>, storing each rectangle in
+a <code>vector</code>. Then print how many rectangles were entered, the total area, the average area,
+and finally every rectangle whose area is strictly greater than the average. If no rectangles were
+entered, say so and stop.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> This is the professor's Problem&nbsp;1 shape from every midterm &mdash;
+  sentinel-controlled input loop, store into a vector, compute an aggregate, print a filtered subset
+  &mdash; with a class in place of a plain <code>int</code>. Four stages:</p>
+  <ol>
+    <li>Declare the class above <code>main</code>, with <code>public:</code> and the closing
+      <code>};</code>.</li>
+    <li>Read the first pair <em>before</em> the loop, then loop while the pair is not the sentinel,
+      reading the next pair at the bottom of the body. Build a local <code>Rectangle</code>, fill both
+      members, <code>push_back</code> it.</li>
+    <li>Guard the empty case before dividing by <code>n</code> &mdash; dividing by zero here would
+      produce <code>nan</code> and a nonsense report.</li>
+    <li>One pass to total, then a second pass to print the ones above average. Two passes are needed
+      because you cannot compare against an average you have not finished computing.</li>
+  </ol>
+<div class="codewrap"><div class="cap">rect_report.cpp</div><pre><code class="language-cpp">// rect_report.cpp -- read rectangles until 0 0, report the ones above average area
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    double width, height;
+};
+
+int main() {
+    vector&lt;Rectangle&gt; shelf;
+    double w, h;
+
+    cout &lt;&lt; "Enter width and height pairs (0 0 to stop): ";
+    cin &gt;&gt; w &gt;&gt; h;
+    while (!(w == 0 &amp;&amp; h == 0)) {
+        Rectangle r;
+        r.width  = w;
+        r.height = h;
+        shelf.push_back(r);
+        cin &gt;&gt; w &gt;&gt; h;
+    }
+
+    int n = shelf.size();
+    if (n == 0) {
+        cout &lt;&lt; "No rectangles entered." &lt;&lt; endl;
+        return 0;
+    }
+
+    double total = 0.0;
+    for (int i = 0; i &lt; n; ++i) {
+        total = total + shelf[i].width * shelf[i].height;
+    }
+    double average = total / n;
+
+    cout &lt;&lt; "count   = " &lt;&lt; n &lt;&lt; endl;
+    cout &lt;&lt; "total   = " &lt;&lt; total &lt;&lt; endl;
+    cout &lt;&lt; "average = " &lt;&lt; average &lt;&lt; endl;
+
+    cout &lt;&lt; "above average:" &lt;&lt; endl;
+    for (int i = 0; i &lt; n; ++i) {
+        double area = shelf[i].width * shelf[i].height;
+        if (area &gt; average) {
+            cout &lt;&lt; "  " &lt;&lt; shelf[i].width &lt;&lt; " x " &lt;&lt; shelf[i].height
+                 &lt;&lt; " has area " &lt;&lt; area &lt;&lt; endl;
+        }
+    }
+    return 0;
+}</code></pre></div>
+  <p>With <code>3 4</code>, <code>2 2</code>, <code>10 1.5</code>, <code>5 5</code> and then
+  <code>0 0</code> typed in:</p>
+<pre class="out">Enter width and height pairs (0 0 to stop): count   = 4
+total   = 56
+average = 14
+above average:
+  10 x 1.5 has area 15
+  5 x 5 has area 25</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>vector&lt;Rectangle&gt;</code> works with no effort on your part. A vector can hold
+      objects of a class you wrote for exactly the reason &sect;5 gave: the compiler already generated
+      the create, copy, assign and destroy operations that the vector needs in order to store and
+      move its elements.</li>
+    <li><code>push_back(r)</code> stores a <strong>copy</strong> of <code>r</code>. The local
+      <code>r</code> is destroyed at the bottom of each loop iteration and the vector's copy lives on
+      &mdash; &sect;6 in action.</li>
+    <li>The prompt appears once and the typed numbers are not echoed back, so the output above starts
+      with the prompt and the report on the same line. That is normal for a program reading from the
+      keyboard, and it is what the professor's own sample transcripts look like.</li>
+    <li><code>total / n</code> is <code>double / int</code>, so the division is floating point. If you had made
+      <code>total</code> an <code>int</code> you would get integer division and a wrong average.</li>
+    <li>Strictly greater: the 3 x 4 rectangle has area exactly 12, below the average of 14, and is
+      excluded. Test a case that lands exactly on the boundary &mdash; the professor's own rubrics
+      make a point of it.</li>
+    <li>Points on this question are awarded per stage: standard beginning and ending, declaring the
+      storage, reading the input, computing the aggregate, printing the filtered subset. Write every
+      stage even if one of them is wrong.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 6 &mdash; Copies, assignments and a function call <span class="muted small">(added)</span></h3>
+
+<p>State the exact output of this program, then say for each of the three objects whether it was
+copied, assigned, or neither.</p>
+
+<div class="codewrap"><div class="cap">copy_trace.cpp</div><pre><code class="language-cpp">// copy_trace.cpp -- create, copy, assign: which objects change and which do not
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+};
+
+void bump(Point p) {
+    p.x = p.x + 1;
+    p.y = p.y + 1;
+    cout &lt;&lt; "bump:  " &lt;&lt; p.x &lt;&lt; " " &lt;&lt; p.y &lt;&lt; endl;
+}
+
+int main() {
+    Point a;
+    a.x = 1.0;
+    a.y = 2.0;
+
+    Point b = a;
+    Point c;
+    c.x = 0.0;
+    c.y = 0.0;
+    c = b;
+
+    b.y = 50.0;
+    bump(a);
+
+    cout &lt;&lt; "a:     " &lt;&lt; a.x &lt;&lt; " " &lt;&lt; a.y &lt;&lt; endl;
+    cout &lt;&lt; "b:     " &lt;&lt; b.x &lt;&lt; " " &lt;&lt; b.y &lt;&lt; endl;
+    cout &lt;&lt; "c:     " &lt;&lt; c.x &lt;&lt; " " &lt;&lt; c.y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Keep a table with one column per object and add a column for
+  <code>bump</code>'s parameter when it comes into existence. The one question to ask at every line is
+  <em>which object does this statement write to?</em> &mdash; and remember that a by-value parameter
+  is a different object from its argument.</p>
+  <table class="trace">
+    <tr><th>Statement</th><th><code>a</code></th><th><code>b</code></th><th><code>c</code></th><th><code>p</code> (in <code>bump</code>)</th></tr>
+    <tr><td><code>a.x = 1.0; a.y = 2.0;</code></td><td>(1, 2)</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td><code>Point b = a;</code> &mdash; copy</td><td>(1, 2)</td><td>(1, 2)</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td><code>Point c;</code> then two writes</td><td>(1, 2)</td><td>(1, 2)</td><td>(0, 0)</td><td>&mdash;</td></tr>
+    <tr><td><code>c = b;</code> &mdash; assign</td><td>(1, 2)</td><td>(1, 2)</td><td>(1, 2)</td><td>&mdash;</td></tr>
+    <tr><td><code>b.y = 50.0;</code></td><td>(1, 2)</td><td>(1, <strong>50</strong>)</td><td>(1, 2)</td><td>&mdash;</td></tr>
+    <tr><td><code>bump(a);</code> &mdash; copy into <code>p</code></td><td>(1, 2)</td><td>(1, 50)</td><td>(1, 2)</td><td>(1, 2) then (2, 3)</td></tr>
+    <tr><td><code>bump</code> returns &mdash; <code>p</code> destroyed</td><td>(1, 2)</td><td>(1, 50)</td><td>(1, 2)</td><td>gone</td></tr>
+  </table>
+<pre class="out">bump:  2 3
+a:     1 2
+b:     1 50
+c:     1 2</pre>
+  <p><strong>The three objects.</strong></p>
+  <ul>
+    <li><code>a</code> was <strong>copied from</strong> twice &mdash; once into <code>b</code>, once
+      into <code>bump</code>'s parameter &mdash; and never written to after its first two assignments.
+      It ends at (1, 2).</li>
+    <li><code>b</code> was <strong>copy-initialized</strong> from <code>a</code>, then written to
+      directly. It ends at (1, 50).</li>
+    <li><code>c</code> was created, written to, and then <strong>assigned</strong> from
+      <code>b</code>. Crucially it was assigned <em>before</em> <code>b.y</code> became 50, so it
+      holds (1, 2), not (1, 50). An assignment copies values at the moment it runs; it does not link
+      the two objects together.</li>
+  </ul>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>bump</code> prints <code>2 3</code> and changes nothing outside itself. It is
+      <code>swap1</code> from Class 1 all over again, with an object instead of an <code>int</code>. Change the
+      parameter to <code>Point &amp;p</code> and <code>a</code> would end at (2, 3).</li>
+    <li>The order of <code>c = b;</code> and <code>b.y = 50.0;</code> is the whole trick of the
+      question. Swap those two lines and <code>c</code> ends at (1, 50).</li>
+    <li>Every value prints without a decimal point &mdash; <code>1</code>, <code>2</code>,
+      <code>50</code> &mdash; even though all six are <code>double</code>s.</li>
+    <li>Nothing in this program announces itself. From Class 14 on, this professor's exam classes
+      print a message from every constructor, destructor, copy and assignment, and questions of
+      exactly this shape ask you for the resulting list of lines. The trace table above is the habit
+      that makes those questions routine &mdash; start building it now, while there are only three
+      objects and no output to keep track of.</li>
+  </ul>
+</div></details>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>C++ supports four operations on every type: <strong>create</strong>, <strong>copy</strong>,
+        <strong>assign</strong>, <strong>destroy</strong>. A class you write yourself supports all
+        four, exactly as <code>int</code> does. Those four words are the plan for Classes 13&ndash;15.</li>
+      <li>A class declaration is <code>class Name { public: ...members... };</code>. It declares a
+        <em>type</em> and sets aside <strong>no memory</strong>. The <strong>semicolon after the
+        closing brace</strong> is mandatory; leaving it off gives <em>"expected ';' after class
+        definition"</em>.</li>
+      <li>A variable declared inside a class is a <strong>data member</strong>. Members may be any
+        type, including objects of other classes. <code>public:</code> makes everything after it
+        reachable from outside; without it, members are private and unreachable.</li>
+      <li><code>Point apt;</code> <strong>instantiates</strong> an object &mdash; <em>this</em> is
+        what occupies memory. The <strong>dot operator</strong> reaches a member of an object:
+        <code>apt.x</code> reads or writes the <code>x</code> inside <code>apt</code>. The object goes
+        on the left, never the class name.</li>
+      <li>With no constructor, a new object's data members are <strong>indeterminate</strong>, not
+        zero. Reading one is undefined behavior. Set every member before you read any. Constructors
+        fix this in Class 13.</li>
+      <li>The compiler generates create, copy, assign and destroy for you, plus arrays of objects,
+        pointers to objects, <code>new</code>/<code>delete</code>, and <code>sizeof</code>. The
+        defaults work <strong>member by member</strong> &mdash; right for a <code>Point</code>, wrong
+        the moment a class owns a pointer.</li>
+      <li><code>sizeof(Point)</code> is written like <code>sizeof(int)</code>, and the size of an
+        object is <strong>not necessarily</strong> the sum of its members' sizes &mdash; padding.
+        Never compute it by hand.</li>
+      <li>The dot operator has higher precedence than <code>+ - * /</code> and <code>++ --</code>;
+        only <code>()</code> and <code>[]</code> outrank it. So <code>--apt.y</code> means
+        <code>--(apt.y)</code>, and <code>*p.x</code> means <code>*(p.x)</code> &mdash; which is why
+        you must write <code>(*p).x</code>.</li>
+      <li><code>apt.x++</code> applies the dot first and then increments the member. Inside a <code>cout</code>
+        chain the operands go strictly left to right and the side effects carry forward to the next
+        line &mdash; the Class 3 rules, unchanged.</li>
+    </ul>
+    <p><strong>Coming up in Class 10:</strong> a class can hold functions as well as data &mdash;
+    class methods, <code>const</code> methods, accessors and mutators, the <code>private</code>
+    keyword that finally makes encapsulation real, the arrow operator <code>-&gt;</code> for pointers
+    to objects, and how to move a method's body out of the class with <code>::</code>.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 8 &middot; Pointers II</div><div class="pending">posts Thu Sep 24</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 10 &middot; Classes II</div><div class="pending">posts Thu Oct 1</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>

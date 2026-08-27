@@ -1,0 +1,2958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 7 — Pointers I | CSCI 211</title>
+<style>
+pre code.hljs{display:block;overflow-x:auto;padding:0}.hljs{color:#c9d1d9}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+@media print{
+pre code.hljs{display:block;overflow-x:auto;padding:0}pre .hljs{color:#24292e}pre .hljs-doctag,pre .hljs-keyword,pre .hljs-meta .hljs-keyword,pre .hljs-template-tag,pre .hljs-template-variable,pre .hljs-type,pre .hljs-variable.language_{color:#d73a49}pre .hljs-title,pre .hljs-title.class_,pre .hljs-title.class_.inherited__,pre .hljs-title.function_{color:#6f42c1}pre .hljs-attr,pre .hljs-attribute,pre .hljs-literal,pre .hljs-meta,pre .hljs-number,pre .hljs-operator,pre .hljs-selector-attr,pre .hljs-selector-class,pre .hljs-selector-id,pre .hljs-variable{color:#005cc5}pre .hljs-meta .hljs-string,pre .hljs-regexp,pre .hljs-string{color:#032f62}pre .hljs-built_in,pre .hljs-symbol{color:#e36209}pre .hljs-code,pre .hljs-comment,pre .hljs-formula{color:#6a737d}pre .hljs-name,pre .hljs-quote,pre .hljs-selector-pseudo,pre .hljs-selector-tag{color:#22863a}pre .hljs-subst{color:#24292e}pre .hljs-section{color:#005cc5;font-weight:700}pre .hljs-bullet{color:#735c0f}pre .hljs-emphasis{color:#24292e;font-style:italic}pre .hljs-strong{color:#24292e;font-weight:700}pre .hljs-addition{color:#22863a;background-color:#f0fff4}pre .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+}
+
+:root{
+  --ink:#0f172a; --body:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#ffffff;
+  --wash:#f8fafc;
+  --obj:#4f46e5;  --obj-bg:#eef2ff;
+  --def:#2563eb;  --def-bg:#eff6ff;
+  --ex:#059669;   --ex-bg:#ecfdf5;
+  --alg:#7c3aed;  --alg-bg:#f5f3ff;
+  --key:#b45309;  --key-bg:#fffbeb;
+  --warn:#dc2626; --warn-bg:#fef2f2;
+  --qc:#0891b2;   --qc-bg:#ecfeff;
+  --prac:#be185d; --prac-bg:#fdf2f8;
+  --sum:#475569;  --sum-bg:#f1f5f9;
+  --edit:#ea580c; --edit-bg:#fff7ed;
+  --code-bg:#0d1117; --code-bd:#000000;   /* read-only code listings: black */
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
+}
+.topbar .inner{max-width:900px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.topbar a:hover{text-decoration:underline}
+.topbar .course{font-weight:800;letter-spacing:.02em}
+.topbar .sep{color:var(--line)}
+.topbar .where{color:var(--muted);font-weight:500;font-size:13.5px}
+.topbar .spacer{flex:1}
+
+/* ---------- title block ---------- */
+.titleblock{padding:34px 0 6px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obj);margin-bottom:8px}
+.titleblock h1{margin:0 0 10px;font-size:31px;line-height:1.22;color:var(--ink);letter-spacing:-.01em}
+.titleblock .sub{margin:0 0 20px;color:var(--muted);font-size:16.5px}
+
+/* ---------- headings & prose ---------- */
+h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
+   padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
+h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:26px}
+li{margin:5px 0}
+hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+strong{color:var(--ink)}
+a{color:#1d4ed8}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- table of contents ---------- */
+.toc{background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:14px 20px 14px;margin:22px 0}
+.toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+.toc li{margin:3px 0;break-inside:avoid}
+.toc a{color:var(--body);text-decoration:none}
+.toc a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* ---------- show all / hide all ---------- */
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:20px 0 4px;
+  padding:11px 15px;background:var(--wash);border:1px solid var(--line);border-radius:9px}
+.tools .lab{font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tools button{font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid #cbd5e1;border-radius:6px;padding:4px 13px;cursor:pointer}
+.tools button:hover{background:#f1f5f9;border-color:#94a3b8}
+.tools .muted{font-size:13px;flex-basis:100%}
+
+/* ---------- boxes ---------- */
+.box{border:1px solid var(--line);border-left-width:5px;border-radius:8px;margin:22px 0;
+  overflow:hidden;background:#fff;break-inside:avoid}
+.box>.hd{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:8px 16px;border-bottom:1px solid var(--line)}
+.box>.hd .tag{font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.82;font-size:13px}
+.box>.bd{padding:14px 16px 4px}
+.box>.bd>:last-child{margin-bottom:14px}
+
+.box.obj {border-left-color:var(--obj)}  .box.obj>.hd {color:var(--obj); background:var(--obj-bg)}
+.box.def {border-left-color:var(--def)}  .box.def>.hd {color:var(--def); background:var(--def-bg)}
+.box.ex  {border-left-color:var(--ex)}   .box.ex>.hd  {color:var(--ex);  background:var(--ex-bg)}
+.box.alg {border-left-color:var(--alg)}  .box.alg>.hd {color:var(--alg); background:var(--alg-bg)}
+.box.key {border-left-color:var(--key)}  .box.key>.hd {color:var(--key); background:var(--key-bg)}
+.box.warn{border-left-color:var(--warn)} .box.warn>.hd{color:var(--warn);background:var(--warn-bg)}
+.box.qc  {border-left-color:var(--qc)}   .box.qc>.hd  {color:var(--qc);  background:var(--qc-bg)}
+.box.prac{border-left-color:var(--prac)} .box.prac>.hd{color:var(--prac);background:var(--prac-bg)}
+.box.sum {border-left-color:var(--sum)}  .box.sum>.hd {color:var(--sum); background:var(--sum-bg)}
+
+.box.obj>.bd ol{margin-bottom:14px}
+
+/* ---------- code ---------- */
+pre{margin:14px 0;padding:13px 15px;background:var(--code-bg);border:1px solid var(--code-bd);
+  border-radius:8px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.52;
+  color:#c9d1d9}
+pre code{font-family:inherit;font-size:inherit;background:none;border:0;padding:0;color:inherit}
+code{font-family:var(--mono);font-size:.895em;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:4px;padding:.5px 3px;color:#0f172a}
+h2 code,h3 code,h4 code,.hd code{font-size:.9em;background:rgba(255,255,255,.55)}
+.codewrap{margin:14px 0}
+.codewrap .cap{font-family:var(--mono);font-size:12px;color:#8b949e;background:#010409;
+  border:1px solid var(--code-bd);border-bottom:1px solid #21262d;border-radius:8px 8px 0 0;
+  padding:5px 13px}
+.codewrap .cap+pre{margin:0;border-radius:0 0 8px 8px}
+
+/* output + compiler-error blocks */
+pre.out{background:#111d33;color:#e2e8f0;border-color:#111d33;position:relative;padding-top:26px}
+pre.out::before{content:"OUTPUT";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#7dd3fc}
+pre.shell{background:#1e293b;color:#e2e8f0;border-color:#1e293b;position:relative;padding-top:26px}
+pre.shell::before{content:"TERMINAL";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#86efac}
+pre.err{background:#1f1416;color:#fecdd3;border-color:#7f1d1d;position:relative;padding-top:26px}
+pre.err::before{content:"COMPILER";position:absolute;top:5px;left:15px;font-size:10.5px;
+  letter-spacing:.13em;font-weight:700;color:#fda4af}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:700;color:var(--ink)}
+table.trace td:first-child,table.trace th:first-child{white-space:nowrap}
+table.trace code{background:none;border:none;padding:0}
+
+/* ---------- figures / inline SVG diagrams ---------- */
+figure.fig{margin:22px 0;padding:16px 14px 12px;background:var(--wash);
+  border:1px solid var(--line);border-radius:9px;break-inside:avoid}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:11px;font-size:13.5px;line-height:1.5;
+  color:var(--muted);text-align:center}
+figure.fig figcaption strong{color:var(--ink)}
+
+/* ---------- multi-part questions ---------- */
+.part{margin:14px 0;padding-left:13px;border-left:2px solid #cbd5e1}
+.part .q{margin:0 0 7px}
+.part .q .pl{font-weight:800;color:var(--ink);margin-right:5px}
+
+/* ---------- solution / reveal toggles ---------- */
+details.soln{margin:9px 0 13px;border:1px dashed #cbd5e1;border-radius:7px;background:var(--wash)}
+details.soln>summary{list-style:none;cursor:pointer;padding:7px 13px;font-size:13.5px;
+  font-weight:700;color:#334155;user-select:none;display:flex;align-items:center;gap:7px}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:"\25B6";font-size:10px;transition:transform .15s;display:inline-block}
+details.soln[open]>summary::before{transform:rotate(90deg)}
+details.soln>summary::after{content:"Show Answer"}
+details.soln[open]>summary::after{content:"Hide Answer"}
+details.soln>.ans{padding:2px 15px 4px;border-top:1px dashed #cbd5e1;background:#fff;
+  border-radius:0 0 6px 6px}
+details.soln>.ans>:first-child{margin-top:12px}
+
+details.soln.reveal{border-color:#6ee7b7;background:var(--ex-bg)}
+details.soln.reveal>summary{color:var(--ex)}
+details.soln.reveal>summary::after{content:"Show Output & Explanation"}
+details.soln.reveal[open]>summary::after{content:"Hide Output & Explanation"}
+details.soln.reveal.noout>summary::after{content:"Show Explanation"}
+details.soln.reveal.noout[open]>summary::after{content:"Hide Explanation"}
+details.soln.reveal>.ans{border-top-color:#6ee7b7}
+
+/* ---------- live-coding editor ---------- */
+.editor{margin:16px 0;border:2px solid var(--edit);border-radius:9px;overflow:hidden;
+  background:var(--edit-bg);break-inside:avoid}
+.editor .ehd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 13px;
+  background:var(--edit);color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase}
+.editor .ehd .etitle{flex:1;min-width:150px}
+.editor .ehd button{font:inherit;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--edit);background:#fff;border:1px solid #fff;
+  border-radius:5px;padding:3px 11px;cursor:pointer}
+.editor .ehd button:hover{background:#ffedd5}
+.editor textarea{display:block;width:100%;border:0;outline:0;resize:vertical;
+  min-height:120px;padding:12px 15px;background:#fffdfa;color:#0f172a;
+  font-family:var(--mono);font-size:13.5px;line-height:1.52;tab-size:4}
+.editor .efoot{padding:5px 13px 7px;font-size:12px;color:#9a3412;background:var(--edit-bg)}
+.editor .printbox{display:none}
+
+/* ---------- prev / next nav ---------- */
+.pagenav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:46px 0 10px}
+.pagenav a{display:block;border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  text-decoration:none;color:var(--ink);background:#fff}
+.pagenav a:hover{border-color:#94a3b8;background:var(--wash)}
+.pagenav .dir{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+.pagenav .t{font-weight:700;font-size:15px}
+.pagenav .next{text-align:right}
+.pagenav .ph{border:1px dashed var(--line);border-radius:9px;padding:12px 16px;background:var(--wash)}
+.pagenav .ph.next{text-align:right}
+.pagenav .pending{font-size:12px;color:#94a3b8;font-style:italic;margin-top:2px}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13.5px;text-align:center}
+
+/* ---------- index page ---------- */
+table.sched td,table.sched th{padding:7px 11px}
+table.sched .cn{width:64px;text-align:center;font-weight:800;color:var(--muted)}
+table.sched tr.examrow td{background:var(--warn-bg);color:var(--warn);font-weight:700}
+table.sched tr.revrow td{background:var(--key-bg)}
+table.sched .dt{width:96px;white-space:nowrap;color:var(--muted);font-size:13.5px}
+table.sched tr.offrow td{background:var(--wash);color:var(--muted);font-style:italic}
+table.sched tr.pendingrow td{color:#94a3b8}
+table.sched tr.pendingrow td.cn{color:#cbd5e1}
+table.sched .unrel{font-weight:600;color:#94a3b8}
+table.sched .pending{display:block;font-size:12px;color:#94a3b8;font-style:italic}
+table.sched a{font-weight:600;text-decoration:none}
+table.sched a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .toc ol{columns:1}
+  .pagenav{grid-template-columns:1fr}
+  .titleblock h1{font-size:25px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{margin:15mm 14mm}
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  .topbar,.tools,.pagenav{display:none !important}
+  a{color:inherit;text-decoration:none}
+  h2,h3{page-break-after:avoid}
+  .box,pre,table,.editor,details.soln{page-break-inside:avoid}
+  /* Screen shows code on black; paper does not. A solid black block wastes toner, and the
+     dark theme's light token colors would be unreadable on white -- hljs-theme-print.css
+     restores a dark-on-light palette for print only. */
+  pre{font-size:8.7pt;white-space:pre-wrap;word-wrap:break-word;background:#f8fafc !important;
+      color:#24292e !important;border-color:#cbd5e1 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .codewrap .cap{background:#f1f5f9 !important;color:#475569 !important;
+      border-color:#cbd5e1 !important}
+  pre.out,pre.shell{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
+  pre.out::before,pre.shell::before{color:#475569}
+  pre.err{background:#fef2f2 !important;color:#7f1d1d !important;border-color:#fca5a5 !important}
+  pre.err::before{color:#b91c1c}
+  .box,figure.fig{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  figure.fig{background:#fff !important;border-color:#cbd5e1 !important}
+  details.soln>summary{display:none}
+  details.soln{border:none;background:none;margin:0}
+  details.soln>.ans{border-top:none;padding:0}
+  details.soln:not([open]){display:none}
+  /* editors print as an empty ruled answer box */
+  .editor textarea{display:none}
+  .editor .ehd button{display:none}
+  .editor .ehd{background:#fff !important;color:#9a3412 !important;border-bottom:1px solid #fdba74}
+  .editor{border-color:#fdba74 !important}
+  .editor .printbox{display:block;min-height:34mm;background:#fff;
+    background-image:repeating-linear-gradient(#fff 0,#fff 7.6mm,#f1f5f9 7.6mm,#f1f5f9 7.7mm);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .editor .efoot{display:none}
+  footer{border-top:1px solid #cbd5e1}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="index.html" class="course">CSCI 211</a><span class="sep">|</span><a href="index.html">Course Index</a><span class="sep">|</span><span class="where">Class 7 &middot; Pointers I</span><span class="sep">|</span><span class="where">Tue Sep 22</span><span class="spacer"></span></div></div>
+<div class="wrap">
+<div class="titleblock">
+  <div class="eyebrow">Class 7 &middot; CSCI 211</div>
+  <h1>Pointers I &mdash; Addresses, Dereferencing and Arrays</h1>
+  <p class="sub">The most important class in the first half of the course: how to name a piece of memory instead of copying it, and every way that goes wrong.</p>
+</div>
+
+<div class="box obj">
+  <div class="hd">Learning Objectives</div>
+  <div class="bd">
+    <p>By the end of today's class you should be able to:</p>
+    <ol>
+      <li>Explain what a memory address is and why a variable that stores one is useful.</li>
+      <li>Declare pointer variables correctly, and explain why <code>int* p, q;</code> does not declare two pointers.</li>
+      <li>Use the address-of operator <code>&amp;</code> to make a pointer point at a variable.</li>
+      <li>Use the dereference operator <code>*</code> to read <em>and write</em> the variable a pointer points at, and say which of the two meanings of <code>*</code> you are looking at in any given line.</li>
+      <li>Recognize a null pointer and an uninitialized pointer, and say exactly what happens when each one is dereferenced.</li>
+      <li>Explain why an array name is already a pointer, and rewrite <code>a[i]</code> as <code>*(a + i)</code>.</li>
+      <li>Write functions that take pointer parameters, and say precisely how they differ from the reference parameters of Class 2.</li>
+      <li>Write a function that returns a pointer, and guard the call site against the null it might return.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="th">On this page</div>
+  <ol>
+    <li><a href="#s1">Why pointers exist at all</a></li>
+    <li><a href="#s2">Declaring a pointer, and the <code>&amp;</code> operator</a></li>
+    <li><a href="#s3">Dereferencing: the <code>*</code> that is an operator</a></li>
+    <li><a href="#s4">Null pointers, and pointers that point at garbage</a></li>
+    <li><a href="#s5">Copying an address vs. copying a value</a></li>
+    <li><a href="#s6">Pointers and arrays</a></li>
+    <li><a href="#s7">Pointers as function parameters</a></li>
+    <li><a href="#s8">Pointers as return values</a></li>
+    <li><a href="#prac">Practice Problems</a></li>
+    <li><a href="#summary">Lecture Summary</a></li>
+  </ol>
+</div>
+
+<div class="tools">
+  <span class="lab">Answers</span>
+  <button id="showAll" type="button">Show all</button>
+  <button id="hideAll" type="button">Hide all</button>
+  <span class="muted">&mdash; every worked-example output and every exercise solution starts hidden. Work it out first, then reveal.</span>
+</div>
+
+<hr>
+
+<h2 id="s1"><span class="num">1.</span>Why pointers exist at all</h2>
+
+<p>Before any syntax, here is the honest warning that opens this topic in the course notes, and it is
+worth reading twice:</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; from the course notes, verbatim</span></div>
+  <div class="bd">
+    <ol>
+      <li>Pointers are useful but also tricky things.</li>
+      <li>The misuse of pointers is the single largest source of bugs in C++ programs.</li>
+      <li>In fact, it was (at least) partly for this reason that <em>references</em> were introduced
+        into C++.</li>
+    </ol>
+    <p>The subject of pointers is vast, and we shall study only a few basic topics. That is not
+    modesty &mdash; it is a scoping decision. The few basic topics are the ones that appear on
+    <strong>every single exam in this course</strong>, usually twice.</p>
+  </div>
+</div>
+
+<p>So why bother, if they are that dangerous? Start with a picture of what memory actually is.</p>
+
+<p>Your computer's memory is one enormous row of numbered byte-sized boxes. Box number 0, box number
+1, box number 2, and so on, for billions of boxes. When you write <code>int i = 4;</code> the
+compiler picks some run of four consecutive boxes, writes the bit pattern for 4 into them, and
+records "from now on, the name <code>i</code> means those four boxes." The <em>number</em> of the
+first of those boxes is what we call the <strong>address</strong> of <code>i</code>.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; memory address</span></div>
+  <div class="bd">
+    <p>A <strong>memory address</strong> is the numeric position of a byte in the computer's memory.
+    Every variable in a running program occupies some run of bytes, and the address of the first of
+    those bytes is called the address of the variable.</p>
+    <p>How many bytes a variable occupies depends on its type. The operator <code>sizeof</code>
+    reports that number.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; how much memory does a variable take?</span></div>
+  <div class="bd">
+    <p>Three variables of three different types. Predict the three sizes before you open the toggle
+    &mdash; you have almost certainly seen these numbers before.</p>
+<div class="codewrap"><div class="cap">motivate.cpp</div><pre><code class="language-cpp">// motivate.cpp -- three variables, three addresses
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 4;
+    double d = 1.2345;
+    char c = 'Q';
+
+    cout &lt;&lt; "value of i = " &lt;&lt; i &lt;&lt; ",  size = " &lt;&lt; sizeof(i) &lt;&lt; " bytes" &lt;&lt; endl;
+    cout &lt;&lt; "value of d = " &lt;&lt; d &lt;&lt; ",  size = " &lt;&lt; sizeof(d) &lt;&lt; " bytes" &lt;&lt; endl;
+    cout &lt;&lt; "value of c = " &lt;&lt; c &lt;&lt; ",  size = " &lt;&lt; sizeof(c) &lt;&lt; " byte"  &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">value of i = 4,  size = 4 bytes
+value of d = 1.2345,  size = 8 bytes
+value of c = Q,  size = 1 byte</pre>
+<p>An <code>int</code> occupies four consecutive bytes, a <code>double</code> eight, a
+<code>char</code> one. Only the last of those three is guaranteed by the C++ standard
+(<code>sizeof(char)</code> is always exactly 1); the other two are what essentially every machine
+you will use does, and what we will assume for the rest of the semester. Say "on a typical
+platform" when you write it in an exam answer and you cannot be marked wrong.</p>
+<p>The point of the example is not the numbers. It is that a variable is a <em>location</em>, of a
+known size, at a known place. Locations can be numbered. Numbers can be stored in variables. That
+one observation is the whole idea of a pointer.</p>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now the motivation. You already know two situations where you needed to reach a variable that was
+not yours:</p>
+
+<ul>
+  <li><strong>Class 1 and Class 2.</strong> <code>swap1(int u, int v)</code> did nothing at all,
+    because it got <em>copies</em>. To change the caller's variables the function had to be handed
+    the variables themselves, which we did with reference parameters, <code>int &amp;u</code>.</li>
+  <li><strong>Arrays.</strong> You have been passing arrays to functions since CSCI 111 without ever
+    copying them, and without ever thinking about why that works. It works because an array argument
+    is secretly a pointer &mdash; we will see exactly that in &sect;6.</li>
+</ul>
+
+<p>And here are three things you cannot do at all with what you know so far:</p>
+
+<ol>
+  <li>Write a function that returns "the element that matched" &mdash; not a copy of it, but the
+    element itself, so the caller can change it.</li>
+  <li>Have one function say "there is no answer" in a way that the caller can test for. A
+    <code>double</code> has no spare value that means "nothing."</li>
+  <li>Create a variable while the program is running, sized by something the user typed, and destroy
+    it later. That is Class 8, and it is impossible without pointers.</li>
+</ol>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p>A pointer lets you <strong>refer to a piece of memory without owning it or copying it</strong>.
+    Every advanced thing C++ can do &mdash; dynamic arrays, linked structures, polymorphism, the
+    whole second half of this course &mdash; is built on that one capability.</p>
+  </div>
+</div>
+
+<h2 id="s2"><span class="num">2.</span>Declaring a pointer, and the <code>&amp;</code> operator</h2>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; pointer</span></div>
+  <div class="bd">
+    <p>A <strong>pointer</strong> is a variable which holds the memory address of another
+    variable.</p>
+    <p>For every data type &mdash; <code>char</code>, <code>int</code>, <code>double</code>, and so on
+    &mdash; C++ supports a matching pointer type: <em>pointer to char</em>, <em>pointer to int</em>,
+    <em>pointer to double</em>. A pointer is an ordinary variable in every respect. It has a type, it
+    lives somewhere in memory, it can be assigned to, and it can be passed to functions. What is
+    unusual is only what it <em>stores</em>: an address rather than a value.</p>
+  </div>
+</div>
+
+<p>Compare the two declaration syntaxes side by side. On the left, the plain declarations you
+already write; on the right, the pointer versions.</p>
+
+<pre><code class="language-cpp">// plain variables
+char   c;
+int    i;
+double d;
+double x, y;        // multiple variables on same line
+
+// pointers to those same types
+char   *c_ptr;      // pointer to char
+int    *i_ptr;      // pointer to int
+double *d_ptr;      // pointer to double
+double *px, *py;    // multiple pointers declared on same line</code></pre>
+
+<p>Read a pointer declaration <strong>right to left</strong>, starting at the name:
+<code>double *d_ptr</code> is "<code>d_ptr</code> is a pointer, and what it points to is a
+<code>double</code>." Never read it as "<code>double</code>-star, called <code>d_ptr</code>", however
+much the spacing tempts you to &mdash; and here is exactly why.</p>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; <code>int* p, q;</code> does not declare two pointers</span></div>
+  <div class="bd">
+    <p>The <code>*</code> binds to the <strong>declarator</strong>, that is to the individual name, not to the
+    type at the front of the line. So in</p>
+<pre><code class="language-cpp">int* p, q;</code></pre>
+    <p><code>p</code> is a pointer to <code>int</code> and <code>q</code> is a plain
+    <code>int</code>. The spacing lies to you. This is the reason the course notes lay down a house
+    style and state it explicitly:</p>
+    <blockquote><p>The <code>*</code> is associated with the pointer. Hence the notation is
+    <code>double *px, *py</code>, etc.</p></blockquote>
+    <p>Write the star next to the <em>name</em>, and the multi-declarator case reads correctly:</p>
+<pre><code class="language-cpp">int *p, *q;     // now BOTH are pointers to int</code></pre>
+    <p>What does the compiler say if you get it wrong? Here is a real program with <code>int* p, q;</code> in
+    it, where the next line tries to store an address into <code>q</code>:</p>
+<pre class="err">startrap.cpp: In function 'int main()':
+startrap.cpp:9:9: error: invalid conversion from 'int*' to 'int' [-fpermissive]
+    9 |     q = &amp;x;         // q is an int, not a pointer to int
+      |         ^~
+      |         |
+      |         int*</pre>
+    <p><em>"invalid conversion from <code>int*</code> to <code>int</code>"</em> is the compiler
+    telling you, in its own words, that <code>q</code> is not the pointer you thought it was. Learn
+    to recognize that sentence; it is one of the most common errors in this half of the course.</p>
+  </div>
+</div>
+
+<p>There is one more rule to state before we can put an address into a pointer, and it is the first
+rule the course notes give:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; a pointer's type must match what it points at</span></div>
+  <div class="bd">
+    <ol>
+      <li>A pointer can only hold the address of a variable of the same type.</li>
+      <li>A pointer to <code>int</code> can only hold the memory address of a variable of type
+        <code>int</code>.</li>
+      <li>Similarly, a pointer to <code>double</code> can only hold the memory address of a variable
+        of type <code>double</code>.</li>
+      <li>We cannot "mix and match" pointers to different data types.</li>
+    </ol>
+    <p>The reason is that the pointer's type is what tells the compiler <em>how many bytes to read</em>
+    and <em>how to interpret them</em> when you later follow the pointer. An address by itself is
+    just a number; without the type there is no way to know whether the bytes there are an
+    <code>int</code>, half of a <code>double</code>, or four <code>char</code>s.</p>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the address-of operator <code>&amp;</code></span></div>
+  <div class="bd">
+    <p>The <code>&amp;</code> symbol, written in front of a variable, is the <strong>address-of</strong>
+    operator. It returns the memory address of that variable.</p>
+    <p>So if <code>d</code> is a <code>double</code>, then <code>&amp;d</code> has type <em>pointer to
+    double</em>, and it is exactly the thing you may store in a <code>double *</code>.</p>
+  </div>
+</div>
+
+<pre><code class="language-cpp">char   c;
+int    i;
+double d;
+
+char   *c_ptr = &amp;c;     // points to address of c
+int    *i_ptr = &amp;i;     // points to address of i
+double *d_ptr = &amp;d;     // points to address of d
+double *px = &amp;d;        // multiple pointers can point to the same address
+double *py = &amp;d;        //   "        "</code></pre>
+
+<p>Notice the last two lines. <strong>Several pointers may hold the same address at the same
+time.</strong> There is nothing exclusive about a pointer; it is not ownership, it is just a
+signpost, and any number of signposts may point at the same building. That fact is the source of a
+great deal of both power and grief, and we come back to it hard in &sect;5.</p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; <code>&amp;</code> is now doing double duty</span></div>
+  <div class="bd">
+    <p>You met <code>&amp;</code> in Class 2 in a <em>declaration</em>: <code>void swap2(int &amp;u, int &amp;v)</code>
+    made <code>u</code> a reference. Today you are meeting it in an <em>expression</em>:
+    <code>&amp;i</code> takes an address. These are two different jobs for one character, decided
+    entirely by context, exactly as we are about to see for <code>*</code>:</p>
+    <table class="trace">
+      <tr><th>Where it appears</th><th>What <code>&amp;</code> means</th><th>Example</th></tr>
+      <tr><td>In a declaration, after a type</td><td>Declares a reference</td><td><code>int &amp;r = x;</code></td></tr>
+      <tr><td>In an expression, before a variable</td><td>Address-of operator</td><td><code>int *p = &amp;x;</code></td></tr>
+      <tr><td>Between two expressions</td><td>Bitwise AND (rare in this course)</td><td><code>x &amp; 1</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a pointer really does hold the address</span></div>
+  <div class="bd">
+    <p>This program prints an address. <strong>Addresses are machine-dependent:</strong> the exact
+    hexadecimal number differs between machines, between compilations, and even between two runs of
+    the same executable, because modern operating systems deliberately randomize where a program's
+    memory is placed. So do not try to predict the hexadecimal number. Predict instead the
+    <em>relationships</em> &mdash; which printed lines must agree with each other, and what the three
+    comparisons at the bottom evaluate to.</p>
+<div class="codewrap"><div class="cap">addrof.cpp</div><pre><code class="language-cpp">// addrof.cpp -- the address-of operator, and what a pointer holds
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 4;
+    double d = 1.2345;
+
+    int *i_ptr = &amp;i;        // declare and initialize
+    double *d_ptr = &amp;d;     // declare and initialize
+
+    cout &lt;&lt; "i     = " &lt;&lt; i     &lt;&lt; endl;
+    cout &lt;&lt; "&amp;i    = " &lt;&lt; &amp;i    &lt;&lt; endl;   // an address -- differs every run
+    cout &lt;&lt; "i_ptr = " &lt;&lt; i_ptr &lt;&lt; endl;   // the same address
+    cout &lt;&lt; "*i_ptr= " &lt;&lt; *i_ptr &lt;&lt; endl;  // back to the value
+
+    cout &lt;&lt; endl;
+    cout &lt;&lt; "(i_ptr == &amp;i) is " &lt;&lt; (i_ptr == &amp;i) &lt;&lt; endl;
+    cout &lt;&lt; "(*i_ptr == i) is " &lt;&lt; (*i_ptr == i) &lt;&lt; endl;
+    cout &lt;&lt; "(*d_ptr == d) is " &lt;&lt; (*d_ptr == d) &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<p>One real run. <strong>The two hexadecimal values below are representative only</strong> &mdash;
+your machine will print something different, and so will the next run on this machine:</p>
+<pre class="out">i     = 4
+&amp;i    = 0x7ffef77d592c
+i_ptr = 0x7ffef77d592c
+*i_ptr= 4
+
+(i_ptr == &amp;i) is 1
+(*i_ptr == i) is 1
+(*d_ptr == d) is 1</pre>
+<p>Everything you can actually check is in that output:</p>
+<ul>
+  <li><code>&amp;i</code> and <code>i_ptr</code> printed <strong>the same</strong> hexadecimal
+    number. They must, because <code>i_ptr</code> was initialized from <code>&amp;i</code> and
+    nothing changed it. That agreement is the point of the example; the digits are not.</li>
+  <li>The three comparisons all printed <code>1</code>. <code>cout</code> prints a <code>bool</code>
+    as <code>1</code> for true and <code>0</code> for false unless you ask otherwise &mdash; so
+    <code>1</code> here means "yes, those are equal."</li>
+  <li>Addresses print in hexadecimal with a leading <code>0x</code>. That formatting is
+    <code>cout</code>'s built-in behavior for pointer values; you do not have to do anything.</li>
+</ul>
+<p>Run the same executable twice in a row and you get two different addresses. On the machine these
+notes were built on, a second run printed <code>0x7ffe66fd27dc</code>. That is normal and expected.
+It is also why <strong>an exam question will never ask you for the numeric value of an
+address</strong> &mdash; and why, when you see a question like Practice Problem 4 that says "print
+the address of <code>var</code>", the graded answer is the <em>statement</em>, not the number.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.1</div>
+  <div class="bd">
+    <p>Assume <code>int i; double d; char c;</code> have been declared.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of these four lines compile? <code>int *p = &amp;i;</code> &nbsp; <code>int *q = &amp;d;</code> &nbsp; <code>double *r = &amp;d;</code> &nbsp; <code>char *s = &amp;i;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Line</th><th>Verdict</th><th>Why</th></tr>
+          <tr><td><code>int *p = &amp;i;</code></td><td>Compiles</td><td><code>&amp;i</code> is a pointer to <code>int</code>; <code>p</code> is a pointer to <code>int</code>. Types match.</td></tr>
+          <tr><td><code>int *q = &amp;d;</code></td><td><strong>Error</strong></td><td><code>&amp;d</code> is a pointer to <code>double</code>. You cannot mix and match.</td></tr>
+          <tr><td><code>double *r = &amp;d;</code></td><td>Compiles</td><td>Types match.</td></tr>
+          <tr><td><code>char *s = &amp;i;</code></td><td><strong>Error</strong></td><td><code>&amp;i</code> is a pointer to <code>int</code>, not to <code>char</code>.</td></tr>
+        </table>
+        <p>The two errors both read <em>"invalid conversion from ... to ..."</em>. Note that this is
+        <em>not</em> like ordinary arithmetic types, where C++ quietly converts an <code>int</code>
+        to a <code>double</code> for you. Pointer types do not convert silently, and that strictness
+        is protecting you.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> How many pointers does <code>double *px, py, *pz;</code> declare, and what is the type of each name?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Two pointers, not three.</strong></p>
+        <ul>
+          <li><code>px</code> &mdash; pointer to <code>double</code></li>
+          <li><code>py</code> &mdash; a plain <code>double</code>, because it has no star of its
+            own</li>
+          <li><code>pz</code> &mdash; pointer to <code>double</code></li>
+        </ul>
+        <p>This is why the course notes insist on attaching the star to the name. Written as
+        <code>double *px, py, *pz;</code> the mistake is at least <em>visible</em>; written as
+        <code>double* px, py, pz;</code> it is invisible and you will lose an hour to it.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Is <code>int *p = i;</code> legal, given <code>int i = 4;</code>? What about <code>int *p = &amp;i;</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>int *p = i;</code> is <strong>not</strong> legal. <code>i</code> is an
+        <code>int</code> with value 4; <code>p</code> wants an <em>address</em>. The compiler says
+        <em>"invalid conversion from <code>int</code> to <code>int*</code>"</em> &mdash; note it is
+        the same message as before with the two types in the opposite order, which is a useful clue
+        about which side of the assignment you got wrong.</p>
+        <p><code>int *p = &amp;i;</code> is legal and is the normal way to initialize a pointer.</p>
+        <p><strong>Things to notice.</strong> One historical wart: <code>int *p = 0;</code> <em>is</em>
+        legal even though 0 is an <code>int</code>, because the literal 0 is a special case meaning
+        "the null pointer". That special case is the whole reason <code>nullptr</code> was invented; see
+        &sect;4.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>Pointers to pointers</h3>
+
+<p>The course notes pause here to ask a question and answer it immediately:</p>
+
+<blockquote><p>Can we declare a pointer to a pointer? &mdash; <em>Oh yes!</em> And we can declare a
+pointer to a pointer to a pointer, without limit.</p></blockquote>
+
+<pre><code class="language-cpp">double **ppx;       // pointer to pointer to double
+double ***pppx;     // pointer to pointer to pointer to double</code></pre>
+
+<p>A pointer is a variable, a variable has an address, and an address can be stored in a pointer.
+There is nothing new here, only one more application of the same rule. Here is the shortest program
+that makes it concrete:</p>
+
+<div class="codewrap"><div class="cap">ptrptr.cpp</div><pre><code class="language-cpp">// ptrptr.cpp -- a pointer to a pointer
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    double d = 1.2345;
+    double *px = &amp;d;        // pointer to double
+    double **ppx = &amp;px;     // pointer to pointer to double
+
+    cout &lt;&lt; "d     = " &lt;&lt; d     &lt;&lt; endl;
+    cout &lt;&lt; "*px   = " &lt;&lt; *px   &lt;&lt; endl;
+    cout &lt;&lt; "**ppx = " &lt;&lt; **ppx &lt;&lt; endl;
+
+    **ppx = 9.9;            // two hops: reaches d itself
+    cout &lt;&lt; "d after **ppx = 9.9 : " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+
+<pre class="out">d     = 1.2345
+*px   = 1.2345
+**ppx = 1.2345
+d after **ppx = 9.9 : 9.9</pre>
+
+<p>Before we get lost in silliness (the notes' phrase, and a fair one), park this. Two stars will
+matter exactly once in this course &mdash; in Class 8, where <code>int **</code> is how you build a
+two-dimensional array at run time. Everything else today uses one star.</p>
+
+<h2 id="s3"><span class="num">3.</span>Dereferencing: the <code>*</code> that is an operator</h2>
+
+<p>You can now make a pointer hold an address. The other half of the deal is getting <em>back</em> to
+the variable it points at.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; dereferencing</span></div>
+  <div class="bd">
+    <p>The operation of reading the data contained at the memory address held by a pointer is called
+    <strong>dereferencing</strong> the pointer. The dereferencing operator is again the <code>*</code> symbol
+    &mdash; and yes, in <em>this</em> context it is an operator.</p>
+    <p>If <code>i_ptr</code> holds the address of <code>i</code>, then the expression
+    <code>*i_ptr</code> <em>is</em> the variable <code>i</code>. Not a copy of it. The variable
+    itself, under a different spelling.</p>
+  </div>
+</div>
+
+<p>That last sentence is the one to memorize, because it has a consequence students consistently
+miss: since <code>*i_ptr</code> <em>is</em> the variable, you can put it on the <strong>left</strong>
+of an assignment and write through it.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; writing through a pointer</span></div>
+  <div class="bd">
+    <p>Nothing in this program ever mentions <code>i</code> or <code>d</code> after the two
+    pointers are set up. Predict both printed lines.</p>
+<div class="codewrap"><div class="cap">deref.cpp</div><pre><code class="language-cpp">// deref.cpp -- writing through a pointer
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 4;
+    double d = 1.2345;
+
+    int *i_ptr = &amp;i;        // declare and initialize
+    double *d_ptr = &amp;d;     // declare and initialize
+
+    cout &lt;&lt; "before: i = " &lt;&lt; i &lt;&lt; ", d = " &lt;&lt; d &lt;&lt; endl;
+
+    *i_ptr = 3;             // dereference, value of i is now 3
+    *d_ptr = 7.2;           // dereference, value of d is now 7.2
+
+    cout &lt;&lt; "after:  i = " &lt;&lt; i &lt;&lt; ", d = " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">before: i = 4, d = 1.2345
+after:  i = 3, d = 7.2</pre>
+<p>The course notes spell the reasoning out in three steps, and they are worth copying into your
+own notes exactly as stated:</p>
+<ol>
+  <li>"Dereference" means the variable at the memory address pointed to by <code>i_ptr</code>.</li>
+  <li>The variable is <code>i</code>.</li>
+  <li>Therefore the value of <code>i</code> is set to 3.</li>
+</ol>
+<p>Read <code>*i_ptr = 3;</code> out loud as <em>"store 3 into whatever <code>i_ptr</code> points
+at."</em> Reading it as "set <code>i_ptr</code> to 3" is the mistake, and that mistake is exactly
+what the next section is about.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; <code>*</code> means two entirely different things</span></div>
+  <div class="bd">
+    <table class="trace">
+      <tr><th>Where the <code>*</code> appears</th><th>What it means</th><th>Example</th></tr>
+      <tr><td>On a <strong>declaration</strong> line, attached to a name</td><td>"this name is a pointer" &mdash; it is part of the <em>type</em>, not an action</td><td><code>int *p;</code></td></tr>
+      <tr><td>In an <strong>expression</strong>, in front of a pointer</td><td>the <strong>dereference operator</strong> &mdash; "the variable that is pointed at"</td><td><code>*p = 3;</code></td></tr>
+      <tr><td>Between two <strong>numbers</strong></td><td>ordinary multiplication</td><td><code>x * y</code></td></tr>
+    </table>
+    <p>The course notes put it plainly: <em>the <code>*</code> is used on the declaration line to tell the
+    compiler that <code>px</code> and <code>py</code> are pointers. However, in assignment
+    statements, we write "<code>px = ...</code>" etc.</em> The names of the pointers are really
+    <code>px</code> and <code>py</code> &mdash; not <code>*px</code> and <code>*py</code>.</p>
+    <p><strong>The test:</strong> is there a <em>type name</em> at the front of the line? If yes, the
+    star is declaring a pointer. If no, the star is dereferencing one.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.2</div>
+  <div class="bd">
+    <p>For each line below, say whether the <code>*</code> is declaring a pointer, dereferencing one, or
+    multiplying. Assume <code>double d = 2.0;</code> and <code>double *p = &amp;d;</code> already
+    exist.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>double *q = &amp;d;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Declaring.</strong> There is a type name (<code>double</code>) at the front of the
+        line, so this line introduces a new name <code>q</code> whose type is "pointer to
+        <code>double</code>". After it runs, <code>p</code> and <code>q</code> hold the same
+        address.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>*p = 5.0;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Dereferencing.</strong> No type name at the front. This stores 5.0 into
+        <code>d</code>. Afterwards <code>d</code> is 5.0 and <code>p</code> is completely
+        unchanged &mdash; it still holds the same address it always did.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>double area = *p * 3.0;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Both, in one line.</strong> The first <code>*</code> (immediately in front of <code>p</code>)
+        dereferences; the second (between two values) multiplies. The line means
+        <code>area = d * 3.0;</code>.</p>
+        <p>Note that the leading <code>double</code> declares <code>area</code>, not a pointer
+        &mdash; the star is not attached to <code>area</code>. If you find this line hard to read,
+        you are right, and the cure is parentheses: <code>double area = (*p) * 3.0;</code> compiles
+        to exactly the same thing and reads far better.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>p = 5.0;</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>None of the three &mdash; there is no <code>*</code> at all, and that is the bug. This tries to store
+        the number 5.0 into the <em>pointer</em>, i.e. to make <code>p</code> point at memory address
+        5. It does not compile: <em>"cannot convert <code>double</code> to <code>double*</code> in
+        assignment"</em>.</p>
+        <p><strong>Things to notice.</strong> Missing star and extra star are the two classic pointer
+        typos, and they usually announce themselves with an <em>"invalid conversion"</em> or
+        <em>"cannot convert"</em> message naming one type with a star and one without. When you see
+        that message, count the stars.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s4"><span class="num">4.</span>Null pointers, and pointers that point at garbage</h2>
+
+<p>A pointer holds an address. But what should it hold when there is no sensible address to hold
+&mdash; when a search found nothing, or when you have declared the pointer but do not yet know what
+it will point at? C++ reserves one special value for exactly that.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the null pointer</span></div>
+  <div class="bd">
+    <p>A <strong>null pointer</strong> is a pointer that deliberately points at nothing. It is a
+    valid, testable, well-defined state, and it is the standard way for a pointer to say "no
+    answer".</p>
+    <p>There are three spellings of it in C++, and you will meet all three:</p>
+    <table class="trace">
+      <tr><th>Spelling</th><th>Status</th><th>Notes</th></tr>
+      <tr><td><code>NULL</code></td><td>Inherited from C; used throughout the course notes</td><td>A macro. Expands to <code>0</code> (or something like it). Requires no header in practice because <code>&lt;iostream&gt;</code> pulls it in.</td></tr>
+      <tr><td><code>0</code></td><td>Legal, and used in the course notes</td><td>The literal zero is special-cased by the language to mean "null pointer" when the context wants a pointer.</td></tr>
+      <tr><td><code>nullptr</code></td><td>The modern C++ form (since C++11)</td><td>A keyword with its own type. This is the one to write in new code.</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; why <code>nullptr</code> is better than <code>NULL</code> or <code>0</code></span></div>
+  <div class="bd">
+    <p><code>NULL</code> and <code>0</code> are <em>integers</em> that the language agrees to treat as
+    pointers in certain contexts. <code>nullptr</code> is a genuine pointer value with its own type,
+    so it can never be mistaken for the number zero. The difference bites when overloading:</p>
+<pre><code class="language-cpp">void f(int n);
+void f(char *p);
+
+f(NULL);        // ambiguous or surprising: NULL is an integer, so this may call f(int)
+f(nullptr);     // unambiguous: only f(char *) can accept it</code></pre>
+    <p>It also reads better. <code>if (p == nullptr)</code> says "is this pointer null"; the older
+    <code>if (p == 0)</code> reads like an arithmetic test on a number.</p>
+    <p><strong>What to write in this course.</strong> The course notes use <code>NULL</code> and
+    <code>0</code> throughout, so you must be able to <em>read</em> both, and both are perfectly
+    acceptable in exam answers &mdash; the professor's own rubrics use <code>NULL</code>. These notes
+    use <code>nullptr</code> in new code because it is the correct modern form, and say so wherever
+    the original wrote <code>NULL</code>. All three compile to the same thing.
+    <span class="muted small">(<code>nullptr</code> is an addition to the course notes, not a
+    change to them.)</span></p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; testing a pointer before using it</span></div>
+  <div class="bd">
+    <p>The pattern in this program &mdash; check, then dereference &mdash; is the single most
+    important defensive habit with pointers. Predict all four lines.</p>
+<div class="codewrap"><div class="cap">nullptrdemo.cpp</div><pre><code class="language-cpp">// nullptrdemo.cpp -- a null pointer is a pointer that points at nothing
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    double d = 1.2345;
+    double *px = &amp;d;        // px points to the address of d
+    double *py = nullptr;   // py deliberately points at nothing
+
+    cout &lt;&lt; "px is null? " &lt;&lt; (px == nullptr) &lt;&lt; endl;
+    cout &lt;&lt; "py is null? " &lt;&lt; (py == nullptr) &lt;&lt; endl;
+
+    // The guard: check BEFORE you dereference.
+    if (py != nullptr)
+        cout &lt;&lt; "*py = " &lt;&lt; *py &lt;&lt; endl;
+    else
+        cout &lt;&lt; "py points at nothing -- not dereferencing it" &lt;&lt; endl;
+
+    py = px;                // now py is safe to use
+    if (py != nullptr)
+        cout &lt;&lt; "*py = " &lt;&lt; *py &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">px is null? 0
+py is null? 1
+py points at nothing -- not dereferencing it
+*py = 1.2345</pre>
+<p>Three things to take from this:</p>
+<ul>
+  <li>Testing a pointer against null is <strong>completely safe</strong>. Only
+    <em>dereferencing</em> a null pointer is dangerous. You may compare, assign, and print a null
+    pointer all day long.</li>
+  <li>The line <code>py = px;</code> is a <strong>pointer assignment</strong> &mdash; it copies an
+    address, so <code>py</code> stops being null and starts pointing where <code>px</code> points.
+    That is &sect;5's subject.</li>
+  <li>The guard costs one line and converts a crash into a message. Write it every time you use a
+    pointer whose origin you did not personally control &mdash; and every function that
+    <em>returns</em> a pointer produces exactly such a pointer (&sect;8).</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<h3>What happens if you dereference null anyway</h3>
+
+<p>The course notes give two deliberately symmetric error cases &mdash; reading through null, and
+writing through null:</p>
+
+<pre><code class="language-cpp">double d = 1.2345;
+double *px = &amp;d;        // px points to address of d
+double *py = NULL;      // py set to NULL
+
+*px = *py;              // ERROR *** dereference of NULL pointer *** (read through null)
+*py = *px;              // ERROR *** dereference of NULL pointer *** (write through null)</code></pre>
+
+<p>Of the first the notes say: <em>"this illustrates the danger of using pointers: they can be NULL.
+Attempting to dereference a NULL pointer causes a run-time fault."</em> Of the second: <em>"the error
+here is that we attempt to store the value of d at a NULL memory address."</em></p>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; this is undefined behavior, not a defined crash</span></div>
+  <div class="bd">
+    <p>Dereferencing a null pointer is <strong>undefined behavior</strong>. The C++ standard says
+    nothing whatsoever about what your program will do. In practice, on a normal desktop operating
+    system, it crashes &mdash; which is the <em>best</em> possible outcome, because it is loud. But
+    "it crashes" is an observation about one platform, not a guarantee.</p>
+    <p>Here is a real terminal session with the first of the two lines above, compiled and run on the
+    machine these notes were built on. <strong>This is one possible outcome, not "the" output:</strong></p>
+<pre class="shell">$ g++ nullcrash.cpp -o nullcrash
+$ ./nullcrash
+about to dereference py...
+Segmentation fault</pre>
+    <p>Note that the program got as far as printing its first line before dying. A crash tells you
+    <em>where execution stopped</em>, not where the bug is. And note also that the compiler said
+    <em>nothing</em> &mdash; not even with <code>-Wall</code> turned on. This is a run-time fault, and no amount of
+    compiling will find it for you. The guard <code>if (p != nullptr)</code> is your only
+    defense.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; an uninitialized pointer is worse than a null one</span></div>
+  <div class="bd">
+    <p>A null pointer at least points somewhere <em>known</em>. A pointer you never initialized
+    contains whatever bit pattern happened to be lying in those eight bytes &mdash; an address, of a
+    sort, pointing at some arbitrary place in memory.</p>
+<div class="codewrap"><div class="cap">uninit.cpp</div><pre><code class="language-cpp">// uninit.cpp -- UNDEFINED BEHAVIOR: an uninitialized pointer
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int *p;                 // never initialized: holds garbage
+    cout &lt;&lt; "about to dereference p..." &lt;&lt; endl;
+    cout &lt;&lt; *p &lt;&lt; endl;     // undefined behavior
+    return 0;
+}</code></pre></div>
+    <p>g++ does warn you, and this warning is the reliable part of the story &mdash; it is the same
+    every time:</p>
+<pre class="err">uninit.cpp: In function 'int main()':
+uninit.cpp:8:14: warning: 'p' is used uninitialized [-Wuninitialized]
+    8 |     cout &lt;&lt; *p &lt;&lt; endl;     // undefined behavior
+      |              ^
+uninit.cpp:6:10: note: 'p' was declared here
+    6 |     int *p;                 // never initialized: holds garbage
+      |          ^</pre>
+    <p>It is only a warning, so the program still builds and runs. What it then does is
+    <strong>undefined</strong>. Running the same executable three times in a row on the machine
+    these notes were built on printed <code>-1876000916</code>, then <code>1663836012</code>, then
+    <code>-1921683604</code> &mdash; different garbage each time, and no crash at all. On another
+    machine, or on another day, it may well segfault instead.</p>
+    <p><strong>That is the danger.</strong> A crash is a bug that announces itself. A program that
+    quietly reads garbage and keeps going is a bug that shows up three weeks later in someone else's
+    module. The rule is absolute:</p>
+    <p><strong>Initialize every pointer at the point of declaration</strong> &mdash; either to a real
+    address, or to <code>nullptr</code>. Never <code>int *p;</code> on its own. Write
+    <code>int *p = nullptr;</code> and pay the zero-cost insurance.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.3</div>
+  <div class="bd">
+    <p>Consider this fragment:</p>
+<pre><code class="language-cpp">int x = 5;
+int *p = nullptr;
+int *q = &amp;x;</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of <code>cout &lt;&lt; p;</code>, <code>cout &lt;&lt; *p;</code>, <code>cout &lt;&lt; q;</code>, <code>cout &lt;&lt; *q;</code> are safe to execute?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Statement</th><th>Safe?</th><th>Why</th></tr>
+          <tr><td><code>cout &lt;&lt; p;</code></td><td>Safe</td><td>Prints the pointer's own value. For a null pointer g++ prints <code>0</code>. Printing a pointer never follows it.</td></tr>
+          <tr><td><code>cout &lt;&lt; *p;</code></td><td><strong>Undefined behavior</strong></td><td>Dereferences null. On a typical system, a crash.</td></tr>
+          <tr><td><code>cout &lt;&lt; q;</code></td><td>Safe</td><td>Prints the address of <code>x</code>, in hexadecimal, different every run.</td></tr>
+          <tr><td><code>cout &lt;&lt; *q;</code></td><td>Safe</td><td>Prints <code>5</code>.</td></tr>
+        </table>
+        <p>The pattern: a bare pointer name is safe; a star in front of it is only safe when you know
+        the pointer is not null.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Write a single <code>if</code> statement that prints the value <code>p</code> points at when that is possible, and the message <code>no value</code> otherwise.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">if (p != nullptr)
+    cout &lt;&lt; *p &lt;&lt; endl;
+else
+    cout &lt;&lt; "no value" &lt;&lt; endl;</code></pre>
+        <p>You will also see it written <code>if (p)</code> &mdash; a pointer used where a
+        <code>bool</code> is wanted converts to <code>false</code> when null and <code>true</code>
+        otherwise. That is idiomatic and correct, but write the explicit comparison while you are
+        learning; it is clearer, and it costs nothing.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A student writes <code>int *r;</code> and then, twenty lines later, <code>if (r != nullptr) *r = 9;</code>. Explain why the guard does not save them.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because <code>r</code> was never set to <code>nullptr</code> in the first place. It holds
+        garbage, and garbage is almost certainly not zero &mdash; so the test
+        <code>r != nullptr</code> passes, and <code>*r = 9;</code> writes the number 9 into some
+        arbitrary location in memory.</p>
+        <p>That is strictly worse than a crash. The write may land in unmapped memory and segfault;
+        it may land in another variable and silently corrupt it; it may land somewhere harmless and
+        the program appears to work until the code around it changes.</p>
+        <p><strong>Things to notice.</strong> A null check only works if <em>every</em> path to that
+        line either set the pointer to a real address or set it to null. That is why the rule is
+        "initialize at declaration" and not "check before use" &mdash; the check is worthless without
+        the initialization.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s5"><span class="num">5.</span>Copying an address vs. copying a value</h2>
+
+<p>Here is the centerpiece of the whole lecture. Two statements that look almost identical do
+completely different things:</p>
+
+<table class="trace">
+  <tr><th>Statement</th><th>What is copied</th><th>Effect</th></tr>
+  <tr><td><code>p1 = p2;</code></td><td>an <strong>address</strong></td><td><code>p1</code> now points where <code>p2</code> points. The variables they point at are untouched.</td></tr>
+  <tr><td><code>*p1 = *p2;</code></td><td>a <strong>value</strong></td><td>The variable <code>p1</code> points at is overwritten with the value of the variable <code>p2</code> points at. Both pointers keep pointing where they were.</td></tr>
+</table>
+
+<p>The course notes make this the subject of their first full example program, and it repays reading
+slowly.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the course notes' Example program #1</span></div>
+  <div class="bd">
+    <p>Twelve lines of output in three groups of four. Write down all twelve before you open the
+    toggle. The middle group is where most people go wrong.</p>
+<div class="codewrap"><div class="cap">ptrassign.cpp</div><pre><code class="language-cpp">// ptrassign.cpp -- pointer assignment versus assignment through a dereference
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 4;
+    int j = 7;
+    int *p1 = &amp;i;               // p1 points to address of i
+    int *p2 = 0;                // initialized to zero (null)
+    p2 = &amp;j;                    // p2 points to address of j
+
+    cout &lt;&lt; "i = "   &lt;&lt; i   &lt;&lt; endl;
+    cout &lt;&lt; "j = "   &lt;&lt; j   &lt;&lt; endl;
+    cout &lt;&lt; "*p1 = " &lt;&lt; *p1 &lt;&lt; endl;
+    cout &lt;&lt; "*p2 = " &lt;&lt; *p2 &lt;&lt; endl;
+    cout &lt;&lt; endl;
+
+    p1 = p2;                    // *** BOTH p1 AND p2 NOW POINT TO j ***
+
+    cout &lt;&lt; "i = "   &lt;&lt; i   &lt;&lt; endl;
+    cout &lt;&lt; "j = "   &lt;&lt; j   &lt;&lt; endl;
+    cout &lt;&lt; "*p1 = " &lt;&lt; *p1 &lt;&lt; endl;
+    cout &lt;&lt; "*p2 = " &lt;&lt; *p2 &lt;&lt; endl;
+    cout &lt;&lt; endl;
+
+    p1 = &amp;i;                    // p1 points to address of i
+    p2 = &amp;j;                    // p2 points to address of j
+    j = 6;
+    *p1 = *p2;                  // value of *p2 copied into *p1
+                                // equivalent to the assignment i = j
+
+    cout &lt;&lt; "i = "   &lt;&lt; i   &lt;&lt; endl;
+    cout &lt;&lt; "j = "   &lt;&lt; j   &lt;&lt; endl;
+    cout &lt;&lt; "*p1 = " &lt;&lt; *p1 &lt;&lt; endl;
+    cout &lt;&lt; "*p2 = " &lt;&lt; *p2 &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">i = 4
+j = 7
+*p1 = 4
+*p2 = 7
+
+i = 4
+j = 7
+*p1 = 7
+*p2 = 7
+
+i = 6
+j = 6
+*p1 = 6
+*p2 = 6</pre>
+<p>Here is the state of the world after every statement that changes anything. Read the two pointer
+columns as "points at", not as a number &mdash; the actual addresses are machine-dependent and
+irrelevant:</p>
+<table class="trace">
+  <tr><th>After</th><th><code>i</code></th><th><code>j</code></th><th><code>p1</code> points at</th><th><code>p2</code> points at</th><th><code>*p1</code></th><th><code>*p2</code></th></tr>
+  <tr><td><code>int *p1 = &amp;i;</code></td><td>4</td><td>7</td><td><code>i</code></td><td>&mdash;</td><td>4</td><td>&mdash;</td></tr>
+  <tr><td><code>int *p2 = 0;</code></td><td>4</td><td>7</td><td><code>i</code></td><td><em>nothing (null)</em></td><td>4</td><td><em>illegal</em></td></tr>
+  <tr><td><code>p2 = &amp;j;</code></td><td>4</td><td>7</td><td><code>i</code></td><td><code>j</code></td><td>4</td><td>7</td></tr>
+  <tr><td colspan="7"><em>first group of output: <code>4 / 7 / 4 / 7</code></em></td></tr>
+  <tr><td><code>p1 = p2;</code></td><td>4</td><td>7</td><td><strong><code>j</code></strong></td><td><code>j</code></td><td><strong>7</strong></td><td>7</td></tr>
+  <tr><td colspan="7"><em>second group of output: <code>4 / 7 / 7 / 7</code></em></td></tr>
+  <tr><td><code>p1 = &amp;i; p2 = &amp;j;</code></td><td>4</td><td>7</td><td><code>i</code></td><td><code>j</code></td><td>4</td><td>7</td></tr>
+  <tr><td><code>j = 6;</code></td><td>4</td><td><strong>6</strong></td><td><code>i</code></td><td><code>j</code></td><td>4</td><td><strong>6</strong></td></tr>
+  <tr><td><code>*p1 = *p2;</code></td><td><strong>6</strong></td><td>6</td><td><code>i</code></td><td><code>j</code></td><td>6</td><td>6</td></tr>
+  <tr><td colspan="7"><em>third group of output: <code>6 / 6 / 6 / 6</code></em></td></tr>
+</table>
+<p>The two moments that matter:</p>
+<ul>
+  <li><strong><code>p1 = p2;</code> changed no variable at all.</strong> <code>i</code> is still 4
+    and <code>j</code> is still 7. All that changed is <em>where <code>p1</code> points</em>. The
+    printed <code>*p1</code> jumped from 4 to 7 not because anything was assigned to <code>i</code>,
+    but because <code>*p1</code> is now a different variable. Also note the casualty: nothing points
+    at <code>i</code> any more.</li>
+  <li><strong><code>*p1 = *p2;</code> changed no pointer at all.</strong> Both pointers still point
+    where they did. What changed is <code>i</code>, which was overwritten with <code>j</code>'s
+    value. The comment in the notes says it best: this line is <em>equivalent to the assignment
+    <code>i = j</code></em>.</li>
+</ul>
+<p>One more piece of vocabulary from the notes, because it will show up in exam wording: <em>the
+statements "<code>p1</code> points to the address of <code>i</code>" and "<code>p1</code> points to
+<code>i</code>" are formally different but have the same meaning. Both statements are widely used in
+programming.</em></p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.4</div>
+  <div class="bd">
+    <p>Given this setup:</p>
+<pre><code class="language-cpp">int a = 1, b = 2;
+int *p = &amp;a;
+int *q = &amp;b;</code></pre>
+    <p>Each part below starts again from that same setup.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> After <code>p = q;</code> what does <code>cout &lt;&lt; a &lt;&lt; b &lt;&lt; *p &lt;&lt; *q;</code> print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">1222</pre>
+        <p><code>p = q;</code> copies an address, so <code>p</code> now points at <code>b</code>.
+        Neither <code>a</code> nor <code>b</code> changed: they are still 1 and 2. Both
+        dereferences now read <code>b</code>, giving 2 and 2.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> After <code>*p = *q;</code> what does the same statement print?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">2222</pre>
+        <p><code>*p = *q;</code> copies a value: it means <code>a = b;</code>, so <code>a</code>
+        becomes 2. The pointers did not move, so <code>*p</code> is still <code>a</code> (now 2) and
+        <code>*q</code> is still <code>b</code> (2).</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> After <code>p = q; *p = 99;</code> what are <code>a</code> and <code>b</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>a</code> is <strong>1</strong> and <code>b</code> is <strong>99</strong>.</p>
+        <p>The first statement repointed <code>p</code> at <code>b</code>. The second therefore
+        writes 99 into <code>b</code>, not into <code>a</code>. This is the standard exam trap: once
+        a pointer has been reassigned, every later dereference of it lands somewhere new, and it is
+        very easy to keep reading it as if it still meant the original variable.</p>
+        <p><strong>Things to notice.</strong> When you trace pointer code on paper, draw an arrow and
+        <em>redraw it</em> at every plain assignment to a pointer name. The arrow, not the value, is
+        the thing that moves.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s6"><span class="num">6.</span>Pointers and arrays</h2>
+
+<p>Now the connection that explains a great deal of C++ you have been using without knowing why.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; array decay</span></div>
+  <div class="bd">
+    <p>In C++, an array is allocated as a block of memory, and <strong>the name of the array is
+    implemented as a pointer to the start of that block</strong>. In almost every expression you can
+    write, an array name automatically converts to a pointer to its first element. That automatic
+    conversion is called <strong>array decay</strong>.</p>
+    <p>So if <code>a</code> is <code>double a[3];</code>, then in an expression <code>a</code> means
+    <code>&amp;a[0]</code>, and its type is <code>double *</code>.</p>
+  </div>
+</div>
+
+<p>Two consequences follow immediately, and the course notes state both:</p>
+
+<ul>
+  <li>You initialize a pointer from an array by writing <code>p = a;</code>. <strong>Not</strong>
+    <code>p = &amp;a;</code>. The notes are explicit: <em>"the syntax is <code>p = a</code> and not
+    <code>p = &amp;a</code>. This is because <code>a</code> itself is an array."</em></li>
+  <li>Once <code>p</code> points at the start of the array, <code>p[i]</code> is the same variable as
+    <code>a[i]</code>, for every valid <code>i</code>. And since <code>p</code> holds the address of
+    <code>a[0]</code>, the dereference <code>*p</code> is the array element <code>a[0]</code>.</li>
+</ul>
+
+<pre><code class="language-cpp">int n = 3;
+double a[n];
+double *p = a;          // p points to the start of the array "a"</code></pre>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; writing <code>double *p = &amp;a;</code></span></div>
+  <div class="bd">
+    <p>It looks consistent with everything else you have learned today, and it does not compile.
+    Here is the real message:</p>
+<pre class="err">amp_array.cpp: In function 'int main()':
+amp_array.cpp:7:17: error: cannot convert 'double (*)[3]' to 'double*' in initialization
+    7 |     double *p = &amp;a;     // WRONG: &amp;a is not a pointer to double
+      |                 ^~
+      |                 |
+      |                 double (*)[3]</pre>
+    <p>That alarming type <code>double (*)[3]</code> is "pointer to an array of 3 doubles" &mdash; a
+    real and different type from "pointer to double". You will not need it in this course. Just
+    remember: <strong>an array name is already an address, so it needs no <code>&amp;</code>.</strong>
+    This distinction is graded on the professor's exams: <code>int *py = y;</code> for an array
+    versus <code>int *px = &amp;x;</code> for a scalar are two separate lettered parts of Fall 2023
+    Exam 1, Problem 2.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the course notes' Example program #2</span></div>
+  <div class="bd">
+    <p>Twelve numbers again. The second group is the interesting one: three different notations write
+    into the array, and then every element is printed twice, once through the array name and once
+    through the pointer.</p>
+<div class="codewrap"><div class="cap">arrayalias.cpp</div><pre><code class="language-cpp">// arrayalias.cpp -- a pointer into an array is an alias for the array
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n = 3;
+    double a[] = {1.1, 2.2, 3.3};   // "a" is an array of length 3
+    double *p = a;                  // p points to the START of array "a"
+
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; a[i] &lt;&lt; endl;       // printouts of a[i] and p[i] are the same
+        cout &lt;&lt; p[i] &lt;&lt; endl;
+    }
+    cout &lt;&lt; endl;
+
+    *p = 1.7;                       // *p same as p[0] same as a[0]
+    p[1] = 33.8;                    // p[1] same as a[1]
+    a[2] = 7.6;                     // a[2] same as p[2], therefore p[2] = 7.6
+
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; a[i] &lt;&lt; endl;
+        cout &lt;&lt; p[i] &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">1.1
+1.1
+2.2
+2.2
+3.3
+3.3
+
+1.7
+1.7
+33.8
+33.8
+7.6
+7.6</pre>
+<p>Every pair of lines agrees, before and after the writes. That is the entire content of the
+example: <strong>there is only one array.</strong> <code>a</code> and <code>p</code> are two names
+for the same block of memory, and it does not matter which name you use to write through.</p>
+<table class="trace">
+  <tr><th>Written as</th><th>Also written as</th><th>And as</th><th>Element affected</th></tr>
+  <tr><td><code>*p = 1.7;</code></td><td><code>p[0] = 1.7;</code></td><td><code>a[0] = 1.7;</code></td><td>first</td></tr>
+  <tr><td><code>p[1] = 33.8;</code></td><td><code>a[1] = 33.8;</code></td><td><code>*(p + 1) = 33.8;</code></td><td>second</td></tr>
+  <tr><td><code>a[2] = 7.6;</code></td><td><code>p[2] = 7.6;</code></td><td><code>*(a + 2) = 7.6;</code></td><td>third</td></tr>
+</table>
+<p>Note in passing that <code>a</code> is declared with an empty <code>[]</code> and an initializer
+list, so its length comes from the list &mdash; three elements. The separate variable <code>n</code>
+is just the loop bound; the array does <em>not</em> know its own length, and neither will
+<code>p</code>. That is a real limitation of raw arrays, and one of the reasons Classes 5 and 6 spent
+their time on <code>vector</code> instead.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Pointer arithmetic: <code>a[i]</code> is <code>*(a + i)</code></h3>
+
+<p>If an array name is a pointer, what does it mean to add 1 to it? The course notes lay out the
+rules, and they have one peculiarity worth stating up front.</p>
+
+<div class="box alg">
+  <div class="hd">Procedure<span class="tag">&mdash; the rules of pointer arithmetic</span></div>
+  <div class="bd">
+    <ol>
+      <li>You <strong>cannot</strong> add or multiply two pointers, and you cannot multiply a pointer
+        by a number. Those are compilation errors.</li>
+      <li>You <strong>can</strong> add an integer to a pointer. The result is a new address. Adding
+        1 advances by <em>one whole element</em>, not by one byte: if <code>ip</code> is an
+        <code>int *</code>, then <code>ip + 1</code> is 4 bytes further along on a typical platform,
+        and if <code>dp</code> is a <code>double *</code>, then <code>dp + 1</code> is 8 bytes
+        further along.</li>
+      <li>For an array <code>a</code>, the expression <code>a + n</code> is the address of
+        <code>a[n]</code>, and therefore <code>*(a + n)</code> means exactly the same thing as
+        <code>a[n]</code>. Subscripting <em>is</em> pointer arithmetic with a nicer face.</li>
+      <li>You <strong>can</strong> subtract two pointers of the same type pointing into the same
+        array. The result is an integer: the number of <em>elements</em> between them. If
+        <code>ip_m</code> is <code>&amp;a[m]</code> and <code>ip_n</code> is <code>&amp;a[n]</code>,
+        then <code>ip_n - ip_m</code> equals <code>n - m</code>.</li>
+      <li>You <strong>can</strong> compare two such pointers with <code>&lt;</code>,
+        <code>&gt;</code>, <code>==</code> and so on. <code>ip_n &gt; ip_m</code> is true exactly
+        when <code>n - m</code> is positive.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; four spellings of the same element</span></div>
+  <div class="bd">
+    <p>The first loop prints each element four different ways. Predict what the four columns look
+    like relative to each other, then check the pointer subtraction and the two moves at the end.</p>
+<div class="codewrap"><div class="cap">ptrarith.cpp</div><pre><code class="language-cpp">// ptrarith.cpp -- a[i] is *(a + i), and pointer arithmetic counts elements
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a[5] = {10, 20, 30, 40, 50};
+    int *p = a;                     // decay: p holds the address of a[0]
+
+    for (int i = 0; i &lt; 5; ++i)
+        cout &lt;&lt; "a[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; a[i]
+             &lt;&lt; "   *(a+" &lt;&lt; i &lt;&lt; ") = " &lt;&lt; *(a + i)
+             &lt;&lt; "   p[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; p[i]
+             &lt;&lt; "   *(p+" &lt;&lt; i &lt;&lt; ") = " &lt;&lt; *(p + i) &lt;&lt; endl;
+
+    cout &lt;&lt; endl;
+    int *ip_m = &amp;a[1];              // address of a[1]
+    int *ip_n = &amp;a[4];              // address of a[4]
+    cout &lt;&lt; "ip_n - ip_m = " &lt;&lt; ip_n - ip_m &lt;&lt; endl;   // 4 - 1 = 3 elements
+    cout &lt;&lt; "(ip_n &gt;  ip_m) is " &lt;&lt; (ip_n &gt;  ip_m) &lt;&lt; endl;
+    cout &lt;&lt; "(ip_n == ip_m) is " &lt;&lt; (ip_n == ip_m) &lt;&lt; endl;
+
+    cout &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(int)    = " &lt;&lt; sizeof(int)    &lt;&lt; endl;
+    cout &lt;&lt; "sizeof(double) = " &lt;&lt; sizeof(double) &lt;&lt; endl;
+
+    cout &lt;&lt; endl;
+    p = p + 2;                      // p now points at a[2]
+    cout &lt;&lt; "*p after p = p + 2 : " &lt;&lt; *p &lt;&lt; endl;
+    ++p;                            // p now points at a[3]
+    cout &lt;&lt; "*p after ++p        : " &lt;&lt; *p &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">a[0] = 10   *(a+0) = 10   p[0] = 10   *(p+0) = 10
+a[1] = 20   *(a+1) = 20   p[1] = 20   *(p+1) = 20
+a[2] = 30   *(a+2) = 30   p[2] = 30   *(p+2) = 30
+a[3] = 40   *(a+3) = 40   p[3] = 40   *(p+3) = 40
+a[4] = 50   *(a+4) = 50   p[4] = 50   *(p+4) = 50
+
+ip_n - ip_m = 3
+(ip_n &gt;  ip_m) is 1
+(ip_n == ip_m) is 0
+
+sizeof(int)    = 4
+sizeof(double) = 8
+
+*p after p = p + 2 : 30
+*p after ++p        : 40</pre>
+<p>The four columns are identical on every row, which is the whole point:
+<code>a[i]</code>, <code>*(a + i)</code>, <code>p[i]</code> and <code>*(p + i)</code> are four
+spellings of one variable. In fact the language <em>defines</em> subscripting that way &mdash;
+<code>a[i]</code> is shorthand for <code>*(a + i)</code>.</p>
+<p><code>ip_n - ip_m</code> printed <strong>3</strong>, not 12. The subtraction counts
+<em>elements</em>, not bytes; the byte distance would be <code>3 * sizeof(int)</code>, that is 12.
+This is the rule students most often get backwards, so say it to yourself in the useful direction:
+<em>pointer arithmetic is measured in elements.</em></p>
+<p>Finally, <code>p = p + 2;</code> and <code>++p;</code> <strong>move the pointer</strong>. Nothing
+in the array changed &mdash; <code>a[2]</code> is still 30 &mdash; but <code>*p</code> now names a
+different element each time. An array name cannot do this: <code>a</code> is not a variable you can
+assign to, so <code>a = a + 2;</code> is a compile error. That asymmetry is the one real difference
+between an array name and a pointer.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.5</div>
+  <div class="bd">
+    <p>Given <code>double v[4] = {1.5, 2.5, 3.5, 4.5};</code> and <code>double *p = v;</code>,
+    each part below starts again from that setup.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What is the value of <code>*(p + 3)</code>, and what is the value of <code>*p + 3</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>*(p + 3)</code> is <strong>4.5</strong> &mdash; move the pointer three elements
+        along, then dereference.</p>
+        <p><code>*p + 3</code> is <strong>4.5</strong> as well &mdash; but for a completely different
+        reason: dereference first (giving 1.5), then add 3 arithmetically. The values coinciding here
+        is a coincidence of the numbers chosen; with <code>{1.5, 2.5, 3.5, 9.0}</code> the first
+        would be 9.0 and the second still 4.5.</p>
+        <p>The lesson: <code>*</code> binds tighter than <code>+</code>, so <code>*p + 3</code> is <code>(*p) + 3</code>.
+        When you mean to move the pointer, the parentheses are mandatory.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Rewrite <code>v[2] = 8.0;</code> using pointer arithmetic and no square brackets anywhere.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">*(v + 2) = 8.0;     // or, equivalently
+*(p + 2) = 8.0;</code></pre>
+        <p>Both work, because <code>v</code> decays to the same address <code>p</code> holds. Note
+        that the dereference is on the left of the assignment &mdash; you are writing through it, and
+        that is legal precisely because <code>*(v + 2)</code> <em>is</em> the element, not a copy of
+        it.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> What does <code>&amp;v[3] - &amp;v[1]</code> evaluate to? What about <code>&amp;v[1] - &amp;v[3]</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><code>&amp;v[3] - &amp;v[1]</code> is <strong>2</strong>: two elements apart. Not 16,
+        even though a <code>double</code> is 8 bytes and the byte distance is 16.</p>
+        <p><code>&amp;v[1] - &amp;v[3]</code> is <strong>-2</strong>. Pointer subtraction yields a
+        signed integer, so the sign tells you which one comes first.</p>
+        <p><strong>Things to notice.</strong> The general identity is
+        <code>&amp;v[n] - &amp;v[m] == n - m</code>. That is exactly what the notes state, and it is
+        the reason <code>p - a</code> is the standard idiom for "which element is <code>p</code>
+        pointing at?" &mdash; we use it in Practice Problem 6.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="s7"><span class="num">7.</span>Pointers as function parameters</h2>
+
+<p>This is where pointers start earning their keep, and it is also where the professor's exams
+concentrate. Recall the problem from Class 1 and Class 2: a function that takes its parameters by
+value cannot change the caller's variables, because it only ever sees copies. Class 2's answer was
+the reference parameter. Today you get the other answer.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; three swaps, only two of which swap</span></div>
+  <div class="bd">
+    <p>The course notes give <code>swap_using_ptr</code> and <code>swap_using_ref</code> back to back
+    for exactly this comparison; <code>swap_broken</code> is the by-value version from Class 1,
+    included here so all three sit side by side. Read the <code>main</code> carefully &mdash; the
+    swaps are applied one after another to the <em>same</em> two variables, so each line depends on
+    the one above it. Predict all four lines.</p>
+<div class="codewrap"><div class="cap">swapptr.cpp</div><pre><code class="language-cpp">// swapptr.cpp -- swapping with pointers, and with references, side by side
+#include &lt;iostream&gt;
+using namespace std;
+
+void swap_using_ptr(double *u, double *v) {
+    double tmp = *u;    // save temporary value (dereference)
+    *u = *v;            // copy dereference
+    *v = tmp;           // finish the swap
+}
+
+void swap_using_ref(double &amp;a, double &amp;b) {
+    double tmp = a;
+    a = b;
+    b = tmp;
+}
+
+void swap_broken(double u, double v) {   // by value: swaps nothing
+    double tmp = u;
+    u = v;
+    v = tmp;
+}
+
+int main() {
+    double x = 1.5, y = 9.25;
+    cout &lt;&lt; "start:            x = " &lt;&lt; x &lt;&lt; ", y = " &lt;&lt; y &lt;&lt; endl;
+
+    swap_broken(x, y);
+    cout &lt;&lt; "after swap_broken:    x = " &lt;&lt; x &lt;&lt; ", y = " &lt;&lt; y &lt;&lt; endl;
+
+    swap_using_ptr(&amp;x, &amp;y);              // note the &amp; at the CALL site
+    cout &lt;&lt; "after swap_using_ptr: x = " &lt;&lt; x &lt;&lt; ", y = " &lt;&lt; y &lt;&lt; endl;
+
+    swap_using_ref(x, y);                // no decoration at the call site
+    cout &lt;&lt; "after swap_using_ref: x = " &lt;&lt; x &lt;&lt; ", y = " &lt;&lt; y &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">start:            x = 1.5, y = 9.25
+after swap_broken:    x = 1.5, y = 9.25
+after swap_using_ptr: x = 9.25, y = 1.5
+after swap_using_ref: x = 1.5, y = 9.25</pre>
+<p>Read the last line carefully. <code>swap_using_ref</code> did work &mdash; it swapped the values
+<em>back</em>, because <code>swap_using_ptr</code> had already swapped them once. Two working swaps
+in a row return you to where you started. If you predicted <code>9.25 1.5</code> on the last line,
+you got the functions right and the bookkeeping wrong.</p>
+<p>The mechanism of <code>swap_using_ptr</code>, in the notes' own words:</p>
+<ol>
+  <li>The dereferences of <code>u</code> and <code>v</code> inside the function operate on the
+    variables in the calling application.</li>
+  <li>Hence <code>*u = *v</code> is an assignment of the variables in the calling application.</li>
+  <li>Next <code>*v = tmp</code> is also an assignment of a variable in the calling
+    application.</li>
+</ol>
+<p>The parameters <code>u</code> and <code>v</code> <em>are</em> still copies &mdash; C++ always
+passes by value. But what is copied is an <em>address</em>, and both the caller's pointer and the
+function's copy of it point at the same variable. Copying a signpost still leaves you pointing at
+the same building.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; pointer parameter vs. reference parameter</span></div>
+  <div class="bd">
+    <p>Both let a function change the caller's variable. Know both directions of this table cold; the
+    professor's exams lean on the distinction, and the two syntaxes are easy to blur together.</p>
+    <table class="trace">
+      <tr><th></th><th>Pointer parameter</th><th>Reference parameter</th></tr>
+      <tr><td>Declaration</td><td><code>void f(double *u)</code></td><td><code>void f(double &amp;u)</code></td></tr>
+      <tr><td>Call site</td><td><code>f(&amp;x);</code> &mdash; you must write the <code>&amp;</code></td><td><code>f(x);</code> &mdash; looks exactly like by-value</td></tr>
+      <tr><td>Inside the function</td><td><code>*u</code> to reach the value; <code>u</code> alone is the address</td><td><code>u</code> is the value; there is no address to speak of</td></tr>
+      <tr><td>Can it be null / absent?</td><td><strong>Yes.</strong> A pointer parameter can be <code>nullptr</code>, so a function can offer an optional argument &mdash; and must guard against it.</td><td><strong>No.</strong> A reference must be bound to a real object at the call. There is no "null reference."</td></tr>
+      <tr><td>Can it be repointed?</td><td><strong>Yes.</strong> <code>u = &amp;something_else;</code> inside the function is legal (it changes only the local copy).</td><td><strong>No.</strong> Once bound, a reference names that object forever. <code>u = 5;</code> assigns to the object, it does not rebind.</td></tr>
+      <tr><td>Read-only version</td><td><code>const double *u</code></td><td><code>const double &amp;u</code></td></tr>
+      <tr><td>Receives an array?</td><td><strong>Yes</strong>, naturally &mdash; arrays decay to pointers.</td><td>Not the usual way; needs awkward syntax.</td></tr>
+    </table>
+    <p><strong>Which to use?</strong> In modern C++ the guidance is: use a reference when the
+    argument is always required, and a pointer when it might legitimately be absent, or when you are
+    passing an array. The course notes make the same connection more briefly: <em>"there are
+    analogies between pointers and references."</em></p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.6</div>
+  <div class="bd">
+    <p>A function is declared <code>void bump(int *n);</code> and its body is <code>*n = *n + 1;</code>.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write the call that increments a variable <code>int count = 0;</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">bump(&amp;count);</code></pre>
+        <p>The function wants an address, so you must supply one. Writing <code>bump(count);</code>
+        fails to compile with <em>"invalid conversion from <code>int</code> to <code>int*</code>"</em>
+        &mdash; which is a mercy, because it means this particular mistake cannot survive to run
+        time.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> A student writes the body as <code>n = n + 1;</code> instead. Does it compile, and what does it do?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It <strong>compiles</strong>, and it does nothing useful. <code>n</code> is the local copy
+        of the pointer; <code>n + 1</code> is pointer arithmetic, producing the address one
+        <code>int</code> further along. The local pointer is moved, the function returns, the local
+        pointer is destroyed, and the caller's <code>count</code> is untouched.</p>
+        <p>This is the single most dangerous pointer typo, precisely because the compiler accepts it.
+        A missing star turns "change the value" into "move the pointer".</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Rewrite <code>bump</code> to use a reference parameter instead. What changes at the call site?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">void bump(int &amp;n) {
+    n = n + 1;
+}
+// call site:
+bump(count);</code></pre>
+        <p>The star disappears from the body and the ampersand disappears from the call. That is
+        precisely the trade-off: the reference version is shorter and cannot be null, and the cost is
+        that <code>bump(count);</code> gives the reader no clue that <code>count</code> is about to
+        change. With the pointer version, <code>bump(&amp;count);</code> announces it.</p>
+        <p><strong>Things to notice.</strong> Notice also that the reference version is immune to
+        part (b)'s bug: with <code>int &amp;n</code>, the statement <code>n = n + 1;</code> is exactly
+        what you want. That is a real argument for references in ordinary code &mdash; which is what
+        the course notes meant by saying references were introduced into C++ partly because pointers
+        are error-prone.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>Arrays through pointer parameters, and <code>const</code></h3>
+
+<p>Because an array name decays to a pointer, a function that declares a pointer parameter can
+receive a whole array &mdash; and the caller writes no <code>&amp;</code> at all. Here are the course
+notes' two functions, with a driver added so we can actually run them.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; swapping two whole arrays</span></div>
+  <div class="bd">
+    <p>Six lines of output, in two groups of three. Note the parameter lists: <code>swap_array</code>
+    takes plain <code>double *</code>, <code>print</code> takes <code>const double *</code>.</p>
+<div class="codewrap"><div class="cap">swaparray.cpp</div><pre><code class="language-cpp">// swaparray.cpp -- pointer parameters that receive whole arrays
+#include &lt;iostream&gt;
+using namespace std;
+
+void swap_array(int n, double *u, double *v) {
+    for (int i = 0; i &lt; n; ++i) {
+        double tmp = u[i];      // save temporary value (array element)
+        u[i] = v[i];            // copy element
+        v[i] = tmp;             // assign element
+    }
+}
+
+void print(int n, const double *p1, const double *p2) {
+    for (int i = 0; i &lt; n; ++i) {
+        cout &lt;&lt; p1[i] &lt;&lt; " " &lt;&lt; p2[i] &lt;&lt; endl;
+    }
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    const int n = 3;
+    double a[n] = {1.1, 2.2, 3.3};
+    double b[n] = {7.7, 8.8, 9.9};
+
+    print(n, a, b);             // arrays decay to pointers -- no &amp; needed
+    swap_array(n, a, b);
+    print(n, a, b);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">1.1 7.7
+2.2 8.8
+3.3 9.9
+
+7.7 1.1
+8.8 2.2
+9.9 3.3</pre>
+<p>Points to take away, in the notes' order:</p>
+<ul>
+  <li><code>u</code> and <code>v</code> hold the memory addresses of arrays in the calling
+    application. Hence <code>u[i]</code> and <code>v[i]</code> <em>are</em> elements of the caller's
+    arrays &mdash; not copies. The three-line body is the same temp-swap you have written since
+    CSCI 111, and it lands on the originals.</li>
+  <li>The <strong>length has to be passed separately</strong>. A pointer knows nothing about how many
+    elements follow it. That is the <code>int n</code> first parameter, and forgetting it is a
+    classic bug &mdash; <code>sizeof</code> inside the function would give you the size of the
+    pointer (8 bytes), not the size of the array.</li>
+  <li><code>print</code>'s pointers are tagged <code>const</code> to indicate that
+    <code>print</code> will not change the values of the elements. This is exactly analogous to the
+    <code>const</code> reference parameters of Class 2: <em>the <code>const</code> keyword is a
+    promise to the compiler that the code will not make changes that would alter the values of
+    variables in the calling application.</em></li>
+  <li><code>swap_array</code>'s pointers <strong>cannot</strong> be tagged <code>const</code>,
+    because the whole job of the function is to change the array elements.</li>
+</ul>
+<p>Note also that the call <code>print(n, a, b);</code> passes non-<code>const</code> arrays to
+<code>const</code> parameters. That direction is always allowed &mdash; promising to do less than you
+are permitted is never a problem. The reverse would be.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; writing through a <code>const</code> pointer parameter</span></div>
+  <div class="bd">
+    <p>If <code>print</code>'s body were changed to assign into <code>p1[i]</code>, the promise
+    breaks and the compiler stops you:</p>
+<pre class="err">constbreak.cpp: In function 'void print(int, const double*, const double*)':
+constbreak.cpp:7:15: error: assignment of read-only location '*(p1 + ((sizetype)(((long unsigned int)i) * 8)))'
+    7 |         p1[i] = 0.0;            // the promise is broken here
+      |         ~~~~~~^~~~~</pre>
+    <p>The message is ugly because g++ has already expanded <code>p1[i]</code> into
+    <code>*(p1 + i * 8)</code> &mdash; which is a nice confirmation of &sect;6, if nothing else. The
+    words that matter are <em>"assignment of read-only location"</em>: the same family of error as
+    Class 1's <em>"assignment of read-only variable"</em>, and it always means you broke a
+    <code>const</code> promise.</p>
+    <p>There is a second, subtler <code>const</code> to know about. <code>const double *p</code>
+    means "the <code>double</code> is const" &mdash; you may move <code>p</code> but not write
+    through it. <code>double * const p</code> means "the <em>pointer</em> is const" &mdash; you may
+    write through it but not move it. The first is by far the more common and is the one used
+    throughout this course.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; swap the ends of an array</h3>
+
+<p>Write a function <code>swap_ends(int n, int *a)</code> that exchanges the first and last elements
+of an array, reusing a small <code>swap_ints</code> helper that takes two pointers. Add a
+<code>print_array</code> that takes a <code>const int *</code> so the compiler enforces that it only
+reads.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="29" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+// Swap the two ints that u and v point at.
+void swap_ints(int *u, int *v) {
+
+}
+
+// Swap a[0] with a[n-1]. Do nothing if the array is too short.
+void swap_ends(int n, int *a) {
+
+}
+
+// Print n elements. This one must not be able to modify them.
+void print_array(int n, const int *a) {
+
+}
+
+int main() {
+    const int n = 5;
+    int a[n] = {10, 20, 30, 40, 50};
+
+    print_array(n, a);
+    swap_ends(n, a);
+    print_array(n, a);
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+// Swap the two ints that u and v point at.
+void swap_ints(int *u, int *v) {
+
+}
+
+// Swap a[0] with a[n-1]. Do nothing if the array is too short.
+void swap_ends(int n, int *a) {
+
+}
+
+// Print n elements. This one must not be able to modify them.
+void print_array(int n, const int *a) {
+
+}
+
+int main() {
+    const int n = 5;
+    int a[n] = {10, 20, 30, 40, 50};
+
+    print_array(n, a);
+    swap_ends(n, a);
+    print_array(n, a);
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.7</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> <code>swap_ints</code> is the notes' <code>swap_using_ptr</code> with
+      <code>int</code> instead of <code>double</code>. <code>swap_ends</code> does not need to swap
+      anything itself &mdash; it just has to hand <code>swap_ints</code> the addresses of the two
+      elements, which is <code>&amp;a[0]</code> and <code>&amp;a[n-1]</code>. The guard for
+      <code>n &lt; 2</code> matters: with <code>n</code> equal to 1 the two addresses would be the
+      same element (harmless but pointless), and with <code>n</code> equal to 0 you would take the
+      address of <code>a[-1]</code>, which is undefined behavior.</p>
+<div class="codewrap"><div class="cap">swapends.cpp</div><pre><code class="language-cpp">// swapends.cpp -- in-class exercise: swap the ends of an array using pointers
+#include &lt;iostream&gt;
+using namespace std;
+
+void swap_ints(int *u, int *v) {
+    int tmp = *u;
+    *u = *v;
+    *v = tmp;
+}
+
+void swap_ends(int n, int *a) {
+    if (n &lt; 2) return;              // nothing to do
+    swap_ints(&amp;a[0], &amp;a[n - 1]);    // or: swap_ints(a, a + n - 1);
+}
+
+void print_array(int n, const int *a) {
+    for (int i = 0; i &lt; n; ++i)
+        cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    const int n = 5;
+    int a[n] = {10, 20, 30, 40, 50};
+
+    print_array(n, a);
+    swap_ends(n, a);
+    print_array(n, a);
+    return 0;
+}</code></pre></div>
+<pre class="out">10 20 30 40 50
+50 20 30 40 10</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>There is a trailing space on each output line, because the loop prints
+          <code>a[i]</code> followed by a space every time. Reproduce output exactly when you are
+          asked to; on this professor's output-prediction questions there is no partial credit.</li>
+        <li><code>swap_ints(&amp;a[0], &amp;a[n-1])</code> and
+          <code>swap_ints(a, a + n - 1)</code> are the same call written two ways.
+          <code>&amp;a[0]</code> <em>is</em> <code>a</code>, and <code>&amp;a[n-1]</code>
+          <em>is</em> <code>a + n - 1</code>. Use whichever you find more readable; the first is
+          usually clearer.</li>
+        <li><code>swap_ends</code> passes <code>a</code> straight through to
+          <code>swap_ints</code> as addresses of elements. There is no copying of the array anywhere
+          in this program &mdash; not at either call. That is the efficiency argument for pointer
+          parameters, and it is why C++ never copies an array when you pass it.</li>
+        <li>If you had written <code>void print_array(int n, int *a)</code> without the
+          <code>const</code>, everything would still work. Adding it is free, it documents your
+          intent, and it makes a whole category of bug into a compile error.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; return two answers through pointers</h3>
+
+<p>A function can only <code>return</code> one thing. Pointer parameters are the classic way around
+that: pass in the addresses of two variables and have the function fill them both in. Write
+<code>min_max</code> so that after the call, <code>lo</code> holds the smallest element and
+<code>hi</code> the largest.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="21" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+// Read the n elements of a; write the smallest through lo and the largest through hi.
+void min_max(int n, const double *a, double *lo, double *hi) {
+
+}
+
+int main() {
+    const int n = 6;
+    double a[n] = {4.5, -2.0, 9.75, 0.0, 3.25, 9.75};
+
+    double lo = 0.0, hi = 0.0;
+    min_max(n, a, &amp;lo, &amp;hi);            // &amp; at the call site: pass addresses
+
+    cout &lt;&lt; &quot;min = &quot; &lt;&lt; lo &lt;&lt; endl;
+    cout &lt;&lt; &quot;max = &quot; &lt;&lt; hi &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+// Read the n elements of a; write the smallest through lo and the largest through hi.
+void min_max(int n, const double *a, double *lo, double *hi) {
+
+}
+
+int main() {
+    const int n = 6;
+    double a[n] = {4.5, -2.0, 9.75, 0.0, 3.25, 9.75};
+
+    double lo = 0.0, hi = 0.0;
+    min_max(n, a, &amp;lo, &amp;hi);            // &amp; at the call site: pass addresses
+
+    cout &lt;&lt; "min = " &lt;&lt; lo &lt;&lt; endl;
+    cout &lt;&lt; "max = " &lt;&lt; hi &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.8</div>
+  <div class="bd">
+    <p>Complete <code>min_max</code> and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The algorithm is the ordinary one: seed both answers with the first
+      element, then walk the rest updating whichever needs updating. The only new thing is that the
+      two answers live in the <em>caller's</em> variables, so every read and write of them has to go
+      through a dereference: <code>*lo</code>, never <code>lo</code>. Seeding with
+      <code>a[0]</code> rather than with 0 matters &mdash; this array contains a negative number, and
+      seeding <code>*lo = 0</code> would return 0 as the minimum, which is not in the array at
+      all.</p>
+<div class="codewrap"><div class="cap">minmax.cpp</div><pre><code class="language-cpp">// minmax.cpp -- one function, two answers, via pointer output parameters
+#include &lt;iostream&gt;
+using namespace std;
+
+void min_max(int n, const double *a, double *lo, double *hi) {
+    *lo = a[0];
+    *hi = a[0];
+    for (int i = 1; i &lt; n; ++i) {
+        if (a[i] &lt; *lo) *lo = a[i];
+        if (a[i] &gt; *hi) *hi = a[i];
+    }
+}
+
+int main() {
+    const int n = 6;
+    double a[n] = {4.5, -2.0, 9.75, 0.0, 3.25, 9.75};
+
+    double lo = 0.0, hi = 0.0;
+    min_max(n, a, &amp;lo, &amp;hi);            // &amp; at the call site: pass addresses
+
+    cout &lt;&lt; "min = " &lt;&lt; lo &lt;&lt; endl;
+    cout &lt;&lt; "max = " &lt;&lt; hi &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">min = -2
+max = 9.75</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>-2.0</code> printed as <code>-2</code>. Default <code>cout</code> formatting drops
+          trailing zeros, exactly as in Class 1. Writing <code>-2.0</code> as your answer on an exam
+          is wrong.</li>
+        <li>The parameter list mixes both kinds of pointer deliberately:
+          <code>const double *a</code> is an <strong>input</strong> (read, never written) and
+          <code>double *lo</code> is an <strong>output</strong> (written). A reader can tell which is
+          which from the signature alone, without opening the body. That is what
+          <code>const</code> is for.</li>
+        <li>Inside the loop, <code>a[i] &lt; *lo</code> compares an element with the value currently
+          in the caller's <code>lo</code>. Forget the star and you get <em>invalid operands to binary</em> <code>&lt;</code> &mdash; comparing a <code>double</code> with a <code>double *</code>.</li>
+        <li>You could also write this with two reference parameters,
+          <code>double &amp;lo, double &amp;hi</code>, and drop every star. Both are correct. The
+          pointer version has the advantage that the call site,
+          <code>min_max(n, a, &amp;lo, &amp;hi)</code>, visibly announces that <code>lo</code> and
+          <code>hi</code> are about to be modified.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h2 id="s8"><span class="num">8.</span>Pointers as return values</h2>
+
+<p>The return value of a function can be a pointer. That is how you write a function that hands back
+<em>the element itself</em> rather than a copy of it &mdash; and, just as importantly, how a function
+says "there is no answer" by returning null.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the course notes' <code>get_element</code></span></div>
+  <div class="bd">
+    <p><code>get_element</code> returns the address of element <code>n</code> of a vector, or null if
+    <code>n</code> is out of range. The driver deliberately probes indices from <code>-1</code> up to
+    <code>len + 1</code>, so both branches get exercised. Eight lines of output &mdash; predict all
+    eight, including which are the word <code>null</code>.</p>
+<div class="codewrap"><div class="cap">getelement.cpp</div><pre><code class="language-cpp">// getelement.cpp -- a function whose return value is a pointer
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+double* get_element(vector&lt;double&gt; &amp;v, int n)   // return type = pointer
+{
+    if ((n &gt;= 0) &amp;&amp; (n &lt; static_cast&lt;int&gt;(v.size())))
+        return &amp;v[n];           // return value = pointer
+    else
+        return nullptr;         // return value = pointer (null)
+}
+
+int main() {
+    int len = 5;
+    vector&lt;double&gt; v;
+    for (int i = 0; i &lt; len; ++i)
+        v.push_back(i + 1.2);
+
+    for (int i = -1; i &lt; len + 2; ++i) {
+        double *p = get_element(v, i);
+        if (p == nullptr)
+            cout &lt;&lt; "null, i = " &lt;&lt; i &lt;&lt; endl;
+        else
+            cout &lt;&lt; *p &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">null, i = -1
+1.2
+2.2
+3.2
+4.2
+5.2
+null, i = 5
+null, i = 6</pre>
+<p>Walk the driver's loop: <code>i</code> runs from <code>-1</code> to <code>len + 1</code>, that is
+from <code>-1</code> to <code>6</code>, eight iterations in total.</p>
+<table class="trace">
+  <tr><th><code>i</code></th><th><code>n &gt;= 0</code>?</th><th><code>n &lt; 5</code>?</th><th>Returns</th><th>Printed</th></tr>
+  <tr><td>-1</td><td>no</td><td>&mdash;</td><td>null</td><td><code>null, i = -1</code></td></tr>
+  <tr><td>0</td><td>yes</td><td>yes</td><td><code>&amp;v[0]</code></td><td><code>1.2</code></td></tr>
+  <tr><td>1&hellip;4</td><td>yes</td><td>yes</td><td><code>&amp;v[i]</code></td><td><code>2.2</code> &hellip; <code>5.2</code></td></tr>
+  <tr><td>5</td><td>yes</td><td>no</td><td>null</td><td><code>null, i = 5</code></td></tr>
+  <tr><td>6</td><td>yes</td><td>no</td><td>null</td><td><code>null, i = 6</code></td></tr>
+</table>
+<p>Three things worth pulling out:</p>
+<ul>
+  <li>The vector holds <code>i + 1.2</code> for <code>i</code> from 0 to 4, that is
+    <code>1.2, 2.2, 3.2, 4.2, 5.2</code>. Each prints without trailing zeros, as usual.</li>
+  <li><strong>The null-check idiom at the call site is the point of the example.</strong> Every
+    function that can return null obliges its caller to write
+    <code>if (p == nullptr) ... else ...</code>. Skip that <code>if</code> and you have written a
+    crash that only happens on the unusual input &mdash; the worst kind.</li>
+  <li>The <code>&amp;</code> in <code>return &amp;v[n];</code> is address-of, taking the address of
+    the element inside the vector. The caller can then write through the returned pointer and modify
+    the vector, which is exactly why the parameter is <code>vector&lt;double&gt; &amp;v</code> and
+    not <code>const vector&lt;double&gt; &amp;v</code>.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; three corrections to this example as it appears in the course notes</span></div>
+  <div class="bd">
+    <p>The version above is corrected. The original slide has three problems, and each is worth
+    knowing on its own account:</p>
+    <ol>
+      <li><strong>The function name lost its underscore.</strong> The slide prints
+        <code>double* get element(...)</code> with a space in the middle, which is a syntax error;
+        the driver on the next slide calls <code>get_element</code>. The correct name is
+        <code>get_element</code>.</li>
+      <li><strong>The forward declaration is missing its semicolon.</strong> The driver slide has
+        <code>double* get_element(vector&lt;double&gt; &amp;v, int n)</code> immediately followed by
+        <code>int main() {</code>, with no <code>;</code>. Declarations need one; definitions do
+        not.</li>
+      <li><strong>The prose says <code>0 &lt; n</code> but the code says <code>n &gt;= 0</code>.</strong>
+        The code is right. If the test were <code>0 &lt; n</code>, element <code>v[0]</code> would be
+        unreachable, and the driver's output would start <code>null, i = -1</code> followed by
+        <code>null, i = 0</code>. Whenever prose and code disagree, run the code.</li>
+    </ol>
+    <p>There is also a real compiler warning hiding in the original, which is worth meeting because
+    it will happen to you:</p>
+<pre class="err">getelement_warn.cpp: In function 'double* get_element(std::vector&lt;double&gt;&amp;, int)':
+getelement_warn.cpp:7:24: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector&lt;double&gt;::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+    7 |     if ((n &gt;= 0) &amp;&amp; (n &lt; v.size()))
+      |                      ~~^~~~~~~~~~</pre>
+    <p><code>v.size()</code> is an <em>unsigned</em> type. Comparing it with a signed
+    <code>int</code> makes the compiler nervous, and rightly so: if <code>n</code> were negative and
+    the <code>n &gt;= 0</code> test were not there first, <code>n</code> would be converted to a
+    huge positive value and the test would pass. The code above is <em>correct</em> because the
+    <code>n &gt;= 0</code> check runs first, but silence the warning anyway by writing
+    <code>static_cast&lt;int&gt;(v.size())</code>, as the corrected version does.</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; never return a pointer to a local variable</span></div>
+  <div class="bd">
+    <p>Returning a pointer is safe when the thing pointed at outlives the function. In
+    <code>get_element</code> it does: <code>v</code> belongs to the caller. This does not:</p>
+<pre><code class="language-cpp">int* broken() {
+    int local = 42;
+    return &amp;local;      // local dies when the function returns
+}</code></pre>
+    <p>The variable <code>local</code> is destroyed the instant <code>broken</code> returns, and the
+    caller is left holding the address of memory that no longer belongs to anything. Following it is
+    undefined behavior. g++ warns: <em>"address of local variable 'local' returned"</em>.</p>
+    <p>So a function may safely return a pointer to: something the caller passed in, something with
+    a lifetime longer than the call &mdash; or, from Class 8, memory the function allocated with
+    <code>new</code>, which deliberately outlives the function that created it. That last one is the
+    reason the next class exists.</p>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; a function that returns a pointer</h3>
+
+<p>Write <code>find_value</code>, which searches an array for a target and returns a pointer to the
+first element that matches, or <code>nullptr</code> if none does. Then use the returned pointer to
+report <em>which</em> element matched, and to change it.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+// Return the address of the first element equal to target, or nullptr.
+int* find_value(int n, int *a, int target) {
+
+}
+
+int main() {
+    const int n = 5;
+    int a[n] = {12, 7, 40, 7, 3};
+
+    int *p = find_value(n, a, 40);
+    // if p is not null: print *p, print which element it is, then set it to 999
+
+    // now search for a value that is not there, and report that
+
+    for (int i = 0; i &lt; n; ++i)
+        cout &lt;&lt; a[i] &lt;&lt; &quot; &quot;;
+    cout &lt;&lt; endl;
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+// Return the address of the first element equal to target, or nullptr.
+int* find_value(int n, int *a, int target) {
+
+}
+
+int main() {
+    const int n = 5;
+    int a[n] = {12, 7, 40, 7, 3};
+
+    int *p = find_value(n, a, 40);
+    // if p is not null: print *p, print which element it is, then set it to 999
+
+    // now search for a value that is not there, and report that
+
+    for (int i = 0; i &lt; n; ++i)
+        cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.9</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output. (Hint for the "which element" part:
+    &sect;6 gives you a one-expression answer.)</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The search is an ordinary linear scan; the only new thing is that
+      when it succeeds it returns <code>&amp;a[i]</code> rather than <code>a[i]</code>, and when it
+      fails it returns <code>nullptr</code> rather than some sentinel value like <code>-1</code>.
+      For "which element", use pointer subtraction: <code>p - a</code> is the number of elements
+      between the start of the array and where <code>p</code> points, which is precisely the
+      index.</p>
+<div class="codewrap"><div class="cap">findvalue.cpp</div><pre><code class="language-cpp">// findvalue.cpp -- return a pointer to the element found, or null
+#include &lt;iostream&gt;
+using namespace std;
+
+int* find_value(int n, int *a, int target) {
+    for (int i = 0; i &lt; n; ++i) {
+        if (a[i] == target)
+            return &amp;a[i];       // address of the element that matched
+    }
+    return nullptr;             // not found
+}
+
+int main() {
+    const int n = 5;
+    int a[n] = {12, 7, 40, 7, 3};
+
+    int *p = find_value(n, a, 40);
+    if (p == nullptr)
+        cout &lt;&lt; "40 not found" &lt;&lt; endl;
+    else {
+        cout &lt;&lt; "found 40, value through pointer = " &lt;&lt; *p &lt;&lt; endl;
+        cout &lt;&lt; "it is element number " &lt;&lt; (p - a) &lt;&lt; endl;
+        *p = 999;                       // write through the returned pointer
+    }
+
+    p = find_value(n, a, 55);
+    if (p == nullptr)
+        cout &lt;&lt; "55 not found" &lt;&lt; endl;
+    else
+        cout &lt;&lt; "found 55" &lt;&lt; endl;
+
+    for (int i = 0; i &lt; n; ++i)
+        cout &lt;&lt; a[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">found 40, value through pointer = 40
+it is element number 2
+55 not found
+12 7 999 7 3</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li><code>*p = 999;</code> in <code>main</code> changed <code>a[2]</code>, which is visible
+          in the last line. That is the payoff of returning a pointer instead of a value: the caller
+          gets write access to the element that was found. A function returning plain
+          <code>int</code> could only have given back a copy.</li>
+        <li><code>p - a</code> is <code>2</code> &mdash; pointer subtraction, counting elements.
+          Note that <code>a</code> decays to a pointer for this subtraction to be legal.</li>
+        <li>The array holds <code>7</code> twice; the function returns the <strong>first</strong>
+          match because it returns the moment it finds one. Say so in a comment if a problem
+          statement is ambiguous about it.</li>
+        <li>Returning <code>nullptr</code> rather than an index like <code>-1</code> is a design
+          choice with a real advantage: there is no value of <code>int*</code> other than null that
+          could be confused with a legitimate answer, whereas a "not found" code of <code>-1</code>
+          has to be documented and remembered.</li>
+        <li>The parameter is <code>int *a</code>, not <code>const int *a</code>, precisely because
+          the returned pointer is going to be written through. Marking it <code>const</code> would
+          force the return type to be <code>const int *</code> and the caller's <code>*p = 999;</code>
+          would not compile.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 7.10</div>
+  <div class="bd">
+    <p>Three short judgment questions about returning pointers.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Why can a function that returns <code>double</code> never report "no answer" as cleanly as one returning <code>double *</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Because every <code>double</code> is a legitimate answer. Whatever sentinel you pick
+        &mdash; <code>-1</code>, <code>0</code>, <code>-999.0</code> &mdash; is a value the data might
+        genuinely contain, and then the caller cannot tell "the answer is <code>-1</code>" from "there
+        is no answer."</p>
+        <p><code>double *</code> has one value, <code>nullptr</code>, that can never be the address of
+        a real element. So "no answer" is representable without stealing a legal answer to say
+        it.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Is <code>return &amp;v[n];</code> inside <code>get_element</code> an address-of or a dereference?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Address-of.</strong> <code>v[n]</code> is the element (a <code>double</code>), and
+        the <code>&amp;</code> in front of it produces its address, which is a <code>double *</code>
+        &mdash; matching the declared return type.</p>
+        <p>Contrast <code>return v[n];</code>, which would return a <em>copy</em> of the element and
+        would not compile against a <code>double *</code> return type: <em>"cannot convert
+        <code>double</code> to <code>double*</code> in return"</em>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> What goes wrong if the caller of <code>get_element</code> writes <code>cout &lt;&lt; *get_element(v, 99) &lt;&lt; endl;</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Index 99 is out of range, so <code>get_element</code> returns <code>nullptr</code>, and the
+        star in front of the call dereferences it. That is undefined behavior; on a typical desktop
+        system it is a segmentation fault.</p>
+        <p>The call compiles perfectly &mdash; the types are all correct &mdash; and it may even work
+        fine for months if nobody ever passes an out-of-range index. This is exactly the class of bug
+        that makes the null check non-negotiable:</p>
+<pre><code class="language-cpp">double *p = get_element(v, 99);
+if (p != nullptr)
+    cout &lt;&lt; *p &lt;&lt; endl;
+else
+    cout &lt;&lt; "no such element" &lt;&lt; endl;</code></pre>
+        <p><strong>Things to notice.</strong> The general rule for this whole class: <em>a pointer
+        that came from somewhere else is guilty until proven innocent.</em> Every pointer you did not
+        personally initialize on the line above needs a null check before its first
+        dereference.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h2 id="prac"><span class="num">&#9733;</span>Practice Problems</h2>
+
+<div class="box prac">
+  <div class="hd">Practice Problems<span class="tag">&mdash; Class 7</span></div>
+  <div class="bd">
+    <p>Problems 1 and 2 are the two example programs the course notes work through for this lecture,
+    posed here as prediction problems instead of being handed to you annotated. Problem 3 is the
+    notes' <code>get_element</code> example, asked as a write-the-function problem. Problems 4 and 5
+    are taken from the professor's own exams &mdash; Problem 4 is the pointer skeleton from the Fall
+    2023 Final almost word for word, and Problem 5 adapts the statement-writing question from the
+    Fall 2023 Exam 1 to the parts that do not need <code>new</code>. Problem 6 is added, in the
+    output-prediction format that occupies the same slot on every midterm.</p>
+    <p>Work each one on paper before opening the answer. Output-prediction questions on this
+    professor's exams carry <strong>no partial credit</strong>, and write-the-code questions pay
+    points for the signature line alone &mdash; so write the signature even when you are unsure of
+    the body.</p>
+  </div>
+</div>
+
+<h3>Problem 1 &mdash; Pointer assignment vs. dereference assignment <span class="muted small">(from the course notes)</span></h3>
+
+<p>State the exact output of the program in &sect;5 (<code>ptrassign.cpp</code>), all twelve lines,
+and explain in one sentence each why <code>p1 = p2;</code> and <code>*p1 = *p2;</code> have such
+different effects.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Trace with a two-column picture: values on one side, arrows on the other.
+  At every statement ask one question &mdash; <em>is a type name present?</em> No: then it is an
+  assignment, and the presence or absence of a star tells you whether an arrow moves or a value
+  changes.</p>
+<pre class="out">i = 4
+j = 7
+*p1 = 4
+*p2 = 7
+
+i = 4
+j = 7
+*p1 = 7
+*p2 = 7
+
+i = 6
+j = 6
+*p1 = 6
+*p2 = 6</pre>
+  <p><strong>Why they differ.</strong></p>
+  <ul>
+    <li><code>p1 = p2;</code> copies an <strong>address</strong>. It moves an arrow. No
+      <code>int</code> anywhere in the program is written to, which is why <code>i</code> is still 4
+      and <code>j</code> is still 7 in the second group &mdash; only <code>*p1</code> changed, and
+      only because <code>*p1</code> now names a different variable.</li>
+    <li><code>*p1 = *p2;</code> copies a <strong>value</strong>. It leaves both arrows where they
+      are and writes into the variable at the far end of one of them; with <code>p1</code> pointing
+      at <code>i</code> and <code>p2</code> at <code>j</code>, it is exactly
+      <code>i = j;</code>.</li>
+  </ul>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The middle group is the one people miss. Watch the trap: after <code>p1 = p2;</code>
+      <em>nothing points at <code>i</code> any more</em>. If <code>i</code> had been the only way to
+      reach some piece of data, it would now be unreachable &mdash; and in Class 8, when the data is
+      dynamically allocated, that exact situation has a name: a memory leak.</li>
+    <li><code>int *p2 = 0;</code> in the original is the notes' way of writing
+      <code>nullptr</code>. It is immediately overwritten by <code>p2 = &amp;j;</code>, so it is
+      never dereferenced while null &mdash; but it models the habit worth copying: give a pointer a
+      known value at declaration even when you are about to change it.</li>
+    <li>If an exam asks for this output, write all twelve lines including the blank lines. The
+      <code>cout &lt;&lt; endl;</code> between groups is part of the answer.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 2 &mdash; One array, two names <span class="muted small">(from the course notes)</span></h3>
+
+<p>State the exact output of the program in &sect;6 (<code>arrayalias.cpp</code>). Then answer: if
+the line <code>double *p = a;</code> were changed to <code>double *p = &amp;a[1];</code>, and nothing
+else were changed, what would the second group of six lines be?</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> For the first part, remember there is only one array: every pair of lines
+  must agree. For the second part, redraw the picture &mdash; <code>p</code> now points at the
+  <em>second</em> element, so <code>p[i]</code> is <code>a[i+1]</code>, and the three writes land in
+  different places.</p>
+  <p>The original program's output:</p>
+<pre class="out">1.1
+1.1
+2.2
+2.2
+3.3
+3.3
+
+1.7
+1.7
+33.8
+33.8
+7.6
+7.6</pre>
+  <p><strong>The modified version.</strong> With <code>double *p = &amp;a[1];</code>, the three
+  writes become:</p>
+  <table class="trace">
+    <tr><th>Statement</th><th>Means</th><th>Array after</th></tr>
+    <tr><td><code>*p = 1.7;</code></td><td><code>a[1] = 1.7;</code></td><td><code>{1.1, 1.7, 3.3}</code></td></tr>
+    <tr><td><code>p[1] = 33.8;</code></td><td><code>a[2] = 33.8;</code></td><td><code>{1.1, 1.7, 33.8}</code></td></tr>
+    <tr><td><code>a[2] = 7.6;</code></td><td><code>a[2] = 7.6;</code></td><td><code>{1.1, 1.7, 7.6}</code></td></tr>
+  </table>
+  <p>The second loop then prints <code>a[i]</code> and <code>p[i]</code> for <code>i</code> equal to
+  0, 1, 2, where <code>p[i]</code> is <code>a[i+1]</code>:</p>
+<pre class="out">1.1
+1.7
+1.7
+7.6
+7.6
+1.29868e-311</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>That last number is garbage, and it will be different on your machine and on every run.
+      <code>p[2]</code> is <code>a[3]</code>, which is <strong>one past the end of a three-element
+      array</strong>. Reading it is undefined behavior. The value shown is one run's outcome on the
+      machine these notes were built on, not a prediction &mdash; the honest answer to "what does
+      this print" is <em>"undefined; it reads past the end of the array."</em></li>
+    <li>C++ does <strong>no bounds checking</strong> on arrays or on pointers. <code>a[3]</code>
+      compiles, runs, and quietly reads whatever bytes happen to sit there. This is why raw arrays
+      are dangerous and why <code>vector</code> exists.</li>
+    <li>The first modified line prints <code>1.1</code> and <code>1.7</code> &mdash; they no longer
+      agree, because <code>p</code> and <code>a</code> no longer start at the same place. Whenever
+      you see <code>a[i]</code> and <code>p[i]</code> agreeing, that is telling you
+      <code>p == a</code>.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 3 &mdash; A function that returns a pointer <span class="muted small">(from the course notes)</span></h3>
+
+<p>Write a function <code>get_element</code> that takes a <code>vector&lt;double&gt;</code> and an
+<code>int</code>, and returns a pointer to element <code>n</code> of the vector when
+<code>n</code> is a legal index, and a null pointer otherwise. Then write a <code>main</code> that
+calls it for every <code>i</code> from <code>-1</code> to <code>len + 1</code> and prints either the
+value or a "null" message. Give the output.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The signature does most of the work: the return type is
+  <code>double *</code>, and the vector parameter is a plain reference (not
+  <code>const</code>) because we intend to hand out a writable pointer into it. The body is one
+  <code>if</code> with a two-sided range test &mdash; <code>n</code> must be at least 0
+  <em>and</em> less than the size. Take care with the second half: <code>v.size()</code> is
+  unsigned, so cast it to <code>int</code> before comparing with a signed <code>n</code>. At the call
+  site, the null check is not optional.</p>
+<div class="codewrap"><div class="cap">getelement.cpp</div><pre><code class="language-cpp">// getelement.cpp -- a function whose return value is a pointer
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+double* get_element(vector&lt;double&gt; &amp;v, int n)   // return type = pointer
+{
+    if ((n &gt;= 0) &amp;&amp; (n &lt; static_cast&lt;int&gt;(v.size())))
+        return &amp;v[n];           // return value = pointer
+    else
+        return nullptr;         // return value = pointer (null)
+}
+
+int main() {
+    int len = 5;
+    vector&lt;double&gt; v;
+    for (int i = 0; i &lt; len; ++i)
+        v.push_back(i + 1.2);
+
+    for (int i = -1; i &lt; len + 2; ++i) {
+        double *p = get_element(v, i);
+        if (p == nullptr)
+            cout &lt;&lt; "null, i = " &lt;&lt; i &lt;&lt; endl;
+        else
+            cout &lt;&lt; *p &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+<pre class="out">null, i = -1
+1.2
+2.2
+3.2
+4.2
+5.2
+null, i = 5
+null, i = 6</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li>The loop bound is <code>i &lt; len + 2</code>, so the last value of <code>i</code> is 6, not
+      7. Counting the iterations is part of the answer: eight lines.</li>
+    <li>The two range checks are joined by <code>&amp;&amp;</code> in the order
+      <code>(n &gt;= 0) &amp;&amp; (n &lt; ...)</code> for a reason. <code>&amp;&amp;</code>
+      short-circuits, so when <code>n</code> is negative the second test is never evaluated &mdash;
+      which is what keeps the signed/unsigned comparison from misbehaving. Reversing the two tests
+      would be a real bug.</li>
+    <li>Returning a pointer <em>into</em> a vector is safe only as long as the vector does not
+      change size. A <code>push_back</code> may move the vector's storage, leaving every previously
+      returned pointer dangling. We do not do that here, and Class 8 explains why moving storage is
+      what a growing vector must do.</li>
+    <li>Writing <code>NULL</code> in place of <code>nullptr</code> throughout is exactly as correct
+      and is what the course notes use.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 4 &mdash; Complete the code skeleton <span class="muted small">(from the Fall 2023 Final)</span></h3>
+
+<p>Given the following code skeleton in C++:</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int var = 20;
+    int *ptr;
+
+    // Code to assign the address of var to ptr and print
+
+    return 0;
+}</code></pre>
+
+<p>Complete the code by performing the following tasks. Each part is one or two lines.</p>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Assign the address of <code>var</code> to <code>ptr</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">ptr = &amp;var;</code></pre>
+    <p>Address-of operator. Note that <code>ptr</code> was already declared on the line above, so
+    this is an <em>assignment</em>, not a declaration &mdash; there is no <code>int *</code> at the
+    front. Writing <code>int *ptr = &amp;var;</code> here would declare a second, different pointer
+    that shadows nothing and leaves the original uninitialized; the skeleton's declaration is
+    deliberate.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Print the value of <code>var</code> using <code>ptr</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">cout &lt;&lt; *ptr &lt;&lt; endl;</code></pre>
+    <p>Prints <code>20</code>. "Using <code>ptr</code>" is the constraint that forces the star; the
+    answer <code>cout &lt;&lt; var &lt;&lt; endl;</code> prints the same thing and scores
+    zero.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Change the value of <code>var</code> to 30 using <code>ptr</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">*ptr = 30;</code></pre>
+    <p>The dereference is on the left of the assignment, which is legal because <code>*ptr</code>
+    <em>is</em> the variable <code>var</code>. The classic wrong answer is <code>ptr = 30;</code>,
+    which tries to make the pointer point at memory address 30 and does not compile.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Print the address of <code>var</code> using <code>var</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">cout &lt;&lt; &amp;var &lt;&lt; endl;</code></pre>
+    <p>Address-of, applied directly to the variable. The printed value is a hexadecimal address that
+    differs on every run &mdash; the graded answer is the statement, never the number.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Print the address of <code>var</code> using <code>ptr</code>. Then state the full output of the completed program.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">cout &lt;&lt; ptr &lt;&lt; endl;</code></pre>
+    <p>No star. The pointer's own value <em>is</em> the address, so printing the pointer prints the
+    address. Parts (d) and (e) must produce identical output, and that is the point of asking both.
+    Here is the whole thing assembled and run:</p>
+<div class="codewrap"><div class="cap">examfinal_p2.cpp</div><pre><code class="language-cpp">// examfinal_p2.cpp -- exam-style: complete the skeleton
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int var = 20;
+    int *ptr;
+
+    ptr = &amp;var;                     // (a) assign the address of var to ptr
+    cout &lt;&lt; *ptr &lt;&lt; endl;           // (b) print the value of var using ptr
+    *ptr = 30;                      // (c) change the value of var to 30 using ptr
+    cout &lt;&lt; var &lt;&lt; endl;            // (proof that (c) worked)
+    cout &lt;&lt; &amp;var &lt;&lt; endl;           // (d) print the address of var using var
+    cout &lt;&lt; ptr &lt;&lt; endl;            // (e) print the address of var using ptr
+
+    return 0;
+}</code></pre></div>
+<pre class="out">20
+30
+0x7ffff109793c
+0x7ffff109793c</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li><strong>The two hexadecimal values are representative only.</strong> They are equal to each
+        other on every run &mdash; that is guaranteed &mdash; but the digits themselves change every
+        time the program starts. The extra <code>cout &lt;&lt; var</code> line is not part of the
+        exam question; it is here to show that (c) worked.</li>
+      <li>The five answers use, in order: address-of, dereference, dereference-as-lvalue,
+        address-of, and no operator at all. That is a complete tour of &sect;2 and &sect;3 in five
+        lines, which is exactly why this question exists.</li>
+      <li>The professor's rubric gives <strong>2 points each, no partial credit</strong>. There is
+        no reward for a nearly-right answer here, so check every star before you move on.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 5 &mdash; Write C++ statements <span class="muted small">(adapted from the Fall 2023 Exam 1)</span></h3>
+
+<p>Write C++ statements to carry out the following tasks. Do not write complete programs, just give a
+single line, or a few lines of C++ instructions. Assume the following declarations have been made and
+the declared variables have been set to legal values:</p>
+
+<pre><code class="language-cpp">int x = 7, y[3] = {3, 1, 4};
+int z[3] = {0, 0, 0};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare a pointer <code>px</code> that points to the variable <code>x</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int *px = &amp;x;</code></pre>
+    <p><code>x</code> is a scalar, so you need the address-of operator. This is the professor's own
+    rubric answer, verbatim.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Declare a pointer <code>py</code> that points to the array <code>y</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int *py = y;</code></pre>
+    <p><strong>No <code>&amp;</code>.</strong> <code>y</code> is an array name, which already decays
+    to the address of <code>y[0]</code>. This is the professor's rubric answer, and the contrast
+    between (a) and (b) is the entire reason both parts are on the exam. Writing
+    <code>int *py = &amp;y;</code> is a compile error: <em>"cannot convert
+    <code>int (*)[3]</code> to <code>int*</code>"</em>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Declare a pointer <code>pz</code> that points to the array <code>z</code>, then copy the data in <code>y</code> into <code>z</code> using only <code>py</code> and <code>pz</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">int *pz = z;
+for (int i = 0; i &lt; 3; ++i)
+    pz[i] = py[i];</code></pre>
+    <p>An element-wise loop is the only way. <code>pz = py;</code> would <em>not</em> copy anything
+    &mdash; it would make both pointers point at <code>y</code> and leave <code>z</code>
+    untouched, which is &sect;5's distinction showing up on an exam.</p>
+    <p>You may equivalently write <code>*(pz + i) = *(py + i);</code>. Both compile to the same
+    thing.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Change the value of <code>x</code> to 99, using <code>px</code> and not mentioning <code>x</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">*px = 99;</code></pre>
+    <p>Dereference on the left-hand side. If you wrote <code>px = 99;</code> the compiler rejects it
+    &mdash; <em>"invalid conversion from <code>int</code> to <code>int*</code>"</em> &mdash; which is
+    the friendly outcome.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Assemble parts (a)&ndash;(d) into a complete program that proves each step worked, and give its output.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<div class="codewrap"><div class="cap">exam1_p2.cpp</div><pre><code class="language-cpp">// exam1_p2.cpp -- exam-style: write single C++ statements (pointer half)
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int x = 7, y[3] = {3, 1, 4};
+    int z[3] = {0, 0, 0};
+
+    int *px = &amp;x;                       // (a) pointer to the variable x
+    int *py = y;                        // (b) pointer to the array y
+    int *pz = z;                        // (c) pointer to the array z
+
+    for (int i = 0; i &lt; 3; ++i)         // (d) copy y into z through pointers
+        pz[i] = py[i];
+
+    *px = 99;                           // (e) change x through px
+
+    cout &lt;&lt; "x = " &lt;&lt; x &lt;&lt; endl;
+    cout &lt;&lt; "*px = " &lt;&lt; *px &lt;&lt; endl;
+    for (int i = 0; i &lt; 3; ++i)
+        cout &lt;&lt; "z[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; z[i] &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">x = 99
+*px = 99
+z[0] = 3
+z[1] = 1
+z[2] = 4</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li><code>x</code> and <code>*px</code> print the same thing, because they <em>are</em> the
+        same variable. If they ever disagree in your trace, your picture is wrong.</li>
+      <li>The professor's original Problem 2 continues with two more parts that use
+        <code>new</code> and <code>delete</code>; those belong to Class 8 and are deliberately left
+        out here. Everything above is within Class 7's scope, and the exam habit &mdash; five short
+        independent statements, two points each &mdash; is the same.</li>
+      <li>His answer key for the original part (c) contains a genuine error: it writes
+        <code>*py = x;</code> when the question asked about a different pointer entirely. Read what
+        the question asks for and answer <em>that</em>; do not pattern-match on the previous
+        part.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 6 &mdash; What is the output for each of the following lines? <span class="muted small">(added)</span></h3>
+
+<p>Consider the following C++ program. What output would the program print for each of the labelled
+lines? Answer each line separately, with no spaces between the printed values &mdash; the format of
+the professor's midterm Problem 3, on pointers instead of increments.</p>
+
+<div class="codewrap"><div class="cap">trace_lines.cpp</div><pre><code class="language-cpp">// trace_lines.cpp -- output prediction, exam style
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a[5] = {2, 4, 6, 8, 10};
+    int *p = a;
+    int *q = &amp;a[3];
+
+    cout &lt;&lt; *p &lt;&lt; p[2] &lt;&lt; *(p + 4) &lt;&lt; endl;             // line (a)
+    *p = *q;
+    cout &lt;&lt; a[0] &lt;&lt; a[3] &lt;&lt; (q - p) &lt;&lt; endl;            // line (b)
+    p = p + 2;
+    cout &lt;&lt; *p &lt;&lt; *(p - 1) &lt;&lt; p[1] &lt;&lt; endl;             // line (c)
+    *p = *p + a[0];
+    cout &lt;&lt; a[2] &lt;&lt; *p &lt;&lt; (p == &amp;a[2]) &lt;&lt; endl;         // line (d)
+    q = p;
+    *q = 1;
+    cout &lt;&lt; a[2] &lt;&lt; *p &lt;&lt; *q &lt;&lt; endl;                   // line (e)
+
+    return 0;
+}</code></pre></div>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> What is the output at line (a)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">2610</pre>
+    <p>Nothing has been modified yet, so the array is still <code>{2, 4, 6, 8, 10}</code> and
+    <code>p</code> points at <code>a[0]</code>. Then <code>*p</code> is 2, <code>p[2]</code> is
+    <code>a[2]</code> which is 6, and <code>*(p + 4)</code> is <code>a[4]</code> which is 10. Run
+    together with no separators that reads <code>2610</code> &mdash; four characters from three
+    values, which is exactly the sort of thing that makes this format hard.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> What is the output at line (b)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">883</pre>
+    <p><code>*p = *q;</code> copies a value: <code>q</code> points at <code>a[3]</code> which is 8,
+    and <code>p</code> points at <code>a[0]</code>, so this is <code>a[0] = 8;</code>. The array is
+    now <code>{8, 4, 6, 8, 10}</code>.</p>
+    <p>So <code>a[0]</code> is 8, <code>a[3]</code> is 8, and <code>q - p</code> is pointer
+    subtraction: <code>&amp;a[3] - &amp;a[0]</code> is <strong>3</strong>, counting elements, not
+    bytes. Writing 12 there is the standard wrong answer.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> What is the output at line (c)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">648</pre>
+    <p><code>p = p + 2;</code> moves the pointer: <code>p</code> now points at <code>a[2]</code>. It
+    does <strong>not</strong> change the array. So <code>*p</code> is <code>a[2]</code> which is 6,
+    <code>*(p - 1)</code> is <code>a[1]</code> which is 4, and <code>p[1]</code> is
+    <code>a[3]</code> which is 8.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> What is the output at line (d)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">14141</pre>
+    <p><code>*p = *p + a[0];</code> is <code>a[2] = 6 + 8</code>, so <code>a[2]</code> becomes 14 and
+    the array is <code>{8, 4, 14, 8, 10}</code>.</p>
+    <p>Then <code>a[2]</code> prints <code>14</code>, <code>*p</code> prints <code>14</code> (same
+    variable), and <code>(p == &amp;a[2])</code> is a pointer comparison which is true, printing
+    <code>1</code>. Concatenated: <code>14141</code>. Five characters from three values &mdash; if
+    you wrote <code>1414</code> you dropped the comparison, and if you wrote <code>true</code> you
+    forgot that <code>cout</code> prints a <code>bool</code> as <code>1</code> or
+    <code>0</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> What is the output at line (e)?</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">111</pre>
+    <p><code>q = p;</code> is a pointer assignment: <code>q</code> stops pointing at
+    <code>a[3]</code> and joins <code>p</code> at <code>a[2]</code>. Then <code>*q = 1;</code> writes
+    1 into <code>a[2]</code>. All three printed expressions &mdash; <code>a[2]</code>,
+    <code>*p</code>, <code>*q</code> &mdash; now name the same variable, so all three print
+    <code>1</code>.</p>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>Full verified output of the program, for checking all five at once:</li>
+    </ul>
+<pre class="out">2610
+883
+648
+14141
+111</pre>
+    <ul>
+      <li>The trick this format plays every time: <strong>each line's answer depends on the side
+        effects of the lines above it.</strong> You cannot answer (d) without having done (b) and
+        (c). Trace the whole program once, top to bottom, writing down the array and both arrows
+        after every statement, and then read off five answers. Trying to answer them independently
+        is how people lose 8 of the 10 points.</li>
+      <li>Two kinds of statement move things in this program, and telling them apart is the whole
+        skill: <code>p = p + 2;</code> and <code>q = p;</code> move <em>arrows</em>;
+        <code>*p = *q;</code> and <code>*q = 1;</code> change <em>values</em>. A star on the left
+        means the array changed. No star means an arrow changed.</li>
+      <li>The array at the end is <code>{8, 4, 1, 8, 10}</code> &mdash; a useful self-check.</li>
+    </ul>
+  </div></details>
+</div>
+
+<div class="box sum" id="summary">
+  <div class="hd">Lecture Summary</div>
+  <div class="bd">
+    <ul>
+      <li>A <strong>pointer</strong> is a variable that holds the memory address of another variable.
+        A pointer's type must match the type of what it points at &mdash; no mixing and matching.</li>
+      <li>Declare with the star attached to the <em>name</em>: <code>double *px, *py;</code>. Written
+        <code>double* px, py;</code>, only <code>px</code> is a pointer.</li>
+      <li><code>&amp;x</code> is the <strong>address-of</strong> operator; it produces a pointer to
+        <code>x</code>. <code>*p</code> is the <strong>dereference</strong> operator; it names the
+        variable <code>p</code> points at, and may appear on either side of an assignment.</li>
+      <li>The star means "pointer" on a declaration line and "dereference" in an expression. The test
+        is whether there is a type name at the front of the line.</li>
+      <li>A <strong>null pointer</strong> points at nothing. The course notes write <code>NULL</code>
+        or <code>0</code>; modern C++ writes <code>nullptr</code>. Testing a pointer against null is
+        always safe; dereferencing a null pointer is <strong>undefined behavior</strong>, in practice
+        a crash.</li>
+      <li>An <strong>uninitialized</strong> pointer is worse than a null one, because a null check
+        will not catch it. Initialize every pointer where you declare it.</li>
+      <li><code>p1 = p2;</code> copies an <strong>address</strong> and moves an arrow.
+        <code>*p1 = *p2;</code> copies a <strong>value</strong> and changes a variable. This is the
+        single most examined distinction in the topic.</li>
+      <li>An array name <strong>decays</strong> to a pointer to its first element, so
+        <code>p = a;</code> &mdash; never <code>p = &amp;a;</code>. Then <code>a[i]</code>,
+        <code>p[i]</code>, <code>*(a + i)</code> and <code>*(p + i)</code> are four spellings of one
+        variable.</li>
+      <li><strong>Pointer arithmetic counts elements, not bytes.</strong> <code>p + 1</code> advances
+        by one whole element, and <code>&amp;a[n] - &amp;a[m]</code> is <code>n - m</code>.</li>
+      <li>A <strong>pointer parameter</strong> lets a function change the caller's variable, like a
+        reference parameter, but the call site must write <code>&amp;</code> and the pointer may be
+        null or be repointed. Arrays reach functions this way, and the length must be passed
+        separately. Tag read-only pointer parameters <code>const</code>.</li>
+      <li>A function may <strong>return</strong> a pointer &mdash; to something the caller owns, never
+        to one of its own locals. Every such call needs a null check before the first
+        dereference.</li>
+    </ul>
+    <p><strong>Coming up in Class 8:</strong> we use pointers to create variables that did not exist
+    before &mdash; <code>new</code> and <code>delete</code>, <code>new[]</code> and
+    <code>delete[]</code>, memory leaks, arrays of pointers, and two-dimensional and ragged arrays
+    built at run time.</p>
+  </div>
+</div>
+
+<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 6 &middot; Vectors II</div><div class="pending">posts Thu Sep 17</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 8 &middot; Pointers II</div><div class="pending">posts Thu Sep 24</div></div></nav>
+<footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
+</div>
+<script>
+(()=>{var ct=Object.create;var Re=Object.defineProperty;var at=Object.getOwnPropertyDescriptor;var ot=Object.getOwnPropertyNames;var lt=Object.getPrototypeOf,ut=Object.prototype.hasOwnProperty;var ft=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var gt=(e,t,n,l)=>{if(t&&typeof t=="object"||typeof t=="function")for(let p of ot(t))!ut.call(e,p)&&p!==n&&Re(e,p,{get:()=>t[p],enumerable:!(l=at(t,p))||l.enumerable});return e};var ht=(e,t,n)=>(n=e!=null?ct(lt(e)):{},gt(t||!e||!e.__esModule?Re(n,"default",{value:e,enumerable:!0}):n,e));var Ke=ft((cn,ze)=>{function ve(e){return e instanceof Map?e.clear=e.delete=e.set=function(){throw new Error("map is read-only")}:e instanceof Set&&(e.add=e.clear=e.delete=function(){throw new Error("set is read-only")}),Object.freeze(e),Object.getOwnPropertyNames(e).forEach(t=>{let n=e[t],l=typeof n;(l==="object"||l==="function")&&!Object.isFrozen(n)&&ve(n)}),e}var V=class{constructor(t){t.data===void 0&&(t.data={}),this.data=t.data,this.isMatchIgnored=!1}ignoreMatch(){this.isMatchIgnored=!0}};function Ie(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")}function I(e,...t){let n=Object.create(null);for(let l in e)n[l]=e[l];return t.forEach(function(l){for(let p in l)n[p]=l[p]}),n}var pt="</span>",Se=e=>!!e.scope,dt=(e,{prefix:t})=>{if(e.startsWith("language:"))return e.replace("language:","language-");if(e.includes(".")){let n=e.split(".");return[`${t}${n.shift()}`,...n.map((l,p)=>`${l}${"_".repeat(p+1)}`)].join(" ")}return`${t}${e}`},le=class{constructor(t,n){this.buffer="",this.classPrefix=n.classPrefix,t.walk(this)}addText(t){this.buffer+=Ie(t)}openNode(t){if(!Se(t))return;let n=dt(t.scope,{prefix:this.classPrefix});this.span(n)}closeNode(t){Se(t)&&(this.buffer+=pt)}value(){return this.buffer}span(t){this.buffer+=`<span class="${t}">`}},Ae=(e={})=>{let t={children:[]};return Object.assign(t,e),t},ue=class e{constructor(){this.rootNode=Ae(),this.stack=[this.rootNode]}get top(){return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(t){this.top.children.push(t)}openNode(t){let n=Ae({scope:t});this.add(n),this.stack.push(n)}closeNode(){if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}walk(t){return this.constructor._walk(t,this.rootNode)}static _walk(t,n){return typeof n=="string"?t.addText(n):n.children&&(t.openNode(n),n.children.forEach(l=>this._walk(t,l)),t.closeNode(n)),t}static _collapse(t){typeof t!="string"&&t.children&&(t.children.every(n=>typeof n=="string")?t.children=[t.children.join("")]:t.children.forEach(n=>{e._collapse(n)}))}},fe=class extends ue{constructor(t){super(),this.options=t}addText(t){t!==""&&this.add(t)}startScope(t){this.openNode(t)}endScope(){this.closeNode()}__addSublanguage(t,n){let l=t.root;n&&(l.scope=`language:${n}`),this.add(l)}toHTML(){return new le(this,this.options).value()}finalize(){return this.closeAllNodes(),!0}};function G(e){return e?typeof e=="string"?e:e.source:null}function Le(e){return B("(?=",e,")")}function _t(e){return B("(?:",e,")*")}function Et(e){return B("(?:",e,")?")}function B(...e){return e.map(n=>G(n)).join("")}function bt(e){let t=e[e.length-1];return typeof t=="object"&&t.constructor===Object?(e.splice(e.length-1,1),t):{}}function he(...e){return"("+(bt(e).capture?"":"?:")+e.map(l=>G(l)).join("|")+")"}function De(e){return new RegExp(e.toString()+"|").exec("").length-1}function wt(e,t){let n=e&&e.exec(t);return n&&n.index===0}var xt=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./;function pe(e,{joinWith:t}){let n=0;return e.map(l=>{n+=1;let p=n,x=G(l),c="";for(;x.length>0;){let r=xt.exec(x);if(!r){c+=x;break}c+=x.substring(0,r.index),x=x.substring(r.index+r[0].length),r[0][0]==="\\"&&r[1]?c+="\\"+String(Number(r[1])+p):(c+=r[0],r[0]==="("&&n++)}return c}).map(l=>`(${l})`).join(t)}var yt=/\b\B/,Be="[a-zA-Z]\\w*",de="[a-zA-Z_]\\w*",Pe="\\b\\d+(\\.\\d+)?",Ue="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",He="\\b(0b[01]+)",Mt="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",Nt=(e={})=>{let t=/^#![ ]*\//;return e.binary&&(e.begin=B(t,/.*\b/,e.binary,/\b.*/)),I({scope:"meta",begin:t,end:/$/,relevance:0,"on:begin":(n,l)=>{n.index!==0&&l.ignoreMatch()}},e)},z={begin:"\\\\[\\s\\S]",relevance:0},Ot={scope:"string",begin:"'",end:"'",illegal:"\\n",contains:[z]},Rt={scope:"string",begin:'"',end:'"',illegal:"\\n",contains:[z]},St={begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/},Q=function(e,t,n={}){let l=I({scope:"comment",begin:e,end:t,contains:[]},n);l.contains.push({scope:"doctag",begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0});let p=he("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/);return l.contains.push({begin:B(/[ ]+/,"(",p,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),l},At=Q("//","$"),Tt=Q("/\\*","\\*/"),kt=Q("#","$"),mt={scope:"number",begin:Pe,relevance:0},Ct={scope:"number",begin:Ue,relevance:0},vt={scope:"number",begin:He,relevance:0},It={scope:"regexp",begin:/\/(?=[^/\n]*\/)/,end:/\/[gimuy]*/,contains:[z,{begin:/\[/,end:/\]/,relevance:0,contains:[z]}]},Lt={scope:"title",begin:Be,relevance:0},Dt={scope:"title",begin:de,relevance:0},Bt={begin:"\\.\\s*"+de,relevance:0},Pt=function(e){return Object.assign(e,{"on:begin":(t,n)=>{n.data._beginMatch=t[1]},"on:end":(t,n)=>{n.data._beginMatch!==t[1]&&n.ignoreMatch()}})},Z=Object.freeze({__proto__:null,APOS_STRING_MODE:Ot,BACKSLASH_ESCAPE:z,BINARY_NUMBER_MODE:vt,BINARY_NUMBER_RE:He,COMMENT:Q,C_BLOCK_COMMENT_MODE:Tt,C_LINE_COMMENT_MODE:At,C_NUMBER_MODE:Ct,C_NUMBER_RE:Ue,END_SAME_AS_BEGIN:Pt,HASH_COMMENT_MODE:kt,IDENT_RE:Be,MATCH_NOTHING_RE:yt,METHOD_GUARD:Bt,NUMBER_MODE:mt,NUMBER_RE:Pe,PHRASAL_WORDS_MODE:St,QUOTE_STRING_MODE:Rt,REGEXP_MODE:It,RE_STARTERS_RE:Mt,SHEBANG:Nt,TITLE_MODE:Lt,UNDERSCORE_IDENT_RE:de,UNDERSCORE_TITLE_MODE:Dt});function Ut(e,t){e.input[e.index-1]==="."&&t.ignoreMatch()}function Ht(e,t){e.className!==void 0&&(e.scope=e.className,delete e.className)}function Ft(e,t){t&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",e.__beforeBegin=Ut,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,e.relevance===void 0&&(e.relevance=0))}function jt(e,t){Array.isArray(e.illegal)&&(e.illegal=he(...e.illegal))}function $t(e,t){if(e.match){if(e.begin||e.end)throw new Error("begin & end are not supported with match");e.begin=e.match,delete e.match}}function Gt(e,t){e.relevance===void 0&&(e.relevance=1)}var zt=(e,t)=>{if(!e.beforeMatch)return;if(e.starts)throw new Error("beforeMatch cannot be used with starts");let n=Object.assign({},e);Object.keys(e).forEach(l=>{delete e[l]}),e.keywords=n.keywords,e.begin=B(n.beforeMatch,Le(n.begin)),e.starts={relevance:0,contains:[Object.assign(n,{endsParent:!0})]},e.relevance=0,delete n.beforeMatch},Kt=["of","and","for","in","not","or","if","then","parent","list","value"],Wt="keyword";function Fe(e,t,n=Wt){let l=Object.create(null);return typeof e=="string"?p(n,e.split(" ")):Array.isArray(e)?p(n,e):Object.keys(e).forEach(function(x){Object.assign(l,Fe(e[x],t,x))}),l;function p(x,c){t&&(c=c.map(r=>r.toLowerCase())),c.forEach(function(r){let u=r.split("|");l[u[0]]=[x,Xt(u[0],u[1])]})}}function Xt(e,t){return t?Number(t):qt(e)?0:1}function qt(e){return Kt.includes(e.toLowerCase())}var Te={},D=e=>{console.error(e)},ke=(e,...t)=>{console.log(`WARN: ${e}`,...t)},U=(e,t)=>{Te[`${e}/${t}`]||(console.log(`Deprecated as of ${e}. ${t}`),Te[`${e}/${t}`]=!0)},J=new Error;function je(e,t,{key:n}){let l=0,p=e[n],x={},c={};for(let r=1;r<=t.length;r++)c[r+l]=p[r],x[r+l]=!0,l+=De(t[r-1]);e[n]=c,e[n]._emit=x,e[n]._multi=!0}function Yt(e){if(Array.isArray(e.begin)){if(e.skip||e.excludeBegin||e.returnBegin)throw D("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),J;if(typeof e.beginScope!="object"||e.beginScope===null)throw D("beginScope must be object"),J;je(e,e.begin,{key:"beginScope"}),e.begin=pe(e.begin,{joinWith:""})}}function Zt(e){if(Array.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw D("skip, excludeEnd, returnEnd not compatible with endScope: {}"),J;if(typeof e.endScope!="object"||e.endScope===null)throw D("endScope must be object"),J;je(e,e.end,{key:"endScope"}),e.end=pe(e.end,{joinWith:""})}}function Vt(e){e.scope&&typeof e.scope=="object"&&e.scope!==null&&(e.beginScope=e.scope,delete e.scope)}function Jt(e){Vt(e),typeof e.beginScope=="string"&&(e.beginScope={_wrap:e.beginScope}),typeof e.endScope=="string"&&(e.endScope={_wrap:e.endScope}),Yt(e),Zt(e)}function Qt(e){function t(c,r){return new RegExp(G(c),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(r?"g":""))}class n{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(r,u){u.position=this.position++,this.matchIndexes[this.matchAt]=u,this.regexes.push([u,r]),this.matchAt+=De(r)+1}compile(){this.regexes.length===0&&(this.exec=()=>null);let r=this.regexes.map(u=>u[1]);this.matcherRe=t(pe(r,{joinWith:"|"}),!0),this.lastIndex=0}exec(r){this.matcherRe.lastIndex=this.lastIndex;let u=this.matcherRe.exec(r);if(!u)return null;let w=u.findIndex((m,F)=>F>0&&m!==void 0),b=this.matchIndexes[w];return u.splice(0,w),Object.assign(u,b)}}class l{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(r){if(this.multiRegexes[r])return this.multiRegexes[r];let u=new n;return this.rules.slice(r).forEach(([w,b])=>u.addRule(w,b)),u.compile(),this.multiRegexes[r]=u,u}resumingScanAtSamePosition(){return this.regexIndex!==0}considerAll(){this.regexIndex=0}addRule(r,u){this.rules.push([r,u]),u.type==="begin"&&this.count++}exec(r){let u=this.getMatcher(this.regexIndex);u.lastIndex=this.lastIndex;let w=u.exec(r);if(this.resumingScanAtSamePosition()&&!(w&&w.index===this.lastIndex)){let b=this.getMatcher(0);b.lastIndex=this.lastIndex+1,w=b.exec(r)}return w&&(this.regexIndex+=w.position+1,this.regexIndex===this.count&&this.considerAll()),w}}function p(c){let r=new l;return c.contains.forEach(u=>r.addRule(u.begin,{rule:u,type:"begin"})),c.terminatorEnd&&r.addRule(c.terminatorEnd,{type:"end"}),c.illegal&&r.addRule(c.illegal,{type:"illegal"}),r}function x(c,r){let u=c;if(c.isCompiled)return u;[Ht,$t,Jt,zt].forEach(b=>b(c,r)),e.compilerExtensions.forEach(b=>b(c,r)),c.__beforeBegin=null,[Ft,jt,Gt].forEach(b=>b(c,r)),c.isCompiled=!0;let w=null;return typeof c.keywords=="object"&&c.keywords.$pattern&&(c.keywords=Object.assign({},c.keywords),w=c.keywords.$pattern,delete c.keywords.$pattern),w=w||/\w+/,c.keywords&&(c.keywords=Fe(c.keywords,e.case_insensitive)),u.keywordPatternRe=t(w,!0),r&&(c.begin||(c.begin=/\B|\b/),u.beginRe=t(u.begin),!c.end&&!c.endsWithParent&&(c.end=/\B|\b/),c.end&&(u.endRe=t(u.end)),u.terminatorEnd=G(u.end)||"",c.endsWithParent&&r.terminatorEnd&&(u.terminatorEnd+=(c.end?"|":"")+r.terminatorEnd)),c.illegal&&(u.illegalRe=t(c.illegal)),c.contains||(c.contains=[]),c.contains=[].concat(...c.contains.map(function(b){return en(b==="self"?c:b)})),c.contains.forEach(function(b){x(b,u)}),c.starts&&x(c.starts,r),u.matcher=p(u),u}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=I(e.classNameAliases||{}),x(e)}function $e(e){return e?e.endsWithParent||$e(e.starts):!1}function en(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map(function(t){return I(e,{variants:null},t)})),e.cachedVariants?e.cachedVariants:$e(e)?I(e,{starts:e.starts?I(e.starts):null}):Object.isFrozen(e)?I(e):e}var tn="11.11.1",ge=class extends Error{constructor(t,n){super(t),this.name="HTMLInjectionError",this.html=n}},oe=Ie,me=I,Ce=Symbol("nomatch"),nn=7,Ge=function(e){let t=Object.create(null),n=Object.create(null),l=[],p=!0,x="Could not find the language '{}', did you forget to load/include a language module?",c={disableAutodetect:!0,name:"Plain text",contains:[]},r={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:fe};function u(i){return r.noHighlightRe.test(i)}function w(i){let o=i.className+" ";o+=i.parentNode?i.parentNode.className:"";let h=r.languageDetectRe.exec(o);if(h){let _=A(h[1]);return _||(ke(x.replace("{}",h[1])),ke("Falling back to no-highlight mode for this block.",i)),_?h[1]:"no-highlight"}return o.split(/\s+/).find(_=>u(_)||A(_))}function b(i,o,h){let _="",y="";typeof o=="object"?(_=i,h=o.ignoreIllegals,y=o.language):(U("10.7.0","highlight(lang, code, ...args) has been deprecated."),U("10.7.0",`Please use highlight(code, options) instead.
+[hljs issue 2277]`),y=i,_=o),h===void 0&&(h=!0);let S={code:_,language:y};W("before:highlight",S);let v=S.result?S.result:m(S.language,S.code,h);return v.code=S.code,W("after:highlight",v),v}function m(i,o,h,_){let y=Object.create(null);function S(s,a){return s.keywords[a]}function v(){if(!f.keywords){M.addText(E);return}let s=0;f.keywordPatternRe.lastIndex=0;let a=f.keywordPatternRe.exec(E),g="";for(;a;){g+=E.substring(s,a.index);let d=k.case_insensitive?a[0].toLowerCase():a[0],N=S(f,d);if(N){let[C,st]=N;if(M.addText(g),g="",y[d]=(y[d]||0)+1,y[d]<=nn&&(Y+=st),C.startsWith("_"))g+=a[0];else{let rt=k.classNameAliases[C]||C;T(a[0],rt)}}else g+=a[0];s=f.keywordPatternRe.lastIndex,a=f.keywordPatternRe.exec(E)}g+=E.substring(s),M.addText(g)}function X(){if(E==="")return;let s=null;if(typeof f.subLanguage=="string"){if(!t[f.subLanguage]){M.addText(E);return}s=m(f.subLanguage,E,!0,Oe[f.subLanguage]),Oe[f.subLanguage]=s._top}else s=P(E,f.subLanguage.length?f.subLanguage:null);f.relevance>0&&(Y+=s.relevance),M.__addSublanguage(s._emitter,s.language)}function R(){f.subLanguage!=null?X():v(),E=""}function T(s,a){s!==""&&(M.startScope(a),M.addText(s),M.endScope())}function xe(s,a){let g=1,d=a.length-1;for(;g<=d;){if(!s._emit[g]){g++;continue}let N=k.classNameAliases[s[g]]||s[g],C=a[g];N?T(C,N):(E=C,v(),E=""),g++}}function ye(s,a){return s.scope&&typeof s.scope=="string"&&M.openNode(k.classNameAliases[s.scope]||s.scope),s.beginScope&&(s.beginScope._wrap?(T(E,k.classNameAliases[s.beginScope._wrap]||s.beginScope._wrap),E=""):s.beginScope._multi&&(xe(s.beginScope,a),E="")),f=Object.create(s,{parent:{value:f}}),f}function Me(s,a,g){let d=wt(s.endRe,g);if(d){if(s["on:end"]){let N=new V(s);s["on:end"](a,N),N.isMatchIgnored&&(d=!1)}if(d){for(;s.endsParent&&s.parent;)s=s.parent;return s}}if(s.endsWithParent)return Me(s.parent,a,g)}function Qe(s){return f.matcher.regexIndex===0?(E+=s[0],1):(ae=!0,0)}function et(s){let a=s[0],g=s.rule,d=new V(g),N=[g.__beforeBegin,g["on:begin"]];for(let C of N)if(C&&(C(s,d),d.isMatchIgnored))return Qe(a);return g.skip?E+=a:(g.excludeBegin&&(E+=a),R(),!g.returnBegin&&!g.excludeBegin&&(E=a)),ye(g,s),g.returnBegin?0:a.length}function tt(s){let a=s[0],g=o.substring(s.index),d=Me(f,s,g);if(!d)return Ce;let N=f;f.endScope&&f.endScope._wrap?(R(),T(a,f.endScope._wrap)):f.endScope&&f.endScope._multi?(R(),xe(f.endScope,s)):N.skip?E+=a:(N.returnEnd||N.excludeEnd||(E+=a),R(),N.excludeEnd&&(E=a));do f.scope&&M.closeNode(),!f.skip&&!f.subLanguage&&(Y+=f.relevance),f=f.parent;while(f!==d.parent);return d.starts&&ye(d.starts,s),N.returnEnd?0:a.length}function nt(){let s=[];for(let a=f;a!==k;a=a.parent)a.scope&&s.unshift(a.scope);s.forEach(a=>M.openNode(a))}let q={};function Ne(s,a){let g=a&&a[0];if(E+=s,g==null)return R(),0;if(q.type==="begin"&&a.type==="end"&&q.index===a.index&&g===""){if(E+=o.slice(a.index,a.index+1),!p){let d=new Error(`0 width match regex (${i})`);throw d.languageName=i,d.badRule=q.rule,d}return 1}if(q=a,a.type==="begin")return et(a);if(a.type==="illegal"&&!h){let d=new Error('Illegal lexeme "'+g+'" for mode "'+(f.scope||"<unnamed>")+'"');throw d.mode=f,d}else if(a.type==="end"){let d=tt(a);if(d!==Ce)return d}if(a.type==="illegal"&&g==="")return E+=`
+`,1;if(ce>1e5&&ce>a.index*3)throw new Error("potential infinite loop, way more iterations than matches");return E+=g,g.length}let k=A(i);if(!k)throw D(x.replace("{}",i)),new Error('Unknown language: "'+i+'"');let it=Qt(k),re="",f=_||it,Oe={},M=new r.__emitter(r);nt();let E="",Y=0,L=0,ce=0,ae=!1;try{if(k.__emitTokens)k.__emitTokens(o,M);else{for(f.matcher.considerAll();;){ce++,ae?ae=!1:f.matcher.considerAll(),f.matcher.lastIndex=L;let s=f.matcher.exec(o);if(!s)break;let a=o.substring(L,s.index),g=Ne(a,s);L=s.index+g}Ne(o.substring(L))}return M.finalize(),re=M.toHTML(),{language:i,value:re,relevance:Y,illegal:!1,_emitter:M,_top:f}}catch(s){if(s.message&&s.message.includes("Illegal"))return{language:i,value:oe(o),illegal:!0,relevance:0,_illegalBy:{message:s.message,index:L,context:o.slice(L-100,L+100),mode:s.mode,resultSoFar:re},_emitter:M};if(p)return{language:i,value:oe(o),illegal:!1,relevance:0,errorRaised:s,_emitter:M,_top:f};throw s}}function F(i){let o={value:oe(i),illegal:!1,relevance:0,_top:c,_emitter:new r.__emitter(r)};return o._emitter.addText(i),o}function P(i,o){o=o||r.languages||Object.keys(t);let h=F(i),_=o.filter(A).filter(we).map(R=>m(R,i,!1));_.unshift(h);let y=_.sort((R,T)=>{if(R.relevance!==T.relevance)return T.relevance-R.relevance;if(R.language&&T.language){if(A(R.language).supersetOf===T.language)return 1;if(A(T.language).supersetOf===R.language)return-1}return 0}),[S,v]=y,X=S;return X.secondBest=v,X}function ee(i,o,h){let _=o&&n[o]||h;i.classList.add("hljs"),i.classList.add(`language-${_}`)}function j(i){let o=null,h=w(i);if(u(h))return;if(W("before:highlightElement",{el:i,language:h}),i.dataset.highlighted){console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",i);return}if(i.children.length>0&&(r.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("[hljs security wiki]"),console.warn("The element with unescaped HTML:"),console.warn(i)),r.throwUnescapedHTML))throw new ge("One of your code blocks includes unescaped HTML.",i.innerHTML);o=i;let _=o.textContent,y=h?b(_,{language:h,ignoreIllegals:!0}):P(_);i.innerHTML=y.value,i.dataset.highlighted="yes",ee(i,h,y.language),i.result={language:y.language,re:y.relevance,relevance:y.relevance},y.secondBest&&(i.secondBest={language:y.secondBest.language,relevance:y.secondBest.relevance}),W("after:highlightElement",{el:i,result:y,text:_})}function te(i){r=me(r,i)}let ne=()=>{O(),U("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")};function Ee(){O(),U("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")}let ie=!1;function O(){function i(){O()}if(document.readyState==="loading"){ie||window.addEventListener("DOMContentLoaded",i,!1),ie=!0;return}document.querySelectorAll(r.cssSelector).forEach(j)}function K(i,o){let h=null;try{h=o(e)}catch(_){if(D("Language definition for '{}' could not be registered.".replace("{}",i)),p)D(_);else throw _;h=c}h.name||(h.name=i),t[i]=h,h.rawDefinition=o.bind(null,e),h.aliases&&be(h.aliases,{languageName:i})}function $(i){delete t[i];for(let o of Object.keys(n))n[o]===i&&delete n[o]}function se(){return Object.keys(t)}function A(i){return i=(i||"").toLowerCase(),t[i]||t[n[i]]}function be(i,{languageName:o}){typeof i=="string"&&(i=[i]),i.forEach(h=>{n[h.toLowerCase()]=o})}function we(i){let o=A(i);return o&&!o.disableAutodetect}function Ye(i){i["before:highlightBlock"]&&!i["before:highlightElement"]&&(i["before:highlightElement"]=o=>{i["before:highlightBlock"](Object.assign({block:o.el},o))}),i["after:highlightBlock"]&&!i["after:highlightElement"]&&(i["after:highlightElement"]=o=>{i["after:highlightBlock"](Object.assign({block:o.el},o))})}function Ze(i){Ye(i),l.push(i)}function Ve(i){let o=l.indexOf(i);o!==-1&&l.splice(o,1)}function W(i,o){let h=i;l.forEach(function(_){_[h]&&_[h](o)})}function Je(i){return U("10.7.0","highlightBlock will be removed entirely in v12.0"),U("10.7.0","Please use highlightElement now."),j(i)}Object.assign(e,{highlight:b,highlightAuto:P,highlightAll:O,highlightElement:j,highlightBlock:Je,configure:te,initHighlighting:ne,initHighlightingOnLoad:Ee,registerLanguage:K,unregisterLanguage:$,listLanguages:se,getLanguage:A,registerAliases:be,autoDetection:we,inherit:me,addPlugin:Ze,removePlugin:Ve}),e.debugMode=function(){p=!1},e.safeMode=function(){p=!0},e.versionString=tn,e.regex={concat:B,lookahead:Le,either:he,optional:Et,anyNumberOfTimes:_t};for(let i in Z)typeof Z[i]=="object"&&ve(Z[i]);return Object.assign(e,Z),e},H=Ge({});H.newInstance=()=>Ge({});ze.exports=H;H.HighlightJS=H;H.default=H});var We=ht(Ke(),1);var _e=We.default;function Xe(e){let t=e.regex,n=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]}),l="decltype\\(auto\\)",p="[a-zA-Z_]\\w*::",c="(?!struct)("+l+"|"+t.optional(p)+"[a-zA-Z_]\\w*"+t.optional("<[^<>]+>")+")",r={className:"type",begin:"\\b[a-z\\d_]*_t\\b"},w={className:"string",variants:[{begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{begin:"(u8?|U|L)?'("+"\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)"+"|.)",end:"'",illegal:"."},e.END_SAME_AS_BEGIN({begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},b={className:"number",variants:[{begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"},{begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"}],relevance:0},m={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"},contains:[{begin:/\\\n/,relevance:0},e.inherit(w,{className:"string"}),{className:"string",begin:/<.*?>/},n,e.C_BLOCK_COMMENT_MODE]},F={className:"title",begin:t.optional(p)+e.IDENT_RE,relevance:0},P=t.optional(p)+e.IDENT_RE+"\\s*\\(",ee=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],j=["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],te=["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"],ne=["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"],O={type:j,keyword:ee,literal:["NULL","false","nullopt","nullptr","true"],built_in:["_Pragma"],_type_hints:te},K={className:"function.dispatch",relevance:0,keywords:{_hint:ne},begin:t.concat(/\b/,/(?!decltype)/,/(?!if)/,/(?!for)/,/(?!switch)/,/(?!while)/,e.IDENT_RE,t.lookahead(/(<[^<>]+>|)\s*\(/))},$=[K,m,r,n,e.C_BLOCK_COMMENT_MODE,b,w],se={variants:[{begin:/=/,end:/;/},{begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],keywords:O,contains:$.concat([{begin:/\(/,end:/\)/,keywords:O,contains:$.concat(["self"]),relevance:0}]),relevance:0},A={className:"function",begin:"("+c+"[\\*&\\s]+)+"+P,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,keywords:O,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:l,keywords:O,relevance:0},{begin:P,returnBegin:!0,contains:[F],relevance:0},{begin:/::/,relevance:0},{begin:/:/,endsWithParent:!0,contains:[w,b]},{relevance:0,match:/,/},{className:"params",begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:[n,e.C_BLOCK_COMMENT_MODE,w,b,r,{begin:/\(/,end:/\)/,keywords:O,relevance:0,contains:["self",n,e.C_BLOCK_COMMENT_MODE,w,b,r]}]},r,n,e.C_BLOCK_COMMENT_MODE,m]};return{name:"C++",aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:O,illegal:"</",classNameAliases:{"function.dispatch":"built_in"},contains:[].concat(se,A,K,$,[m,{begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",end:">",keywords:O,contains:["self",r]},{begin:e.IDENT_RE+"::",keywords:O},{match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],className:{1:"keyword",3:"title.class"}}])}}var qe="cout cin cerr clog wcout wcin endl ends flush ws getline setw setprecision setfill fixed scientific showpoint boolalpha left right internal dec hex oct ifstream ofstream fstream istream ostream stringstream istringstream ostringstream push_back pop_back size capacity resize reserve empty front back at begin end rbegin rend insert erase clear find count sort swap npos substr length c_str".split(" ");function sn(e){let t=Xe(e),n=t.keywords;return n&&Array.isArray(n.built_in)?n.built_in=n.built_in.concat(qe):n&&typeof n.built_in=="string"&&(n.built_in+=" "+qe.join(" ")),t}_e.registerLanguage("cpp",sn);window.hljs=_e;})();
+
+</script>
+<script>
+
+(function(){
+  "use strict";
+
+  /* ---- 1. syntax highlighting ---- */
+  function highlight(){
+    if(!window.hljs) return;
+    var blocks = document.querySelectorAll('pre code.language-cpp');
+    for(var i=0;i<blocks.length;i++){
+      try{ window.hljs.highlightElement(blocks[i]); }catch(e){}
+    }
+  }
+
+  /* ---- 2. every solution / reveal starts closed, always ---- */
+  function closeAll(){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++) d[i].removeAttribute('open');
+  }
+  function setAll(open){
+    var d = document.querySelectorAll('details.soln');
+    for(var i=0;i<d.length;i++){
+      if(open) d[i].setAttribute('open',''); else d[i].removeAttribute('open');
+    }
+  }
+
+  /* ---- 3. live-coding editors ---- */
+  function initEditors(){
+    var eds = document.querySelectorAll('.editor');
+    for(var i=0;i<eds.length;i++){ (function(box){
+      var ta    = box.querySelector('textarea');
+      var reset = box.querySelector('button[data-act="reset"]');
+      var copy  = box.querySelector('button[data-act="copy"]');
+      if(!ta) return;
+      var starter = ta.getAttribute('data-starter') || ta.value;
+
+      /* Tab inserts an indent instead of moving focus; Shift+Tab outdents. */
+      ta.addEventListener('keydown', function(e){
+        if(e.key !== 'Tab') return;
+        e.preventDefault();
+        var IND = '    ';
+        var s = ta.selectionStart, t = ta.selectionEnd, v = ta.value;
+        var ls = v.lastIndexOf('\n', s - 1) + 1;               /* start of first line */
+        var multi = v.slice(s,t).indexOf('\n') !== -1;
+
+        if(!e.shiftKey && !multi){
+          ta.value = v.slice(0,s) + IND + v.slice(t);
+          ta.selectionStart = ta.selectionEnd = s + IND.length;
+          return;
+        }
+        var le = v.indexOf('\n', t); if(le === -1) le = v.length;
+        var seg = v.slice(ls, le);
+        var lines = seg.split('\n'), delta = 0, first = 0;
+        for(var k=0;k<lines.length;k++){
+          if(e.shiftKey){
+            var m = lines[k].match(/^( {1,4}|\t)/);
+            if(m){ lines[k] = lines[k].slice(m[0].length);
+                   delta -= m[0].length; if(k===0) first = -m[0].length; }
+          }else{
+            if(lines.length>1 || lines[k].length){ lines[k] = IND + lines[k];
+                   delta += IND.length; if(k===0) first = IND.length; }
+          }
+        }
+        ta.value = v.slice(0,ls) + lines.join('\n') + v.slice(le);
+        ta.selectionStart = Math.max(ls, s + first);
+        ta.selectionEnd   = Math.max(ta.selectionStart, t + delta);
+      });
+
+      if(reset) reset.addEventListener('click', function(){
+        ta.value = starter; ta.focus();
+        flash(reset, 'Reset', 'Restored');
+      });
+
+      if(copy) copy.addEventListener('click', function(){
+        var ok = false;
+        try{
+          ta.focus(); ta.select();
+          ok = document.execCommand && document.execCommand('copy');
+        }catch(e){ ok = false; }
+        if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ta.value).then(function(){
+            flash(copy,'Copy','Copied');
+          },function(){ flash(copy,'Copy','Press Ctrl+C'); });
+          return;
+        }
+        try{ ta.selectionStart = ta.selectionEnd = ta.value.length; }catch(e){}
+        flash(copy,'Copy', ok ? 'Copied' : 'Press Ctrl+C');
+      });
+    })(eds[i]); }
+  }
+  function flash(btn, base, msg){
+    btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = base; }, 1200);
+  }
+
+  function boot(){
+    closeAll();
+    highlight();
+    initEditors();
+    var s = document.getElementById('showAll'), h = document.getElementById('hideAll');
+    if(s) s.addEventListener('click', function(){ setAll(true);  });
+    if(h) h.addEventListener('click', function(){ setAll(false); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{ boot(); }
+})();
+
+</script>
+</body>
+</html>
