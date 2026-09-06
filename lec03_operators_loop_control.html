@@ -811,101 +811,6 @@ chain_array.cpp:7:25: warning: operation on 'k' may be undefined [-Wsequence-poi
   </div>
 </div>
 
-<h3>In-class exercise &mdash; make the counter print what you want</h3>
-
-<p>Fill in the two loops below so the first prints <code>0 1 2 3 4</code> and the second prints
-<code>1 2 3 4 5</code>, changing nothing but the operator position. Then add a third loop that
-prints <code>5 4 3 2 1</code>.</p>
-
-<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="23" data-starter="#include &lt;iostream&gt;
-using namespace std;
-
-int main() {
-    int i = 0;
-    while (i &lt; 5) {
-        cout &lt;&lt; /* i and one operator */ &lt;&lt; &quot; &quot;;
-    }
-    cout &lt;&lt; endl;
-
-    int j = 0;
-    while (j &lt; 5) {
-        cout &lt;&lt; /* j and one operator */ &lt;&lt; &quot; &quot;;
-    }
-    cout &lt;&lt; endl;
-
-    // third loop: print 5 4 3 2 1
-
-
-    return 0;
-}">#include &lt;iostream&gt;
-using namespace std;
-
-int main() {
-    int i = 0;
-    while (i &lt; 5) {
-        cout &lt;&lt; /* i and one operator */ &lt;&lt; " ";
-    }
-    cout &lt;&lt; endl;
-
-    int j = 0;
-    while (j &lt; 5) {
-        cout &lt;&lt; /* j and one operator */ &lt;&lt; " ";
-    }
-    cout &lt;&lt; endl;
-
-    // third loop: print 5 4 3 2 1
-
-
-    return 0;
-}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
-
-<div class="box qc">
-  <div class="hd">Quick Check 3.5</div>
-  <div class="bd">
-    <p>Write the third loop from the exercise above &mdash; one that prints <code>5 4 3 2 1</code>
-    &mdash; and say what the counter holds when the loop ends.</p>
-    <details class="soln"><summary></summary><div class="ans">
-      <p><strong>Plan.</strong> You want the <em>old</em> value printed on each pass, starting at 5,
-      so this is postfix decrement. Start the counter at 5 and keep going while it is still positive;
-      the last pass prints 1 and leaves the counter at 0.</p>
-<div class="codewrap"><div class="cap">qc_countdown.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
-using namespace std;
-
-int main() {
-    int n = 3;
-    while (n &gt; 0) {
-        cout &lt;&lt; n-- &lt;&lt; " ";
-    }
-    cout &lt;&lt; endl &lt;&lt; "n is now " &lt;&lt; n &lt;&lt; endl;
-
-    int m = 3;
-    while (m &gt; 0) {
-        cout &lt;&lt; --m &lt;&lt; " ";
-    }
-    cout &lt;&lt; endl &lt;&lt; "m is now " &lt;&lt; m &lt;&lt; endl;
-    return 0;
-}</code></pre></div>
-      <p>That program uses 3 rather than 5 so the contrast fits on one line, but the shape is the
-      one you want. Its output is:</p>
-<pre class="out">3 2 1
-n is now 0
-2 1 0
-m is now 0</pre>
-      <p>So the answer to the exercise is the <code>n</code> loop with 5 in place of 3:</p>
-<pre><code class="language-cpp">    int n = 5;
-    while (n &gt; 0) {
-        cout &lt;&lt; n-- &lt;&lt; " ";
-    }</code></pre>
-      <p>and the counter ends at <strong>0</strong>.</p>
-      <p><strong>Things to notice.</strong> The <code>m</code> loop is a trap that catches people every
-      semester. <code>--m</code> steps first, so the very first thing printed is 2, not 3, and the loop prints a
-      <code>0</code> that the other version never shows. Both loops run three times and both counters
-      end at 0 &mdash; the side effect is the same &mdash; but the printed sequences differ at both
-      ends.</p>
-    </div></details>
-  </div>
-</div>
-
 <h2 id="s5"><span class="num">5.</span>How <code>cout</code> prints a <code>double</code></h2>
 
 <p>Back in Class 1 a program computed the area of a circle of radius 3 and printed
@@ -1006,7 +911,7 @@ marked wrong, and these parts carry no partial credit.</p>
 </div>
 
 <div class="box qc">
-  <div class="hd">Quick Check 3.6</div>
+  <div class="hd">Quick Check 3.5</div>
   <div class="bd">
     <p>Predict every line. Then decide, for each one, whether the surprise (if any) came from the
     arithmetic or from the printing.</p>
@@ -1112,7 +1017,7 @@ back to the default:    4  0.333333</pre>
 </div>
 
 <div class="box qc">
-  <div class="hd">Quick Check 3.7</div>
+  <div class="hd">Quick Check 3.6</div>
   <div class="bd">
     <p>A student wants every number in a table printed to exactly two decimal places, so they write
     <code>cout &lt;&lt; setprecision(2);</code> at the top of <code>main</code> and nothing else. They then print
@@ -1121,14 +1026,30 @@ back to the default:    4  0.333333</pre>
     <div class="part">
       <p class="q"><span class="pl">(a)</span> What do they actually get, and why?</p>
       <details class="soln"><summary></summary><div class="ans">
-        <p>They get <code>4</code>, <code>0.33</code> and <code>149</code>.</p>
-        <p>Without <code>fixed</code>, the stream stays in its default mode, so <code>setprecision(2)</code> means
-        <strong>two significant digits</strong>, and trailing zeros are still dropped. So
-        <code>4.0</code> loses its zeros as before; <code>1.0/3.0</code> keeps two significant digits
-        and becomes <code>0.33</code>; and <code>149.1</code> rounded to two significant digits would
-        be 150 &mdash; which prints as <code>149</code>? No: two significant digits of 149.1 is
-        <code>1.5e+02</code>. Do not guess at this one &mdash; the point of the question is that the
-        result is hard to predict and therefore the wrong tool. Reach for <code>fixed</code>.</p>
+        <p>They get:</p>
+<pre class="out">4
+0.33
+1.5e+02</pre>
+        <p>Without <code>fixed</code>, the stream stays in its default mode, where
+        <code>setprecision(2)</code> means <strong>two significant digits</strong> &mdash; not two
+        decimal places &mdash; and trailing zeros are still dropped. Taking the three values one at a
+        time:</p>
+        <table class="trace">
+          <tr><th>Value</th><th>Prints</th><th>Why</th></tr>
+          <tr><td><code>4.0</code></td><td><code>4</code></td><td>Two significant digits would be
+            <code>4.0</code>, but trailing zeros are dropped in the default mode, so the decimal
+            point goes too.</td></tr>
+          <tr><td><code>1.0/3.0</code></td><td><code>0.33</code></td><td>0.3333&hellip; to two
+            significant digits. This is the one case that looks like what the student wanted, which
+            is exactly why the bug survives.</td></tr>
+          <tr><td><code>149.1</code></td><td><code>1.5e+02</code></td><td>Two significant digits of
+            149.1 is 150. Writing <code>150</code> would show three digits, so the stream switches to
+            <strong>scientific notation</strong> to keep the promise of two: 1.5 &times; 10<sup>2</sup>.</td></tr>
+        </table>
+        <p>That third row is the point of the question. Ask for two significant digits and a number
+        in the hundreds comes back in scientific notation &mdash; almost certainly not what anyone
+        wanted in a table. <code>setprecision</code> on its own is the wrong tool for "two decimal
+        places."</p>
       </div></details>
     </div>
 
@@ -1264,7 +1185,7 @@ That is the entire distinction.</p>
 </div>
 
 <div class="box qc">
-  <div class="hd">Quick Check 3.8</div>
+  <div class="hd">Quick Check 3.7</div>
   <div class="bd">
     <p>The course notes present this pair with a different guard: <code>if (i &gt; 3)</code> instead of
     <code>if (i == 2)</code>. Everything else is unchanged.</p>
@@ -1521,7 +1442,7 @@ is still <code>true</code>, so 3 is correctly reported as prime.</p>
 </div>
 
 <div class="box qc">
-  <div class="hd">Quick Check 3.9</div>
+  <div class="hd">Quick Check 3.8</div>
   <div class="bd">
     <p>Questions about the primes program above.</p>
 
@@ -1603,7 +1524,7 @@ int main() {
 }</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
 
 <div class="box qc">
-  <div class="hd">Quick Check 3.10</div>
+  <div class="hd">Quick Check 3.9</div>
   <div class="bd">
     <p>Complete the exercise above and give the exact output. Then answer this: would moving the
     <code>break</code> <em>above</em> the <code>cout</code> change what is printed?</p>
@@ -1782,45 +1703,8 @@ this shape by reflex when a body starts drifting to the right.</p>
   </div>
 </div>
 
-<div class="box warn">
-  <div class="hd">Common Mistake<span class="tag">&mdash; a character that looks right but is not ASCII</span></div>
-  <div class="bd">
-    <p>The slide this program comes from contains a real, compile-breaking typo, and it is one you
-    will hit yourself sooner or later &mdash; usually after pasting code from a PDF, a chat window,
-    or a word processor. The printed line is</p>
-<pre><code class="language-cpp">    if ( (i%5) ！= 0 ) continue；</code></pre>
-    <p>Look closely at the <code>!</code> and the <code>;</code>. They are not <code>!</code> and
-    <code>;</code>. They are U+FF01 FULLWIDTH EXCLAMATION MARK and U+FF1B FULLWIDTH SEMICOLON &mdash;
-    different characters that happen to be drawn like the ones you want. The corrected line is the
-    one used above:</p>
-<pre><code class="language-cpp">    if ( (i % 5) != 0 ) continue;</code></pre>
-    <p>Compile the original and g++ produces this, which tells you nothing useful if you do not know
-    what to look for:</p>
-<pre class="err">fullwidth_bug.cpp: In function 'int main()':
-fullwidth_bug.cpp:6:21: error: expected ')' before '\U0000ff01'
-    6 |         if ( (i % 5) ！= 0 ) continue；
-      |            ~        ^~~
-      |                     )
-fullwidth_bug.cpp:6:30: error: 'continue\U0000ff1b' was not declared in this scope
-    6 |         if ( (i % 5) ！= 0 ) continue；
-      |                              ^~~~~~~~~~</pre>
-    <p>The whole family of these errors has one giveaway: <strong>the message quotes a
-    <code>\U0000xxxx</code> escape for a character you never knowingly typed</strong>, or complains
-    about an "extended character" that "is not valid in an identifier." A simpler case, a full-width
-    semicolon after a number, produces this:</p>
-<pre class="err">stray_semicolon.cpp: In function 'int main()':
-stray_semicolon.cpp:5:13: error: unable to find numeric literal operator 'operator""\U0000ff1b'
-    5 |     int x = 5；
-      |             ^~~</pre>
-    <p>Curly quotes from a word processor (<code>&ldquo;</code> and <code>&rdquo;</code> instead of
-    <code>"</code>) and non-breaking spaces behave the same way. The cure is always the same: retype
-    the suspicious line by hand in your editor. Do not try to fix it by staring at it &mdash; the
-    characters are designed to look identical.</p>
-  </div>
-</div>
-
 <div class="box qc">
-  <div class="hd">Quick Check 3.11</div>
+  <div class="hd">Quick Check 3.10</div>
   <div class="bd">
     <p>The loop above runs <code>i = 6, 10, 14, 18, 22, 26, 30</code>.</p>
 
@@ -1932,7 +1816,7 @@ int main() {
 }</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
 
 <div class="box qc">
-  <div class="hd">Quick Check 3.12</div>
+  <div class="hd">Quick Check 3.11</div>
   <div class="bd">
     <p>Write the flattened version of the scores loop, and give its output.</p>
     <details class="soln"><summary></summary><div class="ans">
@@ -2438,15 +2322,13 @@ int main() {
       <li>Deep <code>if</code> nesting inside a loop flattens mechanically into <strong>guard clauses</strong>:
         negate each condition, replace each block with <code>continue</code>, and the real work moves out to the
         left. Valid only when the nest is the whole loop body.</li>
-      <li>A character that looks like <code>!</code> or <code>;</code> but is not ASCII produces a compiler message quoting
-        a <code>\U0000xxxx</code> escape you never typed. Retype the line rather than staring at it.</li>
     </ul>
     <p><strong>Coming up in Class 4:</strong> we give programs a memory that outlives them &mdash;
     reading and writing files with <code>ifstream</code> and <code>ofstream</code>, and generating random numbers.</p>
   </div>
 </div>
 
-<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 2 &middot; Functions &amp; References</div><div class="pending">posts Thu Sep 3</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 4 &middot; File I/O</div><div class="pending">posts Thu Sep 10</div></div></nav>
+<nav class="pagenav"><a href="lec02_functions_references.html"><div class="dir">&larr; Previous</div><div class="t">Class 2 &middot; Functions &amp; References</div></a><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 4 &middot; File I/O</div><div class="pending">posts Thu Sep 10</div></div></nav>
 <footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
 </div>
 <script>
