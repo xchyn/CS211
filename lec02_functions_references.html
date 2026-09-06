@@ -440,7 +440,7 @@ them on the floor. The function was never broken; the parameter passing was.</p>
     </div>
 
     <div class="part">
-      <p class="q"><span class="pl">(c)</span> Class 1 mentioned that <code>gcd(int a, int b)</code> deliberately modifies its parameters as it works. Why is call by value the *right* choice there?</p>
+      <p class="q"><span class="pl">(c)</span> Class 1 mentioned that <code>gcd(int a, int b)</code> deliberately modifies its parameters as it works. Why is call by value the <em>right</em> choice there?</p>
       <details class="soln"><summary></summary><div class="ans">
         <p>Because <code>gcd</code> is a <em>query</em>: the caller wants an answer, not a side
         effect. Euclid's algorithm is easiest to write if you may chew up <code>a</code> and
@@ -790,6 +790,20 @@ copy and get nothing for the money.</p>
     address of that block, we can watch a by-value parameter make a whole second copy of 100,000
     characters &mdash; and watch a <code>const</code> reference not bother. Which two of the three
     addresses will match?</p>
+    <p>Two pieces of the program below are running ahead of the course, so here is what they do
+    before you meet them properly:</p>
+    <ul>
+      <li><code>s.data()</code> asks the string where its characters actually live, and hands back
+        the <em>address</em> of the first one. An address is a number identifying a location in
+        memory. Class 7 is entirely about these; for today, treat it as "where the text is kept."</li>
+      <li><code>(const void*)</code> in front of it is a <strong>cast</strong> &mdash; it tells
+        <code>cout</code> to treat that address as a plain location rather than as text.
+        Without the cast <code>cout</code> recognizes an address-of-characters and helpfully prints
+        <em>the 100,000 characters themselves</em>. The cast is what makes it print the address, which
+        is the one thing we want to see.</li>
+    </ul>
+    <p>Neither is exam material. They are here because the address is the only way to <em>see</em>
+    a copy happen.</p>
 <div class="codewrap"><div class="cap">constref.cpp</div><pre><code class="language-cpp">// constref.cpp -- a by-value string parameter really does copy every character
 #include &lt;iostream&gt;
 #include &lt;string&gt;
@@ -822,9 +836,8 @@ point. <code>by_value</code> got its own block of 100,000 characters at a differ
 program really did allocate and copy all of it, just so a function could print a number and throw
 the copy away. <code>by_const_ref</code> is looking straight at <code>main</code>'s characters.</p>
 <p><code>string(100000, 'x')</code> is a constructor call that builds a string of 100,000 copies of
-the letter <code>x</code>; <code>.data()</code> hands back the address of the first character, and
-the cast to <code>const void*</code> is only there to make <code>cout</code> print the address rather
-than the 100,000 characters. Neither is exam material &mdash; the measurement is.</p>
+the letter <code>x</code> &mdash; a cheap way to make an argument big enough that copying it is
+obviously wasteful.</p>
 
 </div></details>
   </div>
@@ -2010,8 +2023,7 @@ limits.h:2:11: error: redefinition of 'const int MAX_STUDENTS'
     <p>Cut the project down to one <code>swap</code>, put a marker inside it so we can see when it
     runs, and then <em>forget the <code>#include</code></em> in the driver. Does it fail to compile,
     fail to link, or print something?</p>
-<div class="codewrap"><div class="cap">swap_marked.cpp</div><pre><code class="language-cpp">// swap.cpp
-#include &lt;iostream&gt;
+<div class="codewrap"><div class="cap">swap.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
 #include "swap.h"
 
 void swap(int &amp;u, int &amp;v) {
@@ -2020,8 +2032,7 @@ void swap(int &amp;u, int &amp;v) {
     u = v;
     v = t;
 }</code></pre></div>
-<div class="codewrap"><div class="cap">main_noinclude.cpp</div><pre><code class="language-cpp">// main.cpp
-#include &lt;iostream&gt;
+<div class="codewrap"><div class="cap">main.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
 // #include "swap.h"        &lt;-- forgotten
 using namespace std;
 
