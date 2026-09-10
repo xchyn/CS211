@@ -75,6 +75,9 @@ a{color:#1d4ed8}
 .toc .th{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
   color:var(--muted);margin-bottom:7px}
 .toc ol{margin:0;padding-left:22px;columns:2;column-gap:30px}
+/* .toc.single -- one column. Used where the entries carry a trailing
+   description, which two narrow columns would wrap badly. */
+.toc.single ol{columns:1}
 .toc li{margin:3px 0;break-inside:avoid}
 .toc a{color:var(--body);text-decoration:none}
 .toc a:hover{color:#1d4ed8;text-decoration:underline}
@@ -2328,7 +2331,7 @@ int main() {
   </div>
 </div>
 
-<nav class="pagenav"><a href="lec02_functions_references.html"><div class="dir">&larr; Previous</div><div class="t">Class 2 &middot; Functions &amp; References</div></a><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 4 &middot; File I/O</div><div class="pending">posts Thu Sep 10</div></div></nav>
+<nav class="pagenav"><a href="lec02_functions_references.html"><div class="dir">&larr; Previous</div><div class="t">Class 2 &middot; Functions &amp; References</div></a><a class="next" href="lec04_file_io_random.html"><div class="dir">Next &rarr;</div><div class="t">Class 4 &middot; File I/O</div></a></nav>
 <footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
 </div>
 <script>
