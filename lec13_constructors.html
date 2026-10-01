@@ -59,6 +59,7 @@ body{
 h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
    padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
 h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
 h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
 h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
 p{margin:0 0 13px}
@@ -298,6 +299,8 @@ table.sched a:hover{text-decoration:underline}
 <div class="toc">
   <div class="th">On this page</div>
   <ol>
+    <li><a href="#cA">Carried over: a class can contain functions too</a></li>
+    <li><a href="#cB">Carried over: <code>const</code> member functions</a></li>
     <li><a href="#s1">Where Class 10 left off: an object full of garbage</a></li>
     <li><a href="#s2">The default constructor</a></li>
     <li><a href="#s3">Non-default constructors and which one the compiler picks</a></li>
@@ -318,6 +321,358 @@ table.sched a:hover{text-decoration:underline}
 </div>
 
 <hr>
+
+<h2 id="carried"><span class="num">&#9670;</span>Carried over from Classes II</h2>
+
+<div class="box key"><div class="hd">Why this is here</div><div class="bd">Classes II was cut short when Pointers II ran into Class&nbsp;9. These two sections move here, because a constructor is a member function and you cannot write one without them.</div></div>
+
+<h3 id="cA"><span class="num">A.</span>A class can contain functions too</h3>
+
+<p>In Class 10 a class was a container of data. You wrote <code>class Point { public: double x, y; };</code>, you
+declared an object with <code>Point apt;</code>, and you reached into it with the dot operator: <code>apt.x = 2.5;</code>.
+Useful, but so far a class is only a way to keep related variables side by side. It has no behavior
+of its own.</p>
+
+<p>Today it gets some. Here is the whole idea, in the course notes' own words:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; from the course notes</span></div>
+  <div class="bd">
+    <ul>
+      <li>A class can contain more than just data.</li>
+      <li>A class can also contain <em>functions</em>.</li>
+      <li>Functions which belong to a class are called <strong>class methods</strong>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; class method / member function</span></div>
+  <div class="bd">
+    <p>A <strong>class method</strong> &mdash; also called a <strong>member function</strong> &mdash;
+    is a function declared inside a class. It is an ordinary C++ function in every respect except
+    one: it belongs to the class, so when you call it, it is always called <em>on some object</em>,
+    and inside the body the data member names refer to <em>that</em> object's data.</p>
+    <p>The two names mean exactly the same thing. The course notes say "method"; the C++ standard
+    says "member function"; exam questions in this course use both. Get comfortable with each.</p>
+  </div>
+</div>
+
+<p>Three mechanical facts to notice before the example, all straight from the notes:</p>
+
+<ul>
+  <li>The dot operator applies to class methods using exactly the same syntax as for class data.
+    You wrote <code>apt.x</code>; you now write <code>bpt.print()</code>.</li>
+  <li>A class method must have a return type. In these first examples it is <code>void</code>, but it is
+    written out just like any function's return type.</li>
+  <li>A method is a function just like any other C++ function. The only difference is that it
+    belongs to a class.</li>
+</ul>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the first class with methods</span></div>
+  <div class="bd">
+    <p>This is the course notes' program. The class now has a <em>data</em> section and a
+    <em>methods</em> section. Read <code>set</code> and <code>print</code> carefully &mdash; notice that neither of them
+    mentions any object at all, and neither of them declares <code>x</code> or <code>y</code>. Predict the output.</p>
+<div class="codewrap"><div class="cap">methods.cpp</div><pre><code class="language-cpp">// methods.cpp -- a class that contains functions as well as data
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    // data
+    double x, y;
+
+    // methods
+    void set(double a, double b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+};
+
+int main() {
+    Point bpt;
+    bpt.set(1.23, 4.56);    // dot operator for class methods
+    bpt.print();            // dot operator for class methods
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56</pre>
+<p>The interesting part is what is <em>not</em> written. Inside <code>set</code>, the bare names <code>x</code> and <code>y</code>
+are not local variables and not globals &mdash; they are the data members of whichever object the
+method was called on. Because <code>main</code> wrote <code>bpt.set(...)</code>, the assignment <code>x = a;</code> lands in
+<code>bpt</code>'s <code>x</code>. If <code>main</code> had two points and called <code>apt.set(...)</code> instead, the identical
+line of code would land in <code>apt</code>'s <code>x</code>.</p>
+<table class="trace">
+  <tr><th>Statement in <code>main</code></th><th>What actually happens</th></tr>
+  <tr><td><code>Point bpt;</code></td><td>Memory for one <code>Point</code> is set aside: two <code>double</code>s. No method runs.</td></tr>
+  <tr><td><code>bpt.set(1.23, 4.56);</code></td><td>The shared function <code>set</code> runs <em>with <code>bpt</code> as its object</em>. <code>a</code> becomes 1.23, <code>b</code> becomes 4.56, and the two assignments write into <code>bpt</code>.</td></tr>
+  <tr><td><code>bpt.print();</code></td><td>The shared function <code>print</code> runs with <code>bpt</code> as its object, reads <code>bpt</code>'s <code>x</code> and <code>y</code>, and sends them to <code>cout</code>.</td></tr>
+</table>
+<p>And the formatting detail that costs points on exams: <code>4.56</code> prints as <code>4.56</code>, but if you had
+called <code>bpt.set(1.0, 2.0)</code> the output would be <code>print x,y 1 2</code>. <code>cout</code> drops trailing
+zeros by default. Write it that way in an exam answer.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; naming a parameter after a data member</span></div>
+  <div class="bd">
+    <p>The professor named the parameters <code>a</code> and <code>b</code>, not <code>x</code> and <code>y</code>, and that is deliberate. If
+    you write</p>
+<pre><code class="language-cpp">    void set(double x, double y) {
+        x = x;          // does nothing useful
+        y = y;
+    }</code></pre>
+    <p>then inside the method the name <code>x</code> means the <em>parameter</em>, not the data member &mdash;
+    the closer declaration wins. The line <code>x = x;</code> assigns the parameter to itself and the object is
+    never touched. It compiles, it runs, and it silently does nothing. There is a fix using the
+    <code>this</code> pointer, which we meet in Class 15; until then just give the parameters different
+    names.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.1</div>
+  <div class="bd">
+    <p>Using the <code>Point</code> class from the worked example above.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> How many copies of the function <code>set</code> exist in the compiled program if <code>main</code> creates five <code>Point</code> objects? How many copies of <code>x</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>One</strong> copy of <code>set</code>, and <strong>five</strong> copies of <code>x</code>.</p>
+        <p>Methods are compiled once and shared by every object of the class &mdash; there is only
+        one set of machine instructions for <code>set</code> in the whole executable. Data members are
+        per-object; that is the entire reason objects exist. What varies from call to call is
+        <em>which</em> object the method operates on, and that is decided by whatever sits to the
+        left of the dot.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Inside <code>print</code>, would it be legal to write <code>bpt.x</code> instead of <code>x</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. The class knows nothing about a variable named <code>bpt</code>; that name exists only
+        inside <code>main</code>. The class is a blueprint, written once, and it has to work for every object
+        ever made from it &mdash; including objects that have not been given a name at all.</p>
+        <p>Inside a method, an unqualified data-member name already means "this object's copy". That
+        is precisely what makes one shared function able to serve every object.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> Add a method <code>void reset()</code> that sets both coordinates to zero, written in terms of the existing <code>set</code> method. Can one method call another?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes, and with no dot in front of it:</p>
+<pre><code class="language-cpp">    void reset() {
+        set(0.0, 0.0);
+    }</code></pre>
+        <p>Inside a method, calling <code>set(0.0, 0.0)</code> means "call <code>set</code> on the same object I was called
+        on." This is the same rule as (b), applied to methods instead of data. It is also why
+        <code>print</code> in a class can call <code>area()</code> or <code>getx()</code> directly, which we lean on constantly from
+        here on.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3 id="cB"><span class="num">B.</span>const member functions</h3>
+
+<p>You have already met <code>const</code> twice in this course: on a variable in Class 1
+(<code>const int DAYS_IN_WEEK = 7;</code>) and on a reference parameter in Class 2
+(<code>void show(const string &amp;s)</code>). This is the third use, and syntactically it is the odd one,
+because the keyword goes in a place you have not seen before &mdash; <em>after</em> the parameter
+list.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>const</code> member function</span></div>
+  <div class="bd">
+    <p>A method written as</p>
+<pre><code class="language-cpp">    void print() const {  ...  }</code></pre>
+    <p>is a <strong><code>const</code> member function</strong>. Tagging a class method <code>const</code> is a promise to
+    the compiler that <strong>the method will not change the values of the internal data in the
+    class.</strong></p>
+    <p>The <code>const</code> goes after the parameter list and before the opening brace. It is part of the
+    method's signature, so if you later define the body outside the class it must appear in
+    <em>both</em> places (Class 14, &sect;8).</p>
+  </div>
+</div>
+
+<p>The course notes state the rule for our two methods directly:</p>
+
+<ul>
+  <li>Obviously <code>print()</code> does not change the values of <code>x</code> and <code>y</code>. Hence <code>print()</code> can be tagged
+    as <code>const</code>.</li>
+  <li>However <code>set(...)</code> changes the values of <code>x</code> and <code>y</code>. Hence <code>set(...)</code> cannot be tagged as
+    <code>const</code>.</li>
+</ul>
+
+<p>So what does the promise actually buy? Two things, and the second one is the one that matters.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; breaking the promise inside the method</span></div>
+  <div class="bd">
+    <p>The first thing <code>const</code> buys you is that the compiler checks the method's own body. Here
+    someone has tagged the mutator <code>const</code> &mdash; perhaps out of a vague sense that <code>const</code> is
+    always good. What does g++ say?</p>
+<div class="codewrap"><div class="cap">constbad.cpp</div><pre><code class="language-cpp">// constbad.cpp -- tagging a mutator const: the promise is broken
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+    void set(double a, double b) const {   // WRONG: set changes the object
+        x = a;
+        y = b;
+    }
+};
+
+int main() {
+    Point p;
+    p.set(1.0, 2.0);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constbad.cpp: In member function 'void Point::set(double, double) const':
+constbad.cpp:9:11: error: assignment of member 'Point::x' in read-only object
+    9 |         x = a;
+      |         ~~^~~
+constbad.cpp:10:11: error: assignment of member 'Point::y' in read-only object
+   10 |         y = b;
+      |         ~~^~~</pre>
+<p><em>"assignment of member ... in read-only object"</em> is the phrasing to memorize. Inside a
+<code>const</code> method, every data member of the object is treated as read-only, so the two assignments are
+rejected. Note that the error points at the <em>body</em>, not at the <code>const</code> keyword &mdash; g++
+believes your promise and blames the code that breaks it. The fix is to delete the <code>const</code>, because
+a mutator genuinely does change the object.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the promise as seen from outside</span></div>
+  <div class="bd">
+    <p>The second and far more important payoff: once an object is <code>const</code>, or is reached through a
+    <code>const</code> reference, <strong>only its <code>const</code> methods may be called.</strong> Here <code>show</code> takes a
+    <code>const Point &amp;</code> &mdash; the Class 2 idiom for "pass a big thing cheaply, and promise not to
+    change it." It calls one method that is <code>const</code> and one that is not.</p>
+<div class="codewrap"><div class="cap">constobj.cpp</div><pre><code class="language-cpp">// constobj.cpp -- a const object may only call const methods
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double x, y;
+    void set(double a, double b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+};
+
+void show(const Point &amp;p) {
+    p.print();               // fine: print is const
+    p.set(0.0, 0.0);         // error: set is not const
+}
+
+int main() {
+    Point bpt;
+    bpt.set(1.23, 4.56);
+    show(bpt);
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">constobj.cpp: In function 'void show(const Point&amp;)':
+constobj.cpp:19:10: error: passing 'const Point' as 'this' argument discards qualifiers [-fpermissive]
+   19 |     p.set(0.0, 0.0);         // error: set is not const
+      |     ~~~~~^~~~~~~~~~
+constobj.cpp:8:10: note:   in call to 'void Point::set(double, double)'
+    8 |     void set(double a, double b) {
+      |          ^~~~</pre>
+<p><em>"discards qualifiers"</em> is g++'s way of saying: <em>you have a read-only handle on this
+object and you tried to call a method that reserves the right to write to it.</em> The line
+<code>p.print();</code> is accepted without complaint, because <code>print</code> is <code>const</code> and therefore safe.</p>
+<p>The word <code>this</code> in the message is a forward reference &mdash; every method receives a hidden
+pointer to the object it was called on, and that pointer is what carries the <code>const</code>. We take
+<code>this</code> apart properly in Class 15. For now, read "discards qualifiers" as "non-<code>const</code> method,
+<code>const</code> object."</p>
+<p>Here is why this matters more than the first example. The moment anyone in your program writes a
+function taking <code>const YourClass &amp;</code>, every method they need must already be <code>const</code>. If you
+forgot the keyword when you wrote the class, <em>their</em> code will not compile, and the fix has
+to happen in <em>your</em> file. So the rule is not "add <code>const</code> when it seems tidy." It is:</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box key">
+  <div class="hd">Key Idea</div>
+  <div class="bd">
+    <p><strong>If a method does not change the object, mark it <code>const</code>.</strong> Do it when you write
+    the method, not later. It costs one word, it is checked by the compiler, and leaving it off
+    quietly makes your class unusable through <code>const</code> references &mdash; which is how objects are
+    passed to functions for the rest of this course.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.2</div>
+  <div class="bd">
+    <p>For each method of a hypothetical <code>BankAccount</code> class, say whether it should be tagged
+    <code>const</code>, and why.</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> <code>double getBalance()</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Yes</strong> &mdash; <code>double getBalance() const</code>. It reads a data member and hands
+        the value back; nothing in the object changes. Every accessor in this course should be
+        <code>const</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>void deposit(double amount)</code></p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> <code>deposit</code> writes to the balance. Tagging it <code>const</code> produces exactly
+        the <em>"assignment of member ... in read-only object"</em> error from the worked example
+        above.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> <code>void print()</code>, which sends the balance to <code>cout</code> but does not touch a data member</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Yes</strong> &mdash; <code>void print() const</code>. Printing changes the screen, not the
+        object, and it is the object that <code>const</code> is about. This is the case people most often get
+        wrong, and the professor's own <code>print()</code> is <code>const</code> in every version of <code>Point</code> in the
+        notes.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(d)</span> <code>double applyInterest()</code>, which grows the balance and returns the interest earned</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>No.</strong> Do not be fooled by the return value &mdash; the question is never
+        "does this method return something", it is "does this method change the object." This one
+        changes the balance, so it cannot be <code>const</code>.</p>
+        <p><strong>The test to apply every time:</strong> read the method body and ask whether any
+        data member appears on the left of an assignment, is passed somewhere by non-<code>const</code>
+        reference, or is modified by <code>++</code>/<code>--</code>. If the answer is no anywhere in the body, write
+        <code>const</code>.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
 
 <h2 id="s1"><span class="num">1.</span>Where Class 10 left off: an object full of garbage</h2>
 
@@ -2546,6 +2901,124 @@ print x,y 0 0</pre>
       <li>Questions in this format carry no partial credit per sub-task, so write the punctuation
         carefully &mdash; the semicolon, the brackets, the asterisk in the declaration.</li>
     </ul>
+  </div></details>
+</div>
+
+
+<h3>Problem 7 &mdash; What is the output for each of the following lines? <span class="muted small">(added)</span> <span class="muted small">(carried over from Classes II)</span></h3>
+
+<p>Consider the following class and <code>main</code>. For each of the five labelled lines, state the output. If
+the line causes a compiler error, write ERROR and explain why the error occurs, then comment the line
+out and move on to the next one.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Counter {
+public:
+    void set(int v) { count = v; }
+    int  get() const { return count; }
+    void bump() { count++; }
+    void show() const { cout &lt;&lt; "count = " &lt;&lt; count &lt;&lt; endl; }
+private:
+    int count;
+};
+
+int main() {
+    Counter c;
+    Counter *p = new Counter;
+    c.set(5);
+    p-&gt;set(10);
+    const Counter &amp;r = c;
+
+    c.show();                          // (a)
+    p.show();                          // (b)
+    (*p).bump();  p-&gt;show();           // (c)
+    cout &lt;&lt; c.count &lt;&lt; endl;           // (d)
+    r.bump();                          // (e)
+
+    delete p;
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> <code>c.show();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">count = 5</pre>
+    <p><code>c</code> is an ordinary object, <code>show</code> is public and <code>const</code>, and <code>c.set(5)</code> ran earlier. Nothing
+    to trip over.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> <code>p.show();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>ERROR.</strong> <code>p</code> is a pointer, so the member must be reached with <code>-&gt;</code>.</p>
+<pre class="err">trace_err.cpp:23:7: error: request for member 'show' in 'p', which is of pointer type 'Counter*' (maybe you meant to use '-&gt;' ?)
+   23 |     p.show();                          // (b)
+      |       ^~~~</pre>
+    <p>The fix is <code>p-&gt;show();</code>, which would print <code>count = 10</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> <code>(*p).bump();  p-&gt;show();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre class="out">count = 11</pre>
+    <p>Both halves are legal. <code>(*p).bump()</code> is the long form of <code>p-&gt;bump()</code>; it dereferences the
+    pointer and then calls <code>bump</code>, taking the heap object's count from 10 to 11. Then
+    <code>p-&gt;show()</code> prints it.</p>
+    <p>Note that <code>bump</code> is <em>not</em> <code>const</code> &mdash; it increments a data member &mdash; and that
+    is fine here, because <code>p</code> is a plain <code>Counter*</code>, not a pointer to <code>const</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> <code>cout &lt;&lt; c.count &lt;&lt; endl;</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>ERROR.</strong> <code>count</code> is private, and <code>main</code> is outside the class.</p>
+<pre class="err">trace_err.cpp:25:15: error: 'int Counter::count' is private within this context
+   25 |     cout &lt;&lt; c.count &lt;&lt; endl;           // (d)
+      |               ^~~~~
+trace_err.cpp:12:9: note: declared private here
+   12 |     int count;
+      |         ^~~~~
+trace_err.cpp:25:15: note: field 'int Counter::count' can be accessed via 'int Counter::get() const'
+   25 |     cout &lt;&lt; c.count &lt;&lt; endl;           // (d)
+      |               ^~~~~
+      |               get()</pre>
+    <p>The fix is the one g++ suggests: <code>cout &lt;&lt; c.get() &lt;&lt; endl;</code>, which prints
+    <code>5</code>.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> <code>r.bump();</code></p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>ERROR.</strong> <code>r</code> is a <code>const Counter &amp;</code>, so only <code>const</code> methods may be called
+    through it, and <code>bump</code> is not one.</p>
+<pre class="err">trace_err.cpp:26:11: error: passing 'const Counter' as 'this' argument discards qualifiers [-fpermissive]
+   26 |     r.bump();                          // (e)
+      |     ~~~~~~^~
+trace_err.cpp:9:10: note:   in call to 'void Counter::bump()'
+    9 |     void bump() { count++; }
+      |          ^~~~</pre>
+    <p>There is no fix that keeps the meaning &mdash; <code>r</code> is a read-only handle by design, and
+    <code>bump</code> writes. You could call a <code>const</code> method instead: <code>cout &lt;&lt; r.get() &lt;&lt; endl;</code>
+    prints <code>5</code>.</p>
+    <p><strong>Things to notice.</strong> With (b), (d) and (e) commented out and (e) replaced by
+    <code>r.get()</code>, the surviving program prints:</p>
+<pre class="out">count = 5
+count = 11
+5</pre>
+    <p>The three errors are the three big traps of this class, one each: <em>dot on a pointer</em>,
+    <em>outside code touching private data</em>, and <em>a non-<code>const</code> method through a <code>const</code>
+    handle</em>. Learn to recognize those three g++ messages on sight and you will diagnose most of
+    your class bugs from the first line of the error.</p>
+    <p>Two exam habits this question is drilling: read the <em>declaration</em> of anything on the
+    left of a <code>.</code> or <code>-&gt;</code> before deciding which one is legal, and, when a line fails, say
+    <em>which</em> rule it broke rather than just "it does not compile" &mdash; the rubric for this
+    style of question pays for the explanation.</p>
   </div></details>
 </div>
 
