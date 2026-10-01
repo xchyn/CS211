@@ -288,7 +288,7 @@ table.sched a:hover{text-decoration:underline}
       <li>Choose between a value, reference, <code>const</code> reference and pointer parameter, and justify the choice in one sentence.</li>
       <li>Write the sentinel-controlled input loop that every "write a complete C++ program" question is built on, from memory and without a compiler.</li>
       <li>Write the five pointer-and-dynamic-memory statements &mdash; declare, allocate, copy through, use, release &mdash; without hesitating over <code>.</code> versus <code>-&gt;</code>, or <code>delete</code> versus <code>delete []</code>.</li>
-      <li>Implement a small class's <code>set</code>, accessor and arithmetic methods, and a free function that has to reach private data through the getters.</li>
+      <li>Write a function into a given program: results out through <strong>reference parameters</strong>, input in through a <code>const</code> reference, and an array built with <code>new</code> and handed back as a pointer.</li>
       <li>Trace a <code>cout</code> chain full of <code>++</code> and <code>--</code>, a <code>break</code> loop against its <code>continue</code> twin, and a vector built by conditional <code>push_back</code>/<code>pop_back</code> &mdash; and get every digit right.</li>
       <li>Run the checklist in &sect;7 and name the two or three things you still need to practice tonight.</li>
     </ol>
@@ -302,7 +302,7 @@ table.sched a:hover{text-decoration:underline}
     <li><a href="#s2">Passing data to a function</a></li>
     <li><a href="#s3">Vectors, and the write-a-program question</a></li>
     <li><a href="#s4">Pointers and dynamic memory</a></li>
-    <li><a href="#s5">Classes: private data and the way in</a></li>
+    <li><a href="#s5">Classes I: an object is a box of variables</a></li>
     <li><a href="#s6">The output-prediction traps</a></li>
     <li><a href="#s7">The night-before checklist</a></li>
     <li><a href="#prac">Practice Problems &mdash; a full timed exam</a></li>
@@ -323,7 +323,7 @@ table.sched a:hover{text-decoration:underline}
 
 <p>Exam 1 is next class. It covers Classes 1 through 10 &mdash; the C++ refresher, references and
 parameter passing, the increment operators and loop control, file I/O, vectors, pointers, dynamic
-memory, and your first two classes on classes. Today is not new material. Today is the same
+memory, and your first class on classes. Today is not new material. Today is the same
 material, re-sorted into the four shapes the paper uses, so that when you turn it over nothing on it
 is a surprise.</p>
 
@@ -338,10 +338,10 @@ questions look like. Here is the actual structure of this course's Exam 1.</p>
 
 <table class="trace">
   <tr><th>Q</th><th>Format</th><th>What it is about</th><th>Points</th><th>Partial credit?</th></tr>
-  <tr><td>1</td><td>"Write a complete C++ program that does the following."</td><td>A sentinel-controlled input loop into a vector, then a computation and a filtered print.</td><td>10</td><td><strong>Yes</strong>, generously</td></tr>
-  <tr><td>2</td><td>"Write C++ statements to carry out the following tasks." Five lettered one-liners.</td><td>Pointers and dynamic memory: declare, allocate, copy through, use, release.</td><td>10 (2 each)</td><td>Barely &mdash; 1 pt on two parts</td></tr>
+  <tr><td>1</td><td>"Write a complete C++ program that does the following."</td><td>A sentinel-controlled input loop into a vector, then a computation and a filtered print.</td><td>10</td><td><strong>Yes</strong></td></tr>
+  <tr><td>2</td><td>"Write C++ statements to carry out the following tasks." Five lettered one-liners.</td><td>Pointers and dynamic memory: declare, allocate, copy through, use, release.</td><td>10 (2 each)</td><td>Barely</td></tr>
   <tr><td>3</td><td>"What is the output for each of the following lines?" Lines (a)&ndash;(e).</td><td><code>++</code>/<code>--</code> inside a <code>cout</code> chain, <code>break</code> versus <code>continue</code>, a vector's <code>size()</code> and <code>back()</code>.</td><td>10 (2 each)</td><td><strong>No</strong></td></tr>
-  <tr><td>4</td><td>"Give an implementation for the &hellip; method."</td><td>A small class: a <code>set</code> method, an arithmetic method, and a free function that goes through the getters.</td><td>10 (2 + 2 + 6)</td><td>On the 6-point part only</td></tr>
+  <tr><td>4</td><td>"Give an implementation for the function &hellip;"</td><td>Two free functions written into a given program: one that reports results through <strong>reference parameters</strong>, one that <strong>returns a dynamically allocated array</strong>, then the statements in <code>main</code> that call them, print, and release.</td><td>10 (4 + 4 + 2)</td><td>Yes</td></tr>
 </table>
 
 <p>Four questions, <strong>40 points</strong>, <strong>50 minutes</strong>. That is the shape of the
@@ -479,10 +479,10 @@ where it lands before you plan tonight.</p>
   <tr><th>Topic</th><th>Class</th><th>How it shows up on an Exam 1 style paper</th></tr>
   <tr><td>Pointers and dynamic memory</td><td>7, 8</td><td>Its own question, every time, and again inside the class question. The most pervasive topic in the whole course.</td></tr>
   <tr><td>Vectors</td><td>5, 6</td><td>The container the program question is built on, plus part (e) of the trace.</td></tr>
-  <tr><td>Classes: members, methods, <code>private</code>, accessors</td><td>9, 10</td><td>The whole of Question 4.</td></tr>
+  <tr><td>Classes: declaring one, objects, the dot operator</td><td>10</td><td>Light. A class, if one appears, has <strong>public data members only</strong> &mdash; it is a box of variables you reach with <code>.</code>. Member functions, <code>const</code> methods, <code>private:</code>, accessors, <code>-&gt;</code> and <code>::</code> are <strong>not</strong> on this paper; they moved to Classes 13&ndash;15.</td></tr>
   <tr><td><code>++</code>, <code>--</code>, <code>break</code>, <code>continue</code></td><td>3</td><td>Parts (a) through (d) of the trace.</td></tr>
   <tr><td><code>cout</code> formatting of a <code>double</code></td><td>3</td><td>Never asked directly &mdash; but it decides whether an answer of <code>4</code> or <code>4.0</code> is right, and it appears inside program questions that divide.</td></tr>
-  <tr><td>References and parameter passing</td><td>2</td><td>Never the subject of a question; required in almost every answer, and worth signature points.</td></tr>
+  <tr><td>References and parameter passing</td><td>2</td><td><strong>Promoted.</strong> Question 4 is built on it: a <code>const</code> reference for input you must not change, plain references for results you must send back. Required in almost every other answer too, and worth signature points.</td></tr>
   <tr><td>Arrays</td><td>7</td><td>Constantly, mixed in with the pointer material &mdash; <code>int *py = y;</code> for an array against <code>int *px = &amp;x;</code> for a scalar is an explicitly graded distinction.</td></tr>
   <tr><td>File I/O</td><td>4</td><td>Has not appeared on a past Exam 1 or midterm paper &mdash; the input always arrives through <code>cin</code>. Know it anyway; the loop discipline is the same one the input loops need, and past papers are evidence, not a promise.</td></tr>
 </table>
@@ -642,13 +642,14 @@ length = 27</pre>
     </div>
 
     <div class="part">
-      <p class="q"><span class="pl">(d)</span> A function that returns the product of two <code>Rational</code> objects, where <code>Rational</code> has private data and public getters.</p>
+      <p class="q"><span class="pl">(d)</span> A function that receives a vector of integers it must not change, and reports the smallest and the largest value back to the caller.</p>
       <details class="soln"><summary></summary><div class="ans">
-<pre><code class="language-cpp">Rational product(Rational x, Rational y)</code></pre>
-        <p>This is the signature from the Fall 2023 paper itself, and it takes both objects
-        <strong>by value</strong>. <code>const Rational &amp;x</code> would be better style, but it needs the
-        getters to be <code>const</code> member functions &mdash; and on that exam they are not, so the
-        <code>const</code> reference version would not compile. Match the stem you are given.</p>
+<pre><code class="language-cpp">void spread(const vector&lt;int&gt; &amp;v, int &amp;lo, int &amp;hi)</code></pre>
+        <p>Three decisions, each worth marks. <code>const vector&lt;int&gt; &amp;</code> for the input: a
+        reference so the vector is not copied, <code>const</code> because the question says it must not
+        change. Plain <code>int &amp;</code> for each result, because that is the only way a value gets
+        back to the caller. And <code>void</code> for the return type &mdash; a function that answers
+        through references has nothing left to return.</p>
         <p><strong>The wrap-up for all four parts:</strong> the parameter list is worth points on its
         own. Get the return type, the names and the <code>&amp;</code> right, and you have banked the signature
         credit before writing a single statement of the body.</p>
@@ -739,6 +740,29 @@ int main() {
 nouns. Fall 2023 asked for the evens and odds of a list terminated by <code>0</code>. Winter 2025 asked for the
 average and the values above it, terminated by <code>0</code>. Summer 2025 asked for the maximum and the values
 below half of it, terminated by <code>-1</code>. One recipe covers all three.</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the nouns can be words, not just numbers</span></div>
+  <div class="bd">
+    <p>Nothing in the recipe depends on the element type. A sentinel can be a <em>word</em> rather than a
+    number, and the container can be a <code>vector&lt;string&gt;</code>; the loop is identical:</p>
+<pre><code class="language-cpp">string w;
+vector&lt;string&gt; words;
+cin &gt;&gt; w;
+while (w != "stop") {        // compare with != , exactly as with an int
+    words.push_back(w);
+    cin &gt;&gt; w;
+}</code></pre>
+    <p>Three things change, and all three are worth marks. You need
+    <code>#include &lt;string&gt;</code> in the standard beginning. <code>cin &gt;&gt; w</code> reads
+    <strong>one whitespace-separated word</strong>, which is what these questions want. And the length of
+    a string is <code>w.length()</code> (or <code>w.size()</code>) &mdash; a method call with parentheses,
+    not a member. Comparisons such as <code>a.length() &gt; b.length()</code> work exactly like the
+    numeric ones.</p>
+    <p>If you have only ever drilled this with <code>vector&lt;int&gt;</code>, write it once tonight with
+    strings. It is the same program.</p>
+  </div>
+</div>
 
 <div class="box alg">
   <div class="hd">Procedure<span class="tag">&mdash; the write-a-complete-program pattern</span></div>
@@ -1294,13 +1318,17 @@ data. Given this <code>Rectangle</code>, write the five statements: declare an o
 declare a pointer that dynamically allocates a rectangle; copy the data across; print through the
 pointer; release it.</p>
 
+<p class="muted small">Adapted from the Summer 2025 Midterm, which gave the class a <code>display()</code>
+method and used <code>rptr-&gt;width</code>. Both are Classes II material and are off this exam, so the
+class here is pure data and the pointer is used the way Class 10 teaches it:
+<code>(*rptr).width</code>.</p>
+
 <div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; five statements, from memory</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="24" data-starter="#include &lt;iostream&gt;
 using namespace std;
 
 class Rectangle {
 public:
     int width, height;
-    void display() { cout &lt;&lt; &quot;[&quot; &lt;&lt; width &lt;&lt; &quot; x &quot; &lt;&lt; height &lt;&lt; &quot;]&quot; &lt;&lt; endl; }
 };
 
 int main() {
@@ -1310,7 +1338,7 @@ int main() {
 
     // (c) copy the data in r into the rectangle rptr points to
 
-    // (d) print the rectangle rptr points to
+    // (d) print the width and height of the rectangle rptr points to
 
     // (e) release the memory for rptr
 
@@ -1321,7 +1349,6 @@ using namespace std;
 class Rectangle {
 public:
     int width, height;
-    void display() { cout &lt;&lt; "[" &lt;&lt; width &lt;&lt; " x " &lt;&lt; height &lt;&lt; "]" &lt;&lt; endl; }
 };
 
 int main() {
@@ -1331,7 +1358,7 @@ int main() {
 
     // (c) copy the data in r into the rectangle rptr points to
 
-    // (d) print the rectangle rptr points to
+    // (d) print the width and height of the rectangle rptr points to
 
     // (e) release the memory for rptr
 
@@ -1343,14 +1370,13 @@ int main() {
   <div class="bd">
     <p>Write the five statements, then check them.</p>
     <details class="soln"><summary></summary><div class="ans">
-<div class="codewrap"><div class="cap">rectstmts.cpp</div><pre><code class="language-cpp">// rectstmts.cpp -- Summer 2025 Midterm Problem 2, all five answers, in a driver
+<div class="codewrap"><div class="cap">rectstmts.cpp</div><pre><code class="language-cpp">// rectstmts.cpp -- Summer 2025 Midterm Problem 2, adapted to Class 10 syntax
 #include &lt;iostream&gt;
 using namespace std;
 
 class Rectangle {
 public:
     int width, height;
-    void display() { cout &lt;&lt; "[" &lt;&lt; width &lt;&lt; " x " &lt;&lt; height &lt;&lt; "]" &lt;&lt; endl; }
 };
 
 int main() {
@@ -1360,10 +1386,11 @@ int main() {
 
     Rectangle *rptr = new Rectangle;        // (b)
 
-    rptr-&gt;width  = r.width;                 // (c)
-    rptr-&gt;height = r.height;
+    (*rptr).width  = r.width;               // (c)
+    (*rptr).height = r.height;
 
-    rptr-&gt;display();                        // (d)
+    cout &lt;&lt; "[" &lt;&lt; (*rptr).width &lt;&lt; " x "   // (d)
+         &lt;&lt; (*rptr).height &lt;&lt; "]" &lt;&lt; endl;
 
     delete rptr;                            // (e)
     rptr = nullptr;
@@ -1379,9 +1406,12 @@ int main() {
         <li><code>new Rectangle</code> with <strong>no parentheses and no arguments</strong>: this class has no
           constructor, so there is nothing to pass. The members are indeterminate until you set
           them.</li>
-        <li><code>rptr-&gt;width</code> and <code>(*rptr).width</code> are the same thing and both score. The arrow is
-          "pointer member of." Use <code>.</code> when the left-hand side is an object, <code>-&gt;</code> when it is a
-          pointer.</li>
+        <li><code>(*rptr).width</code>, and the parentheses are not optional:
+          <code>*rptr.width</code> is parsed as <code>*(rptr.width)</code> and rejected, because
+          <code>.</code> binds tighter than <code>*</code>. Note the shape of the statement &mdash;
+          <code>.</code> on the left of an object, <code>(*&hellip;).</code> on the left of a pointer, in the
+          same line. (<code>rptr-&gt;width</code> is the shorthand for exactly this and would also score,
+          but it is Class 14; you are not expected to use it on this paper.)</li>
         <li><code>delete rptr;</code> &mdash; a single object, so no brackets. Setting the pointer to <code>nullptr</code>
           afterwards is the habit that defuses double deletes; it is not required by the rubric but
           it costs nothing.</li>
@@ -1394,334 +1424,173 @@ int main() {
   </div>
 </div>
 
-<h2 id="s5"><span class="num">5.</span>Classes: private data and the way in</h2>
-
-<div class="box def">
-  <div class="hd">Definition<span class="tag">&mdash; compressed from Classes 9 and 10</span></div>
-  <div class="bd">
-    <ul>
-      <li>A <strong>class</strong> is a type you write yourself; an <strong>object</strong> is an
-        instance of it. The declaration ends with a <strong>semicolon after the closing brace</strong>.</li>
-      <li>A variable declared inside the class is a <strong>data member</strong>; a function declared
-        inside it is a <strong>method</strong>. The dot operator reaches both: <code>r1.set(2, 3)</code>.</li>
-      <li><strong><code>public</code></strong> members are reachable from anywhere; <strong><code>private</code></strong>
-        members are reachable <em>inside the class only</em>. That one keyword is what makes
-        <strong>encapsulation</strong> real.</li>
-      <li>An <strong>accessor</strong> ("get") returns a data member and should be <code>const</code>; a
-        <strong>mutator</strong> ("set") changes one and cannot be.</li>
-      <li>With no constructor, a new object's members are <strong>indeterminate</strong>, not zero.
-        Constructors arrive in Class 13 &mdash; after this exam.</li>
-    </ul>
-  </div>
-</div>
-
-<div class="box ex">
-  <div class="hd">Worked Example<span class="tag">&mdash; everything Classes 9 and 10 gave you, in one file</span></div>
-  <div class="bd">
-    <p>Private data, a method defined outside the class with <code>::</code>, <code>const</code> accessors, an object on the
-    stack reached with <code>.</code>, and an object on the heap reached with <code>-&gt;</code>. Four lines of output. Predict
-    them.</p>
-<div class="codewrap"><div class="cap">pointclass.cpp</div><pre><code class="language-cpp">// pointclass.cpp -- everything Classes 9 and 10 gave you, in one file
-#include &lt;iostream&gt;
-using namespace std;
-
-class Point {
-    private:
-        double x, y;
-    public:
-        void set(double a, double b);       // declared here, defined below
-        double getX() const { return x; }
-        double getY() const { return y; }
-        void print() const;
-};
-
-void Point::set(double a, double b) {       // :: says "the set that belongs to Point"
-    x = a;
-    y = b;
-}
-
-void Point::print() const {
-    cout &lt;&lt; "(" &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ")" &lt;&lt; endl;
-}
-
-int main() {
-    Point p;
-    p.set(3, 4);
-    p.print();                              // object  -&gt; dot
-
-    Point *q = new Point;
-    q-&gt;set(1.5, 2.5);
-    q-&gt;print();                             // pointer -&gt; arrow
-    (*q).print();                           // the same thing, spelled out
-
-    cout &lt;&lt; q-&gt;getX() + p.getY() &lt;&lt; endl;
-
-    delete q;
-    q = nullptr;
-    return 0;
-}</code></pre></div>
-<details class="soln reveal"><summary></summary><div class="ans">
-<pre class="out">(3, 4)
-(1.5, 2.5)
-(1.5, 2.5)
-5.5</pre>
-    <ul>
-      <li><code>p.set(3, 4)</code> passes two <code>int</code> literals to <code>double</code> parameters, which converts silently.
-        <code>p.print()</code> shows <code>(3, 4)</code>, not <code>(3.0, 4.0)</code> &mdash; <code>cout</code> drops
-        trailing zeros on a <code>double</code> whose value is whole. That rule from Class 3 does not stop
-        applying just because the number came out of an object.</li>
-      <li>The <code>::</code> in <code>void Point::print() const</code> is the scope-resolution operator: it says which
-        class this body belongs to. The <code>const</code> must appear in <strong>both</strong> the declaration
-        and the definition, or the compiler sees two different functions.</li>
-      <li><code>q-&gt;print()</code> and <code>(*q).print()</code> are identical, and both print the same thing here. The
-        arrow exists because <code>.</code> binds tighter than <code>*</code>, so <code>*q.print()</code> would mean
-        <code>*(q.print())</code> &mdash; a compile error.</li>
-      <li>The last line, <code>q-&gt;getX() + p.getY()</code>, is 1.5 + 4, printed as <code>5.5</code>. Accessors
-        are how outside code reads private data, and marking them <code>const</code> is what lets them be called
-        on a <code>const</code> object later.</li>
-    </ul>
-
-</div></details>
-  </div>
-</div>
-
-<div class="box ex">
-  <div class="hd">Worked Example<span class="tag">&mdash; the Fall 2023 class question, complete</span></div>
-  <div class="bd">
-    <p>The exam gives you a <code>Rational</code> class with <code>numerator</code> and <code>denominator</code> <strong>private</strong>,
-    with <code>getn()</code>, <code>getd()</code> and <code>print()</code> already written, and asks for three things: an
-    implementation of <code>set</code>, an implementation of <code>add1</code> (add 1 to the rational number, given the
-    hint that <code>p/q + 1 = (p+q)/q</code>), and an implementation of a free function <code>product</code> that
-    returns the product of two rationals without simplifying.</p>
-    <p>Here is the whole thing, assembled and compiled. Work out the three bodies yourself first, and
-    predict the three lines of output.</p>
-<div class="codewrap"><div class="cap">rational.cpp</div><pre><code class="language-cpp">// rational.cpp -- Fall 2023 Exam 1 Problem 4, complete
-#include &lt;iostream&gt;
-using namespace std;
-
-class Rational {
-    private:
-        int numerator, denominator;
-    public:
-        void set(int a, int b) {                    // part (a)
-            numerator = a;
-            denominator = b;
-        }
-        int getn() { return numerator; }
-        int getd() { return denominator; }
-        void add1() {                               // part (b)
-            numerator = numerator + denominator;
-        }
-        void print() { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
-};
-
-Rational product(Rational x, Rational y) {          // part (c)
-    Rational answer;
-    int n = x.getn() * y.getn();
-    int d = x.getd() * y.getd();
-    answer.set(n, d);
-    return answer;
-}
-
-int main() {
-    Rational r1, r2;
-    r1.set(2, 3);
-    r2.set(4, 5);
-    r1.add1();              // add1 adds 1 to the rational number
-    r1.print();             // 5/3
-    r2.print();             // 4/5
-    Rational p = product(r1, r2);
-    p.print();              // 20/15
-    return 0;
-}</code></pre></div>
-<details class="soln reveal"><summary></summary><div class="ans">
-<pre class="out">5/3
-4/5
-20/15</pre>
-    <p>Part by part, with the published point split:</p>
-    <table class="trace">
-      <tr><th>Part</th><th>Points</th><th>The thing being tested</th></tr>
-      <tr><td><code>set</code></td><td>2, no partial credit</td><td>That you assign the parameters to the members, and in the right order. Two lines.</td></tr>
-      <tr><td><code>add1</code></td><td>2, no partial credit</td><td>That you can turn the hint <code>p/q + 1 = (p+q)/q</code> into code. The denominator does not change. One line.</td></tr>
-      <tr><td><code>product</code></td><td>6, with partial credit: 2 for declaring a <code>Rational</code> and returning it, 2 for computing the numerator and denominator through the <code>.get</code> methods, 2 for setting them on the new object</td><td>That you know a free function cannot touch private data, and must go through the public interface.</td></tr>
-    </table>
-    <p>The shape of <code>product</code> is worth memorizing, because it is the answer to a whole family of
-    questions: <strong>declare a local object, compute the parts through the accessors, <code>set</code> them on
-    the local object, return it.</strong></p>
-    <p>And note that 2/3 + 1 is 5/3 &mdash; the numerator becomes 2 + 3 &mdash; while the product of
-    5/3 and 4/5 is printed as <code>20/15</code>. The question says explicitly that you do not need
-    to simplify, and the expected-output comment in the stem confirms it. Do not "improve" the answer
-    by reducing the fraction; you would be answering a different question.</p>
-
-</div></details>
-  </div>
-</div>
+<h2 id="s5"><span class="num">5.</span>Classes I: an object is a box of variables</h2>
 
 <div class="box warn">
-  <div class="hd">Warning<span class="tag">&mdash; why product cannot just read the members</span></div>
+  <div class="hd">Read this first<span class="tag">&mdash; what is <em>not</em> on this paper</span></div>
   <div class="bd">
-    <p>The obvious-looking version of <code>product</code> does not compile:</p>
-<pre><code class="language-cpp">Rational product(Rational x, Rational y) {
-    Rational answer;
-    answer.set(x.numerator * y.numerator, x.denominator * y.denominator);
-    return answer;
-}</code></pre>
-<pre class="err">privbad.cpp: In function 'Rational product(Rational, Rational)':
-privbad.cpp:15:18: error: 'int Rational::numerator' is private within this context
-   15 |     answer.set(x.numerator * y.numerator, x.denominator * y.denominator);
-      |                  ^~~~~~~~~
-privbad.cpp:6:13: note: declared private here
-privbad.cpp:15:18: note: field 'int Rational::numerator' can be accessed via 'int Rational::getn()'</pre>
-    <p><code>product</code> is a <strong>free function</strong>, not a member, so <code>private</code> shuts it out. That is
-    exactly why the class was given getters, and why the rubric pays two of the six points
-    specifically for using them. Read the error's last line: g++ names the accessor for you.</p>
-    <p>Two other things about that question as printed. The stem writes <code>Class Rational {</code> with a
-    capital C, which is not a C++ keyword, and it spells the return type of <code>product</code> as <code>Ration</code> in
-    both the stem and the answer key. Both are typos in the paper. Write <code>class</code> and <code>Rational</code> in
-    your answer &mdash; you will not be penalized for correcting them, and reproducing them faithfully
-    would give you code that does not compile.</p>
+    <p>Pointers II ran over into Class 9, so Classes II never happened before this exam. Everything it
+    would have taught is therefore <strong>off Exam 1</strong>:</p>
+    <ul>
+      <li>member functions inside a class &mdash; <code>void set(...)</code>, <code>print()</code>, <code>area()</code></li>
+      <li><code>const</code> member functions, accessors and mutators, <code>getX()</code> / <code>setX()</code></li>
+      <li><code>private:</code> and encapsulation</li>
+      <li>the arrow operator <code>-&gt;</code>, and definitions outside the class with <code>::</code></li>
+    </ul>
+    <p>Those arrive in Classes 13&ndash;15 and are examinable on Exam 2. Do not spend tonight on them. What
+    <em>is</em> examinable is the whole of Class 10: declaring a class, making objects, and the dot
+    operator. Any class on this paper has <strong>public data members only</strong>.</p>
   </div>
 </div>
 
-<h3>In-class exercise &mdash; the class question, from memory</h3>
-
-<p>Close the notes again. Fill in the three bodies. You have about ten minutes for this on the day,
-and two of the three are one or two lines each.</p>
-
-<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; the three implementations</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
-using namespace std;
-
-class Rational {
-    private:
-        int numerator, denominator;
-    public:
-        void set(int a, int b) {
-            // (a) set the two members
-        }
-        int getn() { return numerator; }
-        int getd() { return denominator; }
-        void add1() {
-            // (b) add 1 to the rational number:  p/q + 1 = (p+q)/q
-        }
-        void print() { cout &lt;&lt; numerator &lt;&lt; &quot;/&quot; &lt;&lt; denominator &lt;&lt; endl; }
-};
-
-// (c) the free function: Rational product(Rational x, Rational y)
-
-int main() {
-    Rational r1, r2;
-    r1.set(2, 3);
-    r2.set(4, 5);
-    r1.add1();
-    r1.print();             // should print 5/3
-    r2.print();             // should print 4/5
-    Rational p = product(r1, r2);
-    p.print();              // should print 20/15
-    return 0;
-}">#include &lt;iostream&gt;
-using namespace std;
-
-class Rational {
-    private:
-        int numerator, denominator;
-    public:
-        void set(int a, int b) {
-            // (a) set the two members
-        }
-        int getn() { return numerator; }
-        int getd() { return denominator; }
-        void add1() {
-            // (b) add 1 to the rational number:  p/q + 1 = (p+q)/q
-        }
-        void print() { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
-};
-
-// (c) the free function: Rational product(Rational x, Rational y)
-
-int main() {
-    Rational r1, r2;
-    r1.set(2, 3);
-    r2.set(4, 5);
-    r1.add1();
-    r1.print();             // should print 5/3
-    r2.print();             // should print 4/5
-    Rational p = product(r1, r2);
-    p.print();              // should print 20/15
-    return 0;
-}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
-
-<div class="box qc">
-  <div class="hd">Quick Check 11.8</div>
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; Class 10, in five lines</span></div>
   <div class="bd">
-    <p>Three short questions about the class you just wrote.</p>
+    <ul>
+      <li>A <strong>class</strong> is a type you write yourself; an <strong>object</strong> is an instance
+        of it. The declaration ends with a <strong>semicolon after the closing brace</strong>:
+        <code>};</code></li>
+      <li>A variable declared inside it is a <strong>data member</strong>. Under
+        <code>public:</code> it is reachable from anywhere, with the <strong>dot operator</strong>:
+        <code>b.width</code>.</li>
+      <li>A data member is an ordinary variable. It can be read, assigned, incremented and printed
+        exactly like any other &mdash; <code>b.width++</code> obeys the rules from Class 3, not some new
+        set of rules.</li>
+      <li>Assigning one object to another <strong>copies every member</strong>, and the copy is
+        <strong>independent</strong>: changing <code>q.x</code> afterwards does not touch <code>p.x</code>.</li>
+      <li>With no constructor, a new object's members are <strong>indeterminate</strong>, not zero.
+        Constructors are Class 13 &mdash; after this exam.</li>
+    </ul>
+  </div>
+</div>
 
-    <div class="part">
-      <p class="q"><span class="pl">(a)</span> <code>add1</code> changes the numerator but not the denominator. Why is <code>numerator += denominator;</code> correct, and what would <code>numerator + denominator;</code> on its own do?</p>
-      <details class="soln"><summary></summary><div class="ans">
-        <p>Adding 1 to <code>p/q</code> means adding <code>q/q</code>, which gives
-        <code>(p+q)/q</code> &mdash; a new numerator over the <em>same</em> denominator. So
-        <code>numerator = numerator + denominator;</code>, or the shorter <code>numerator += denominator;</code>.</p>
-        <p><code>numerator + denominator;</code> on its own computes the sum and throws it away. It compiles,
-        it does nothing, and <code>-Wall</code> warns about a statement with no effect. This is a real exam
-        answer that students write under time pressure.</p>
-      </div></details>
-    </div>
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; the one precedence rule that earns points</span></div>
+  <div class="bd">
+    <p>Only <code>()</code> and <code>[]</code> bind more tightly than <code>.</code> &mdash; everything else binds
+    <em>less</em> tightly. Two consequences, and both have shown up on past papers:</p>
+    <ul>
+      <li><code>b.width++</code> is <code>(b.width)++</code>. The dot happens first, then the increment is
+        applied to that member. It is a post-increment, so it <strong>prints the old value</strong> and
+        leaves the member one larger.</li>
+      <li><code>--b.height</code> is <code>--(b.height)</code>: pre-decrement, so it <strong>prints the new
+        value</strong>.</li>
+      <li>With a pointer to an object, <code>*</code> binds <em>looser</em> than <code>.</code>, so
+        <code>*bp.width</code> does not compile. The parentheses are not optional:
+        <code>(*bp).width</code>.</li>
+    </ul>
+  </div>
+</div>
 
-    <div class="part">
-      <p class="q"><span class="pl">(b)</span> Could <code>product</code> have been written as a member function instead, <code>Rational Rational::product(Rational y)</code>? What would change at the call site?</p>
-      <details class="soln"><summary></summary><div class="ans">
-        <p>Yes, and as a member it <em>would</em> be allowed to read <code>numerator</code> and <code>denominator</code>
-        directly on both objects &mdash; access control is per class, not per object. The call site
-        would change from <code>product(r1, r2)</code> to <code>r1.product(r2)</code>.</p>
-        <p>But the exam's <code>main</code> is printed for you and it calls <code>product(r1, r2)</code>. Match the call
-        you are given. Changing the design to one that does not compile against the supplied <code>main</code>
-        is the expensive way to be clever.</p>
-      </div></details>
-    </div>
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; everything Class 10 can ask, in one program</span></div>
+  <div class="bd">
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
 
-    <div class="part">
-      <p class="q"><span class="pl">(c)</span> The <code>main</code> says <code>Rational p = product(r1, r2);</code>. Nothing here has a constructor. Why does that line work anyway, and what would break if <code>product</code> returned before calling <code>set</code> on <code>answer</code>?</p>
-      <details class="soln"><summary></summary><div class="ans">
-        <p>It works because the compiler writes the four basic operations for you &mdash; create,
-        copy, assign, destroy &mdash; and the copy it generates copies the object member by member.
-        <code>Rational p = product(...)</code> copy-initializes <code>p</code> from the returned object, member by member,
-        and for two plain <code>int</code>s that is exactly right.</p>
-        <p>If <code>product</code> returned <code>answer</code> without ever calling <code>set</code>, <code>answer</code>'s members would be
-        <strong>indeterminate</strong>, not zero. The copy would faithfully copy the garbage, and
-        <code>p.print()</code> would print two arbitrary numbers &mdash; different ones on different runs, with
-        no crash and no warning. Every object in this course is born with garbage until Class 13
-        gives us constructors.</p>
-        <p><strong>The wrap-up:</strong> a class body ends with <code>};</code>. Every year the rubric hands out
-        points for that semicolon, and every year people lose them.</p>
-      </div></details>
-    </div>
+class Box {
+public:
+    int width, height;
+};
+
+int main() {
+    Box b;
+    b.width  = 5;
+    b.height = 9;
+
+    cout &lt;&lt; b.width++ &lt;&lt; --b.height &lt;&lt; b.width &lt;&lt; b.height &lt;&lt; endl;   // line (a)
+
+    Box c = b;              // copies both members
+    c.width += 10;
+    cout &lt;&lt; b.width &lt;&lt; c.width &lt;&lt; c.height &lt;&lt; endl;                    // line (b)
+
+    Box *bp = new Box;
+    (*bp).width  = 2;
+    (*bp).height = 3;
+    cout &lt;&lt; (*bp).width &lt;&lt; (*bp).height &lt;&lt; endl;                       // line (c)
+    delete bp;
+    return 0;
+}</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>(a)</strong> <code>5886</code>. <code>b.width++</code> prints <code>5</code> and leaves
+      <code>width</code> at 6. <code>--b.height</code> drops <code>height</code> to 8 and prints
+      <code>8</code>. Then the last two print the current values, <code>6</code> and <code>8</code>.
+      Four digits, no spaces &mdash; <code>cout</code> inserts nothing between items.</p>
+      <p><strong>(b)</strong> <code>6168</code>. <code>c</code> is a copy, so <code>c.width += 10</code>
+      makes it 16 and leaves <code>b.width</code> at 6. The digits run together: 6, then 16, then 8.</p>
+      <p><strong>(c)</strong> <code>23</code>. And <code>delete bp;</code> &mdash; singular, because
+      <code>new Box</code> was singular.</p>
+      <p><strong>The wrap-up:</strong> a class body ends with <code>};</code>. Every year the rubric hands
+      out a point for that semicolon, and every year people lose it.</p>
+    </div></details>
   </div>
 </div>
 
 <div class="box qc">
   <div class="hd">Quick Check 11.9</div>
   <div class="bd">
-    <p>A student marks a method <code>const</code> and then modifies a member inside it:</p>
-<pre><code class="language-cpp">class Point {
-    private:
-        double x, y;
-    public:
-        void set(double a, double b) { x = a; y = b; }
-        void shift(double d) const { x = x + d; }
-};</code></pre>
-    <p>What does g++ say, and what is the fix?</p>
+    <p>Three lines, one object. Which compile, and what does the program print?</p>
+<pre><code class="language-cpp">class Pair { public: int a, b; };
+
+Pair  p;      p.a = 1;  p.b = 2;
+Pair *pp = &amp;p;
+
+cout &lt;&lt; p.a + p.b &lt;&lt; endl;     // (i)
+cout &lt;&lt; *pp.a &lt;&lt; endl;         // (ii)
+cout &lt;&lt; (*pp).b &lt;&lt; endl;       // (iii)</code></pre>
     <details class="soln"><summary></summary><div class="ans">
-<pre class="err">constbad.cpp: In member function 'void Point::shift(double) const':
-constbad.cpp:9:40: error: assignment of member 'Point::x' in read-only object
-    9 |         void shift(double d) const { x = x + d; }   // promises not to change, then changes
-      |                                      ~~^~~~~~~</pre>
-      <p>Inside a <code>const</code> method every data member is read-only, so the assignment is rejected. The
-      fix is to drop the <code>const</code>: <code>shift</code> is a <strong>mutator</strong>, and mutators are never
-      <code>const</code>.</p>
-      <p>The rule to carry in: <strong>accessors <code>const</code>, mutators not.</strong> <code>getX()</code>, <code>getY()</code>
-      and <code>print()</code> are <code>const</code>; <code>set()</code> and <code>shift()</code> are not. The related error you will meet after
-      the exam, when objects start being passed as <code>const</code> references, is <em>"passing 'const Point'
-      as 'this' argument discards qualifiers"</em> &mdash; the same rule seen from the call site.</p>
+      <p><strong>(i)</strong> prints <code>3</code>. Both dots happen before the addition.</p>
+      <p><strong>(ii)</strong> <strong>ERROR</strong>. The compiler reads <code>*pp.a</code> as
+      <code>*(pp.a)</code> &mdash; it looks for a member <code>a</code> in the <em>pointer</em>:
+      <em>"request for member 'a' in 'pp', which is of pointer type"</em>. Say that rule, not just
+      "it does not compile"; the rubric pays for the explanation.</p>
+      <p><strong>(iii)</strong> prints <code>2</code>. The parentheses force the dereference first.</p>
+      <p>(After this exam, <code>pp-&gt;b</code> becomes the normal way to write (iii) &mdash; that is Class 14.)</p>
+    </div></details>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; the object question, from memory</h3>
+
+<div class="box prac">
+  <div class="hd">Five minutes, on paper, no compiler</div>
+  <div class="bd">
+    <p>Write a class <code>Student</code> with two public data members, <code>int id</code> and
+    <code>double gpa</code>. Then, in <code>main</code>:</p>
+    <ol>
+      <li>declare an object <code>s</code> and set it to id 1042 and gpa 3.5;</li>
+      <li>declare a second object <code>t</code> as a copy of <code>s</code>, then raise only
+        <code>t</code>'s gpa by 0.2;</li>
+      <li>print both gpas on one line, separated by a space;</li>
+      <li>declare a pointer <code>sp</code> to a dynamically allocated <code>Student</code>, set its id
+        to 2000 through the pointer, print it, and release the memory.</li>
+    </ol>
+    <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">class Student {
+public:
+    int id;
+    double gpa;
+};                                  // the semicolon
+
+int main() {
+    Student s;
+    s.id = 1042;
+    s.gpa = 3.5;
+
+    Student t = s;
+    t.gpa = t.gpa + 0.2;            // or t.gpa += 0.2;
+
+    cout &lt;&lt; s.gpa &lt;&lt; " " &lt;&lt; t.gpa &lt;&lt; endl;    // 3.5 3.7
+
+    Student *sp = new Student;
+    (*sp).id = 2000;
+    cout &lt;&lt; (*sp).id &lt;&lt; endl;       // 2000
+    delete sp;
+    return 0;
+}</code></pre>
+      <p>Two things to check in your own answer. The <code>};</code> after the class body &mdash; look for
+      it specifically. And <code>3.5 3.7</code>, not <code>3.50000 3.70000</code>: a <code>double</code>
+      prints with no trailing zeros unless you ask for them, which is the formatting rule from &sect;6.</p>
     </div></details>
   </div>
 </div>
@@ -2068,10 +1937,11 @@ you could. The rows you hesitate on are your revision list, and there should not
   <tr><td>Write <code>int *px = &amp;x;</code> for a scalar and <code>int *py = y;</code> for an array, and say why they differ?</td><td>Class 7</td><td>Q2</td></tr>
   <tr><td>Pair every <code>new</code> with <code>delete</code> and every <code>new[]</code> with <code>delete []</code>, brackets empty?</td><td>Class 8</td><td>Q2</td></tr>
   <tr><td>Copy one dynamic array into another with a loop, and say why assignment will not do it?</td><td>Class 8</td><td>Q2</td></tr>
-  <tr><td>Declare a class with <code>private</code> data and <code>public</code> methods, ending in <code>};</code>?</td><td>Classes 9&ndash;10</td><td>Q4</td></tr>
-  <tr><td>Write a <code>set</code> method, a <code>const</code> accessor, and say which can be <code>const</code>?</td><td>Class 10</td><td>Q4</td></tr>
-  <tr><td>Say when to write <code>.</code> and when to write <code>-&gt;</code>, and what <code>(*p).x</code> means?</td><td>Class 10</td><td>Q2 and Q4</td></tr>
-  <tr><td>Write a free function that reaches private data through the getters?</td><td>Class 10</td><td>Q4, worth 6 points</td></tr>
+  <tr><td>Declare a class with <code>public</code> data members, ending in <code>};</code>, and make an object of it?</td><td>Class 10</td><td>Q3, and any class that appears</td></tr>
+  <tr><td>Say what <code>p.x++</code> and <code>--p.y</code> print, and why a copied object is independent?</td><td>Classes 3 and 10</td><td>Q3</td></tr>
+  <tr><td>Reach a member through a pointer with <code>(*p).x</code>, and say why <code>*p.x</code> is rejected?</td><td>Class 10</td><td>Q2</td></tr>
+  <tr><td>Write a function whose results come back through <strong>reference parameters</strong>, with a <code>const</code> reference for the input it must not change?</td><td>Class 2</td><td>Q4, worth 4 points</td></tr>
+  <tr><td>Write a function that <code>new</code>s an array, fills it, and returns the pointer &mdash; then <code>delete []</code> it at the call site?</td><td>Classes 7&ndash;8</td><td>Q4, worth 6 points</td></tr>
 </table>
 
 <div class="box key">
@@ -2104,10 +1974,11 @@ you could. The rows you hesitate on are your revision list, and there should not
     </div>
 
     <div class="part">
-      <p class="q"><span class="pl">(b)</span> The one-line difference between an accessor and a mutator, in code.</p>
+      <p class="q"><span class="pl">(b)</span> The signature of a function that takes a vector it must not change and sends two results back to the caller.</p>
       <details class="soln"><summary></summary><div class="ans">
-<pre><code class="language-cpp">    int getn() const { return numerator; }   // accessor: const, returns
-    void setn(int a) { numerator = a; }      // mutator: not const, assigns</code></pre>
+<pre><code class="language-cpp">    void spread(const vector&lt;int&gt; &amp;v, int &amp;lo, int &amp;hi)</code></pre>
+        <p><code>const</code> reference in, plain references out, <code>void</code> return. Drop an
+        <code>&amp;</code> and the caller never sees the answer.</p>
       </div></details>
     </div>
 
@@ -2146,8 +2017,10 @@ you could. The rows you hesitate on are your revision list, and there should not
     <p><strong>Problems 5 and 6 are a second pass</strong> in the same two formats, taken from the
     Summer 2025 and Winter 2025 midterm papers &mdash; the same question types with different
     numbers. Use them after you have marked the first four.</p>
-    <p>Every problem here is the professor's own, from his exam bank; nothing in this section was
-    invented for these notes. Two of them have errors in their published answer keys, and the
+    <p>Problems 1, 2, 3, 5 and 6 are the professor's own, from past papers. <strong>Problem 4 was
+    written for these notes</strong>: the Fall 2023 Question 4 was a <code>private</code>-data class with
+    getters, which is off this exam, so it has been replaced by a question in the same format over
+    material that is in scope. Two of them have errors in their published answer keys, and the
     solutions say so and give the verified answer.</p>
   </div>
 </div>
@@ -2444,128 +2317,105 @@ int main() {
   </div></details>
 </div>
 
-<h3>Problem 4 &mdash; Give an implementation for these methods <span class="muted small">(from the Fall 2023 Exam 1)</span></h3>
+<h3>Problem 4 &mdash; Give an implementation for these functions <span class="muted small">(written for these notes, in the Question&nbsp;4 format)</span></h3>
 
-<p class="muted small">[10 points: 2 + 2 + 6] &middot; about 10 minutes</p>
+<p class="muted small">[10 points: 4 + 4 + 2] &middot; about 10 minutes</p>
 
-<p>Given the following program with a <code>Rational</code> class:</p>
+<p>The Fall 2023 Question 4 was a class with <code>private</code> data, a
+<code>set</code> method and getters. That material is <strong>not on this exam</strong> &mdash; Classes II
+moved to Classes 13&ndash;15 &mdash; so this replaces it with the same question <em>format</em> over
+material that is in scope: writing functions into a given program, with reference parameters and
+dynamic memory. Expect Question 4 to look like this one.</p>
+
+<p>Given the following program.</p>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
 using namespace std;
 
-class Rational {
-    private:
-        int numerator, denominator;
-    public:
-        void set(int a, int b) { ... }          // part (a)
-        int getn() { return numerator; }
-        int getd() { return denominator; }
-        void add1() { ... }                     // part (b)
-        void print() { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
-};
+// part (a): countEvenOdd goes here
 
-Rational product(Rational x, Rational y) { ... }        // part (c)
+// part (b): makeMultiples goes here
 
 int main() {
-    Rational r1, r2;
-    r1.set(2, 3);
-    r2.set(4, 5);
-    r1.add1();              // add1 adds 1 to the rational number
-    r1.print();             // prints 5/3
-    r2.print();             // prints 4/5
-    Rational p = product(r1, r2);
-    p.print();              // prints 20/15
+    vector&lt;int&gt; data{8, 3, 5, 12, 7, 6};
+    int evens, odds;
+
+    countEvenOdd(data, evens, odds);
+    cout &lt;&lt; "evens = " &lt;&lt; evens &lt;&lt; ", odds = " &lt;&lt; odds &lt;&lt; endl;   // evens = 3, odds = 3
+
+    // part (c)
+
     return 0;
 }</code></pre>
 
-<div class="part">
-  <p class="q"><span class="pl">(a)</span> Give an implementation for the <code>set</code> method that sets the values for <code>numerator</code> and <code>denominator</code> respectively. <span class="muted small">[2 points, no partial credit]</span></p>
+<div class="q">
+  <div class="part"><span class="pl">(a)</span> <strong>[4 pts]</strong> Give an implementation for the
+  function <code>countEvenOdd</code>, which receives a vector of integers <em>that it must not
+  change</em>, and sets <code>evens</code> and <code>odds</code> in the caller to how many of its values
+  are even and how many are odd.</div>
+
+  <div class="part"><span class="pl">(b)</span> <strong>[4 pts]</strong> Give an implementation for the
+  function <code>makeMultiples</code>, which receives two positive integers <code>n</code> and
+  <code>step</code>, dynamically allocates an array of <code>n</code> integers holding
+  <code>step</code>, <code>2*step</code>, <code>3*step</code>, &hellip;, <code>n*step</code>, and returns a
+  pointer to that array.</div>
+
+  <div class="part"><span class="pl">(c)</span> <strong>[2 pts]</strong> Write the C++ statements that go
+  at <code>// part (c)</code> in <code>main</code>: call <code>makeMultiples</code> with
+  <code>evens</code> and <code>odds</code> as the two arguments, print every value in the returned array
+  on one line, then release the memory. The printed line should be
+  <code>3 6 9</code>.</div>
+
   <details class="soln"><summary></summary><div class="ans">
-<pre><code class="language-cpp">        void set(int a, int b) {
-            numerator = a;
-            denominator = b;
-        }</code></pre>
-    <p>"Respectively" fixes the order: the first parameter is the numerator. Inside a method the bare
-    member names refer to <em>this object's</em> data, which is why no <code>r1.</code> prefix appears.</p>
-  </div></details>
-</div>
-
-<div class="part">
-  <p class="q"><span class="pl">(b)</span> Give an implementation for the <code>add1</code> method that adds 1 to the rational number. Hint: <code>p/q + 1 = (p+q)/q</code>. <span class="muted small">[2 points, no partial credit]</span></p>
-  <details class="soln"><summary></summary><div class="ans">
-<pre><code class="language-cpp">        void add1() {
-            numerator = numerator + denominator;
-        }</code></pre>
-    <p>One line. The denominator is unchanged &mdash; that is what the hint is telling you. Check it
-    against the driver: <code>r1</code> is 2/3, and after <code>add1()</code> it prints <code>5/3</code>.</p>
-  </div></details>
-</div>
-
-<div class="part">
-  <p class="q"><span class="pl">(c)</span> Give an implementation for the <code>product</code> function that returns the product of two rational numbers. Hint: <code>(x/y)&middot;(w/z) = (xw)/(yz)</code>. You do not need to simplify the result. <span class="muted small">[6 points, with partial credit]</span></p>
-  <details class="soln"><summary></summary><div class="ans">
-    <p><strong>Plan.</strong> <code>product</code> is a <em>free</em> function, not a member, so it cannot touch
-    <code>numerator</code> or <code>denominator</code> directly &mdash; they are private. Everything it needs must come
-    through <code>getn()</code> and <code>getd()</code>, and everything it writes must go through <code>set()</code>. The published
-    point split follows exactly that: 2 points for declaring a local <code>Rational</code> and returning it, 2
-    for computing the numerator and denominator through the <code>.get</code> methods, 2 for setting them on the
-    new object.</p>
-<div class="codewrap"><div class="cap">rational.cpp</div><pre><code class="language-cpp">// rational.cpp -- Fall 2023 Exam 1 Problem 4, complete
-#include &lt;iostream&gt;
-using namespace std;
-
-class Rational {
-    private:
-        int numerator, denominator;
-    public:
-        void set(int a, int b) {                    // part (a)
-            numerator = a;
-            denominator = b;
-        }
-        int getn() { return numerator; }
-        int getd() { return denominator; }
-        void add1() {                               // part (b)
-            numerator = numerator + denominator;
-        }
-        void print() { cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl; }
-};
-
-Rational product(Rational x, Rational y) {          // part (c)
-    Rational answer;
-    int n = x.getn() * y.getn();
-    int d = x.getd() * y.getd();
-    answer.set(n, d);
-    return answer;
+<pre><code class="language-cpp">// (a)
+void countEvenOdd(const vector&lt;int&gt; &amp;v, int &amp;evens, int &amp;odds) {
+    evens = 0;
+    odds  = 0;
+    for (int i = 0; i &lt; v.size(); i++) {
+        if (v[i] % 2 == 0) evens++;
+        else               odds++;
+    }
 }
 
-int main() {
-    Rational r1, r2;
-    r1.set(2, 3);
-    r2.set(4, 5);
-    r1.add1();
-    r1.print();             // 5/3
-    r2.print();             // 4/5
-    Rational p = product(r1, r2);
-    p.print();              // 20/15
-    return 0;
-}</code></pre></div>
-<pre class="out">5/3
-4/5
-20/15</pre>
-    <p><strong>Things to notice.</strong></p>
+// (b)
+int *makeMultiples(int n, int step) {
+    int *a = new int[n];
+    for (int i = 0; i &lt; n; i++) a[i] = (i + 1) * step;
+    return a;
+}
+
+// (c)
+int *m = makeMultiples(evens, odds);
+for (int i = 0; i &lt; evens; i++) cout &lt;&lt; m[i] &lt;&lt; " ";
+cout &lt;&lt; endl;
+delete [] m;</code></pre>
+    <p><strong>Where the points are.</strong></p>
     <ul>
-      <li>Reaching for <code>x.numerator</code> instead of <code>x.getn()</code> is a compile error &mdash; <em>"'int
-        Rational::numerator' is private within this context"</em> &mdash; and costs the two points
-        the rubric assigns to using the accessors. This question exists to test exactly that.</li>
-      <li><code>20/15</code> is the required answer. The question says you do not need to simplify,
-        and the stem's own comment says the line prints <code>20/15</code>. Reducing it to 4/3 gives
-        a different output from the one you were asked for.</li>
-      <li>The stem as printed says <code>Class Rational {</code> with a capital C and spells the return type
-        <code>Ration product(...)</code> &mdash; both typos, repeated in the answer key. Write <code>class</code> and
-        <code>Rational</code>.</li>
-      <li>If you run out of time on part (c), write the signature and
-        <code>Rational answer; ... return answer;</code>. Those two lines alone are 2 of the 6 points.</li>
+      <li><strong>(a), the signature is half the marks.</strong> <code>const vector&lt;int&gt; &amp;v</code>
+        &mdash; the reference because a copy of a vector is wasteful, the <code>const</code> because the
+        question says it must not change the vector. <code>int &amp;evens, int &amp;odds</code> &mdash;
+        plain references, because the results have to reach the caller. Drop one <code>&amp;</code> and
+        <code>main</code> prints garbage: the function sets its own private copy and throws it away. The
+        return type is <code>void</code>; a function that answers through references returns nothing.</li>
+      <li><strong>(a), set both counters to 0 first.</strong> They are uninitialised <code>int</code>s in
+        <code>main</code>. <code>evens++</code> on an indeterminate value is not zero plus one.</li>
+      <li><strong>(b), return the pointer, never a local array.</strong> <code>int a[n];</code> inside the
+        function is doubly wrong &mdash; the size is not a constant, and the array dies at the closing
+        brace. The whole point of <code>new</code> here is that the memory outlives the call.</li>
+      <li><strong>(b), check the arithmetic at both ends.</strong> <code>i</code> runs 0 to
+        <code>n-1</code>, so the value stored is <code>(i+1)*step</code>. Writing <code>i*step</code>
+        gives <code>0 3 6</code> &mdash; a classic off-by-one that costs the points even though the loop
+        is right.</li>
+      <li><strong>(c), <code>delete []</code> with the brackets</strong>, because <code>new int[n]</code>
+        had them. And read the call carefully: <code>makeMultiples(evens, odds)</code> is
+        <code>makeMultiples(3, 3)</code>, so the array is <code>3 6 9</code> &mdash; three values, which is
+        why the loop runs to <code>evens</code> and not to some other number.</li>
     </ul>
+    <p><strong>If you only remember one thing from this question:</strong> an output parameter is a
+    reference, an input parameter you must not change is a <code>const</code> reference, and anything
+    you <code>new</code> you must <code>delete</code> in the same answer. Those three sentences are worth
+    more marks on this paper than any single piece of syntax.</p>
   </div></details>
 </div>
 
@@ -2655,7 +2505,6 @@ single line, or a few lines of C++ instructions. Given the following class:</p>
 <pre><code class="language-cpp">class Rectangle {
 public:
     int width, height;
-    void display() { cout &lt;&lt; "[" &lt;&lt; width &lt;&lt; " x " &lt;&lt; height &lt;&lt; "]" &lt;&lt; endl; }
 };</code></pre>
 
 <div class="part">
@@ -2683,24 +2532,30 @@ public:
 <div class="part">
   <p class="q"><span class="pl">(c)</span> Copy the data in <code>r</code> into the rectangle <code>rptr</code> points to.</p>
   <details class="soln"><summary></summary><div class="ans">
-<pre><code class="language-cpp">    rptr-&gt;width  = r.width;
-    rptr-&gt;height = r.height;</code></pre>
-    <p>Or, equivalently, <code>(*rptr).width = r.width;</code>. Both score. The arrow is the shorthand: <code>p-&gt;m</code>
-    <em>is</em> <code>(*p).m</code>. It exists because <code>.</code> binds tighter than <code>*</code>, so <code>*rptr.width</code> would be
-    parsed as <code>*(rptr.width)</code> and rejected.</p>
-    <p>Note the shape of this: <code>.</code> on the left of the object, <code>-&gt;</code> on the left of the pointer, in
-    the same statement. Getting which is which right is the entire content of the part.</p>
+<pre><code class="language-cpp">    (*rptr).width  = r.width;
+    (*rptr).height = r.height;</code></pre>
+    <p>The parentheses are not optional. <code>.</code> binds tighter than <code>*</code>, so
+    <code>*rptr.width</code> is parsed as <code>*(rptr.width)</code> and rejected &mdash; the compiler looks
+    for a member <code>width</code> inside the pointer.</p>
+    <p>Note the shape of this: <code>.</code> on the left of the object, <code>(*&hellip;).</code> on the left
+    of the pointer, in the same statement. Getting which is which right is the entire content of the
+    part. (The original paper wrote <code>rptr-&gt;width</code>; the arrow is pure shorthand for
+    <code>(*rptr).width</code> and arrives in Class 14, after this exam. It would score, but you do not
+    need it.)</p>
   </div></details>
 </div>
 
 <div class="part">
-  <p class="q"><span class="pl">(d)</span> Print the rectangle that <code>rptr</code> points to.</p>
+  <p class="q"><span class="pl">(d)</span> Print the width and height of the rectangle that
+  <code>rptr</code> points to.</p>
   <details class="soln"><summary></summary><div class="ans">
-<pre><code class="language-cpp">    rptr-&gt;display();</code></pre>
-    <p>A method is reached through the arrow exactly like a data member. <code>(*rptr).display();</code> is the
-    same thing. Writing <code>cout &lt;&lt; rptr;</code> would print an <em>address</em>; writing
-    <code>cout &lt;&lt; *rptr;</code> does not compile, because nobody has taught this class how to print itself to a
-    stream &mdash; that is <code>operator&lt;&lt;</code>, and it arrives in Class 18.</p>
+<pre><code class="language-cpp">    cout &lt;&lt; "[" &lt;&lt; (*rptr).width &lt;&lt; " x " &lt;&lt; (*rptr).height &lt;&lt; "]" &lt;&lt; endl;</code></pre>
+    <p>The original paper gave this class a <code>display()</code> method and asked for
+    <code>rptr-&gt;display();</code>. Methods are Classes II, so the in-scope answer prints the members
+    directly. Two things that still cost marks either way: <code>cout &lt;&lt; rptr;</code> prints an
+    <em>address</em>, and <code>cout &lt;&lt; *rptr;</code> does not compile, because nobody has taught this
+    class how to print itself to a stream &mdash; that is <code>operator&lt;&lt;</code>, and it arrives in
+    Class 18.</p>
   </div></details>
 </div>
 
@@ -2749,9 +2604,10 @@ public:
       <li><strong>Pointers.</strong> <code>&amp;x</code> for a scalar, plain <code>y</code> for an array. <code>p = q;</code> moves an
         arrow; <code>*p = *q;</code> changes a value. Arrays are copied element by element, never by assignment.
         One <code>new</code> per <code>delete</code>, one <code>new[]</code> per <code>delete []</code>, brackets empty.</li>
-      <li><strong>Classes.</strong> <code>private</code> data, <code>public</code> methods, <code>};</code> at the end. Accessors are
-        <code>const</code>, mutators are not. <code>.</code> for an object, <code>-&gt;</code> for a pointer, and a free function must
-        go through the getters &mdash; which is worth two of the six points on that question.</li>
+      <li><strong>Classes.</strong> <code>public</code> data members, <code>};</code> at the end, and the dot
+        operator to reach them. <code>b.w++</code> is <code>(b.w)++</code>; a copied object is independent;
+        a pointer needs <code>(*bp).w</code>, parentheses and all. Member functions, <code>const</code>,
+        <code>private:</code> and <code>-&gt;</code> are <strong>not</strong> on this paper.</li>
       <li><strong>The traps.</strong> Prefix hands back the new value, postfix the old. Line (b)
         prints what line (a) left behind. <code>break</code> abandons the loop; <code>continue</code> runs the update and
         the test. And with no formatting instructions, <code>cout</code> prints a <code>double</code> to six significant
@@ -2765,7 +2621,7 @@ public:
   </div>
 </div>
 
-<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 10 &middot; Classes II</div><div class="pending">posts Thu Oct 1</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 13 &middot; Constructors</div><div class="pending">posts Thu Oct 15</div></div></nav>
+<nav class="pagenav"><a href="lec09_classes_1.html"><div class="dir">&larr; Previous</div><div class="t">Class 10 &middot; Classes I</div></a><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 13 &middot; Constructors</div><div class="pending">posts Thu Oct 15</div></div></nav>
 <footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
 </div>
 <script>
