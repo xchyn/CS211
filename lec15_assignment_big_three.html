@@ -59,6 +59,7 @@ body{
 h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
    padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
 h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
 h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
 h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
 p{margin:0 0 13px}
@@ -298,6 +299,9 @@ table.sched a:hover{text-decoration:underline}
 <div class="toc">
   <div class="th">On this page</div>
   <ol>
+    <li><a href="#cA">Carried over: accessor and mutator methods</a></li>
+    <li><a href="#cB">Carried over: <code>private:</code> and encapsulation</a></li>
+    <li><a href="#cC">Carried over: working through the interface</a></li>
     <li><a href="#s1">Two out of three is not enough</a></li>
     <li><a href="#s2">The <code>this</code> pointer</a></li>
     <li><a href="#s3">Overloading <code>operator=</code></a></li>
@@ -319,6 +323,802 @@ table.sched a:hover{text-decoration:underline}
 </div>
 
 <hr>
+
+<h2 id="carried"><span class="num">&#9670;</span>Carried over from Classes II</h2>
+
+<div class="box key"><div class="hd">Why this is here</div><div class="bd">The last of the Classes II material lands here. Encapsulation is the reason the Big Three matter at all: a class that hands out its data members has nothing to protect.</div></div>
+
+<h3 id="cA"><span class="num">A.</span>Accessor and mutator methods</h3>
+
+<p>Once a class has methods, a naming convention appears that you will see in every C++ codebase you
+ever touch. The course notes introduce it exactly here.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; accessor and mutator</span></div>
+  <div class="bd">
+    <p><strong>Accessor</strong> methods return the values of data members in a class. That is why
+    accessor methods are also called <strong>"get" methods</strong>. Accessor methods can be tagged
+    as <code>const</code>, because they do not change the values of the data members in a class.</p>
+    <p><strong>Mutator</strong> methods set (or "mutate") the values of data members in a class.
+    Mutator methods are called <strong>"set"</strong> or <strong>"put"</strong> methods.</p>
+    <p>So <code>getx()</code> and <code>gety()</code> are accessors; <code>set(a, b)</code> is a mutator. Accessors are <code>const</code>;
+    mutators are not.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the professor's <code>getx</code>/<code>gety</code>/<code>set</code></span></div>
+  <div class="bd">
+    <p>This is the course notes' class with accessors added, plus two extra lines at the end of
+    <code>main</code> that were not in the notes. Those two lines are the point of the example: predict what
+    the <em>third</em> line of output is, and think about whether you like the answer.</p>
+<div class="codewrap"><div class="cap">accessors.cpp</div><pre><code class="language-cpp">// accessors.cpp -- accessor (get) and mutator (set) methods
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double getx() const { return x; }     // accessor method
+    double gety() const { return y; }     // accessor method
+
+    void set(double a, double b) {        // mutator method
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+
+    // data
+    double x, y;
+};
+
+int main() {
+    Point bpt;
+    bpt.set(1.23, 4.56);
+    bpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; bpt.getx() &lt;&lt; " " &lt;&lt; bpt.gety() &lt;&lt; endl;
+
+    bpt.x = -99.0;                        // still legal: x is public
+    bpt.print();
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56
+print x,y -99 4.56</pre>
+<p>The first two lines are the notes' own output. The third line is the problem. We built a tidy
+little interface &mdash; <code>set</code> to write, <code>getx</code>/<code>gety</code> to read &mdash; and then <code>main</code> ignored all of
+it and assigned straight into <code>bpt.x</code>. Nothing stopped it, because <code>double x, y;</code> is sitting under
+<code>public:</code> in the same class.</p>
+<p>Notice also that a method body written on one line, <code>double getx() const { return x; }</code>, is
+completely ordinary C++. There is no special "one-line method" rule; it is just a function whose
+body happens to be short.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Common Mistake<span class="tag">&mdash; accessors on public data are decoration</span></div>
+  <div class="bd">
+    <p>The class above is the version printed in the course notes, and taken on its own it is
+    <strong>self-defeating</strong>: it offers <code>getx()</code> and <code>gety()</code> as the controlled way to read
+    the coordinates while leaving <code>x</code> and <code>y</code> public, so <code>bpt.x = -99.0;</code> still compiles. Every
+    guarantee the accessors were supposed to provide is worth nothing.</p>
+    <p>The notes fix this a few slides later, and so do we, in &sect;B. But do not read this class as
+    a finished design. <strong>Accessors and mutators are only meaningful once the data they guard is
+    <code>private</code>.</strong> Writing getters and setters around public data is one of the most common
+    things beginners do that looks professional and accomplishes nothing.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.3</div>
+  <div class="bd">
+    <p>A <code>Rectangle</code> class stores <code>width</code> and <code>height</code>. A classmate proposes adding an accessor
+    <code>double getArea() const { return width * height; }</code> and objects that it is not a real accessor
+    because there is no data member called <code>area</code>.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Is <code>getArea()</code> a legitimate method for this class? Should it be <code>const</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Absolutely legitimate, and yes, <code>const</code>. A method that computes and returns a value
+        derived from the data members is one of the most useful things a class can offer, precisely
+        because the caller does not need to know whether the value is stored or computed.</p>
+        <p>That is encapsulation working in your favor: today <code>area</code> is computed on demand; if
+        profiling later showed it was worth caching in a data member, you could change the class and
+        no caller would notice.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Would you name it <code>getArea</code> or just <code>area</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Either is fine and both appear in real code. The <code>get</code> prefix is conventionally reserved
+        for "hand me back a stored data member", so many programmers write <code>area()</code> for a computed
+        value and <code>getWidth()</code> for a stored one. The course notes use the <code>get</code> prefix for the plain
+        accessors <code>getx</code>/<code>gety</code>, and Class 1's <code>Rectangle</code> used a bare <code>area()</code>. Pick a convention
+        and be consistent inside one class &mdash; that consistency is worth more than which
+        convention you picked.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3 id="cB"><span class="num">B.</span>private: encapsulation becomes syntax</h3>
+
+<p>Class 1 defined <strong>encapsulation</strong> as keeping an object's data private and exposing it
+only through a controlled public interface, and then asked you to take it on faith that this was
+worth the trouble. Class 10 gave you <code>public:</code> and told you that <code>private</code> and <code>protected</code> existed
+but were "more complicated" and would come later. This is later. It is one keyword.</p>
+
+<p>The course notes open the topic by naming the flaw in everything we have written so far:</p>
+
+<div class="box key">
+  <div class="hd">Key Idea<span class="tag">&mdash; from the course notes</span></div>
+  <div class="bd">
+    <p>An obvious weak feature of the <code>Point</code> class is that everything in the class is accessible to
+    outside calling applications (keyword <code>public</code>).</p>
+    <ol>
+      <li>The data members <code>x</code> and <code>y</code> become <strong>private</strong> data members of the class.</li>
+      <li>The keyword <code>private</code> means that outside applications cannot directly access the values of
+        <code>x</code> and <code>y</code>.</li>
+      <li>To access the class data, outside applications must go through a <strong>controlled
+        interface</strong> (the accessor and mutator methods).</li>
+      <li>We can therefore control outside access to the internal class data.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; <code>public</code> and <code>private</code></span></div>
+  <div class="bd">
+    <p>Anything which is tagged <strong><code>public</code></strong> &mdash; data or methods &mdash; is
+    accessible to outside applications.</p>
+    <p>Anything which is tagged <strong><code>private</code></strong> &mdash; data or methods &mdash; is
+    accessible <strong>inside the class only</strong>.</p>
+    <p><code>public:</code> and <code>private:</code> are <em>labels</em>, not blocks: each one applies to every member
+    written after it, until the next label. A class may switch back and forth as many times as you
+    like, and the members do not have to be in any particular order.</p>
+  </div>
+</div>
+
+<p>Here is the professor's revised class. He renames it <code>Point1</code> so both versions can coexist in the
+notes. Structurally, exactly one thing changed: the word <code>public:</code> above <code>double x, y;</code> became
+<code>private:</code>.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same class, data moved behind the interface</span></div>
+  <div class="bd">
+    <p>The public section is identical to &sect;A's. Only the last two lines of the class differ.
+    Predict the output, then ask yourself what changed for the code in <code>main</code>.</p>
+<div class="codewrap"><div class="cap">private_point.cpp</div><pre><code class="language-cpp">// private_point.cpp -- the same Point, with its data moved behind the interface
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:                                   // keyword public
+    double getx() const { return x; }
+    double gety() const { return y; }
+
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+
+private:                                  // keyword private
+    double x, y;
+};
+
+int main() {
+    Point1 bpt;
+    bpt.set(1.23, 4.56);
+    bpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; bpt.getx() &lt;&lt; " " &lt;&lt; bpt.gety() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56</pre>
+<p>Byte for byte the same output as &sect;A. That is the whole point: <strong><code>private</code> changes
+nothing about what the program does and everything about what a future programmer is allowed to
+do.</strong> It is a compile-time restriction, not a run-time mechanism; it costs zero
+instructions.</p>
+<p>Two smaller changes the professor made in the same step, worth noticing because they will show up
+in his exam answers:</p>
+<ul>
+  <li><code>set</code> now takes <code>const double &amp;a, const double &amp;b</code> &mdash; <code>const</code> reference
+    parameters, from Class 2. For a <code>double</code> this is a wash (a reference is typically the same size
+    as the value), but it is the habit he wants: read-only parameters get <code>const &amp;</code>.</li>
+  <li>The methods are written <em>above</em> the data. That is a common style, because the interface
+    is what a reader of the class cares about and the data is an implementation detail. C++ does not
+    care about the order.</li>
+</ul>
+
+</div></details>
+  </div>
+</div>
+
+<p>Now the part that makes it real. Take that same class and add the line <code>main</code> used to be allowed
+to write.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; what outside code gets now</span></div>
+  <div class="bd">
+    <p>Two lines have been added to <code>main</code>: one writes a private member, one reads one. Neither is
+    doing anything sinister &mdash; the first is the exact line that quietly worked in &sect;A.
+    Predict what g++ says about each.</p>
+<div class="codewrap"><div class="cap">private_err.cpp</div><pre><code class="language-cpp">// private_err.cpp -- outside code reaching for a private data member
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point1 bpt;
+    bpt.set(1.23, 4.56);
+    bpt.x = -99.0;                 // outside code writing a private member
+    cout &lt;&lt; bpt.y &lt;&lt; endl;         // outside code reading a private member
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">private_err.cpp: In function 'int main()':
+private_err.cpp:18:9: error: 'double Point1::x' is private within this context
+   18 |     bpt.x = -99.0;                 // outside code writing a private member
+      |         ^
+private_err.cpp:12:12: note: declared private here
+   12 |     double x, y;
+      |            ^
+private_err.cpp:18:9: note: field 'double Point1::x' can be accessed via 'double Point1::getx() const'
+   18 |     bpt.x = -99.0;                 // outside code writing a private member
+      |         ^
+      |         getx()
+private_err.cpp:19:17: error: 'double Point1::y' is private within this context
+   19 |     cout &lt;&lt; bpt.y &lt;&lt; endl;         // outside code reading a private member
+      |                 ^
+private_err.cpp:12:15: note: declared private here
+   12 |     double x, y;
+      |               ^
+private_err.cpp:19:17: note: field 'double Point1::y' can be accessed via 'double Point1::gety() const'
+   19 |     cout &lt;&lt; bpt.y &lt;&lt; endl;         // outside code reading a private member
+      |                 ^
+      |                 gety()</pre>
+<p>Learn the first line of that message by heart, because you will see it constantly for the rest of
+the semester:</p>
+<p><strong><code>error: 'double Point1::x' is private within this context</code></strong></p>
+<p>Three things to read out of it:</p>
+<ul>
+  <li>It is a <strong>compile-time</strong> error. No executable is produced. The mistake cannot
+    reach a user.</li>
+  <li>The <code>note: declared private here</code> line points at the exact declaration, so you never have to
+    guess which member it means &mdash; useful once classes have a dozen of them.</li>
+  <li>Modern g++ even suggests the accessor: <em>"field ... can be accessed via
+    <code>Point1::getx() const</code>"</em>. It has read your public section and found the intended
+    door. Do not skip past <code>note:</code> lines.</li>
+</ul>
+<p>Notice too that <em>reading</em> is blocked just as firmly as writing. <code>private</code> is not about
+protecting the data from corruption alone; it is about not letting anyone <em>depend</em> on the
+representation, in either direction.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Why this is worth the trouble</h3>
+
+<p>It is easy to hear "the compiler stops you writing <code>bpt.x</code>" and conclude that <code>private</code> is an
+annoyance invented to make simple things harder. Here is the argument in its concrete form.</p>
+
+<p>Suppose <code>Point1</code> had kept its data public and fifty files across a project read and wrote
+<code>p.x</code> and <code>p.y</code> directly. Now a requirement arrives: points must be stored in polar form, radius and
+angle, because that is what the graphics library wants. With public data, all fifty files are wrong,
+and worse, most of them still <em>compile</em> &mdash; they just silently mean something else now.
+With private data, you rewrite <code>getx()</code> as <code>return r * cos(theta);</code>, change <code>set</code>, and not one
+caller changes at all. That is the trade: <strong>a public data member is a promise about
+representation that you can never take back; a public method is a promise about behavior that you can
+keep while changing everything behind it.</strong></p>
+
+<p>The second payoff is enforcement. Once the only way in is a mutator, the mutator can refuse.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a mutator that says no</span></div>
+  <div class="bd">
+    <p>A circle's radius must not be negative. With a public data member there is nowhere to put that
+    rule. With a private one there is exactly one door, and the rule lives in it. Predict all four
+    lines.</p>
+<div class="codewrap"><div class="cap">circle.cpp</div><pre><code class="language-cpp">// circle.cpp -- private data lets the mutator enforce a rule
+#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r) {
+        if (r &lt; 0.0) {
+            cout &lt;&lt; "Circle: negative radius rejected" &lt;&lt; endl;
+            radius = 0.0;
+        } else {
+            radius = r;
+        }
+    }
+    double getRadius() const { return radius; }
+    double area() const { return 3.14159 * radius * radius; }
+    void print() const {
+        cout &lt;&lt; "Circle r = " &lt;&lt; radius &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double radius;
+};
+
+int main() {
+    Circle c;
+    c.setRadius(2.0);
+    c.print();
+
+    c.setRadius(-5.0);      // the class refuses
+    c.print();
+
+    cout &lt;&lt; "radius is " &lt;&lt; c.getRadius() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">Circle r = 2, area = 12.5664
+Circle: negative radius rejected
+Circle r = 0, area = 0
+radius is 0</pre>
+<p>The rule "radius is never negative" is now a property of the <em>class</em>, not a discipline that
+every caller has to remember. A statement like this is called an <strong>invariant</strong>: a fact
+about the object that is true before and after every public method call. Invariants are the real
+reason for <code>private</code>, and a good exam answer about encapsulation names one instead of reciting the
+definition.</p>
+<p>Two details in the code: <code>print</code> calls <code>area()</code> with no dot, which is the Class 13, &sect;A rule again; and
+<code>area</code> is <code>const</code> while <code>setRadius</code> is not, which is the Class 13, &sect;B rule again. Every class you write
+from now on has this shape.</p>
+
+</div></details>
+  </div>
+</div>
+
+<h3>Private methods</h3>
+
+<p>The notes add one line that is easy to miss: <em>"It is also possible to write private class
+methods."</em> A private method is a helper &mdash; a piece of the implementation that the public
+methods use and that outside code has no business calling.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a helper that is not part of the interface</span></div>
+  <div class="bd">
+    <p><code>toF</code> is a conversion used by two public methods. It is nobody else's business.</p>
+<div class="codewrap"><div class="cap">privhelper.cpp</div><pre><code class="language-cpp">// privhelper.cpp -- a private method: a helper the outside world cannot call
+#include &lt;iostream&gt;
+using namespace std;
+
+class Temperature {
+public:
+    void setCelsius(double c) { celsius = c; }
+    double getFahrenheit() const { return toF(celsius); }
+    void report() const {
+        cout &lt;&lt; celsius &lt;&lt; "C = " &lt;&lt; toF(celsius) &lt;&lt; "F" &lt;&lt; endl;
+    }
+private:
+    double toF(double c) const { return c * 9.0 / 5.0 + 32.0; }   // private helper
+    double celsius;
+};
+
+int main() {
+    Temperature t;
+    t.setCelsius(100.0);
+    t.report();
+    cout &lt;&lt; "as F: " &lt;&lt; t.getFahrenheit() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">100C = 212F
+as F: 212</pre>
+<p>If <code>main</code> tried to call the helper directly with <code>t.toF(100.0);</code>, the error is the same shape as
+before, just about a method instead of a member:</p>
+<pre class="err">privhelper_err.cpp: In function 'int main()':
+privhelper_err.cpp:21:18: error: 'double Temperature::toF(double) const' is private within this context
+   21 |     cout &lt;&lt; t.toF(100.0) &lt;&lt; endl;
+      |             ~~~~~^~~~~~~
+privhelper_err.cpp:13:12: note: declared private here
+   13 |     double toF(double c) const { return c * 9.0 / 5.0 + 32.0; }   // private helper
+      |            ^~~</pre>
+<p>The value of this is that <code>toF</code> can be renamed, rewritten or deleted at any time without breaking
+a single line outside the class. Anything you put in <code>public:</code> you are stuck with; anything in
+<code>private:</code> stays yours.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; every <code>Point</code> so far is born uninitialized</span></div>
+  <div class="bd">
+    <p>None of the classes in Class 10 has a <strong>constructor</strong>. So when you write
+    <code>Point1 bpt;</code>, memory is set aside for <code>x</code> and <code>y</code> and <em>nothing is written into it</em>. The
+    members hold whatever bytes happened to be there. Reading them before calling <code>set</code> is undefined
+    behavior, and compiling <code>bpt.print()</code> before <code>bpt.set(...)</code> gets you this from <code>-Wall</code>:</p>
+<pre class="err">uninit.cpp: In function 'int main()':
+uninit.cpp:15:14: warning: 'bpt' may be used uninitialized [-Wmaybe-uninitialized]
+   15 |     bpt.print();    // reading them is undefined behavior
+      |     ~~~~~~~~~^~</pre>
+    <p>and this at run time &mdash; the numbers are garbage from the stack and <strong>differ from
+    run to run</strong>, so treat them as representative only:</p>
+<pre class="out">print x,y 6.95335e-310 6.94338e-310
+print x,y 1.23 4.56</pre>
+    <p>Every example on this page calls <code>set</code> before reading, so all of them are safe. But note the
+    hole in the encapsulation story: we can stop outside code from writing nonsense into <code>x</code>, and we
+    still cannot stop an object from <em>starting out</em> as nonsense. Closing that hole is exactly
+    what a constructor is for, and it is the first thing we build in Class 13.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.4</div>
+  <div class="bd">
+    <p>Consider this class and the four lines of <code>main</code> beneath it.</p>
+<pre><code class="language-cpp">class Meter {
+public:
+    void setValue(int v) { value = v; }
+    int getValue() const { return value; }
+private:
+    int value;
+    void reset() { value = 0; }
+};
+
+int main() {
+    Meter m;
+    m.setValue(42);          // (i)
+    cout &lt;&lt; m.value &lt;&lt; endl; // (ii)
+    m.reset();               // (iii)
+    cout &lt;&lt; m.getValue();    // (iv)
+    return 0;
+}</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Which of the four lines compile?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <table class="trace">
+          <tr><th>Line</th><th>Verdict</th><th>Why</th></tr>
+          <tr><td>(i)</td><td>Compiles</td><td><code>setValue</code> is public.</td></tr>
+          <tr><td>(ii)</td><td><strong>Error</strong></td><td><code>'int Meter::value' is private within this context</code>.</td></tr>
+          <tr><td>(iii)</td><td><strong>Error</strong></td><td><code>'void Meter::reset()' is private within this context</code>. Methods obey the labels exactly as data does.</td></tr>
+          <tr><td>(iv)</td><td>Compiles</td><td><code>getValue</code> is public and <code>const</code>; calling a <code>const</code> method on a non-<code>const</code> object is always fine.</td></tr>
+        </table>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> <code>reset</code> is unreachable from outside the class. Is it therefore useless?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. It is callable from any other method of <code>Meter</code> &mdash; <code>setValue</code> could call
+        <code>reset()</code> when handed a bad value, for instance. A private method is a piece of the
+        implementation, shared between the public methods, that the class reserves the right to
+        change or delete.</p>
+        <p>If it turned out that <em>nothing</em> in the class called it either, then yes, delete
+        it &mdash; but that is a dead-code problem, not a <code>private</code> problem.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> A classmate "fixes" line (ii) by moving <code>int value;</code> up into the public section. Is that a fix?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It makes the error go away, which is not the same thing. It also throws away every
+        guarantee the class was offering: any line anywhere may now assign to <code>value</code>, and the class
+        can never change how the value is stored.</p>
+        <p>The real fix is the one g++ suggests in its <code>note:</code> line &mdash; call the accessor:</p>
+<pre><code class="language-cpp">    cout &lt;&lt; m.getValue() &lt;&lt; endl;   // (ii) fixed</code></pre>
+        <p>When the compiler tells you something is private, the answer is almost never "make it
+        public." It is "use the interface, or if the interface is genuinely missing something, add a
+        method to it."</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; put a class behind its interface</h3>
+
+<p>Take the <code>Circle</code> idea and write it yourself from scratch: private radius, a mutator that refuses
+a negative value, a <code>const</code> accessor, a <code>const</code> <code>area()</code>, and a <code>const</code> <code>print()</code>. Then have <code>main</code>
+prove that the guard works.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="28" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    // mutator: reject a negative radius
+
+
+    // accessor (const)
+
+
+    // area() and print(), both const
+
+
+private:
+    // the data, hidden
+
+};
+
+int main() {
+    Circle c;
+    // set a good radius, print it
+    // set a bad radius, print it again
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    // mutator: reject a negative radius
+
+
+    // accessor (const)
+
+
+    // area() and print(), both const
+
+
+private:
+    // the data, hidden
+
+};
+
+int main() {
+    Circle c;
+    // set a good radius, print it
+    // set a bad radius, print it again
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.5</div>
+  <div class="bd">
+    <p>Write the <code>Circle</code> class described above in full, with a <code>main</code> that demonstrates the guard,
+    and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> One data member, <code>double radius</code>, under <code>private:</code>. Four public
+      methods. Sort them by the Class 13, &sect;B test: <code>setRadius</code> writes, so it is not <code>const</code>;
+      <code>getRadius</code>, <code>area</code> and <code>print</code> only read, so all three are <code>const</code>. The guard goes inside
+      <code>setRadius</code> &mdash; that is the only place it <em>can</em> go now, which is the whole reason
+      this design is better than a public data member.</p>
+<div class="codewrap"><div class="cap">circle.cpp</div><pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r) {
+        if (r &lt; 0.0) {
+            cout &lt;&lt; "Circle: negative radius rejected" &lt;&lt; endl;
+            radius = 0.0;
+        } else {
+            radius = r;
+        }
+    }
+    double getRadius() const { return radius; }
+    double area() const { return 3.14159 * radius * radius; }
+    void print() const {
+        cout &lt;&lt; "Circle r = " &lt;&lt; radius &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double radius;
+};
+
+int main() {
+    Circle c;
+    c.setRadius(2.0);
+    c.print();
+
+    c.setRadius(-5.0);      // the class refuses
+    c.print();
+
+    cout &lt;&lt; "radius is " &lt;&lt; c.getRadius() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">Circle r = 2, area = 12.5664
+Circle: negative radius rejected
+Circle r = 0, area = 0
+radius is 0</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>The semicolon after the closing brace of the class. Leave it off and the compiler
+          produces a cascade of errors starting at <code>int main</code>, several lines <em>below</em> the real
+          mistake.</li>
+        <li><code>print</code> calls <code>area()</code> unqualified. Writing <code>c.area()</code> inside the class would not
+          compile &mdash; the class has never heard of a variable called <code>c</code>.</li>
+        <li>Rejecting by clamping to <code>0.0</code> is one policy. Refusing to change the value at all, or
+          taking the absolute value, are equally defensible. The point is that <em>there is a
+          policy, in one place</em>. On an exam, say in a comment which policy you chose.</li>
+        <li><code>12.5664</code> is <code>3.14159 * 4</code> shown to six significant digits, <code>cout</code>'s default.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+
+<h3 id="cC"><span class="num">C.</span>Working through the interface</h3>
+
+<p>Making the data private changes how <em>other</em> code has to be written. The course notes make
+this concrete with a free function &mdash; an ordinary, non-member function &mdash; that needs to
+look inside two objects.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a free function over private data</span></div>
+  <div class="bd">
+    <p><code>distance</code> computes the distance between two points. It is not a member of <code>Point1</code>, so it has
+    no special access to anything. Look at how it gets at the coordinates, and at the parameter
+    types. Predict the output &mdash; the numbers are chosen to make it come out exactly.</p>
+<div class="codewrap"><div class="cap">distance.cpp</div><pre><code class="language-cpp">// distance.cpp -- a free function that must go through the public interface
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+double distance(const Point1 &amp;a, const Point1 &amp;b) {
+    double dx = a.getx() - b.getx();
+    double dy = a.gety() - b.gety();
+    return sqrt(dx*dx + dy*dy);
+}
+
+int main() {
+    Point1 p1, p2;
+    p1.set(1.5, 2.5);
+    p2.set(4.5, -1.5);
+    double d = distance(p1, p2);
+    cout &lt;&lt; "distance = " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">distance = 5</pre>
+<p>The arithmetic: <code>dx</code> is <code>1.5 - 4.5 = -3</code> and <code>dy</code> is <code>2.5 - (-1.5) = 4</code>, so
+the distance is the hypotenuse of a 3-4-5 triangle. <code>sqrt</code> comes from <code>#include &lt;cmath&gt;</code>,
+which you need any time you use it.</p>
+<p>Now the two design points the notes emphasize.</p>
+<p><strong>First:</strong> because <code>x</code> and <code>y</code> are private, they cannot be accessed directly in the
+function <code>distance</code>. Their values must be obtained using the accessor methods <code>getx</code> and <code>gety</code>.
+Writing <code>a.x - b.x</code> would produce the <em>"is private within this context"</em> error from &sect;B.
+The class does not make an exception for code that has a good reason.</p>
+<p><strong>Second, and this is the subtle one:</strong> the parameters are tagged as <code>const</code>
+references. That is a promise to the compiler that the code inside <code>distance</code> will not change the
+data in <code>a</code> and <code>b</code>. <strong>That promise can only be satisfied because <code>getx</code> and <code>gety</code> are
+<code>const</code> methods.</strong> The two uses of <code>const</code> compose &mdash; a <code>const</code> reference is only useful
+if the class offers <code>const</code> methods to call through it.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; the same function when the accessors forget <code>const</code></span></div>
+  <div class="bd">
+    <p>To see how tightly those two ideas are coupled, here is the identical <code>distance</code> function over
+    a class whose accessors are not <code>const</code>. Nothing else changed. Predict whether it compiles.</p>
+<div class="codewrap"><div class="cap">distance_nonconst.cpp</div><pre><code class="language-cpp">// distance_nonconst.cpp -- what happens if the accessors are not const
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() { return x; }        // NOT const
+    double gety() { return y; }        // NOT const
+    void set(const double &amp;a, const double &amp;b) { x = a; y = b; }
+private:
+    double x, y;
+};
+
+double distance(const Point1 &amp;a, const Point1 &amp;b) {
+    double dx = a.getx() - b.getx();
+    double dy = a.gety() - b.gety();
+    return sqrt(dx*dx + dy*dy);
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="err">distance_nonconst.cpp: In function 'double distance(const Point1&amp;, const Point1&amp;)':
+distance_nonconst.cpp:16:23: error: passing 'const Point1' as 'this' argument discards qualifiers [-fpermissive]
+   16 |     double dx = a.getx() - b.getx();
+      |                 ~~~~~~^~
+distance_nonconst.cpp:8:12: note:   in call to 'double Point1::getx()'
+    8 |     double getx() { return x; }        // NOT const
+      |            ^~~~</pre>
+<p>Four errors, one per accessor call, and the class author has broken the client's code without
+touching the client's file. The compiler is right to complain: as far as it knows, <code>getx()</code> might
+modify the object, and <code>a</code> is a handle that promised not to.</p>
+<p>This is the practical reason the rule from Class 13, &sect;B is stated so bluntly. You cannot add <code>const</code> to
+your accessors "later" &mdash; by then, everyone who wanted to pass your objects by <code>const</code> reference
+has already worked around you.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; naming a function <code>distance</code></span></div>
+  <div class="bd">
+    <p>The standard library has a function template called <code>std::distance</code> (it lives in
+    <code>&lt;iterator&gt;</code>, which many headers pull in behind your back). With <code>using namespace std;</code> in
+    force, your <code>distance</code> and the library's are both visible under the same name.</p>
+    <p>The program above compiles because your version is a better match for two <code>Point1</code> arguments.
+    But this is the same hazard we hit with <code>swap</code> in Class 2, and it can bite in less lucky
+    circumstances. If you get a baffling error mentioning <code>std::distance</code>, rename yours &mdash;
+    <code>point_distance</code> is fine &mdash; or drop <code>using namespace std;</code>. We look at namespaces properly
+    in Class 16.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.6</div>
+  <div class="bd">
+    <p>Using the <code>Point1</code> class from the worked example above (private <code>x</code> and <code>y</code>, public <code>getx</code>,
+    <code>gety</code>, <code>set</code>, <code>print</code>, all as shown).</p>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> Write a free function <code>Point1 midpoint(const Point1 &amp;a, const Point1 &amp;b)</code> that returns the point halfway between <code>a</code> and <code>b</code>.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>It has to read through the accessors and write through the mutator &mdash; there is no
+        other way in:</p>
+<pre><code class="language-cpp">Point1 midpoint(const Point1 &amp;a, const Point1 &amp;b) {
+    Point1 m;
+    m.set((a.getx() + b.getx()) / 2.0,
+          (a.gety() + b.gety()) / 2.0);
+    return m;
+}</code></pre>
+        <p>Note the shape: declare a local object, <code>set</code> it, return it. That is exactly the shape of
+        the professor's <code>product</code> function in the Fall 2023 exam (Practice Problem 3), so it is worth
+        recognizing.</p>
+        <p><code>m</code> is <em>not</em> <code>const</code>, and must not be &mdash; we need to call <code>set</code> on it. Only the
+        parameters are <code>const</code>.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> Could <code>midpoint</code> have been written as a member function instead? What would change at the call site?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Yes. As a member it takes one parameter instead of two, because one of the two points is
+        the object it is called on:</p>
+<pre><code class="language-cpp">    Point1 midpoint(const Point1 &amp;b) const {
+        Point1 m;
+        m.set((x + b.getx()) / 2.0,
+              (y + b.gety()) / 2.0);
+        return m;
+    }</code></pre>
+        <p>Inside the class it uses <code>x</code> and <code>y</code> directly, with no accessor, because a method has full
+        access to its own object's private data. Less obviously, it could have written <code>b.x</code> and
+        <code>b.y</code> too: <strong>access control is per class, not per object</strong>, so a member function
+        of <code>Point1</code> can reach the private members of <em>any</em> <code>Point1</code> it can see. Both forms
+        compile; going through the accessors is a habit worth keeping anyway.</p>
+        <p>The call site changes from <code>midpoint(p1, p2)</code> to <code>p1.midpoint(p2)</code>. Neither is more
+        correct; free functions keep the class's interface small, members read more naturally when
+        the operation clearly belongs to one object.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
 
 <h2 id="s1"><span class="num">1.</span>Two out of three is not enough</h2>
 
@@ -3230,6 +4030,307 @@ int main() {
     </div>
   </div>
 </div>
+
+
+<h3>Problem 7 &mdash; Distance between two points <span class="muted small">(from the course notes)</span> <span class="muted small">(carried over from Classes II)</span></h3>
+
+<p>Given a <code>Point1</code> class whose <code>x</code> and <code>y</code> are private, with public <code>set</code>, <code>print</code>, <code>getx</code> and
+<code>gety</code>, write a free function <code>double distance(const Point1 &amp;a, const Point1 &amp;b)</code> that
+returns the distance between the two points, and a <code>main</code> that tests it on the points
+<code>(1.5, 2.5)</code> and <code>(4.5, -1.5)</code>. Explain why the function cannot read <code>a.x</code>
+directly and why the <code>const</code> on the parameters is safe.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The mathematics is the Pythagorean theorem: the distance is
+  <code>sqrt(dx*dx + dy*dy)</code> where <code>dx</code> and <code>dy</code> are the coordinate differences. <code>sqrt</code> lives
+  in <code>&lt;cmath&gt;</code>. The design questions are the interesting part &mdash; the function is not a
+  member, so it has no access to private data and must go through the accessors, and it should take
+  its arguments by <code>const</code> reference so no <code>Point1</code> is copied.</p>
+<div class="codewrap"><div class="cap">distance.cpp</div><pre><code class="language-cpp">// distance.cpp -- a free function that must go through the public interface
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class Point1 {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(const double &amp;a, const double &amp;b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+double distance(const Point1 &amp;a, const Point1 &amp;b) {
+    double dx = a.getx() - b.getx();
+    double dy = a.gety() - b.gety();
+    return sqrt(dx*dx + dy*dy);
+}
+
+int main() {
+    Point1 p1, p2;
+    p1.set(1.5, 2.5);
+    p2.set(4.5, -1.5);
+    double d = distance(p1, p2);
+    cout &lt;&lt; "distance = " &lt;&lt; d &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="out">distance = 5</pre>
+  <table class="trace">
+    <tr><th>Step</th><th>Value</th></tr>
+    <tr><td><code>a.getx() - b.getx()</code></td><td><code>1.5 - 4.5 = -3</code></td></tr>
+    <tr><td><code>a.gety() - b.gety()</code></td><td><code>2.5 - (-1.5) = 4</code></td></tr>
+    <tr><td><code>dx*dx + dy*dy</code></td><td><code>9 + 16 = 25</code></td></tr>
+    <tr><td><code>sqrt(25)</code></td><td><code>5</code>, printed as <code>5</code> and not <code>5.0</code></td></tr>
+  </table>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><strong>Why not <code>a.x</code>?</strong> Because <code>x</code> is private and <code>distance</code> is not a member of the
+      class. The compiler rejects it with <code>'double Point1::x' is private within this
+      context</code>. Outside applications must employ the public methods to manipulate the class
+      data; that is what having an interface means.</li>
+    <li><strong>Why is <code>const</code> safe here?</strong> Because <code>getx</code> and <code>gety</code> are <code>const</code> methods and
+      so are callable through a <code>const</code> reference. If they were not <code>const</code>, this function would not
+      compile at all &mdash; the two uses of <code>const</code> have to line up.</li>
+    <li><code>dx</code> and <code>dy</code> are ordinary local <code>double</code>s. Squaring a negative gives a positive, so no
+      absolute value is needed anywhere.</li>
+    <li>Naming a free function <code>distance</code> while <code>using namespace std;</code> is in force risks a clash
+      with <code>std::distance</code>. It happens to work here; <code>point_distance</code> would be safer.</li>
+    <li>A neater alternative is <code>hypot(dx, dy)</code> from <code>&lt;cmath&gt;</code>, which avoids overflow for huge
+      values. Either is acceptable; <code>sqrt</code> is what the notes use.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 8 &mdash; The <code>Rational</code> class <span class="muted small">(from the Fall 2023 Exam 1)</span> <span class="muted small">(carried over from Classes II)</span></h3>
+
+<p>Given the following program. The data members are private, so the free function <code>product</code> has to
+work through the accessors.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+private:
+    int numerator, denominator;
+public:
+    void set(int a, int b) { ... }              // part (a)
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void add1() { ... }                         // part (b)
+    void print() const {
+        cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl;
+    }
+};
+
+Rational product(Rational x, Rational y) { ... }   // part (c)
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();          // add1 adds 1 to the rational number
+    r1.print();         // prints 5/3
+    r2.print();         // prints 4/5
+    Rational p = product(r1, r2);
+    p.print();          // prints 20/15
+    return 0;
+}</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Give an implementation for the <code>set</code> method, which sets the values for numerator and denominator respectively.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    void set(int a, int b) {
+        numerator = a;
+        denominator = b;
+    }</code></pre>
+    <p>A textbook mutator: parameters named differently from the data members, no <code>const</code> (it writes
+    to the object), and no validation asked for. Two points on the exam, with no partial credit
+    &mdash; so do not get fancy.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Give an implementation for <code>add1</code>, which adds 1 to the rational number. Hint: <code>p/q + 1 = (p+q)/q</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    void add1() {
+        numerator = numerator + denominator;
+    }</code></pre>
+    <p>The denominator does not change. With <code>r1</code> holding 2/3, this makes the numerator
+    <code>2 + 3 = 5</code>, so <code>r1.print()</code> shows <code>5/3</code> exactly as the comment in <code>main</code>
+    predicts.</p>
+    <p>This is a mutator with no parameters &mdash; a perfectly ordinary thing for a method to be.
+    It is not <code>const</code>, because it writes.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Give an implementation for the <code>product</code> function, which returns the product of two rational numbers. Hint: <code>(x/y) * (w/z) = (xw)/(yz)</code>. You do not need to simplify the result.</p>
+  <details class="soln"><summary></summary><div class="ans">
+    <p><strong>Plan.</strong> <code>product</code> is a <em>free function</em>, not a member, so it cannot touch
+    <code>numerator</code> or <code>denominator</code> directly &mdash; they are private. It must read through <code>getn()</code> and
+    <code>getd()</code>, build a fresh <code>Rational</code>, and write into it through <code>set</code>. Declare, compute, set,
+    return.</p>
+<pre><code class="language-cpp">Rational product(Rational x, Rational y) {
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}</code></pre>
+    <p>The complete program, with all three parts filled in:</p>
+<div class="codewrap"><div class="cap">rational.cpp</div><pre><code class="language-cpp">// rational.cpp -- a class with private data, accessors, and a free function
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rational {
+private:
+    int numerator, denominator;
+public:
+    void set(int a, int b) {
+        numerator = a;
+        denominator = b;
+    }
+    int getn() const { return numerator; }
+    int getd() const { return denominator; }
+    void add1() {
+        numerator = numerator + denominator;
+    }
+    void print() const {
+        cout &lt;&lt; numerator &lt;&lt; "/" &lt;&lt; denominator &lt;&lt; endl;
+    }
+};
+
+Rational product(Rational x, Rational y) {
+    Rational answer;
+    int n = x.getn() * y.getn();
+    int d = x.getd() * y.getd();
+    answer.set(n, d);
+    return answer;
+}
+
+int main() {
+    Rational r1, r2;
+    r1.set(2, 3);
+    r2.set(4, 5);
+    r1.add1();          // add1 adds 1 to the rational number
+    r1.print();         // prints 5/3
+    r2.print();         // prints 4/5
+    Rational p = product(r1, r2);
+    p.print();          // prints 20/15
+    return 0;
+}</code></pre></div>
+<pre class="out">5/3
+4/5
+20/15</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li><strong>This is why the accessors exist.</strong> The exam deliberately makes <code>product</code> a
+        free function over private data, so the only route in is <code>getn()</code>/<code>getd()</code>. If you write
+        <code>x.numerator</code> you get zero for this part.</li>
+      <li>The rubric's point split for part (c) is 2 points for declaring a <code>Rational</code> object and
+        returning it, 2 for computing the numerator and denominator using the <code>get</code> methods, and 2
+        for setting them on the created object. Write those three things as three visible steps and
+        you collect the points even if the arithmetic slips.</li>
+      <li><code>20/15</code> is not reduced, and the question says it does not have to be. Answer the
+        question that was asked.</li>
+      <li><code>product</code> takes its parameters <strong>by value</strong>, exactly as the exam prints it, so
+        each call copies a <code>Rational</code>. Taking them as <code>const Rational &amp;</code> would be better style
+        and would still work &mdash; but only because <code>getn</code> and <code>getd</code> are <code>const</code>. (The exam's own
+        listing leaves the <code>const</code> off the accessors; it compiles because the parameters are copies.
+        Adding <code>const</code> to the accessors, as above, is strictly safer.)</li>
+      <li><code>Rational p = product(r1, r2);</code> copies the returned object into <code>p</code>. The compiler generated
+        that copy for us. In Class 14 we learn to write it ourselves, and why that matters the moment
+        a class owns a pointer.</li>
+    </ul>
+  </div></details>
+</div>
+
+<h3>Problem 9 &mdash; A fully encapsulated <code>Rectangle</code> <span class="muted small">(added)</span> <span class="muted small">(carried over from Classes II)</span></h3>
+
+<p>Write a complete C++ program containing a <code>Rectangle</code> class whose <code>width</code> and <code>height</code> are
+private. Give it a mutator <code>set</code>, <code>const</code> accessors for both dimensions, a <code>const</code> <code>area()</code> and a
+<code>const</code> <code>print()</code>. Then write a free function that takes two rectangles by <code>const</code> reference and
+returns the larger of the two by area. In <code>main</code>, create one rectangle normally, one with <code>new</code>,
+compare them, and release the heap one.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> Everything on this page appears in this one program, so build it in the
+  order the class was taught. Data first, <code>private</code>. Then the mutator (not <code>const</code>), then the three
+  reading methods (all <code>const</code>). Then the free function: it is not a member, so it may only use the
+  public interface, and it takes <code>const Rectangle &amp;</code> parameters, which is legal only because
+  <code>area()</code> is <code>const</code>. Returning <code>const Rectangle&amp;</code> avoids copying, and is safe here because both
+  arguments outlive the call. Finally <code>main</code> exercises both an ordinary object and a heap one, so we
+  need <code>.</code> in one place and <code>-&gt;</code> in the other, plus one <code>delete</code> for the one <code>new</code>.</p>
+<div class="codewrap"><div class="cap">rectangle.cpp</div><pre><code class="language-cpp">// rectangle.cpp -- a complete encapsulated class used through its interface
+#include &lt;iostream&gt;
+using namespace std;
+
+class Rectangle {
+public:
+    void set(double w, double h) {
+        width  = w;
+        height = h;
+    }
+    double getWidth()  const { return width;  }
+    double getHeight() const { return height; }
+    double area() const { return width * height; }
+    void print() const {
+        cout &lt;&lt; "Rectangle " &lt;&lt; width &lt;&lt; " x " &lt;&lt; height
+             &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double width, height;
+};
+
+// free function: it can only use the public interface
+const Rectangle&amp; bigger(const Rectangle &amp;a, const Rectangle &amp;b) {
+    if (a.area() &gt;= b.area()) return a;
+    return b;
+}
+
+int main() {
+    Rectangle r;
+    r.set(3.0, 4.0);
+    r.print();
+
+    Rectangle *q = new Rectangle;
+    q-&gt;set(2.0, 8.0);
+    q-&gt;print();
+
+    cout &lt;&lt; "bigger area = " &lt;&lt; bigger(r, *q).area() &lt;&lt; endl;
+
+    delete q;
+    q = nullptr;
+    return 0;
+}</code></pre></div>
+<pre class="out">Rectangle 3 x 4, area = 12
+Rectangle 2 x 8, area = 16
+bigger area = 16</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><code>bigger(r, *q)</code> &mdash; the second argument is <code>*q</code>, not <code>q</code>. The function wants a
+      <code>Rectangle</code>, and <code>q</code> is a <code>Rectangle*</code>, so it has to be dereferenced. This is where the arrow
+      operator does <em>not</em> help you: <code>-&gt;</code> reaches a member, but here we are passing the whole
+      object.</li>
+    <li><code>bigger</code> returns <code>const Rectangle&amp;</code>, so no rectangle is copied anywhere in this program.
+      That is safe because both arguments are alive for the whole statement. Returning a reference to
+      a <em>local</em> object would be a serious bug &mdash; the Class 2 rule about returning
+      references still applies.</li>
+    <li>Because the return type is <code>const Rectangle&amp;</code>, we can only call <code>const</code> methods on the
+      result &mdash; <code>bigger(r, *q).area()</code> works precisely because <code>area()</code> is <code>const</code>. Try it with
+      the <code>const</code> removed and you get "discards qualifiers" again.</li>
+    <li>One <code>new</code>, one <code>delete</code>, and <code>q = nullptr;</code> afterwards. Under <code>valgrind</code> this program reports
+      <em>"All heap blocks were freed &mdash; no leaks are possible."</em></li>
+    <li>Both objects need <code>set</code> called before anything reads them, because the class has no
+      constructor yet. From Class 13, <code>Rectangle r(3.0, 4.0);</code> will do both jobs in one line and
+      remove the possibility of forgetting.</li>
+  </ul>
+</div></details>
 
 <div class="box sum" id="summary">
   <div class="hd">Lecture Summary</div>
