@@ -59,6 +59,7 @@ body{
 h2{margin:44px 0 14px;font-size:23px;color:var(--ink);letter-spacing:-.01em;
    padding-bottom:7px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
 h2 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
+h3 .num{display:inline-block;min-width:1.9em;color:var(--obj);font-weight:800}
 h3{margin:28px 0 9px;font-size:18.5px;color:var(--ink);scroll-margin-top:64px}
 h4{margin:20px 0 6px;font-size:16px;color:var(--ink)}
 p{margin:0 0 13px}
@@ -298,6 +299,7 @@ table.sched a:hover{text-decoration:underline}
 <div class="toc">
   <div class="th">On this page</div>
   <ol>
+    <li><a href="#cA">Carried over: pointers to objects and <code>-&gt;</code></a></li>
     <li><a href="#s1">Where the memory goes when the object dies</a></li>
     <li><a href="#s2">The destructor</a></li>
     <li><a href="#s3"><code>new</code> calls the constructor, <code>delete</code> calls the destructor</a></li>
@@ -329,6 +331,406 @@ table.sched a:hover{text-decoration:underline}
     three; Class 15 finishes the set.</p>
     <p>There is no way to bluff it. Either you can write these four or five lines from memory, or you
     cannot. So today's material is worth over-learning.</p>
+  </div>
+</div>
+
+<h2 id="carried"><span class="num">&#9670;</span>Carried over from Classes II</h2>
+
+<div class="box key"><div class="hd">Why this is here</div><div class="bd">Carried over from Classes II. It belongs here: this is the class where objects start living on the heap.</div></div>
+
+<h3 id="cA"><span class="num">A.</span>Pointers to objects and the arrow operator</h3>
+
+<p>Classes 7 and 8 gave you pointers, <code>new</code> and <code>delete</code> over <code>int</code>s and arrays. None of that
+machinery cares what type it is pointing at, so it all works on objects unchanged. As the notes put
+it: the compiler automatically knows how to create pointers for a user-defined class, and it
+automatically sets up the operators <code>new</code> and <code>delete</code>.</p>
+
+<p>There is exactly one new piece of syntax, and it exists purely for convenience.</p>
+
+<div class="box def">
+  <div class="hd">Definition<span class="tag">&mdash; the arrow operator</span></div>
+  <div class="bd">
+    <p>The arrow operator <code>-&gt;</code> is the <strong>"pointer member of"</strong> operator. It is the
+    partner of the dot operator for objects. If <code>p</code> is a pointer to an object, the following two
+    statements are equivalent:</p>
+<pre><code class="language-cpp">    p-&gt;print();
+    (*p).print();</code></pre>
+    <p>It is simpler and more convenient to use the arrow operator for pointers. The arrow operator
+    <code>-&gt;</code> and the dot operator <code>.</code> have the same level of operator precedence.</p>
+    <p>Read <code>p-&gt;print()</code> out loud as <em>"follow the pointer <code>p</code>, then call <code>print</code> on what you
+    find."</em></p>
+  </div>
+</div>
+
+<p>Why the parentheses in <code>(*p).print()</code> are not optional is a direct consequence of Class 10's
+precedence rule: only <code>()</code> and <code>[]</code> bind more tightly than <code>.</code>, so <code>*</code> binds <em>less</em> tightly.
+That means <code>*p.print()</code> parses as <code>*(p.print())</code> &mdash; "call <code>print</code> on the pointer, then
+dereference the result" &mdash; which is nonsense. Here is what g++ says about it:</p>
+
+<pre class="err">starprec.cpp: In function 'int main()':
+starprec.cpp:16:8: error: request for member 'print' in 'p', which is of pointer type 'Point*' (maybe you meant to use '-&gt;' ?)
+   16 |     *p.print();         // missing parentheses
+      |        ^~~~~</pre>
+
+<p>The arrow operator exists so you never have to type those parentheses. Use it.</p>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; a pointer to an ordinary local object</span></div>
+  <div class="bd">
+    <p>Before any <code>new</code>, the simplest case: a pointer aimed at an object that already exists. Note
+    that <code>&amp;bpt</code> is the Class 7 address-of operator, doing exactly what it did for <code>int</code>s.
+    Predict all three lines.</p>
+<div class="codewrap"><div class="cap">arrowstack.cpp</div><pre><code class="language-cpp">// arrowstack.cpp -- a pointer to an ordinary local object (no new anywhere)
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    void set(double a, double b) { x = a; y = b; }
+    void print() const { cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl; }
+private:
+    double x, y;
+};
+
+int main() {
+    Point bpt;
+    bpt.set(1.23, 4.56);
+
+    Point *p = &amp;bpt;        // p points at an ordinary local object
+    p-&gt;print();             // arrow, because p is a pointer
+    bpt.print();            // dot, because bpt is an object
+
+    p-&gt;set(7.0, 8.0);       // changing it through the pointer...
+    bpt.print();            // ...changes bpt itself
+    return 0;               // no delete: nothing was allocated with new
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+print x,y 1.23 4.56
+print x,y 7 8</pre>
+<p>The first two lines are identical because <code>p</code> and <code>bpt</code> name the same object &mdash; one through
+an address, one directly. The third line is the proof: <code>p-&gt;set(7.0, 8.0)</code> reached through the
+pointer and changed <code>bpt</code> itself. There is no copy anywhere in this program.</p>
+<p>And no <code>delete</code>. <code>bpt</code> is an ordinary local object; it is destroyed automatically when <code>main</code>
+ends. <code>delete</code> is only ever for memory that came from <code>new</code>. Writing <code>delete p;</code> here would be a
+serious error &mdash; Class 8's rule, unchanged.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; one object on the heap: <code>new</code>, <code>-&gt;</code>, <code>delete</code></span></div>
+  <div class="bd">
+    <p>This is the course notes' <code>new</code>/<code>delete</code> example, with the class filled in (see the warning
+    below). <code>new Point</code> allocates one <code>Point</code> and hands back its address &mdash; the singular form,
+    no <code>[]</code> anywhere, so the release is <code>delete p;</code> and not <code>delete [] p;</code>. Predict the three lines
+    of output.</p>
+<div class="codewrap"><div class="cap">arrowdemo.cpp</div><pre><code class="language-cpp">// arrowdemo.cpp -- a pointer to an object, new/delete, and the arrow operator
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    double getx() const { return x; }
+    double gety() const { return y; }
+    void set(double a, double b) {
+        x = a;
+        y = b;
+    }
+    void print() const {
+        cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+    }
+private:
+    double x, y;
+};
+
+int main() {
+    Point *p = new Point;              // one Point on the heap
+    p-&gt;set(1.23, 4.56);
+    p-&gt;print();
+    cout &lt;&lt; "get: " &lt;&lt; p-&gt;getx() &lt;&lt; " " &lt;&lt; p-&gt;gety() &lt;&lt; endl;
+
+    (*p).print();                      // exactly the same call, written out
+    delete p;                          // give the memory back
+    p = nullptr;
+    return 0;
+}</code></pre></div>
+<details class="soln reveal"><summary></summary><div class="ans">
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56
+print x,y 1.23 4.56</pre>
+<table class="trace">
+  <tr><th>Statement</th><th>What it does</th></tr>
+  <tr><td><code>Point *p = new Point;</code></td><td>Allocates enough memory for one <code>Point</code> on the heap and stores its address in <code>p</code>. <code>p</code> itself is an ordinary local pointer variable.</td></tr>
+  <tr><td><code>p-&gt;set(1.23, 4.56);</code></td><td>Follows the address, then calls <code>set</code> on the object there.</td></tr>
+  <tr><td><code>(*p).print();</code></td><td>Identical to <code>p-&gt;print()</code>. Shown once so you recognize it; never write it this way.</td></tr>
+  <tr><td><code>delete p;</code></td><td>Returns the heap memory. Singular <code>new</code>, singular <code>delete</code>.</td></tr>
+  <tr><td><code>p = nullptr;</code></td><td>Not required, but it turns a later accidental use of <code>p</code> from silent corruption into an immediate crash. Class 8's habit.</td></tr>
+</table>
+<p>Exams in this course ask for exactly this sequence &mdash; declare an object, <code>new</code> a second one,
+copy data across with <code>-&gt;</code>, call a method with <code>-&gt;</code>, <code>delete</code> &mdash; on four different midterms.
+Practice Problem 4 is one of them, essentially verbatim.</p>
+
+</div></details>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; the class body in the original listing is incomplete</span></div>
+  <div class="bd">
+    <p>The <code>new</code>/<code>delete</code> program as printed in the course notes has its class body elided:</p>
+<pre><code class="language-cpp">class Point {
+// etc
+int main() {
+    Point * p = new Point;
+    p-&gt;set(1.23, 4.56);
+    ...</code></pre>
+    <p>There is no closing <code>};</code> &mdash; the <code>// etc</code> was meant as "the class from the previous slide
+    goes here", but as printed the file will not compile. It is worth seeing what g++ makes of it,
+    because the failure is instructive rather than obvious:</p>
+<pre class="err">code10c_asprinted.cpp:12:2: error: expected '}' at end of input
+   12 | }
+      |  ^
+code10c_asprinted.cpp:3:13: note: to match this '{'
+    3 | class Point {
+      |             ^
+code10c_asprinted.cpp: In member function 'int Point::main()':
+code10c_asprinted.cpp:7:8: error: 'class Point' has no member named 'set'
+    7 |     p-&gt;set(1.23, 4.56);
+      |        ^~~</pre>
+    <p>Look at the third line of that message: <strong><code>In member function 'int
+    Point::main()'</code></strong>. With no closing brace, the compiler kept reading and swallowed
+    <code>main</code> itself into the class. Everything after that is fallout &mdash; <code>Point</code> has no <code>set</code>
+    because we never finished telling the compiler what <code>Point</code> is.</p>
+    <p>The lesson generalizes well beyond this typo. <strong><code>-&gt;</code> is not magic punctuation; it is
+    a member lookup, and it needs a complete class definition in scope to look anything up in.</strong>
+    If <code>-&gt;</code> produces "has no member named ...", check the class definition before you check the
+    pointer. And when a brace is missing, believe the <em>first</em> error, not the twenty that
+    follow it.</p>
+    <p>The version compiled above restores the class the notes intended &mdash; the accessor/mutator
+    <code>Point</code> from Class 15, &sect;A, with the data made private as in Class 15, &sect;B.</p>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.7</div>
+  <div class="bd">
+    <p>Two students each make one mistake. Given <code>Point bpt;</code> and <code>Point *p = new Point;</code>, one writes
+    <code>p.print();</code> and the other writes <code>bpt-&gt;print();</code>.</p>
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does g++ say about each, and which is easier to fix from the message alone?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Both lines in one file give:</p>
+<pre class="err">dotarrow_err.cpp: In function 'int main()':
+dotarrow_err.cpp:17:7: error: request for member 'print' in 'p', which is of pointer type 'Point*' (maybe you meant to use '-&gt;' ?)
+   17 |     p.print();          // (1) dot on a pointer
+      |       ^~~~~
+dotarrow_err.cpp:18:8: error: base operand of '-&gt;' has non-pointer type 'Point'
+   18 |     bpt-&gt;print();       // (2) arrow on an object
+      |        ^~</pre>
+        <p>The first is easier: g++ literally asks <em>"maybe you meant to use <code>-&gt;</code>?"</em> The
+        second is blunter &mdash; <em>"base operand of <code>-&gt;</code> has non-pointer type"</em> &mdash; but
+        it tells you the same thing in reverse: you used the pointer operator on something that is
+        not a pointer.</p>
+      </div></details>
+    </div>
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> State a rule you can apply without thinking.</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p><strong>Look at the declaration of the thing on the left.</strong> If there is a <code>*</code> in
+        it, use <code>-&gt;</code>. If there is not, use <code>.</code></p>
+        <table class="trace">
+          <tr><th>Declaration</th><th>Reach a member with</th></tr>
+          <tr><td><code>Point bpt;</code></td><td><code>bpt.print()</code></td></tr>
+          <tr><td><code>Point *p = new Point;</code></td><td><code>p-&gt;print()</code></td></tr>
+          <tr><td><code>Point *p = &amp;bpt;</code></td><td><code>p-&gt;print()</code></td></tr>
+          <tr><td><code>Point &amp;r = bpt;</code></td><td><code>r.print()</code> &mdash; a reference is another name for the object, not a pointer</td></tr>
+        </table>
+        <p>The reference row is the one that catches people. <code>&amp;</code> in a declaration means
+        "another name for"; <code>*</code> means "the address of". Only the second one needs an arrow.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.8</div>
+  <div class="bd">
+    <p>Consider this fragment, using the <code>Point</code> class with private data and public <code>set</code>/<code>print</code>.</p>
+<pre><code class="language-cpp">    Point *p = new Point;
+    p-&gt;set(1.0, 2.0);
+    Point *q = p;
+    q-&gt;set(9.0, 9.0);
+    p-&gt;print();
+    delete p;</code></pre>
+
+    <div class="part">
+      <p class="q"><span class="pl">(a)</span> What does <code>p-&gt;print()</code> output?</p>
+      <details class="soln"><summary></summary><div class="ans">
+<pre class="out">print x,y 9 9</pre>
+        <p><code>Point *q = p;</code> copies an <em>address</em>, not an object. There is still exactly one
+        <code>Point</code> on the heap and now two pointers aimed at it, so <code>q-&gt;set(9.0, 9.0)</code> and
+        <code>p-&gt;print()</code> are talking about the same object. This is Class 7's "copying an address vs.
+        copying a value" applied to a class.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(b)</span> After <code>delete p;</code>, is it safe to write <code>q-&gt;print();</code>?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>No. It is undefined behavior. <code>q</code> still holds the old address, but the object there has
+        been destroyed and the memory handed back &mdash; <code>q</code> is a <strong>dangling pointer</strong>.
+        It may print the old values, it may print garbage, it may crash, and which of those happens
+        can change between runs.</p>
+        <p>Setting <code>p = nullptr;</code> after the <code>delete</code> protects <code>p</code> and does nothing for <code>q</code>. That
+        asymmetry &mdash; one object, several pointers, one owner &mdash; is what makes manual memory
+        management hard, and it is the reason the copy constructor and destructor in Classes 13 and
+        14 matter so much.</p>
+      </div></details>
+    </div>
+
+    <div class="part">
+      <p class="q"><span class="pl">(c)</span> How would you get two independent <code>Point</code> objects instead?</p>
+      <details class="soln"><summary></summary><div class="ans">
+        <p>Allocate twice, and release twice:</p>
+<pre><code class="language-cpp">    Point *p = new Point;
+    Point *q = new Point;      // a second, separate object
+    p-&gt;set(1.0, 2.0);
+    q-&gt;set(9.0, 9.0);
+    p-&gt;print();                // print x,y 1 2
+    q-&gt;print();                // print x,y 9 9
+    delete p;
+    delete q;</code></pre>
+        <p><strong>One <code>new</code>, one <code>delete</code>.</strong> Two <code>new</code>s and one <code>delete</code> is a leak; one <code>new</code>
+        and two <code>delete</code>s of the same address is a double free, which typically crashes. Count them
+        in every program you write.</p>
+      </div></details>
+    </div>
+  </div>
+</div>
+
+<h3>In-class exercise &mdash; the same class, on the heap</h3>
+
+<p>Take your <code>Circle</code> from the earlier exercise and drive it entirely through a pointer: allocate one
+with <code>new</code>, set and print it with <code>-&gt;</code>, then release it. Write the long form <code>(*cp).area()</code> once,
+so you have seen it, and never again.</p>
+
+<div class="editor"><div class="ehd"><span class="etitle">Live coding &mdash; type here</span><button type="button" data-act="reset">Reset</button><button type="button" data-act="copy">Copy</button></div><textarea spellcheck="false" rows="30" data-starter="#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r);      // (paste your version from before)
+    double getRadius() const;
+    double area() const;
+    void print() const;
+private:
+    double radius;
+};
+
+int main() {
+    // allocate one Circle with new
+
+
+    // set its radius and print it, using -&gt;
+
+
+    // print the area once using the (*cp) form
+
+
+    // release it, and null the pointer
+
+
+    return 0;
+}">#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r);      // (paste your version from before)
+    double getRadius() const;
+    double area() const;
+    void print() const;
+private:
+    double radius;
+};
+
+int main() {
+    // allocate one Circle with new
+
+
+    // set its radius and print it, using -&gt;
+
+
+    // print the area once using the (*cp) form
+
+
+    // release it, and null the pointer
+
+
+    return 0;
+}</textarea><div class="printbox"></div><div class="efoot">This box does not compile or run code. Type here, then <strong>Copy</strong> and paste into your compiler. Anything you type is lost on refresh.</div></div>
+
+<div class="box qc">
+  <div class="hd">Quick Check 10.9</div>
+  <div class="bd">
+    <p>Complete the exercise above and give the exact output.</p>
+    <details class="soln"><summary></summary><div class="ans">
+      <p><strong>Plan.</strong> The class is unchanged &mdash; that is the point of the exercise.
+      Only <code>main</code> differs: <code>new Circle</code> instead of <code>Circle c;</code>, <code>-&gt;</code> instead of <code>.</code>, and a
+      matching <code>delete</code> at the end. Count one <code>new</code> and one <code>delete</code> before you compile.</p>
+<div class="codewrap"><div class="cap">circle_new.cpp</div><pre><code class="language-cpp">// circle_new.cpp -- one Circle on the heap, reached through the arrow operator
+#include &lt;iostream&gt;
+using namespace std;
+
+class Circle {
+public:
+    void setRadius(double r) {
+        if (r &lt; 0.0) {
+            cout &lt;&lt; "Circle: negative radius rejected" &lt;&lt; endl;
+            radius = 0.0;
+        } else {
+            radius = r;
+        }
+    }
+    double getRadius() const { return radius; }
+    double area() const { return 3.14159 * radius * radius; }
+    void print() const {
+        cout &lt;&lt; "Circle r = " &lt;&lt; radius &lt;&lt; ", area = " &lt;&lt; area() &lt;&lt; endl;
+    }
+private:
+    double radius;
+};
+
+int main() {
+    Circle *cp = new Circle;        // allocate
+    cp-&gt;setRadius(3.0);             // arrow to reach the method
+    cp-&gt;print();
+    cout &lt;&lt; "area again = " &lt;&lt; (*cp).area() &lt;&lt; endl;   // the long form
+
+    delete cp;                      // release
+    cp = nullptr;                   // and do not leave the pointer dangling
+    return 0;
+}</code></pre></div>
+<pre class="out">Circle r = 3, area = 28.2743
+area again = 28.2743</pre>
+      <p><strong>Things to notice.</strong></p>
+      <ul>
+        <li>Not one character of the class changed. A class does not know or care whether its objects
+          live on the stack or the heap; that is the caller's decision.</li>
+        <li><code>new Circle</code> with no parentheses and no arguments is the form to use until Class 13 gives
+          the class a constructor. <code>new Circle;</code> and <code>new Circle();</code> are not quite the same thing for
+          a class like this one &mdash; a detail we can safely leave alone for now.</li>
+        <li>Checking for leaks is not optional in a course whose exams award points for
+          <code>delete</code>. Running this under <code>valgrind</code> reports
+          <em>"All heap blocks were freed &mdash; no leaks are possible."</em> Forget the <code>delete</code>
+          and it reports a definite loss instead.</li>
+        <li><code>(*cp).area()</code> and <code>cp-&gt;area()</code> compile to identical code. The arrow exists because the
+          parentheses are easy to forget, and forgetting them gives the confusing
+          <em>"request for member ... which is of pointer type"</em> error.</li>
+      </ul>
+    </div></details>
   </div>
 </div>
 
@@ -2984,6 +3386,198 @@ a b c</pre>
       by value there would be two copies per call.</li>
   </ul>
 </div></details>
+
+
+<h3>Problem 7 &mdash; Split a class into a header and an implementation file <span class="muted small">(from the course notes)</span> <span class="muted small">(carried over from Classes II)</span></h3>
+
+<p>Take the <code>Point2</code> class &mdash; <code>getx</code>/<code>gety</code> inline, <code>set</code> and <code>print</code> non-inline, data private
+&mdash; and lay it out as three files: <code>point2.h</code>, <code>point2.cpp</code> and <code>main.cpp</code>. Give the commands
+that compile and link them, and say what has to be recompiled when only a method body changes.</p>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>Plan.</strong> The header answers "what can I do with a <code>Point2</code>?" and must be safe to
+  include more than once, so it needs an include guard. The implementation file includes the header
+  (so the compiler knows what <code>Point2</code> is) and defines the two non-inline methods with the
+  <code>Point2::</code> prefix. <code>main.cpp</code> includes only the header. Compile each <code>.cpp</code> separately with <code>-c</code>,
+  then link the object files.</p>
+<div class="codewrap"><div class="cap">point2.h</div><pre><code class="language-cpp">// point2.h -- the class declaration: the interface, and nothing else
+#ifndef POINT2_H
+#define POINT2_H
+
+class Point2 {
+public:
+    const double&amp; getx() const { return x; }      // inline
+    const double&amp; gety() const { return y; }      // inline
+    void set(const double &amp;a, const double &amp;b);   // not inline
+    void print() const;                           // not inline
+private:
+    // data
+    double x, y;
+};
+
+#endif</code></pre></div>
+<div class="codewrap"><div class="cap">point2.cpp</div><pre><code class="language-cpp">// point2.cpp -- the implementation: the method bodies
+#include &lt;iostream&gt;
+#include "point2.h"
+using namespace std;
+
+void Point2::set(const double &amp;a, const double &amp;b) {
+    x = a;
+    y = b;
+}
+
+void Point2::print() const {
+    cout &lt;&lt; "print x,y " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+}</code></pre></div>
+<div class="codewrap"><div class="cap">main.cpp</div><pre><code class="language-cpp">// main.cpp -- a client of the class: includes only the header
+#include &lt;iostream&gt;
+#include "point2.h"
+using namespace std;
+
+int main() {
+    Point2 cpt;
+    cpt.set(1.23, 4.56);
+    cpt.print();
+    cout &lt;&lt; "get: " &lt;&lt; cpt.getx() &lt;&lt; " " &lt;&lt; cpt.gety() &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<pre class="shell">g++ -c point2.cpp
+g++ -c main.cpp
+g++ point2.o main.o -o pointprog
+./pointprog</pre>
+<pre class="out">print x,y 1.23 4.56
+get: 1.23 4.56</pre>
+  <p><strong>Things to notice.</strong></p>
+  <ul>
+    <li><strong>What gets recompiled.</strong> Change a body in <code>point2.cpp</code> and only <code>point2.cpp</code>
+      needs recompiling; <code>main.o</code> is still valid and you just relink. Change anything in <code>point2.h</code>
+      &mdash; including the body of an inline method &mdash; and <em>every</em> file that includes it
+      must be recompiled. That asymmetry is the practical argument for keeping big method bodies out
+      of the header.</li>
+    <li>The <code>Point2::</code> prefix is what makes <code>void Point2::print() const</code> a member rather than a free
+      function. Without it, <code>x</code> and <code>y</code> are not in scope and the compile fails immediately.</li>
+    <li>The <code>const</code> appears in both the declaration and the definition. It is part of the
+      signature.</li>
+    <li><code>point2.cpp</code> needs <code>#include &lt;iostream&gt;</code> because <code>print</code> uses <code>cout</code>. The header does
+      not, because nothing in the header mentions a stream &mdash; and headers should include as
+      little as they can get away with.</li>
+    <li>You can compile and link in one command &mdash; <code>g++ point2.cpp main.cpp -o pointprog</code> &mdash; but then every file is recompiled every time, which throws away
+      the benefit above.</li>
+    <li>The professor's accessors here return <code>const double&amp;</code>. For a <code>double</code>, returning <code>double</code>
+      by value is the safer default; see the warning in Class 15, &sect;A.</li>
+  </ul>
+</div></details>
+
+<h3>Problem 8 &mdash; Write C++ statements <span class="muted small">(from the Summer 2024 Midterm)</span> <span class="muted small">(carried over from Classes II)</span></h3>
+
+<p>Write C++ statements to carry out the following tasks. Do not write complete programs, just give a
+single line, or a few lines, of C++ instructions. Given the following class <code>Point</code>:</p>
+
+<pre><code class="language-cpp">class Point {
+public:
+    int x, y;
+    void print() { cout &lt;&lt; "(" &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ")" &lt;&lt; endl; }
+};</code></pre>
+
+<div class="part">
+  <p class="q"><span class="pl">(a)</span> Declare a point object <code>a</code> and set its value to <code>(3, 4)</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Point a;
+    a.x = 3;
+    a.y = 4;</code></pre>
+    <p>Three lines, and that is fine &mdash; the question says "a single line, or a few lines". The
+    data is public in this class, so direct assignment is the intended answer; there is no <code>set</code>
+    method to call. (This is one of the few places in the course where public data is correct,
+    because the exam gave you the class.)</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(b)</span> Declare a pointer <code>p</code> that dynamically allocates memory for a point.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    Point *p = new Point;</code></pre>
+    <p>Singular <code>new</code>, no <code>[]</code>, no arguments. <code>new Point</code> returns a <code>Point*</code>, which is exactly what
+    the left-hand side declares.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(c)</span> Copy the data in <code>a</code> into the point that <code>p</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    p-&gt;x = a.x;
+    p-&gt;y = a.y;</code></pre>
+    <p>Or, equivalently, <code>(*p).x = a.x;</code> and <code>(*p).y = a.y;</code> &mdash; the rubric accepts both.</p>
+    <p>Look at each side of these assignments: <code>p</code> is a pointer, so it gets an arrow; <code>a</code> is an
+    object, so it gets a dot. Getting this mixed up is the single most common error on this
+    question.</p>
+    <p>You could also write <code>*p = a;</code> &mdash; the compiler-generated assignment copies both members
+    at once. It is correct, and it is what a C++ programmer would actually write, but the exam is
+    testing member access, so the two explicit lines are the safer answer here.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(d)</span> Print the point that the pointer <code>p</code> points to.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    p-&gt;print();</code></pre>
+    <p>Or <code>(*p).print();</code>. Both appear in the rubric.</p>
+  </div></details>
+</div>
+
+<div class="part">
+  <p class="q"><span class="pl">(e)</span> Release the memory for <code>p</code>.</p>
+  <details class="soln"><summary></summary><div class="ans">
+<pre><code class="language-cpp">    delete p;</code></pre>
+    <p><strong>Not</strong> <code>delete [] p;</code>. The allocation was <code>new Point</code>, one object, so the
+    release is the singular <code>delete</code>. Using <code>delete []</code> on memory that came from a singular <code>new</code> is
+    undefined behavior.</p>
+    <p>Here are all five parts assembled into a program that compiles, runs and is leak-clean:</p>
+<div class="codewrap"><div class="cap">statements.cpp</div><pre><code class="language-cpp">// statements.cpp -- the five tasks, assembled into one runnable program
+#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+public:
+    int x, y;
+    void print() { cout &lt;&lt; "(" &lt;&lt; x &lt;&lt; ", " &lt;&lt; y &lt;&lt; ")" &lt;&lt; endl; }
+};
+
+int main() {
+    // (a) declare a point object a and set its value to (3, 4)
+    Point a;
+    a.x = 3;
+    a.y = 4;
+
+    // (b) declare a pointer p that dynamically allocates memory for a point
+    Point *p = new Point;
+
+    // (c) copy the data in a into the point p points to
+    p-&gt;x = a.x;
+    p-&gt;y = a.y;
+
+    // (d) print the point that p points to
+    p-&gt;print();
+
+    // (e) release the memory for p
+    delete p;
+    return 0;
+}</code></pre></div>
+<pre class="out">(3, 4)</pre>
+    <p><strong>Things to notice.</strong></p>
+    <ul>
+      <li>This exact question has appeared on <strong>four</strong> midterms in this course, with only
+        the names and numbers changed &mdash; <code>Point</code> with <code>(3, 4)</code>, <code>Point</code> with
+        <code>(5, 7)</code>, and <code>Rectangle</code> with <code>[4 x 6]</code> and a <code>display</code> method. The
+        shape is always: declare and initialize an object, <code>new</code> a second one, copy across with
+        <code>-&gt;</code>, call a method with <code>-&gt;</code>, <code>delete</code>. Learn the five-step shape, not the names.</li>
+      <li>Three points per part, <strong>no partial credit</strong>. A missing <code>*</code> or a <code>.</code> where an
+        arrow belongs costs the whole part.</li>
+      <li><code>print</code> here is not <code>const</code>, exactly as the exam prints it. That is not a problem in this
+        question, because nothing is passed by <code>const</code> reference &mdash; but it is why you should
+        write <code>const</code> on your own accessors.</li>
+    </ul>
+  </div></details>
+</div>
 
 <div class="box sum" id="summary">
   <div class="hd">Lecture Summary</div>
