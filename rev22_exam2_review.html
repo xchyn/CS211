@@ -352,9 +352,9 @@ the body was really three blocks:</p>
 
 <table class="trace">
   <tr><th>Block</th><th>Points</th><th>What it asked</th><th>Format</th></tr>
-  <tr><td>Problems 1 &amp; 2 (combined)</td><td>20</td><td>Write the destructor, the deep copy constructor, <code>operator=</code> and <code>operator+</code> for a class that owns a dynamic array</td><td>write code</td></tr>
+  <tr><td>Problems 1 &amp; 2 (combined)</td><td>20</td><td>Write the destructor, the deep copy constructor, <code>operator=</code> and <code>operator+</code> for a class that owns a dynamic array. The parts are not worth the same: the usual split is roughly 3 for the destructor, 4 for the copy constructor, 6 for <code>operator=</code> and 7 for <code>operator+</code></td><td>write code</td></tr>
   <tr><td>Problem 3</td><td>10</td><td>Write a derived class with one extra member, a constructor and an overridden method</td><td>write code</td></tr>
-  <tr><td>Problem 4</td><td>10</td><td>Predict the output of five lines, one of which does not compile</td><td>predict output</td></tr>
+  <tr><td>Problem 4</td><td>10</td><td>Predict the output of five labelled lines, 2 points each. Two shapes recur: lines that exercise the special members of one class, where one line may not compile; and a <strong>construction and destruction order</strong> trace, where the classes announce themselves and objects are built from a base class and member objects. Section&nbsp;5 drills the second shape</td><td>predict output</td></tr>
 </table>
 
 <p>Half the paper &mdash; twenty of the forty points &mdash; was one question: <em>implement the
@@ -374,20 +374,10 @@ comes close.</p>
   </div>
 </div>
 
-<h3>The formats, and only the formats</h3>
-
-<p>This professor's exams are <strong>entirely code-based</strong>. In the whole bank of past papers
-there is no true/false, no multiple choice, no matching, no fill-in-the-vocabulary and no essay. You
-will either write C++ or say exactly what C++ prints. The formats that are in scope for Exam 2, in
-descending order of how many points they have historically been worth:</p>
-
-<table class="trace">
-  <tr><th>Format</th><th>How it is worded</th><th>Typical value</th></tr>
-  <tr><td>Implement the special members</td><td>"Give an implementation for the destructor / copy constructor to do the deep copy / assignment operation / <code>operator+</code> overloading"</td><td>20&ndash;25 pts</td></tr>
-  <tr><td>Constructor/destructor trace</td><td>"Assuming your X class is correctly implemented and prints the corresponding messages, what will be the output of the following main program?"</td><td>10&ndash;15 pts</td></tr>
-  <tr><td>Derived class</td><td>"Implement a Y class that inherits from X with the following requirements&hellip;"</td><td>10&ndash;15 pts</td></tr>
-  <tr><td>Output trace with an error line</td><td>"What is the output the program would print for each of the following lines? If the line cause compiler/runtime error, explain why&hellip;"</td><td>10 pts</td></tr>
-</table>
+<p>One thing to note about all of it: this professor's exams are <strong>entirely code-based</strong>.
+In the whole bank of past papers there is no true/false, no multiple choice, no matching, no
+fill-in-the-vocabulary and no essay. You will either write C++ or say exactly what C++ prints, which is
+why re-reading definitions tonight is the least efficient thing you could do.</p>
 
 <div class="box warn">
   <div class="hd">Warning<span class="tag">&mdash; the two marking behaviors that decide your grade</span></div>
@@ -1039,7 +1029,14 @@ class is correctly implemented and prints the corresponding messages, what will 
 following main program?"</em> It is worth 10&ndash;15 points, one point per printed line, and it has
 no partial credit per line &mdash; you either produce that line, in that position, or you do not.</p>
 
-<p>It is really a reading-comprehension exercise about six sentences of C++. There are only six
+<p>It is really a reading-comprehension exercise about six sentences of C++.</p>
+
+<p class="muted small">One warning before the recipe. This is the trace built on <em>one</em> class and
+its special members. There is a second kind, worth the same 10 points and worded almost identically,
+built instead on a class that has a <strong>base class and member objects</strong>, where every
+constructor and destructor announces itself and the whole question is the <em>order</em> they run in.
+That one is drilled in &sect;5, under "construction order, printed", and again in Practice Problem 7.
+Prepare both; the stem will not tell you which you are looking at until you read the classes. There are only six
 things a line of <code>main</code> can do, and each maps to exactly one announcement.</p>
 
 <div class="box alg">
@@ -1646,6 +1643,80 @@ nobaseinit_err.cpp:40:47: error: no matching function for call to 'Polynomial::P
     <code>Pfunction(double c[], int d, double xVal) : Polynomial(c, d) { x = xVal; }</code>. Writing
     <code>Polynomial(c, d);</code> as a <em>statement</em> inside the body builds a temporary, destroys it, and
     changes nothing (Class 20).</p>
+  </div>
+</div>
+
+<div class="box warn">
+  <div class="hd">Warning<span class="tag">&mdash; overriding one method is often not enough</span></div>
+  <div class="bd">
+    <p>This is the trap that costs the most points on the derived-class question, and it follows
+    directly from <strong>static binding</strong>. Suppose the base class has two methods, and one of
+    them calls the other:</p>
+<pre><code class="language-cpp">class Ticket {
+public:
+    Ticket(string c, double b) : code(c), base(b) {}
+    double price() const { return base + 2.0; }
+    void print() const { cout &lt;&lt; code &lt;&lt; " $" &lt;&lt; price() &lt;&lt; endl; }   // calls price()
+protected:
+    string code;
+    double base;
+};</code></pre>
+    <p>Now you derive a class and override <code>price()</code> only. Ask what
+    <code>v.print()</code> prints for a derived object, and the instinct is "the new price." It is not.
+    Without <code>virtual</code> &mdash; and there is no <code>virtual</code> anywhere in Classes
+    13&ndash;21 &mdash; the call to <code>price()</code> inside <code>Ticket::print</code> was bound at
+    compile time to <code>Ticket::price</code>. The base method keeps calling the base method, for ever,
+    whatever the real type of the object is.</p>
+    <p><strong>So if the specification says the derived <code>print</code> must show the derived price,
+    you must override <code>print</code> as well.</strong> Read the requirement list for exactly this
+    shape: an overridden calculation plus an overridden printer is two requirements, not one, and the
+    rubric pays for both.</p>
+  </div>
+</div>
+
+<div class="box ex">
+  <div class="hd">Worked Example<span class="tag">&mdash; overriding both, and reusing the base</span></div>
+  <div class="bd">
+    <p>The derived class below adds a member, overrides the calculation, and overrides the printer. Note
+    what the override does <em>not</em> do: it does not re-derive the base's formula. It calls it.</p>
+<pre><code class="language-cpp">class VipTicket : public Ticket {
+public:
+    VipTicket(string c, double b, int t) : Ticket(c, b) { tier = t; }
+
+    double price() const {                     // override the calculation
+        return Ticket::price() + 4.0 * tier;
+    }
+
+    void print() const {                       // override the printer too
+        cout &lt;&lt; code &lt;&lt; " $" &lt;&lt; price() &lt;&lt; " (vip, tier: " &lt;&lt; tier &lt;&lt; ")" &lt;&lt; endl;
+    }
+
+private:
+    int tier;
+};</code></pre>
+    <details class="soln"><summary></summary><div class="ans">
+      <p>Four things the rubric is looking at.</p>
+      <ul>
+        <li><strong>The title line</strong>, <code>class VipTicket : public Ticket {</code>, and the
+          <strong>base initializer</strong>, <code>: Ticket(c, b)</code>. The base has no default
+          constructor here, so leaving the initializer out is not a style error &mdash; it does not
+          compile.</li>
+        <li><strong><code>Ticket::price()</code> inside the override.</strong> The qualified name is how
+          you reach the version you just hid; writing plain <code>price()</code> there calls
+          <em>itself</em> and recurses until the stack dies. This is the one place in the course where
+          <code>::</code> is not optional.</li>
+        <li><strong><code>print</code> is overridden</strong>, for the reason in the box above. Inside
+          the derived <code>print</code>, the unqualified <code>price()</code> now does find the derived
+          one, because the call is being compiled inside <code>VipTicket</code>.</li>
+        <li><strong>The derived class can read <code>code</code> and <code>base</code></strong> because
+          the base declared them <code>protected</code>. Had they been <code>private</code>, the override
+          would have to go through base accessors &mdash; check which one the question gave you before
+          you write the body.</li>
+      </ul>
+      <p>And a detail that decides the output line: <code>cout</code> prints a <code>double</code> with no
+      trailing zeros, so a price of 18.0 appears as <code>$18</code>, while 11.75 appears as
+      <code>$11.75</code>. Match the expected output in the comments of <code>main</code> exactly.</p>
+    </div></details>
   </div>
 </div>
 
@@ -2298,12 +2369,13 @@ chain_err.cpp:24:13: error: no match for 'operator=' (operand types are 'BookShe
     order and with its original point values: 40 points, 50 minutes. Problems 4&ndash;6 are a second
     rehearsal on a different data layout &mdash; Problems 4 and 5 are the paired
     implement-then-trace questions from a later midterm, and Problem 6 was written for these notes.
+    Problem 7, also written for these notes, drills the other shape the output question takes: construction and destruction order through a base class and member objects.
     Every problem carries its point value and a suggested time.</p>
     <p><strong>Work Problems 1&ndash;3 in one sitting, on paper, with a timer and nothing open.</strong>
     That is the only way to find out whether you can actually produce the Big Five under pressure,
     which is the entire question this exam asks. Reading the solutions first feels like studying and
     is not.</p>
-    <p>Problems 3, 5 and 6 include output prediction, the format that carries no partial credit on
+    <p>Problems 3, 5, 6 and 7 include output prediction, the format that carries no partial credit on
     this professor's exams. Commit to a complete answer in writing &mdash; and count your destructor
     lines &mdash; before you open anything.</p>
   </div>
@@ -2898,6 +2970,77 @@ BookShelf: destructor</pre>
   &mdash; but on this exam, the marker is looking for exactly those lines.</p>
 </div></details>
 
+<h3>Problem 7 &mdash; Construction and destruction order <span class="muted small">(written for these notes)</span></h3>
+
+<p class="muted small">[10 points, 2 per line] &middot; about 8 minutes</p>
+
+<p>The other shape the five-line output question takes. No class here owns memory and nothing fails to
+compile &mdash; every mark is for getting the <em>order</em> and the <em>count</em> right. Write all
+five lines out before revealing.</p>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Wheel {
+public:
+    Wheel() { cout &lt;&lt; "W "; }
+    Wheel(int n) { cout &lt;&lt; "W" &lt;&lt; n &lt;&lt; " "; }
+    ~Wheel() { cout &lt;&lt; "~W "; }
+};
+class Horn {
+public:
+    Horn() { cout &lt;&lt; "H "; }
+    ~Horn() { cout &lt;&lt; "~H "; }
+};
+class Vehicle {
+public:
+    Vehicle() { cout &lt;&lt; "V "; }
+    Vehicle(int n) { cout &lt;&lt; "V" &lt;&lt; n &lt;&lt; " "; }
+    ~Vehicle() { cout &lt;&lt; "~V "; }
+};
+class Bike : public Vehicle {
+public:
+    Bike() { cout &lt;&lt; "B "; }
+    Bike(int n) : wh(n), Vehicle(n) { cout &lt;&lt; "B" &lt;&lt; n &lt;&lt; " "; }
+    ~Bike() { cout &lt;&lt; "~B "; }
+private:
+    Horn  hn;
+    Wheel wh;
+};
+
+int main() {
+    Vehicle v;                   cout &lt;&lt; endl;   // line (a)
+    Bike b;                      cout &lt;&lt; endl;   // line (b)
+    Bike *bp = new Bike(7);      cout &lt;&lt; endl;   // line (c)
+    delete bp;                   cout &lt;&lt; endl;   // line (d)
+    return 0;                                    // line (e)
+}</code></pre>
+
+<details class="soln"><summary></summary><div class="ans">
+  <p><strong>(a)</strong> <code>V</code> &mdash; a plain <code>Vehicle</code>, default constructor.</p>
+  <p><strong>(b)</strong> <code>V H W B</code>. The order is fixed: the <strong>base sub-object</strong>
+  first, then the class's own members <strong>in declaration order</strong> &mdash; <code>hn</code> is
+  declared before <code>wh</code>, so <code>Horn</code> runs first &mdash; then the constructor
+  <strong>body</strong>.</p>
+  <p><strong>(c)</strong> <code>V7 H W7 B7</code>. Same order, and this is the trap: the initializer list
+  is written <code>: wh(n), Vehicle(n)</code>, base last and members out of order, and <strong>it makes
+  no difference whatsoever</strong>. The list says which constructor to use, never when. Base first,
+  then declaration order. (g++ warns about the mismatch with <code>-Wall</code>, which is a hint that
+  the written order is misleading, not meaningful.) Note also that <code>hn</code> takes no argument, so
+  it is still the default <code>Horn</code>, printing <code>H</code> and not <code>H7</code>.</p>
+  <p><strong>(d)</strong> <code>~B ~W ~H ~V</code>. Destruction is the exact reverse: the derived body
+  first, then its members in <strong>reverse</strong> declaration order, then the base. Five lines of
+  construction, five of destruction &mdash; count them against each other.</p>
+  <p><strong>(e)</strong> <code>~B ~W ~H ~V ~V</code>. Two objects are still alive at the end of
+  <code>main</code>: <code>b</code> and <code>v</code>. They die in reverse order of construction, so all
+  of <code>b</code> goes first, then <code>v</code>'s <code>~V</code>. The object <code>bp</code> pointed
+  at was already destroyed on line (d) and does not reappear.</p>
+  <p><strong>The counting check.</strong> Three objects were constructed, so there must be exactly three
+  <code>~V</code> in the whole output, two <code>~B</code>, two <code>~H</code> and two <code>~W</code>.
+  If your answer does not balance, you have lost a line somewhere &mdash; and at two points a line with
+  no partial credit, that is worth the thirty seconds it takes to check.</p>
+</div></details>
+
 <div class="box sum" id="summary">
   <div class="hd">Lecture Summary</div>
   <div class="bd">
@@ -2944,7 +3087,7 @@ BookShelf: destructor</pre>
   </div>
 </div>
 
-<nav class="pagenav"><div class="ph"><div class="dir">&larr; Previous</div><div class="t muted">Class 21 &middot; Inheritance III</div><div class="pending">posts Thu Nov 12</div></div><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 24 &middot; Polymorphism</div><div class="pending">posts Tue Nov 24</div></div></nav>
+<nav class="pagenav"><a href="lec21_inheritance_3.html"><div class="dir">&larr; Previous</div><div class="t">Class 21 &middot; Inheritance III</div></a><div class="ph next"><div class="dir">Next &rarr;</div><div class="t muted">Class 24 &middot; Polymorphism</div><div class="pending">posts Tue Nov 24</div></div></nav>
 <footer>CSCI 211 &middot; Object-Oriented Programming in C++ &middot; Queens College, CUNY</footer>
 </div>
 <script>
